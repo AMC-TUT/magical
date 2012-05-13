@@ -29,6 +29,7 @@ $(function() {
     items: "> div.magos-potions",
     handle: ".magos-image",
     helper: "clone",
+    opacity: 0.8,
     connectWith: ".magos-potions-container"
   });
   $( ".magos-potions-container" ).droppable({
