@@ -1,26 +1,49 @@
 
 $(function() {
-  
-  
 
   /* magos users sortable */
   $( ".magos-sortable" ).sortable({
-    //placeholder: "ui-state-highlight",
+    placeholder: "magos-sortable-highlight",
     items: "> div",
-    handle: "h2"
+    handle: "h2",
+    axis: "y",
+    opacity: 0.6,
+    forceHelperSize: true /* pitäisi olla laatikon kokoinen, ota css pois */
   });
   $( ".magos-sortable" ).disableSelection();
   
   /* magos potion dropbable */
   $( ".potion-icon" ).draggable({
-    /*revert: true, */
     helper: "clone"
   });
+
+  $( ".game-chest li:not(:empty)" ).droppable({
+    greedy: true,
+    accept: ".game-potion-icon",
+    activeClass: "game-chest-hover",
+    hoverClass: "game-chest-active",
+    drop: function(event, ui) {
+      var $tgt = $(this);
+      $(".chest li").removeClass("ui-selected");
+      $tgt.toggleClass("ui-selected");
+    }
+  });
+
   $( ".item-chest li:not(:empty)" ).droppable({
     greedy: true,
     accept: ".potion-icon",
-    activeClass: "ui-state-hover",
-    hoverClass: "ui-state-active"
+    activeClass: "item-chest-hover",
+    hoverClass: "item-chest-active",
+    drop: function(event, ui) {
+      var $tgt = $(this);
+
+      $(".chest li").removeClass("ui-selected");
+
+      $tgt.toggleClass("ui-selected");
+
+      // do something with this information
+      console.log("ui-selected item ID " + $tgt.attr('id'));
+    }
   });
   
   /* magos potions */
@@ -32,6 +55,7 @@ $(function() {
     opacity: 0.8,
     connectWith: ".magos-potions-container"
   });
+
   $( ".magos-potions-container" ).droppable({
     greedy: true,
     accept: ".magos-potions",
@@ -46,30 +70,31 @@ $(function() {
 
   /* magos chest item image */
   $( ".item-chest-item-image, .game-chest-item-image" ).draggable({
-    helper: "clone",
-    /* revert: true */
+    helper: "clone"
   });
+
   $( ".canvas-cell:empty" ).droppable({
     greedy: true,
     accept: ".item-chest-item-image",
-    activeClass: "ui-state-hover",
-    hoverClass: "ui-state-active",
+    activeClass: "canvas-cell-hover",
+    hoverClass: "canvas-cell-active",
     drop: function(event, ui) {
       var $tgt = $(this);
       
       if( ! $tgt.is(":empty") ) {
         return false;
       }
-      
+ 
       var $el = $(ui.draggable).clone();
       $tgt.append( $el );
     }
   });
+
   $( ".canvas table" ).droppable({
     greedy: true,
     accept: ".game-chest-item-image",
-    activeClass: "ui-state-hover",
-    hoverClass: "ui-state-active",
+    activeClass: "canvas-table-hover",
+    hoverClass: "canvas-table-active",
     drop: function(event, ui) {
       var $tgt = $(this);
       var $el = $(ui.draggable);
@@ -78,5 +103,8 @@ $(function() {
       $tgt.css({ "background-image": 'url('+bgimg+')' });
     }
   });
+
+  //
+  $('[rel^="tooltip"]').tooltip({ delay: { show: 500, hide: 100 }, placement: "top" });
 
 });
