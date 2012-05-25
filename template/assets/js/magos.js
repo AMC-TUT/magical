@@ -51,7 +51,7 @@ $(function() {
     /*revert: true,*/
     items: "> div.magos-potions",
     handle: ".magos-image",
-    helper: "clone",
+    /*helper: "clone",*/
     opacity: 0.8,
     connectWith: ".magos-potions-container"
   });
@@ -59,8 +59,8 @@ $(function() {
   $( ".magos-potions-container" ).droppable({
     greedy: true,
     accept: ".magos-potions",
-    activeClass: "ui-state-hover",
-    hoverClass: "ui-state-active"
+    activeClass: "magos-potions-container-hover",
+    hoverClass: "magos-potions-container-active"
   });
 
   /* magos component selectable */
