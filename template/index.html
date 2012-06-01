@@ -44,7 +44,7 @@
           </div>
 
           <div class="btn-group">
-            <button class="btn btn-info active"><i class="icon-th"></i></button>
+            <button class="btn btn-info btn-grid active"><i class="icon-th"></i></button>
           </div>
           
           <div class="btn-group">
@@ -55,7 +55,7 @@
             </ul>
           </div>
 
-          <div class="btn-group">
+          <div class="btn-group btn-group-theme">
             <a class="btn btn-info" href="#">Light</a>
             <a class="btn btn-info active" href="#">Dark</a>
           </div>
@@ -64,7 +64,7 @@
 
          <div class="btn-toolbar pull-right" style="margin-right: 40px;">
 
-          <div class="btn-group">
+          <div class="btn-group btn-group-scene">
             <button class="btn btn-primary">Intro</button>
             <button class="btn btn-primary active">Game</button>
             <button class="btn btn-primary">Outro</button>
@@ -74,7 +74,7 @@
             <button class="btn btn-success">Run Game</button>
           </div>
 
-          <div class="btn-group">
+          <div class="btn-group btn-group-state">
             <a class="btn btn-success" href="#">Public</a>
             <a class="btn btn-success active" href="#">Private</a>
           </div>
@@ -109,6 +109,7 @@
               <tr><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td></tr>
               <tr><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td></tr>
             </table>
+
           </div>
 
         </div>
@@ -137,8 +138,8 @@
               <li class="chest-item" id="chest-item-10"><img class="item-chest-item-image" src="assets/img/10_block_7.png" alt="Painting" title="Painting" rel="tooltip" /></li>
               <li class="chest-item" id="chest-item-11"><img class="item-chest-item-image" src="assets/img/10_block_8.png" alt="Painting" title="Painting" rel="tooltip" /></li>
               <li class="chest-item" id="chest-item-12"><img class="item-chest-item-image" src="assets/img/10_block_9.png" alt="Painting" title="Painting" rel="tooltip" /></li>
-              <li class="chest-item"></li>
-              <li class="chest-item"></li>
+              <li class="chest-item item-add"></li>
+              <li class="chest-item item-trash"></li>
             </ul>
             <div class="clearfix"></div>
           </div>
@@ -255,9 +256,6 @@
 
           </div><!--/span-->
           
-          
-          
-          
               <div class="clearfix"></div>
             </div>
           </div>
@@ -294,16 +292,149 @@
           <div class="magos-sortable-item">
             <h2>Nathalie</h2>
             <div class="magos-potions-container">
-            <div class="magos-potions principes">
+            <div class="magos-potions potions principes">
               <img class="magos-image" src="assets/img/blocks.png" alt="" style="width: 41px;padding: 4px 9px;" />
               <table class="table">
                 <tbody>
-                  <tr><td><img class="potion-icon" src="assets/img/potion-icon.png" alt="" /></td><td>Score</td></tr>
-                  <tr><td><img class="potion-icon" src="assets/img/potion-icon.png" alt="" /></td><td>Dialog</td></tr>
-                  <tr><td><img class="potion-icon game-potion-icon" src="assets/img/potion-icon.png" alt="" /></td><td>Font</td></tr>
+                  <tr><td><img class="potion-icon" data-potion="score" src="assets/img/potion-icon.png" alt="" /></td><td>Score</td></tr>
+                  <tr><td><img class="potion-icon" data-potion="dialog" src="assets/img/potion-icon.png" alt="" /></td><td>Dialog</td></tr>
+                  <tr><td><img class="potion-icon game-potion-icon" data-potion="font" src="assets/img/potion-icon.png" alt="" /></td><td>Font</td></tr>
                 </tbody>
               </table>
             </div>
+
+            <div class="magos-potions magos-form principes score" style="display:none;">
+              <div class="status icon-ajax">
+                <img src="assets/img/ajax.gif" style="display:none;">
+                <i class="icon-ok" class="icon-ajax"></i>
+              </div>
+              <form class="form-vertical">
+                <fieldset>
+                  <legend>Score</legend>
+
+                  <div class="score-action action-group">
+                    <div class="control-group">
+                        <label class="control-label" for="score-action">Action</label>
+                        <div class="controls">
+                        <select class="span12" id="score-action">
+                          <option>---</option>
+                          <option>Forway</option>
+                          <option>Twoway</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="score-event">Scores</label>
+                        <div class="controls">
+                          <input type="number" class="input" min="-1000" max="1000" value="0" placeholder="">
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="form-actions">
+                    <button class="btn btn-info btn-back-potion"><i class="icon-arrow-left"></i></button>
+                    <button class="btn btn-success btn-add-action pull-right"><i class="icon-plus"></i></button>
+                  </div>
+
+                </fieldset>
+              </form>
+            </div>
+
+            <div class="magos-potions magos-form principes dialog" style="display:none;">
+              <div class="status icon-ajax">
+                <img src="assets/img/ajax.gif" style="display:none;">
+                <i class="icon-ok" class="icon-ajax"></i>
+              </div>
+              <form class="form-vertical">
+                <fieldset>
+                  <legend>Dialog</legend>
+
+                  <div class="dialog-action action-group">
+                    <div class="control-group">
+                        <label class="control-label" for="dialog-action">Action</label>
+                        <div class="controls">
+                        <select class="span12" id="dialog-action">
+                          <option>---</option>
+                          <option>Forway</option>
+                          <option>Twoway</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="">Text</label>
+                        <div class="controls">
+                          <textarea class="input" id="" rows="1"></textarea>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="form-actions">
+                    <button class="btn btn-info btn-back-potion"><i class="icon-arrow-left"></i></button>
+                    <button class="btn btn-success btn-add-action pull-right"><i class="icon-plus"></i></button>
+                  </div>
+
+                </fieldset>
+              </form>
+            </div>
+
+            <div class="magos-potions magos-form principes font" style="display:none;">
+              <div class="status icon-ajax">
+                <img src="assets/img/ajax.gif" style="display:none;">
+                <i class="icon-ok" class="icon-ajax"></i>
+              </div>
+              <form class="form-vertical">
+                <fieldset>
+                  <legend>Font</legend>
+
+                  <div class="dialog-action action-group">
+                    
+                    <div class="control-group">
+                        <label class="control-label" for="dialog-action">Font Family</label>
+                        <div class="controls">
+                        <select class="span12" id="dialog-action">
+                          <option>Default</option>
+                          <option>Arial</option>
+                          <option>Verdana</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="dialog-action">Font Size</label>
+                        <div class="controls">
+                        <input class="span12" type="number" min="6" max="50" value="11" id="font-size" />
+                      </div>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label" for="">Font Color</label>
+                      <div class="controls">
+                        <input class="span12" type="color" value="#cf0808" id="font-color" />
+                      </div>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label" for="">Background Color</label>
+                      <div class="controls">
+                        <input class="span12" type="color" value="#141a9c" id="bg-color" />
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="form-actions">
+                    <button class="btn btn-info btn-back-potion"><i class="icon-arrow-left"></i></button>
+                  </div>
+
+                </fieldset>
+              </form>
+            </div>
+
+
             </div>
           </div><!--/span-->
 
@@ -330,42 +461,142 @@
               <img class="magos-image" src="assets/img/physicist.png" alt="" style="width: 45px;" />
               <table class="table">
                 <tbody>
-                  <tr><td><img class="potion-icon" src="assets/img/potion-icon.png" alt="" /></td><td>Movement</td></tr>
-                  <tr><td><img class="potion-icon" src="assets/img/potion-icon.png" alt="" /></td><td>Collision</td></tr>
-                  <tr><td><img class="potion-icon" src="assets/img/potion-icon.png" alt="" /></td><td>Gravity</td></tr>
+                  <tr><td><img class="potion-icon" data-potion="movement" src="assets/img/potion-icon.png" alt="" /></td><td>Movement</td></tr>
+                  <tr><td><img class="potion-icon" data-potion="collision" src="assets/img/potion-icon.png" alt="" /></td><td>Collision</td></tr>
+                  <tr><td><img class="potion-icon" data-potion="gravity" src="assets/img/potion-icon.png" alt="" /></td><td>Gravity</td></tr>
                 </tbody>
               </table>
             </div>
 
-            <div class="magos-potions magos-form physicus collision">
+            <div class="magos-potions magos-form physicus movement" style="display:none;">
+              <div class="status icon-ajax">
+                <img src="assets/img/ajax.gif" style="display:none;">
+                <i class="icon-ok" class="icon-ajax"></i>
+              </div>
+              <form class="form-vertical">
+                <fieldset>
+                  <legend>Movement</legend>
+
+                  <div class="movement-action action-group">
+                      <div class="control-group">
+                        <label class="control-label" for="movement-method">Method</label>
+                        <div class="controls">
+                          <select class="span12" id="movement-method">
+                            <option>---</option>
+                            <option>Forway</option>
+                            <option>Twoway</option>
+                          </select>
+                        </div>
+
+                        <div class="controls subcontrols">
+                          <label class="checkbox">
+                            <input type="checkbox" id="movement-bind-grid">Grid by grid
+                          </label>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label" for="movement-action-btn">Action Button</label>
+                      <div class="controls">
+                          <select class="span12" id="movement-action-btn">
+                            <option>---</option>
+                            <option></option>
+                            <option></option>
+                          </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-actions">
+                    <button class="btn btn-info btn-back-potion"><i class="icon-arrow-left"></i></button>
+                  </div>
+
+                </fieldset>
+              </form>
+
+            </div>
+
+            <div class="magos-potions magos-form physicus collision" style="display:none;">
+              <img src="assets/img/ajax.gif" class="icon-ajax">
               <form class="form-vertical">
                 <fieldset>
                   <legend>Collision</legend>
-                  <div class="control-group">
-                    <label class="control-label" for="input01">Target</label>
-                    <div class="controls">
-                      <select class="span12" id="input01">
-                        <option>---</option>
-                        <option>Stone</option>
-                        <option>Brick</option>
-                        <option>Tracktor</option>
-                        <option>Farm</option>
-                      </select>
+
+                  <div class="collision-action action-group">
+                      <div class="control-group">
+                        <label class="control-label" for="collision-target">Target</label>
+
+                        <div class="controls">
+                          <select class="span12" id="collision-target">
+                            <option>---</option>
+                            <option>Stone</option>
+                            <option>Brick</option>
+                            <option>Tracktor</option>
+                            <option>Farm</option>
+                          </select>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label" for="collision-action">Action</label>
+                      <div class="controls">
+                        <select class="span12" id="collision-action">
+                          <option>---</option>
+                          <option>Destroy target</option>
+                          <option>Destroy self</option>
+                          <option>Swap target</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
-                  
-                  <div class="control-group">
-                    <label class="control-label" for="input01">Action</label>
-                    <div class="controls">
-                      <select class="span12" id="input01">
-                        <option>---</option>
-                        <option>Destroy target</option>
-                        <option>Destroy self</option>
-                        <option>Swap target</option>
-                      </select>
+
+                  <div class="form-actions">
+                    <button class="btn btn-info btn-back-potion"><i class="icon-arrow-left"></i></button>
+                    <button class="btn btn-success btn-add-action pull-right"><i class="icon-plus"></i></button>
+                  </div>
+
+                </fieldset>
+              </form>
+
+            </div>
+
+            <div class="magos-potions magos-form physicus gravity" style="display:none;">
+              <img src="assets/img/ajax.gif" class="icon-ajax">
+              <form class="form-vertical">
+                <fieldset>
+                  <legend>Gravity</legend>
+
+                  <div class="collision-action action-group">
+                      <div class="control-group">
+                        <label class="control-label" for="input01">State</label>
+
+                        <div class="controls">
+                          <div class="btn-group btn-group-theme">
+                            <a class="btn" href="#">On</a>
+                            <a class="btn btn-success active" href="#">Off</a>
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label" for="input01">Strength</label>
+                      <div class="controls">
+                        <input type="number" class="input" min="0" max="5" value="0" placeholder="">
+                        <!--<div class="gravity-strength-slider"></div>-->
+                      </div>
+                      
+                      <div class="controls subcontrols">
+                        <label class="checkbox">
+                          <input type="checkbox" id="gravity-sign">Negative
+                        </label>
+                      </div>
                     </div>
                   </div>
-                  
+
+                  <div class="form-actions">
+                    <button class="btn btn-info btn-back-potion"><i class="icon-arrow-left"></i></button>
+                  </div>
+
                 </fieldset>
               </form>
 

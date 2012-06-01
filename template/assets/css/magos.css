@@ -1,122 +1,89 @@
-
-.magos-potions-container { min-height: 40px; margin-top: 10px; }
-.magos-potions { 
-	position:relative; padding-right: 60px; border: 1px solid transparent; 
-	border-radius: 4px; color: #FFF; min-height: 97px; }
-.magos-potions.principes, .infobox-principes { 
-	background: -webkit-linear-gradient(top, #621283, #290438); border-color: #480C61; }
-.magos-potions.artifex, .infobox-artifex {
-  background-color: #40B83D;
-  background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));
-  border-color: #185516; }
-.magos-potions.physicus, .infobox-physicus {
-	border-color: #053A44;
-	background-color: #095766;
-  background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53)); }
-
-.magos-potions.musicus, .infobox-musicus {
-	background-color: #090D66; border-color: #090D66;
-	background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53)); }
-
-.magos-potions .table { margin: 10px 0; }
-.magos-potions .table td { border: 0; font-weight: 700; line-height: 30px; padding: 4px 8px; text-shadow: 0 2px 6px #000; }
-.magos-potions .table td:first-child { width: 31px; text-align: center; }
-
-.magos-infobox h4 { text-shadow: 0 2px 6px #000; }
-.magos-infobox .infobox-skillset { padding: 10px; color: #fff; border-radius: 3px; }
-.magos-infobox .infobox-skillset.infobox-musicus { margin-top:10px; }
-.magos-infobox .table { margin-bottom: 0; }
-.magos-infobox .table tr:first-child th, .magos-infobox .table tr:first-child td { border-top:0; }
-.magos-infobox .table td:first-child { width: 33%; }
-.magos-infobox .table th, .magos-infobox .table td {
-  padding: 5px 5px; border-top: 1px solid rgba(221, 221, 221, 0.06); }
-
-.magos-image { 
-	position: absolute; right: 10px; top: 10px; cursor: move;
-	border: 1px solid rgba(98, 18, 131, 0.5); padding: 4px 7px 6px; 
-	border-radius: 4px; box-shadow: inset 0 0 10px #333; }
-.magos-potions.principes .magos-image {
-	border: 1px solid rgba(98, 18, 131, 0.5); }
-.magos-potions.artifex .magos-image {
-	border: 1px solid rgba(24, 85, 22, 0.56); }
-.magos-potions.physicus .magos-image {
-	border: 1px solid rgba(9, 87, 102, 0.5); }
-.magos-potions.musicus .magos-image {
-	border: 1px solid rgba(5, 58, 68, 0.5); }
-
-.magos-sortable { padding-bottom: 5px; }
-.magos-sortable-item { background: #2C2929; border-radius: 6px; padding-bottom: 0; border: 1px solid rgba(0, 0, 0, 0.05);padding: 10px;margin: 0 0 10px 0; }
-.magos-sortable-item h2 { font-size: 17px; line-height: 1.4em; cursor: move; }
-
-.potion-icon { 
-	width: 18px; padding: 3px 8px; cursor: move; border: 1px solid rgba(98, 18, 131, 0.5); border-radius: 4px; box-shadow: inset 0 0 10px #333; }
-.potion-icon.ui-draggable-dragging { 
-	box-shadow: none; border-color: transparent !important; }
-
-.magos-potions.artifex .potion-icon {
-	border: 1px solid rgba(24, 85, 22, 0.56); }
-.magos-potions.physicus .potion-icon {
-	border: 1px solid rgba(9, 87, 102, 0.5); }
-.magos-potions.musicus .potion-icon {
-	border: 1px solid rgba(5, 58, 68, 0.5); }
-
-.well { padding:0;border:0;box-shadow:none;margin:0;background:rgba(19, 19, 19, 0.87); }
-.well .well { background: transparent; }
-
-.chest-container { border-radius: 6px; padding: 5px; margin-bottom: 10px; }
-.item-chest-container { background: -webkit-linear-gradient(top, rgb(158, 108, 2) 0%, #412D04 100% ); }
-.game-chest-container { background: -webkit-linear-gradient(top, #6E1B8F 0%, #2F0B3D 100% ); }
-.chest { margin: 0; padding: 0; position: relative; }
-.chest li { display: block;float: left;width: 32px;height: 32px;background: rgba(158, 108, 2, 0.04);padding: 5px;margin: 2px;border: 1px solid #573C04; box-shadow: inset 0 0 10px #111; }
-.game-chest li { border: 1px solid #330944; }
-.item-chest li:last-child { background: url(../img/plus-sign.png) 50% 50% no-repeat; cursor: pointer;}
-
-.chest li.ui-selected { background:#A57102; }
-.game-chest li.ui-state-active, .game-chest li.ui-selected { background:#9830C2; }
-
-.chest li img { cursor: move; }
-
-.canvas-container { background: rgba(19, 19, 19, 0.87); }
-
-.canvas {max-width: 640px;margin: 0 auto 10px;padding: 0;background-color: #000;}
-.canvas table { background-size: cover; background-repeat: no-repeat;}
-.canvas table, .canvas table tr, .canvas table td {margin:0;padding:0;border-collapse:collapse;border:0;}
-.canvas table td { width: 32px;height: 32px;margin: 0;padding: 0;border: 1px solid #3D3C3C;}
-
-.item-information-container { color: #A5730A; padding: 3px 10px 0; box-sizing: border-box; }
-
-.sidebar-nav { color: #08C; }
-.sidebar-nav h2, .magos-shoutbox h3, .magos-infobox h3 { color: #579CFD;}
-
-hr { border-top: 1px solid #3D3C3C; border-bottom: 1px solid #5A5959; }
-
-.magos-sortable-highlight {
-	margin: 10px 0; border-radius: 6px; height: 48px;
-	background: rgba(81, 163, 81, .5) url(../img/arrow-down-bottom-icon.png) 50% 50% no-repeat;  }
-.chest li.item-chest-hover { background-color: rgba(27, 158, 2, 0.42); }
-.chest li.item-chest-active { background-color: rgba(27, 158, 2, 1); }
-
-.chest li.game-chest-hover { background-color: rgba(27, 158, 2, 0.42); }
-.chest li.game-chest-active { background-color: rgba(27, 158, 2, 1); }
-
-.canvas-table-hover:not(.ui-sortable-helper) { background: rgba(81, 163, 81, .5) url(../img/arrow-down-bottom-icon.png) 50% 50% no-repeat; }
-.canvas-table-active:not(.ui-sortable-helper) { background-color: rgba(81, 163, 81, 1); }
-
-.canvas-cell-hover:not(:empty) { background: rgba(255, 0, 0, 0.5); }
-
-.magos-potions-container-hover .magos-potions { box-shadow: 0 0 20px #0C830C; }
-.magos-potions-container-active .magos-potions { box-shadow: 0 0 20px #15FC15; }
-
-.chat-container, .infobox-container { padding: 3px 0 0; box-sizing: border-box; margin-bottom: 10px; }
-.magos-shoutbox, .magos-infobox { background: #2C2929; border-radius: 6px; padding: 10px; }
-.magos-shoutbox input[type=text] { width: -webkit-calc(100% - 69px); box-shadow: inset 0 0 6px black; border-color: #2C2929; color: #444; }
-.magos-shoutbox-log { overflow: hidden; margin: 10px 0; }
-.magos-shoutbox-log ul { list-style: none; color: #555; line-height: 1.4; font-size: 1.1em; margin: 0; padding: 5px; background: #EEE; -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); -webkit-transition: border linear 0.2s, box-shadow linear 0.2s; -moz-transition: border linear 0.2s, box-shadow linear 0.2s; -ms-transition: border linear 0.2s, box-shadow linear 0.2s; -o-transition: border linear 0.2s, box-shadow linear 0.2s; transition: border linear 0.2s, box-shadow linear 0.2s; background-color: white; border: 1px solid #CCC; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; box-shadow: inset 0 0 6px black; border-color: #2C2929; }
-
-.icon-flag { margin-right: 5px; }
-
-.magos-form { padding: 10px; }
-.magos-form legend { font-size: 14px; color: #fff; font-weight: bold; padding: 0; margin-bottom: 0; line-height: 1em; border-bottom: 0; }
-.magos-form label { color: #fff; }
-.magos-form select, input[type="file"] { height: 21px; line-height: 21px; }
-.magos-form legend + .control-group { margin-top: 10px; } 
+.magos-potions-container{min-height:40px;margin-top:10px;}
+.magos-potions{position:relative;padding-right:60px;border:1px solid transparent;border-radius:4px;color:#FFF;min-height:97px;}
+.magos-potions.principes,.infobox-principes{background:-webkit-linear-gradient(top,#621283,#290438);border-color:#480C61;}
+.magos-potions.artifex,.infobox-artifex{background-color:#40B83D;background-image:-webkit-linear-gradient(top,transparent,rgba(0,0,0,0.53));border-color:#185516;}
+.magos-potions.physicus,.infobox-physicus{border-color:#053A44;background-color:#095766;background-image:-webkit-linear-gradient(top,transparent,rgba(0,0,0,0.53));}
+.magos-potions.musicus,.infobox-musicus{background-color:#090D66;border-color:#090D66;background-image:-webkit-linear-gradient(top,transparent,rgba(0,0,0,0.53));}
+.magos-potions .table{margin:10px 0;}
+.magos-potions .table td{border:0;font-weight:700;line-height:30px;padding:4px 8px;text-shadow:0 2px 6px #000;}
+.magos-potions .table td:first-child{width:31px;text-align:center;}
+.magos-infobox h4{text-shadow:0 2px 6px #000;}
+.magos-infobox .infobox-skillset{padding:10px;color:#fff;border-radius:3px;}
+.magos-infobox .infobox-skillset.infobox-musicus{margin-top:10px;}
+.magos-infobox .table{margin-bottom:0;}
+.magos-infobox .table tr:first-child th,.magos-infobox .table tr:first-child td{border-top:0;}
+.magos-infobox .table td:first-child{width:33%;}
+.magos-infobox .table th,.magos-infobox .table td{padding:5px 5px;border-top:1px solid rgba(221,221,221,0.06);}
+.magos-image{position:absolute;right:10px;top:10px;cursor:move;border:1px solid rgba(98,18,131,0.5);padding:4px 7px 6px;border-radius:4px;box-shadow:inset 0 0 10px #333;}
+.magos-potions.principes .magos-image{border:1px solid rgba(98,18,131,0.5);}
+.magos-potions.artifex .magos-image{border:1px solid rgba(24,85,22,0.56);}
+.magos-potions.physicus .magos-image{border:1px solid rgba(9,87,102,0.5);}
+.magos-potions.musicus .magos-image{border:1px solid rgba(5,58,68,0.5);}
+.magos-sortable{padding-bottom:5px;}
+.magos-sortable-item{background:#2C2929;border-radius:6px;padding-bottom:0;border:1px solid rgba(0,0,0,0.05);padding:10px;margin:0 0 10px 0;}
+.magos-sortable-item h2{font-size:17px;line-height:1.4em;cursor:move;}
+.potion-icon{width:18px;padding:3px 8px;cursor:move;border:1px solid rgba(98,18,131,0.5);border-radius:4px;box-shadow:inset 0 0 10px #333;}
+.potion-icon.ui-draggable-dragging{box-shadow:none;border-color:transparent !important;}
+.magos-potions.artifex .potion-icon{border:1px solid rgba(24,85,22,0.56);}
+.magos-potions.physicus .potion-icon{border:1px solid rgba(9,87,102,0.5);}
+.magos-potions.musicus .potion-icon{border:1px solid rgba(5,58,68,0.5);}
+.well{padding:0;border:0;box-shadow:none;margin:0;background:rgba(19,19,19,0.87);}
+.well .well{background:transparent;}
+.chest-container{border-radius:6px;padding:5px;margin-bottom:10px;}
+.item-chest-container{background:-webkit-linear-gradient(top,rgb(158,108,2) 0%,#412D04 100% );}
+.game-chest-container{background:-webkit-linear-gradient(top,#6E1B8F 0%,#2F0B3D 100% );}
+.chest{margin:0;padding:0;position:relative;}
+.chest li{display:block;float:left;width:32px;height:32px;background:rgba(158,108,2,0.04);padding:5px;margin:2px;border:1px solid #573C04;box-shadow:inset 0 0 10px #111;}
+.game-chest li{border:1px solid #330944;}
+.item-chest li.item-add{background:url(../img/plus-sign.png) 50% 50% no-repeat;cursor:pointer;}
+.item-chest li.item-trash{background:url(../img/trash-sign.png) 50% 50% no-repeat;cursor:default;}
+.chest li.ui-selected{background:#A57102;}
+.game-chest li.ui-state-active,.game-chest li.ui-selected{background:#9830C2;}
+.chest li img{cursor:move;}
+.canvas-container{background:rgba(19,19,19,0.87);}
+.canvas{max-width:640px;margin:0 auto 10px;padding:0;background-color:#000;}
+.canvas table{background-size:cover;background-repeat:no-repeat;}
+.canvas table,.canvas table tr,.canvas table td{margin:0;padding:0;border-collapse:collapse;border:0;box-sizing:border-box;-moz-box-sizing:border-box;}
+.canvas table td{width:32px;height:32px;margin:0;padding:0;border:1px solid #3D3C3C;}
+.canvas table td.gridless{border:0;}
+.item-information-container{color:#A5730A;padding:3px 10px 0;box-sizing:border-box;}
+.sidebar-nav{color:#08C;}
+.sidebar-nav h2,.magos-shoutbox h3,.magos-infobox h3{color:#579CFD;}
+hr{border-top:1px solid #3D3C3C;border-bottom:1px solid #5A5959;}
+.magos-sortable-highlight{margin:10px 0;border-radius:6px;height:48px;background:rgba(81,163,81,.5) url(../img/arrow-down-bottom-icon.png) 50% 50% no-repeat;}
+.chest li.item-chest-hover{background-color:rgba(27,158,2,0.42);}
+.chest li.item-chest-active{background-color:rgba(27,158,2,1);}
+.chest li.game-chest-hover{background-color:rgba(27,158,2,0.42);}
+.chest li.game-chest-active{background-color:rgba(27,158,2,1);}
+.canvas-table-hover:not(.ui-sortable-helper){background:rgba(81,163,81,.5) url(../img/arrow-down-bottom-icon.png) 50% 50% no-repeat;}
+.canvas-table-active:not(.ui-sortable-helper){background-color:rgba(81,163,81,1);}
+.canvas-cell-hover{background:rgba(10,189,45,0.18);}
+.canvas-cell-hover:not(:empty){background:rgba(255,0,0,0.28);}
+.magos-potions-container-hover .magos-potions{box-shadow:0 0 20px #0C830C;}
+.magos-potions-container-active .magos-potions{box-shadow:0 0 20px #15FC15;}
+.chat-container,.infobox-container{padding:3px 0 0;box-sizing:border-box;margin-bottom:10px;}
+.magos-shoutbox,.magos-infobox{background:#2C2929;border-radius:6px;padding:10px;}
+.magos-shoutbox input[type=text]{width:-webkit-calc(100% - 69px);box-shadow:inset 0 0 6px black;border-color:#2C2929;color:#444;}
+.magos-shoutbox-log{overflow:hidden;margin:10px 0;}
+.magos-shoutbox-log ul{list-style:none;color:#555;line-height:1.4;font-size:1.1em;margin:0;padding:5px;background:#EEE;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);-moz-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);-webkit-transition:border linear 0.2s,box-shadow linear 0.2s;-moz-transition:border linear 0.2s,box-shadow linear 0.2s;-ms-transition:border linear 0.2s,box-shadow linear 0.2s;-o-transition:border linear 0.2s,box-shadow linear 0.2s;transition:border linear 0.2s,box-shadow linear 0.2s;background-color:white;border:1px solid #CCC;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;box-shadow:inset 0 0 6px black;border-color:#2C2929;}
+.icon-flag{margin-right:5px;}
+.magos-form{padding:10px;}
+.magos-form legend{font-size:14px;color:#fff;font-weight:bold;padding:0 0 10px 0;margin-bottom:0;line-height:1em;border-bottom:0;}
+.magos-form label{color:#fff;}
+.magos-form select,input[type="file"],input[type="number"]{height:21px;line-height:21px;}
+.magos-form legend + .control-group{margin-top:10px;margin-bottom:0;}
+input[type="number"],.magos-form textarea{margin-bottom:0;padding:2px 5px;box-sizing:border-box;width:100%;line-height:1.3em;}
+.magos-form textarea{resize:vertical;max-height:100px;min-height:17px;}
+.form-vertical{margin-bottom:0;}
+.action-group{border-bottom:1px solid rgba(255,255,255,0.16);margin-bottom:8px;padding-bottom:3px;}
+.fieldset > .action-group:last-child{border:0;padding-bottom:0;}
+.form-actions{background:none;border:0;padding:0;margin:0;}
+.icon-ajax{position:absolute;right:12px;top:12px;}
+.ui-slider{width:90%;margin:0 auto;}
+.ui-slider,.ui-slider-range{height:6px;background-color:#5BB75B;background-image:-moz-linear-gradient(top,#62C462,#51A351);background-image:-ms-linear-gradient(top,#62C462,#51A351);background-image:-webkit-gradient(linear,0 0,0 100%,from(#62C462),to(#51A351));background-image:-webkit-linear-gradient(top,#62C462,#51A351);background-image:-o-linear-gradient(top,#62C462,#51A351);background-image:linear-gradient(top,#62C462,#51A351);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#62c462',endColorstr='#51a351',GradientType=0);border-color:#51A351 #51A351 #387038;border-color:rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);filter:progid:DXImageTransform.Microsoft.gradient(enabled = false);}
+.ui-slider .ui-slider-handle{height:12px;width:12px;}
+.subcontrols > .radio:first-child,.subcontrols > .checkbox:first-child{padding-top:0;margin-left:5px;}
+/*input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }*/
+.canvas-potion-icon { cursor:move; }
+.row-fluid input[type="number"], .row-fluid input[type="color"] { min-height: 22px; margin-bottom: 9px; }
+.row-fluid input[type="color"] { height: 22px; padding: 0; }
