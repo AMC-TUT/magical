@@ -12,7 +12,7 @@
 .magos-infobox .infobox-skillset.infobox-musicus{margin-top:10px;}
 .magos-infobox .table{margin-bottom:0;}
 .magos-infobox .table tr:first-child th,.magos-infobox .table tr:first-child td{border-top:0;}
-.magos-infobox .table td:first-child{width:33%;}
+.magos-infobox .table td:first-child{width:33%;white-space:nowrap;}
 .magos-infobox .table th,.magos-infobox .table td{padding:5px 5px;border-top:1px solid rgba(221,221,221,0.06);}
 .magos-image{position:absolute;right:10px;top:10px;cursor:move;border:1px solid rgba(98,18,131,0.5);padding:4px 7px 6px;border-radius:4px;box-shadow:inset 0 0 10px #333;}
 .magos-potions.principes .magos-image{border:1px solid rgba(98,18,131,0.5);}
@@ -20,8 +20,8 @@
 .magos-potions.physicus .magos-image{border:1px solid rgba(9,87,102,0.5);}
 .magos-potions.musicus .magos-image{border:1px solid rgba(5,58,68,0.5);}
 .magos-sortable{padding-bottom:5px;}
-.magos-sortable-item{background:#2C2929;border-radius:6px;padding-bottom:0;border:1px solid rgba(0,0,0,0.05);padding:10px;margin:0 0 10px 0;}
-.magos-sortable-item h2{font-size:17px;line-height:1.4em;cursor:move;}
+.magos-sortable-item{background:#2C2929;border-radius:6px;padding-bottom:0;border:1px solid rgba(0,0,0,0.05);padding:10px;margin:0 0 10px 0;position:relative;}
+.magos-sortable-item h2, .main-sortable h3 {font-size:17px;line-height:1.4em;cursor:move;}
 .potion-icon{width:18px;padding:3px 8px;cursor:move;border:1px solid rgba(98,18,131,0.5);border-radius:4px;box-shadow:inset 0 0 10px #333;}
 .potion-icon.ui-draggable-dragging{box-shadow:none;border-color:transparent !important;}
 .magos-potions.artifex .potion-icon{border:1px solid rgba(24,85,22,0.56);}
@@ -33,12 +33,13 @@
 .item-chest-container{background:-webkit-linear-gradient(top,rgb(158,108,2) 0%,#412D04 100% );}
 .game-chest-container{background:-webkit-linear-gradient(top,#6E1B8F 0%,#2F0B3D 100% );}
 .chest{margin:0;padding:0;position:relative;}
-.chest li{display:block;float:left;width:32px;height:32px;background:rgba(158,108,2,0.04);padding:5px;margin:2px;border:1px solid #573C04;box-shadow:inset 0 0 10px #111;}
+.chest li{display:block;float:left;width:32px;height:32px;background:rgba(158,108,2,0.04);padding:5px;margin:2px;border:1px solid #573C04;box-shadow:inset 0 0 10px #111;text-align:center;}
 .game-chest li{border:1px solid #330944;}
 .item-chest li.item-add{background:url(../img/plus-sign.png) 50% 50% no-repeat;cursor:pointer;}
 .item-chest li.item-trash{background:url(../img/trash-sign.png) 50% 50% no-repeat;cursor:default;}
-.chest li.ui-selected{background:#A57102;}
-.game-chest li.ui-state-active,.game-chest li.ui-selected{background:#9830C2;}
+.item-chest li.item-add, .item-chest li.item-trash { background-color: rgba(0, 0, 0, 0.16); border-color: rgba(54, 38, 2, 0.89); }
+.chest li.ui-selected{background:#EEA200;}
+.game-chest li.ui-state-active,.game-chest li.ui-selected{background:#C73DFF;}
 .chest li img{cursor:move;}
 .canvas-container{background:rgba(19,19,19,0.87);}
 .canvas{max-width:640px;margin:0 auto 10px;padding:0;background-color:#000;}
@@ -51,21 +52,22 @@
 .sidebar-nav h2,.magos-shoutbox h3,.magos-infobox h3{color:#579CFD;}
 hr{border-top:1px solid #3D3C3C;border-bottom:1px solid #5A5959;}
 .magos-sortable-highlight{margin:10px 0;border-radius:6px;height:48px;background:rgba(81,163,81,.5) url(../img/arrow-down-bottom-icon.png) 50% 50% no-repeat;}
-.chest li.item-chest-hover{background-color:rgba(27,158,2,0.42);}
-.chest li.item-chest-active{background-color:rgba(27,158,2,1);}
+.chest li.item-chest-hover{background-color:#1FBE00;}
+.chest li.item-chest-active{background-color:#2AFF00;}
 .chest li.game-chest-hover{background-color:rgba(27,158,2,0.42);}
 .chest li.game-chest-active{background-color:rgba(27,158,2,1);}
 .canvas-table-hover:not(.ui-sortable-helper){background:rgba(81,163,81,.5) url(../img/arrow-down-bottom-icon.png) 50% 50% no-repeat;}
 .canvas-table-active:not(.ui-sortable-helper){background-color:rgba(81,163,81,1);}
-.canvas-cell-hover{background:rgba(10,189,45,0.18);}
-.canvas-cell-hover:not(:empty){background:rgba(255,0,0,0.28);}
+.canvas-cell-hover{background:rgba(11, 255, 59, 0.36);}
+.canvas-cell-hover:not(:empty){background:rgba(255, 19, 19, 0.28);}
 .magos-potions-container-hover .magos-potions{box-shadow:0 0 20px #0C830C;}
 .magos-potions-container-active .magos-potions{box-shadow:0 0 20px #15FC15;}
-.chat-container,.infobox-container{padding:3px 0 0;box-sizing:border-box;margin-bottom:10px;}
-.magos-shoutbox,.magos-infobox{background:#2C2929;border-radius:6px;padding:10px;}
-.magos-shoutbox input[type=text]{width:-webkit-calc(100% - 69px);box-shadow:inset 0 0 6px black;border-color:#2C2929;color:#444;}
-.magos-shoutbox-log{overflow:hidden;margin:10px 0;}
-.magos-shoutbox-log ul{list-style:none;color:#555;line-height:1.4;font-size:1.1em;margin:0;padding:5px;background:#EEE;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);-moz-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);-webkit-transition:border linear 0.2s,box-shadow linear 0.2s;-moz-transition:border linear 0.2s,box-shadow linear 0.2s;-ms-transition:border linear 0.2s,box-shadow linear 0.2s;-o-transition:border linear 0.2s,box-shadow linear 0.2s;transition:border linear 0.2s,box-shadow linear 0.2s;background-color:white;border:1px solid #CCC;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;box-shadow:inset 0 0 6px black;border-color:#2C2929;}
+.main-sortable{padding:3px 0 0;box-sizing:border-box;margin-bottom:10px;}
+.main-sortable > div[class*="span"] { margin-left:0;margin-bottom:10px;}
+.magos-shoutbox,.magos-infobox{background:#2C2929;border-radius:6px;padding:10px;} /*69*/
+.magos-shoutbox input[type=text]{width:-webkit-calc(100% - 81px);box-shadow:inset 0 0 6px black;border-color:#2C2929;color:#444;}
+.magos-shoutbox-log{color:#555;line-height:1.4;font-size:1.1em;overflow:hidden;margin:10px 0 0;padding:5px;background:#EEE;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);-moz-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);-webkit-transition:border linear 0.2s,box-shadow linear 0.2s;-moz-transition:border linear 0.2s,box-shadow linear 0.2s;-ms-transition:border linear 0.2s,box-shadow linear 0.2s;-o-transition:border linear 0.2s,box-shadow linear 0.2s;transition:border linear 0.2s,box-shadow linear 0.2s;background-color:white;border:1px solid #CCC;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;box-shadow:inset 0 0 6px black;border-color:#2C2929;margin-bottom:5px;overflow-y:auto;height:120px;}
+.magos-shoutbox table td {vertical-align:top;}
 .icon-flag{margin-right:5px;}
 .magos-form{padding:10px;}
 .magos-form legend{font-size:14px;color:#fff;font-weight:bold;padding:0 0 10px 0;margin-bottom:0;line-height:1em;border-bottom:0;}
@@ -87,3 +89,38 @@ input[type="number"],.magos-form textarea{margin-bottom:0;padding:2px 5px;box-si
 .canvas-potion-icon { cursor:move; }
 .row-fluid input[type="number"], .row-fluid input[type="color"] { min-height: 22px; margin-bottom: 9px; }
 .row-fluid input[type="color"] { height: 22px; padding: 0; }
+
+.btn-del-action { padding: 0 3px; line-height: 13px; }
+
+
+.main-sortable .navbar {margin-bottom: 0;}
+.main-sortable .navbar .navbar-inner {padding: 0; background: none; box-shadow: none; border-radius: 0; min-height: 30px;}
+.main-sortable .navbar .navbar-inner .btn-navbar {margin: 0;}
+.main-sortable .navbar .navbar-inner h3 {width: -webkit-calc(100% - 60px);line-height: 29px; }
+.main-sortable .navbar .navbar-inner .nav-collapse .row-fluid {margin-top:10px;}
+.main-sortable .navbar .navbar-inner .nav-collapse .row-fluid .span4:nth-child(1) {margin-left:0;}
+
+.magos-status-icon {width:20px;height:20px;position:absolute;right:17px;top:13px;}
+
+
+
+@media (max-width: 767px) {
+
+  .infobox-collapse > .row-fluid > .span4:nth-of-type(1), 
+  .infobox-collapse > .row-fluid > .span4:nth-of-type(2),
+  .infobox-collapse > .row-fluid > .span4:nth-of-type(3) > div {
+    box-sizing: border-box;
+    display: inline-block;
+    width: 49.5%;
+    vertical-align: top;
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+/*
+  .magos-sortable-item {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 49.6%;
+  }
+*/
+}
