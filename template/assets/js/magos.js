@@ -90,7 +90,7 @@ $(function() {
     });
 
     /* magos chest item image */
-    $(".item-chest-item-image").draggable({
+    $(".item-chest-item-image, .game-chest-item-image").draggable({
         helper: "clone"
     });
 
@@ -106,7 +106,7 @@ $(function() {
                 return false;
             }
 
-            var $img = $(ui.draggable).clone().removeAttr('data-original-title rel alt class').addClass('canvas-potion-icon');
+            var $img = $(ui.draggable).clone().removeAttr('data-original-title rel alt class').addClass('canvas-item');
 
             /*
       $img = $('<img/>', {
@@ -116,6 +116,7 @@ $(function() {
       */
 
             $img.draggable({
+                zIndex: 9999,
                 revert: function(valid) {
                     if (!valid) $(this).remove();
                 }
@@ -127,7 +128,7 @@ $(function() {
 
     $(".item-trash").droppable({
         greedy: true,
-        accept: ".item-chest-item-image",
+        accept: ".chest-item, .canvas-item",
         activeClass: "item-chest-hover",
         hoverClass: "item-chest-active",
         drop: function(event, ui) {
@@ -155,10 +156,7 @@ $(function() {
 
     //
     $('[rel^="tooltip"]').tooltip({
-        delay: {
-            show: 500,
-            hide: 100
-        },
+        delay: { show: 500, hide: 100 },
         placement: "top"
     });
 
