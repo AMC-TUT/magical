@@ -88,15 +88,28 @@ $(function() {
     $(".chest").selectable({
         filter: "> li:not(:empty)"
     });
+    /*
+    $(".chest-item, .game-item").on('click tap', function(event) {
+        $tgt = $(event.target);
+        $tgt.parent().trigger('selected').addClass('ui-selected');
+    });
+    */
+    /* magos chest & game item image */
+    $(".game-item").draggable({ helper: "clone" });
 
-    /* magos chest item image */
-    $(".item-chest-item-image, .game-chest-item-image").draggable({
-        helper: "clone"
+    $(".chest-item").draggable({
+        helper: "clone",
+        snap: ".canvas-cell:empty", 
+        snapMode: "inner" /*,
+        start: function(event, ui) {
+          var $draggable = $(ui.draggable);
+          $draggable.parent().trigger('selected').addClass('ui-selected');
+        }*/
     });
 
     $(".canvas-cell:empty").droppable({
         greedy: true,
-        accept: ".item-chest-item-image, .canvas-potion-icon",
+        accept: ".chest-item, .canvas-item",
         activeClass: "canvas-cell-hover",
         hoverClass: "canvas-cell-active",
         drop: function(event, ui) {
@@ -106,27 +119,30 @@ $(function() {
                 return false;
             }
 
-            var $img = $(ui.draggable).clone().removeAttr('data-original-title rel alt class').addClass('canvas-item');
+            var $draggable = $(ui.draggable),
+                $img = '';
 
-            /*
-      $img = $('<img/>', {
-        class: 'canvas-potion-icon',
-        src: $(ui.draggable).attr("src")
-      })
-      */
+            if($draggable.hasClass('chest-item')) {
+              $img = $draggable.clone().removeAttr('data-original-title rel alt class style').addClass('canvas-item');
+            } else {
+              $img = $draggable.removeAttr('data-original-title rel alt class style').addClass('canvas-item');
+            }
 
             $img.draggable({
-                zIndex: 9999,
+                //zIndex: 9999,
+                helper: "original",
+                snap: ".canvas-cell:empty", 
+                snapMode: "inner",
                 revert: function(valid) {
                     if (!valid) $(this).remove();
                 }
             });
 
-            $tgt.append($img);
+            $tgt.append( $img );
         }
     });
 
-    $(".item-trash").droppable({
+    $(".trash-item").droppable({
         greedy: true,
         accept: ".chest-item, .canvas-item",
         activeClass: "item-chest-hover",
@@ -134,13 +150,19 @@ $(function() {
         drop: function(event, ui) {
             $draggable = $(ui.draggable);
 
-            $draggable.parent().remove();
+            if($draggable.hasClass('chest-item')) { // chest item
+              // ember stuff
+              $draggable.parent().remove();
+            } else { // canvas-item
+              // ember stuff
+              $draggable.remove();
+            }
         }
     });
 
-    $(".canvas table").droppable({
+    $(".canvas .table-canvas").droppable({
         greedy: true,
-        accept: ".game-chest-item-image",
+        accept: ".game-item",
         activeClass: "canvas-table-hover",
         hoverClass: "canvas-table-active",
         drop: function(event, ui) {
@@ -148,7 +170,7 @@ $(function() {
             var $el = $(ui.draggable);
             var bgimg = $el.data('url');
 
-            $tgt.css({
+            $tgt.siblings('.table-grid').css({
                 "background-image": 'url(' + bgimg + ')'
             });
         }

@@ -92,8 +92,26 @@
 
         <div class="canvas-container">
 
-          <div class="canvas">
-            <table>
+          <div class="canvas" style="width:640px;">
+
+            <table class="table-grid">
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            </table>
+
+            <table class="table-canvas">
               <tr><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td></tr>
               <tr><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td></tr>
               <tr><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td></tr>
@@ -129,27 +147,19 @@
           </div>
           <div class="span9 chest-container item-chest-container">
             <ul class="chest item-chest">
-              <li id="chest-item-1"><img class="item-chest-item-image" src="assets/img/player.png" alt="Player" title="Player" rel="tooltip" /></li>
-                <!--
-                <div class="chest-icons">
-                  <img class="chest-icon" src="assets/img/16/clock.png" alt="Clock" title="Time" rel="tooltip" />
-                  <img class="chest-icon" src="assets/img/16/linus.png" alt="Linus" title="Time" rel="tooltip" />
-                  <img class="chest-icon" src="assets/img/16/bulb.png" alt="Time" title="Time" rel="tooltip" />
-                  <img class="chest-icon" src="assets/img/16/lock.png" alt="Time" title="Time" rel="tooltip" />
-                </div>
-                -->
-              <li id="chest-item-2"><img class="chest-item" src="assets/img/brick.png" alt="Brick" title="Brick" rel="tooltip" /></li>
-              <li id="chest-item-3"><img class="chest-item" src="assets/img/brick-full.png" alt="Brick Full" title="Brick Full" rel="tooltip" /></li>
-              <li id="chest-item-13"><img class="chest-item" src="assets/img/water.png" alt="Water" title="Water" rel="tooltip" /></li>
-              <li id="chest-item-4"><img class="chest-item" src="assets/img/10_block_1.png" alt="Painting" title="Painting" rel="tooltip" /></li>
-              <li id="chest-item-5"><img class="chest-item" src="assets/img/10_block_2.png" alt="Painting" title="Painting" rel="tooltip" /></li>
-              <li id="chest-item-6"><img class="chest-item" src="assets/img/10_block_3.png" alt="Painting" title="Painting" rel="tooltip" /></li>
-              <li id="chest-item-7"><img class="chest-item" src="assets/img/10_block_4.png" alt="Painting" title="Painting" rel="tooltip" /></li>
-              <li id="chest-item-8"><img class="chest-item" src="assets/img/10_block_5.png" alt="Painting" title="Painting" rel="tooltip" /></li>
-              <li id="chest-item-9"><img class="chest-item" src="assets/img/10_block_6.png" alt="Painting" title="Painting" rel="tooltip" /></li>
-              <li id="chest-item-10"><img class="chest-item" src="assets/img/10_block_7.png" alt="Painting" title="Painting" rel="tooltip" /></li>
-              <li id="chest-item-11"><img class="chest-item" src="assets/img/10_block_8.png" alt="Painting" title="Painting" rel="tooltip" /></li>
-              <li id="chest-item-12"><img class="chest-item" src="assets/img/10_block_9.png" alt="Painting" title="Painting" rel="tooltip" /></li>
+              <li><img class="chest-item" src="assets/img/player.png" alt="Player" title="Player" rel="tooltip" /></li>
+              <li><img class="chest-item" src="assets/img/brick.png" alt="Brick" title="Brick" rel="tooltip" /></li>
+              <li><img class="chest-item" src="assets/img/brick-full.png" alt="Brick Full" title="Brick Full" rel="tooltip" /></li>
+              <li><img class="chest-item" src="assets/img/water.png" alt="Water" title="Water" rel="tooltip" /></li>
+              <li><img class="chest-item" src="assets/img/10_block_1.png" alt="Painting" title="Painting" rel="tooltip" /></li>
+              <li><img class="chest-item" src="assets/img/10_block_2.png" alt="Painting" title="Painting" rel="tooltip" /></li>
+              <li><img class="chest-item" src="assets/img/10_block_3.png" alt="Painting" title="Painting" rel="tooltip" /></li>
+              <li><img class="chest-item" src="assets/img/10_block_4.png" alt="Painting" title="Painting" rel="tooltip" /></li>
+              <li><img class="chest-item" src="assets/img/10_block_5.png" alt="Painting" title="Painting" rel="tooltip" /></li>
+              <li><img class="chest-item" src="assets/img/10_block_6.png" alt="Painting" title="Painting" rel="tooltip" /></li>
+              <li><img class="chest-item" src="assets/img/10_block_7.png" alt="Painting" title="Painting" rel="tooltip" /></li>
+              <li><img class="chest-item" src="assets/img/10_block_8.png" alt="Painting" title="Painting" rel="tooltip" /></li>
+              <li><img class="chest-item" src="assets/img/10_block_9.png" alt="Painting" title="Painting" rel="tooltip" /></li>
               <li class="add-item" title="Add New Item" rel="tooltip"></li>
               <li class="trash-item" title="Trash" rel="tooltip"></li>
             </ul>
