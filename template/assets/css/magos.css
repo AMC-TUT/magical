@@ -44,7 +44,7 @@
 .canvas-container{background:#2C2929;padding: 1px 0;margin-bottom:10px;}
 .canvas{margin:0 auto;padding:0;background-color:#000;position:relative;}
 .canvas table.table-grid { background-size:cover;background-repeat:no-repeat; }
-.canvas table.table-canvas { position:absolute;left:0;top:0; background:transparent; }
+.canvas table.table-canvas { position:absolute;left:0;top:0; }
 .canvas table,.canvas table tr,.canvas table td{margin:0;padding:0;border-collapse:collapse;border:0;box-sizing:border-box;-moz-box-sizing:border-box;}
 .canvas table td{width:32px;height:32px;margin:0;padding:0;}
 .canvas .table-grid td { border:1px solid #2C2929; }
@@ -58,10 +58,13 @@ hr{border-top:1px solid #3D3C3C;border-bottom:1px solid #5A5959;}
 .chest li.item-chest-active{background-color:#2AFF00;}
 .chest li.game-chest-hover{background-color:rgba(27,158,2,0.42);}
 .chest li.game-chest-active{background-color:rgba(27,158,2,1);}
-.canvas-table-hover:not(.ui-sortable-helper){background:rgba(81,163,81,.5) url(../img/arrow-down-bottom-icon.png) 50% 50% no-repeat;}
-.canvas-table-active:not(.ui-sortable-helper){background-color:rgba(81,163,81,1);}
-.canvas-cell-hover{background:rgba(11, 255, 59, 0.36);}
-.canvas-cell-hover:not(:empty){background:rgba(255, 19, 19, 0.28);}
+.canvas-table-hover { background:rgba(11, 255, 59, 0.30); }
+.canvas-table-active { background:rgba(11, 255, 59, 0.40); }
+/*.canvas-table-hover:not(.ui-sortable-helper){background:rgba(81,163,81,.5);} /* url(../img/arrow-down-bottom-icon.png) 50% 50% no-repeat */
+/*.canvas-table-active:not(.ui-sortable-helper){background-color:rgba(81,163,81,7);}*/
+.canvas-cell-hover{ background:rgba(11, 255, 59, 0.30); }
+.canvas-cell-hover:not(:empty){background:rgba(255, 19, 19, 0.3);}
+.canvas-cell-active{ background:rgba(11, 255, 59, 0.4); }
 .magos-potions-container-hover .magos-potions{box-shadow:0 0 20px #0C830C;}
 .magos-potions-container-active .magos-potions{box-shadow:0 0 20px #15FC15;}
 .main-sortable{padding:3px 0 0;box-sizing:border-box;margin-bottom:10px;}

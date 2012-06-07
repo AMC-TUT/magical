@@ -170,9 +170,11 @@ $(function() {
             var $el = $(ui.draggable);
             var bgimg = $el.data('url');
 
-            $tgt.siblings('.table-grid').css({
-                "background-image": 'url(' + bgimg + ')'
-            });
+            if(bgimg.length) {
+              $tgt.siblings('.table-grid').css({
+                  "background-image": 'url(' + bgimg + ')'
+              });
+            }
         }
     });
 
@@ -240,12 +242,11 @@ $(function() {
         $action.find('select').each(function(index) {
         if($(this).val() != "---") $action.remove();
         });
-          });
+        });
         */
     });
 
-    $('.btn-add-action').on('click tap',
-    function(event) {
+    $('.btn-add-action').on('click tap', function(event) {
         event.preventDefault();
 
         var $tgt = $(event.target),
@@ -264,16 +265,66 @@ $(function() {
         $form.find('.action-group:last').after($clone);
     });
 
-    $('.magos-potions').on('click tap', '.btn-del-action',
-    function(event) {
+    $('.magos-potions').on('click tap', '.btn-del-action', function(event) {
         event.preventDefault();
 
         $tgt = $(event.target);
 
         $tgt.closest('.action-group').remove();
-
-        return false;
     });
+    
+
+    // modals
+    
+    $(".add-item").on('click tap', function(event) {
+        event.preventDefault();
+
+        $('#dialog-new-item').modal().on('show', function () {
+          $(this).find('input').val('');
+          $(this).find('.control-group').removeClass('error');
+        })
+    });
+
+    $('.modal .btn').on('click tap', function(event) {
+      event.preventDefault();
+
+      $tgt = $(event.target);
+
+      var action = $tgt.data('action');
+
+      if(action === 'add-item') {
+
+        var $form = $tgt.parent().siblings('.modal-body');
+        var name = $form.find('input').val();
+
+        if(name.length) {
+
+          // check that unique
+
+          var $li = $('<li/>');
+
+          var $img = $('<img/>', {
+              class: 'chest-item',
+              src: 'http://placehold.it/32/E8117F',
+              alt: name,
+              title: name
+          })
+          .tooltip()
+          .draggable({ helper: "clone" })
+          .appendTo($li);
+
+          $li.prependTo( $('.item-chest') );
+
+          $tgt.siblings('[data-dismiss]').click();
+
+        } else {
+          $form.find('.control-group').addClass('error');
+        }
+      }
+
+    });
+
+   
 
 });
 
