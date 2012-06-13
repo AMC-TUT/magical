@@ -56,12 +56,12 @@ $(function() {
             potion = $draggable.data('potion');
 
             $container.find('.magos-potions.potions').hide('slide', {
-                direction: "left"
+                direction: "right"
             },
             250,
             function() {
                 $container.find('.magos-potions.' + potion).show('slide', {
-                    direction: "right"
+                    direction: "left"
                 },
                 250);
             });
@@ -224,12 +224,12 @@ $(function() {
         $container = $tgt.closest('.magos-potions-container');
 
         $tgt.closest('.magos-potions').hide('slide', {
-            direction: "right"
+            direction: "left"
         },
         250,
         function() {
             $container.find('.magos-potions.potions').show('slide', {
-                direction: "left" 
+                direction: "right" 
             }, 250);
         });
         /*

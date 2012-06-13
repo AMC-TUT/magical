@@ -7,19 +7,10 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <!-- Le styles -->
   <link href="assets/css/bootstrap.css" rel="stylesheet">
-  <style type="text/css">
-  body {
-    padding-top: 50px;
-    padding-bottom: 10px;
-  }
-  </style>
   <link href="assets/css/responsive.css" rel="stylesheet">
-
   <!--<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet">-->
   <link href="assets/css/jquery-ui.css" rel="stylesheet">
-
   <link href="assets/css/magos.css" rel="stylesheet">
 
   <link rel="shortcut icon" href="assets/ico/favicon.ico">
@@ -37,14 +28,17 @@
 
         <a class="brand" href="#">Magos</a>
 
-        <div class="btn-toolbar pull-right">
-
+        <div class="btn-toolbar general-toolbar pull-right">
           <div class="btn-group">
             <button class="btn btn-info btn-grid active"><i class="icon-th"></i></button>
           </div>
 
           <div class="btn-group">
             <button class="btn btn-info"><i class="icon-book"></i></button>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-info"><i class="icon-info-sign"></i></button>
           </div>
 
           <div class="btn-group btn-group-theme">
@@ -62,7 +56,7 @@
 
         </div>
 
-        <div class="btn-toolbar pull-right" style="margin-right: 40px;">
+        <div class="btn-toolbar pull-right game-toolbar">
 
           <div class="btn-group btn-group-scene">
             <button class="btn btn-primary">Intro</button>
@@ -215,10 +209,13 @@
                                 <td>Brick</td><td>push target</td>
                               </tr>
                             </table> 
-                            <h4>Gravity</h4>
-                            <table class="table infobox infobox-gravity">
+                            <h4>Gravitation</h4>
+                            <table class="table infobox infobox-gravitation">
                               <tr>
                                 <td>Strength</td><td>2</td>
+                              </tr>
+                              <tr>
+                                <td>Direction</td><td>Inverted</td>
                               </tr>
                             </table>
                           </div>
@@ -236,7 +233,7 @@
                               </tr>
                             </table>
                             <h4>Font</h4>
-                            <table class="table infobox infobox-gravity">
+                            <table class="table infobox infobox-gravitation">
                               <tr>
                                 <th>Type</th><th>Value</th>
                               </tr>
@@ -512,7 +509,7 @@
                   <tbody>
                     <tr><td><img class="potion-icon" data-potion="controls" src="assets/img/potion-icon.png" alt="" /></td><td>Controls</td></tr>
                     <tr><td><img class="potion-icon" data-potion="collision" src="assets/img/potion-icon.png" alt="" /></td><td>Collision</td></tr>
-                    <tr><td><img class="potion-icon" data-potion="gravity" src="assets/img/potion-icon.png" alt="" /></td><td>Gravity</td></tr>
+                    <tr><td><img class="potion-icon" data-potion="gravitation" src="assets/img/potion-icon.png" alt="" /></td><td>Gravitation</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -637,10 +634,10 @@
 
                 </div>
 
-                <div class="magos-potions magos-form physicus gravity" style="display:none;">
+                <div class="magos-potions magos-form physicus gravitation" style="display:none;">
                   <form class="form-vertical">
                     <fieldset>
-                      <legend>Gravity</legend>
+                      <legend>Gravitation</legend>
 
                       <div class="collision-action action-group">
                         <div class="control-group">
@@ -662,7 +659,7 @@
 
                           <div class="controls subcontrols">
                             <label class="checkbox">
-                              <input type="checkbox" id="gravity-sign">Inverted
+                              <input type="checkbox" id="gravitation-sign">Inverted
                             </label>
                           </div>
                         </div>

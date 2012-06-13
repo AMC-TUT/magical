@@ -133,7 +133,7 @@
     margin-right: -20px;
   }
   .container-fluid {
-    padding: 0;
+    padding: 0 10px;
   }
   .dl-horizontal dt {
     float: none;
@@ -643,7 +643,7 @@
     margin-bottom: 18px;
   }
   .navbar-fixed-top .navbar-inner {
-    padding: 5px;
+    padding: 0 5px;
   }
   .navbar .container {
     width: auto;

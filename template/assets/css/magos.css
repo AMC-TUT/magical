@@ -1,3 +1,5 @@
+body { margin: 0 auto; max-width: 1500px; }
+
 .magos-potions-container{min-height:40px;margin-top:10px;}
 .magos-potions{position:relative;padding-right:60px;border:1px solid transparent;border-radius:4px;color:#FFF;min-height:97px;}
 .magos-potions.principes,.infobox-principes{background:-webkit-linear-gradient(top,#621283,#290438);border-color:#480C61;}
@@ -41,7 +43,7 @@
 .chest li.ui-selected{background:#EEA200;}
 .game-chest li.ui-state-active,.game-chest li.ui-selected{background:#C73DFF;}
 .chest li img{cursor:move;}
-.canvas-container{background:#2C2929;padding: 1px 0;margin-bottom:10px;}
+.canvas-container{background:#2C2929;padding: 1px;margin-bottom:10px;}
 .canvas{margin:0 auto;padding:0;background-color:#000;position:relative;}
 .canvas table.table-grid { background-size:cover;background-repeat:no-repeat; }
 .canvas table.table-canvas { position:absolute;left:0;top:0; }
@@ -105,6 +107,10 @@ input[type="number"],.magos-form textarea{margin-bottom:0;padding:2px 5px;box-si
 .main-sortable .navbar .navbar-inner .nav-collapse .row-fluid .span4:nth-child(1) {margin-left:0;}
 
 .magos-status-icon {width:20px;height:20px;position:absolute;right:17px;top:13px;}
+
+/*@media (min-width: 979px) { */
+  .btn-toolbar.general-toolbar { margin-left: 10px; }
+/*} */
 
 @media (max-width: 767px) {
 
