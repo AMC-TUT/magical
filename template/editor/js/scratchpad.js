@@ -74,7 +74,7 @@ var Game = {
                 {
                     name: "Background Image",
                     type: "background-image",
-                    src: "/assets/img/bg.png"
+                    src: "/assets/img/bg.jpeg"
                 },
                 {
                     name: "Timer",
@@ -89,7 +89,65 @@ var Game = {
             name: "Outro"
         }
     ],
-
+    audios: [
+        {
+            name: "Weight Up",
+            id: "weight-up",
+            type: "file", // file || blob
+            content: "weight-up"
+        }
+    ],
+    sprites: [
+        {
+            name: "Player",
+            id: "player-sprite",
+            type: "file", // file || blob
+            content: "player",
+            frameCount: 0 // as in array
+        },
+        {
+            name: "Mario Run",
+            id: "mario-run-sprite",
+            type: "file", // file || blob
+            content: "mario-run",
+            frameCount: 0 // as in array
+        },
+        {
+            name: "Mario Fly",
+            id: "mario-fly-sprite",
+            type: "file", // file || blob
+            content: "mario-fly",
+            frameCount: 0
+        },
+        {
+            name: "Painting",
+            id: "painting-sprite",
+            type: "file", // file || blob
+            content: "painting",
+            frameCount: 0
+        },
+        {
+            name: "Mushroom",
+            id: "mushroom-sprite",
+            type: "file", // file || blob
+            content: "mushroom",
+            frameCount: 0
+        },
+        {
+            name: "Brick",
+            id: "brick-full-sprite",
+            type: "file", // file || blob
+            content: "brick-full",
+            frameCount: 0
+        },
+        {
+             name: "Brick Half",
+             id: "brick-sprite",
+             type: "file", // file || blob
+             content: "brick",
+             frameCount: 0
+         }
+    ],
     canvas: {
         blockSize: 32,
         width: 20,
@@ -126,10 +184,11 @@ var Game = {
             { type: "brick-half", position: { x: 18, y: 11 } },
             { type: "brick-half", position: { x: 17, y: 11 } },
             { type: "brick-half", position: { x: 16, y: 11 } },
-            { type: "brick-half", position: { x: 15, y: 11 } }
+            { type: "brick-half", position: { x: 15, y: 11 } },
+            { type: "painting", position: { x: 17, y: 1 } },
+            { type: "mushroom", position: { x: 6, y: 1 } }
         ]
     },
-
     elements: [
         {
             name: "Süper Mario",
@@ -143,19 +202,23 @@ var Game = {
                     snapToGrid: false,
                     keepOnCanvas: true
                 },
+                events: [
+                    {
+                        type: "keyboard",
+                        key: "LEFT_ARROW",
+                        animation: { id: "mario-fly-sprite" }
+                    },
+                    {
+                        type: "keyboard",
+                        key: "RIGHT_ARROW",
+                        animation: { id: "mario-run-sprite" }
+                    }
+                ],
                 collisions: [
                     {
-                        tgt: "stone",
-                        action: "tgt-destroy"
-                    },
-                    {
-                        tgt: "brick",
-                        action: "tgt-push"
-                    },
-                    {
-                        tgt: "brick",
-                        action: "tgt-swap",
-                        swap: "stone"
+                        tgt: "painting",
+                        action: "tgt-destroy",
+                        audio: { audio: "weight-up" }
                     }
                 ],
                 gravitation: {
@@ -164,6 +227,8 @@ var Game = {
                     inverted: false,
                     platform: false
                 },
+
+                /*
                 scores: [
                     {
                         action: "tgt-destroy",
@@ -175,7 +240,8 @@ var Game = {
                         // which object
                         score: 4
                     }
-                ],
+                ], */
+
                 dialogs: [
                     {
                         action: "tgt-destroy",
@@ -189,7 +255,7 @@ var Game = {
                     color: "#c0ffee",
                     bgcolor: "#bada55"
                 },
-                audios: [
+                /* audios: [
                     {
                         action: "tgt-destroy",
                         sound: "sound-file-entity"
@@ -200,10 +266,10 @@ var Game = {
                         sound: "sound-file-entity"
                         // .mp3, .ogg, .wav
                     }
-                ],
+                ], */
                 image: {
-                    src: "/assets/img/player.png"
-                },
+                    id: "player-sprite"
+                } /*,
                 animations: [
                     {
                         action: "self-move-left",
@@ -217,7 +283,7 @@ var Game = {
                         count: 2
                         // play count
                     }
-                ]
+                ] */
             }
         },
         {
@@ -225,7 +291,7 @@ var Game = {
             type: "brick",
             attr: {
                 image: {
-                    src: "/assets/img/brick-full.png"
+                    id: "brick-full-sprite"
                 },
                 gravitation: {
                     platform: true
@@ -237,10 +303,40 @@ var Game = {
             type: "brick-half",
             attr: {
                 image: {
-                    src: "/assets/img/brick.png"
+                    id: "brick-sprite"
                 },
                 gravitation: {
                     platform: true
+                }
+            }
+        },
+        {
+            name: "Painting",
+            type: "painting",
+            attr: {
+                image: {
+                    id: "painting-sprite"
+                },
+                gravitation: {
+                    on: true,
+                    strength: 2,
+                    inverted: false,
+                    platform: false
+                }
+            }
+        },
+        {
+            name: "Mushroom",
+            type: "mushroom",
+            attr: {
+                image: {
+                    id: "mushroom-sprite"
+                },
+                gravitation: {
+                    on: true,
+                    strength: 2,
+                    inverted: false,
+                    platform: false
                 }
             }
         }
