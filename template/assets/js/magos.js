@@ -324,7 +324,44 @@ $(function() {
 
     });
 
-   
-
 });
 
+var socket = io.connect('http://localhost/editor');
+
+socket.on('connecting', function() {
+    console.log('connecting to magos...');
+});
+
+socket.on('connect', function () {
+  console.log('connected to magos!');
+});
+
+socket.emit('set-user-credentials', {"firstname": "Teemu", 'uid': "teemu", "role": "student"}, function (data) {
+  console.log(data);
+});
+/*
+socket.emit('get game', { 'game': 1 }, function(data) {
+  console.log(data);
+});
+*/
+
+var slug = "super-magos";
+
+socket.emit('join-room', slug, function (data) {
+  console.log( data );
+  /*
+  socket.emit('get room members', { 'game': 'super-magos' }, function(data) {
+    console.log(data);
+  });
+  */
+});
+
+socket.on('chat-message', function (message) {
+  console.log('chat message comming...');
+  console.log(message);
+});
+
+var msg = 'jokin viesti kaikille editorin käyttäjille';
+socket.emit('chat-message', msg, function(message) {
+  console.log(message);
+});
