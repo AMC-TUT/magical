@@ -85,8 +85,13 @@ var rooms = [
         }
     ],
     game: { 
-      "id": 1, 
-      "title": "Peli" 
+        info: {
+            "title": "Super Mario",
+            "slug": "super-mario",
+            "public": false,
+            "clonable": false
+        }
+      }
     }
   }
 ];
@@ -97,9 +102,17 @@ var editor = io.of('/editor').on('connection', function (socket) {
       console.log('client connected, client id: ' + socket.id);
   });
 
-  socket.on('get game', function(data, fn) {
+  socket.on('get-game', function(slug, fn) {
+    
+    var slug = _.isString(slug) ? slug : '';
+
+    var room = _.find(rooms, function(room) { return room.slug === slug; });
+    
+    var game = (_.isObject(room) && _.isObject(room.game)) ? room.game : 'error! there was error while getting the game ' + slug;
+
     fn(game);
   });
+  
 
   socket.on('set-user-credentials', function (credentials, fn) {
 

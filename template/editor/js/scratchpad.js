@@ -1,9 +1,11 @@
 
 var Game = {
     info: {
-        "public": false,
-        "clonable": false,
-        "authors": [
+        title: "Super Mario",
+        slug: "super-mario",
+        public: false,
+        clonable: false,
+        authors: [
             {
                 username: "lorem",
                 roles: ["artifex", "musicus"],

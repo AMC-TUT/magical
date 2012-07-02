@@ -339,13 +339,19 @@ socket.on('connect', function () {
 socket.emit('set-user-credentials', {"firstname": "Teemu", 'uid': "teemu", "role": "student"}, function (data) {
   console.log(data);
 });
-/*
-socket.emit('get game', { 'game': 1 }, function(data) {
-  console.log(data);
-});
-*/
 
 var slug = "super-magos";
+
+socket.emit('get-game', slug, function(data) {
+  console.log(data);
+});
+
+// update, delete, insert
+var attr = { action: 'update',  };
+socket.emit('set-game-attr', attr, function(data) {
+  
+})
+
 
 socket.emit('join-room', slug, function (data) {
   console.log( data );
