@@ -63,7 +63,7 @@ var chat = io.of('/chat').on('connection', function (client) {
 var rooms = [
   { slug: "super-magos",
     members: [
-      { 
+      {
         uid: "teemu",
         magos: "principes"
       }
@@ -84,7 +84,7 @@ var rooms = [
           magos: "musicus"
         }
     ],
-    game: { 
+    game: {
         info: {
             "title": "Super Mario",
             "slug": "super-mario",
@@ -93,7 +93,6 @@ var rooms = [
         }
       }
     }
-  }
 ];
 
 var editor = io.of('/editor').on('connection', function (socket) {
@@ -104,7 +103,7 @@ var editor = io.of('/editor').on('connection', function (socket) {
 
   socket.on('get-game', function(slug, fn) {
     
-    var slug = _.isString(slug) ? slug : '';
+    slug = _.isString(slug) ? slug : '';
 
     var room = _.find(rooms, function(room) { return room.slug === slug; });
     
@@ -136,7 +135,7 @@ var editor = io.of('/editor').on('connection', function (socket) {
         credentials = _credentials;
       });
 
-      var message = { 'name': credentials.firstname, 'magos': credentials.magos, 'message': message };
+      message = { 'name': credentials.firstname, 'magos': credentials.magos, 'message': message };
 
       socket.broadcast.in('super-magos').emit('chat-message', message);
 
@@ -175,7 +174,7 @@ var editor = io.of('/editor').on('connection', function (socket) {
 
         if(!_.isUndefined(user)) {
           //
-          var user = _.find(room.users, function(obj) { return obj.magos === member.magos });
+          user = _.find(room.users, function(obj) { return obj.magos === member.magos; });
           user.uid = credentials.uid;
           user.role = credentials.role; //'student';
           user.id = socket.id;
@@ -195,7 +194,7 @@ var editor = io.of('/editor').on('connection', function (socket) {
 
           var freeone = _.find(magoses, function(obj) { return _.isUndefined(obj.uid); });
 
-          var user = _.find(room.users, function(obj) { return obj.magos === freeone.magos });
+          user = _.find(room.users, function(obj) { return obj.magos === freeone.magos; });
           user.uid = credentials.uid;
           user.role = credentials.role; //'student';
           user.id = socket.id;
@@ -236,7 +235,7 @@ var editor = io.of('/editor').on('connection', function (socket) {
   socket.on('disconnect', function() {
     // user = _.find(rooms.)
 
-    console.info('user ' + socket.id + ' disconnected from magos!')
+    console.info('user ' + socket.id + ' disconnected from magos!');
     // io.sockets.clients('room')
     // socket.broadcast.emit('user disconnected');
   });

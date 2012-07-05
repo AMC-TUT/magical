@@ -74,7 +74,7 @@ hr{border-top:1px solid #3D3C3C;border-bottom:1px solid #5A5959;}
 .main-sortable{padding:3px 0 0;box-sizing:border-box;margin-bottom:10px;}
 .main-sortable > div[class*="span"] { margin-left:0;margin-bottom:10px;}
 .magos-shoutbox,.magos-infobox{background:#2C2929;border-radius:6px;padding:10px;} /*69*/
-.magos-shoutbox input[type=text]{width:-webkit-calc(100% - 81px);box-shadow:inset 0 0 6px black;border-color:#2C2929;color:#444;}
+.magos-shoutbox input[type=text]{height:20px; line-height:20px; width:-webkit-calc(100% - 81px);box-shadow:inset 0 0 6px black;border-color:#2C2929;color:#444;}
 .magos-shoutbox-log{color:#555;line-height:1.4;font-size:1.1em;overflow:hidden;margin:10px 0 0;padding:5px;background:#EEE;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);-moz-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);-webkit-transition:border linear 0.2s,box-shadow linear 0.2s;-moz-transition:border linear 0.2s,box-shadow linear 0.2s;-ms-transition:border linear 0.2s,box-shadow linear 0.2s;-o-transition:border linear 0.2s,box-shadow linear 0.2s;transition:border linear 0.2s,box-shadow linear 0.2s;background-color:white;border:1px solid #CCC;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;box-shadow:inset 0 0 6px black;border-color:#2C2929;margin-bottom:5px;overflow-y:auto;height:120px;}
 .magos-shoutbox table td {vertical-align:top;}
 .icon-flag{margin-right:5px;}

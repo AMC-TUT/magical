@@ -1,5 +1,9 @@
 $(function() {
 
+    $("button").on("submit click tap", function(event) {
+        event.preventDefault();
+    });
+
     /* magos users sortable */
     $(".magos-sortable").sortable({
         placeholder: "magos-sortable-highlight",
@@ -347,11 +351,10 @@ socket.emit('get-game', slug, function(data) {
 });
 
 // update, delete, insert
-var attr = { action: 'update',  };
+var attr = { action: 'update' };
 socket.emit('set-game-attr', attr, function(data) {
   
 })
-
 
 socket.emit('join-room', slug, function (data) {
   console.log( data );

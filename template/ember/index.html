@@ -1,0 +1,78 @@
+<!doctype html>
+<!--[if lt IE 7 ]> <html lang="en" class="ie6"> <![endif]--> <!--[if IE 7 ]>    <html lang="en" class="ie7"> <![endif]--> <!--[if IE 8 ]>    <html lang="en" class="ie8"> <![endif]--> <!--[if IE 9 ]>    <html lang="en" class="ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title></title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/style.css?v=2">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <script type="text/x-handlebars">
+    {{#view App.MyView}}
+      <h1>Hello world!</h1>
+    {{/view}}
+  </script>
+
+                  <form class="form-vertical" style="margin: 40px auto; width: 400px;">
+                  <fieldset>
+                    <div class="dialog-action action-group">
+                      <div class="control-group">
+                        <label class="control-label" for="dialog-action">Font Family</label>
+                        <div class="controls">
+                          <select class="span12" id="dialog-action">
+                            <option>Default</option>
+                            <option>Arial</option>
+                            <option>Verdana</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="control-group">
+                        <label class="control-label" for="dialog-action">Font Size</label>
+                        <div class="controls">
+                          <input class="span12" type="number" min="6" max="50" value="11" id="font-size" />
+                        </div>
+                      </div>
+
+                      <div class="control-group">
+                        <label class="control-label" for="">Font Color</label>
+                        <div class="controls">
+                          <input class="span12" type="color" value="#cf0808" id="font-color" />
+                        </div>
+                      </div>
+
+                      <div class="control-group">
+                        <label class="control-label" for="">Background Color</label>
+                        <div class="controls">
+                          <input class="span12" type="color" value="#141a9c" id="bg-color" />
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="form-actions">
+                      <button class="btn btn-info btn-back-potion"><i class="icon-arrow-left"></i></button>
+                    </div>
+
+                  </fieldset>
+                </form>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  <script src="js/libs/ember-0.9.8.1.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
