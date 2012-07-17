@@ -1,78 +1,132 @@
 <!doctype html>
-<!--[if lt IE 7 ]> <html lang="en" class="ie6"> <![endif]--> <!--[if IE 7 ]>    <html lang="en" class="ie7"> <![endif]--> <!--[if IE 8 ]>    <html lang="en" class="ie8"> <![endif]--> <!--[if IE 9 ]>    <html lang="en" class="ie9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en"> <!--<![endif]-->
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
-  <title></title>
-  <meta name="description" content="">
-  <meta name="author" content="">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="stylesheet" href="css/style.css?v=2">
-
-  <!--[if lt IE 9]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
 </head>
 <body>
+
   <script type="text/x-handlebars">
-    {{#view App.MyView}}
-      <h1>Hello world!</h1>
+    {{#if App.pressaView}}
+    {{#view App.pressaView}}
+    Pressamme on <strong>{{nimi}}</strong>, joka on tunnetusti <strong>{{asema}}</strong>
     {{/view}}
+    {{/if}}
   </script>
 
-                  <form class="form-vertical" style="margin: 40px auto; width: 400px;">
-                  <fieldset>
-                    <div class="dialog-action action-group">
-                      <div class="control-group">
-                        <label class="control-label" for="dialog-action">Font Family</label>
-                        <div class="controls">
-                          <select class="span12" id="dialog-action">
-                            <option>Default</option>
-                            <option>Arial</option>
-                            <option>Verdana</option>
-                          </select>
-                        </div>
-                      </div>
+  <form>
 
-                      <div class="control-group">
-                        <label class="control-label" for="dialog-action">Font Size</label>
-                        <div class="controls">
-                          <input class="span12" type="number" min="6" max="50" value="11" id="font-size" />
-                        </div>
-                      </div>
+    <script type="text/x-handlebars">
+    {{view Ember.Select
+      contentBinding="App.pressatController"
+      optionLabelPath="content.nimi"
+      optionValuePath="content.asema"
+      prompt="Valitse pressa:"
+      selectionBinding="App.selectedPressaController.content"
+    }}
+    </script>
 
-                      <div class="control-group">
-                        <label class="control-label" for="">Font Color</label>
-                        <div class="controls">
-                          <input class="span12" type="color" value="#cf0808" id="font-color" />
-                        </div>
-                      </div>
+    <label>
+      <script type="text/x-handlebars">
+      {{view Ember.Checkbox
+        checkedBinding="App.checkedController.content.isChecked"}}
+        {{App.checkedController.content.title}}
+        </script>
+      </label>
 
-                      <div class="control-group">
-                        <label class="control-label" for="">Background Color</label>
-                        <div class="controls">
-                          <input class="span12" type="color" value="#141a9c" id="bg-color" />
-                        </div>
-                      </div>
+      <label>
+        <script type="text/x-handlebars">
+        <label>{{App.textValue.content.title}}</label>
+        {{view App.textField}}
+        </script>
+      </label>
 
-                    </div>
+    </form>
 
-                    <div class="form-actions">
-                      <button class="btn btn-info btn-back-potion"><i class="icon-arrow-left"></i></button>
-                    </div>
+    <script type="text/x-handlebars">
+    {{#view App.LanguageSelectionView}}
+    <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#">
+    <img {{bindAttr src="content.flag"}} /> {{content.title}}
+    <span class="caret"></span>
+    </a>
+    <ul>
+    {{#each App.languagesController}}
+    {{#view App.LangList tagName="li" languageBinding="this"}}
+    <a href="#"><img {{bindAttr src="language.flag"}} class="icon-flag"> {{language.title}}</a>
+    {{/view}}
+    {{/each}}
+    </ul>
+    {{/view}}
+    </script>
 
-                  </fieldset>
-                </form>
+    <script type="text/x-handlebars">
+    <form class="form-vertical" style="margin: 40px auto; width: 400px;">
+    <fieldset>
+    <div class="dialog-action action-group">
+    <div class="control-group">
+    <label class="control-label" for="dialog-action">Font Family</label>
+    <div class="controls">
+    {{view Ember.Select class="span12"
+      contentBinding="App.fontsController"
+      valueBinding="content.family"
+      optionLabelPath="content.family"
+      optionValuePath="content.family"
+      selectionBinding="App.fontsController.selected.family"}}
+    </div>
+    </div>
 
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-  <script src="js/libs/ember-0.9.8.1.min.js"></script>
-  <script src="js/app.js"></script>
-</body>
-</html>
+    <div class="control-group">
+    <label class="control-label" for="dialog-action">Font Size</label>
+    <div class="controls">
+    {{view App.NumberField min="10" max="50" class="span12" valueBinding="App.fontsController.selected.size" }}
+    </div>
+    </div>
+
+    <div class="control-group">
+    <label class="control-label" for="">Font Color</label>
+    <div class="controls">
+    {{view App.ColorField class="span12" valueBinding="App.fontsController.selected.color"}}
+    </div>
+    </div>
+
+    <div class="control-group">
+    <label class="control-label" for="">Background Color</label>
+    <div class="controls">
+    {{view Ember.TextField type="color" class="span12" valueBinding="App.fontsController.selected.bgcolor"}}
+    </div>
+    </div>
+
+    <div class="control-group">
+      {{#view App.fontPreview}}
+        <div  {{bindAttr style="cssBgColor"}}>
+          <div  {{bindAttr style="cssColor"}}>
+            <div  {{bindAttr style="cssSize"}}>
+              <div  {{bindAttr style="cssFamily"}}>
+                {{family}}
+              </div>
+            </div>
+          </div>
+        </div>
+      {{/view}}
+    </div>
+
+    </div>
+
+    <div class="form-actions">
+    <button class="btn btn-info btn-back-potion"><i class="icon-arrow-left"></i></button>
+    </div>
+
+    </fieldset>
+    </form>
+    </script>
+
+    <script type="text/x-handlebars">
+    {{#collection contentBinding="App.languagesController" tagName="ul" }}
+    <a href="#"><img {{bindAttr src="content.flag"}} class="icon-flag"> {{content.title}}</a>
+    {{/collection}}
+    </script>
+
+    <script src="js/libs/jquery-1.7.2.min.js"></script>
+    <script src="js/libs/ember-0.9.8.1.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+  </html>

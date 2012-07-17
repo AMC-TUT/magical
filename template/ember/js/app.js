@@ -1,106 +1,194 @@
+var App = Ember.Application.create();
 
-window.App = Em.Application.create();
-
-App.MyView = Em.View.extend({
-
+App.pressa = Ember.Object.extend({
+  contentBinding: 'App.selectedPressaController.content'
 });
-
-App.MyObject = Em.Object.extend({
-
-});
-
-
-App.Button = Ember.View.extend({
-  tagName: 'button',
-  template: Ember.Handlebars.compile("{{view.title}}"),
-  didInsertElement: function() {
-    var $btn = this.$().button();
-    console.log($btn);
-  },
-  mouseDown: function() {
-    window.alert("hello world!");
-  }
-});
-var button = App.Button.create({
-  title: "Hi jQuery UI!",
-  "data-testi": "testi"
-}).appendTo('body');
-
-/* Font related Objects */
-App.FontFamily = Ember.Object.extend({
-  family: null
-});
-
-App.FontSize = Ember.Object.extend({
-  size: null
-});
-
-App.FontColor = Ember.Object.extend({
-  color: null
-});
-
-App.FontBgColor = Ember.Object.extend({
-  bgcolor: "testnull"
-});
-
-App.Font = Ember.Object.extend({
-  familyBinding: 'App.FontFamily.family',
-  sizeBinding: 'App.FontSize.size',
-  colorBinding: 'App.FontColor.color',
-  bgcolorBinding: 'App.FontBgColor.bgcolor',
-  toJSON: function() {
-    var json = Model.prototype.toJSON.call(this);
-    json.author = this.author();
-    return json;
-  }
-});
-
-App.FontFamily.create();
-App.FontSize.create();
-App.FontColor.create();
-App.FontBgColor.create();
-
-var fontti = App.Font.create();
 /*
-var color = App.FontColor.create();
-color.set('color', '#degdeg');
-
-App.wife = Ember.Object.create({
-  householdIncome: 80000
-});
-App.husband = Ember.Object.create({
-  householdIncomeBinding: 'App.wife.householdIncome'
-});
-App.husband.get('householdIncome'); // 80000
-*/
-/*
-  family: "Arial",
-  size: 12,
-  color: "#coffee",
-  bgcolor: "#feed22"
-});
-
-/*
-App.PostController = Ember.ObjectController.extend({
-  author: function() {
-    return [this.get('salutation'), this.get('name')].join(' ');
-  }.property('salutation', 'name')
-});
-
-App.PostView = Ember.View.extend({
-  // the controller is the initial context for the template
-  controller: null,
-  template: Ember.Handlebars.compile("<h1>{{title}}</h1><h2>{{author}}</h2><div>{{body}}</div>")
-});
-var post = App.Post.create();
-var postController = App.PostController.create({
-  content: post
-});
-
-App.PostView.create({
-  controller: postController
-}).appendTo('body');
-jQuery.getJSON("/posts/1", function(json) {
-  post.setProperties(json);
+App.pressaController = Ember.Object.create({
+    nimi: 'Mara',
+    asema: 'Rauhantekijä'
 });
 */
+App.selectedPressaController = Ember.Object.create({
+  //templateName: 'pressa-tiedot',
+  content: null
+});
+
+App.pressaView = Ember.View.extend({
+  nimiBinding: 'App.selectedPressaController.content.nimi',
+  asemaBinding: 'App.selectedPressaController.content.asema',
+  classNames: ['my-class', 'my-other-class']
+});
+
+/* templateName: 'pressa-tiedot',
+App.suomiView = Ember.View.extend({
+  templateName: 'suomi-tiedot',
+  nimiBinding: 'App.suomiController.content.nimi',
+  asemaBinding: 'App.suomiController.content.asema'
+});
+*/
+
+/*
+App.pressatController = Ember.Object.create({
+  content: [ { nimi: 'Sauli' },
+            { nimi: 'Tarja' } ]
+});
+*/
+
+App.pressatController = Ember.ArrayController.create({
+  selected: 'App.selectedPressaController.content',
+  content: [{
+    nimi: 'Sauli',
+    asema: 'Kehdonryöstäjä'
+  }, {
+    nimi: 'Tarja',
+    asema: 'Ilkeä ä**ä'
+  }, {
+    nimi: 'Mara',
+    asema: 'Laastarimies'
+  }],
+  init: function() {
+    var obj = this.content.filterProperty('nimi', 'Mara');
+    // console.log(obj);
+    App.selectedPressaController.set('content', obj);
+  }
+}); // App.selectedPressaController.set('content', App.pressatController.objectAt(2));
+App.checkedObject = Ember.Object.extend({
+  content: 'App.checkedController.content'
+});
+
+App.checkedController = Ember.Object.create({
+  content: Ember.Object.create({
+    isChecked: true,
+    title: "Checkboxin label"
+  })
+});
+
+App.textField = Em.TextField.extend({
+  valueBinding: 'App.textValue.content.value',
+  type: 'number'
+});
+
+App.textValue = Em.Object.create({
+  content: Ember.Object.create({
+    value: null,
+    title: 'testi'
+  })
+});
+
+/**
+ *
+ *
+ *
+ *
+ */
+
+App.NumberField = Ember.TextField.extend({
+    attributeBindings: ['min', 'max'],
+    type: 'number'
+});
+
+App.ColorField = Ember.TextField.extend({
+    type: 'color'
+});
+
+App.Font = Em.Object.extend({
+  // default values for font
+  family: { family: 'Verdana' },
+  size: 14,
+  color: '#cf0808',
+  bgcolor: '#141a9c'
+});
+
+App.fontsController = Em.ArrayController.create({
+  content: [],
+  selected: App.Font.create()
+});
+
+var googleFontsUrl = "https://www.googleapis.com/webfonts/v1/webfonts?sort=alpha&key=AIzaSyBdhX1T_3kNk8WFXNzTpnBshi6vg3GKlWU";
+$.getJSON(googleFontsUrl, function(data) {
+  App.fontsController.set('content', data.items);
+});
+
+App.fontPreview = Em.View.extend({
+  tagName: 'div',
+  classNames: ['font-preview'],
+  contentBinding: 'App.fontsController.selected',
+  familyBinding: 'App.fontsController.selected.family.family',
+  sizeBinding: 'App.fontsController.selected.size',
+  colorBinding: 'App.fontsController.selected.color',
+  bgColorBinding: 'App.fontsController.selected.bgcolor',
+  cssFamily: '',
+  cssSize: '',
+  cssColor: '',
+  cssBgColor: '',
+
+  attributeBindings: ['style'],
+  familyObserver: function() {
+    //
+    this.set('cssFamily', 'font-family:' + this.get('family') + ';');
+
+  }.observes('family'),
+  sizeObserver: function() {
+    //
+    this.set('cssSize', 'font-size:' + this.get('size') + 'px;');
+
+  }.observes('size'),
+  colorObserver: function() {
+    //
+    this.set('cssColor', 'color:' + this.get('color') + ';');
+
+  }.observes('color'),
+  bgcolorObserver: function() {
+    //
+    this.set('cssBgColor', 'background-color:' + this.get('bgColor') + ';');
+
+  }.observes('bgColor')
+
+
+});
+
+/*
+{{#each MyApp.listController}}
+  {{firstName}} {{lastName}}
+{{/each}}
+*/
+
+/**
+ *
+ *
+ *
+ *
+ */
+App.Language = Em.Object.extend({
+  title: null,
+  domain: null,
+  flag: function() {
+    return '../assets/img/lang-ico/' + this.get('domain') + '.png';
+  }.property('domain').cacheable()
+});
+
+App.languagesController = Ember.ArrayController.create({
+  content: [],
+  selected: null
+});
+
+var languages = [App.Language.create({ title: 'suomi', domain: 'fi' }), App.Language.create({ title: 'Ελληνικά', domain: 'gr' })];
+App.languagesController.set('content', languages);
+
+App.LangList = Ember.View.extend({
+  classNames: ['btn-group'],
+  contentBinding: 'App.languagesController.selected',
+  click: function(event) {
+    App.languagesController.set('selected', this.get('language'));
+  }
+});
+
+App.LanguageSelectionView = Ember.View.extend({
+  classNames: ['btn-group'],
+  contentBinding: 'App.languagesController.selected'
+});
+
+App.languagesController.set('selected', App.languagesController.objectAt(0));
+
+
