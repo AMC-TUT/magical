@@ -167,6 +167,32 @@ App.FontForm = Em.View.extend({
     }
 });
 
+/**
+ *
+ *
+ *
+ *
+ */
+App.Shout = Ember.Object.extend({
+  timestamp: '',
+  writer: '',
+  magos: '',
+  message: ''
+});
+
+App.shoutboxController = Ember.ArrayController.create({
+  content: []
+});
+
+App.shoutboxView = Ember.View.extend({
+
+});
+
+App.shoutboxController.get('content').pushObject({ 'timestamp': '12:13', 'writer': 'teemu', 'magos': 'principes', 'message': 'lorem ipsum 1' });
+App.shoutboxController.get('content').pushObject({ 'timestamp': '13:13', 'writer': 'matti', 'magos': 'physicus', 'message': 'lorem ipsum 2' });
+App.shoutboxController.get('content').pushObject({ 'timestamp': '19:13', 'writer': 'maija', 'magos': 'artifex', 'message': 'lorem ipsum 3' });
+App.shoutboxController.get('content').pushObject({ 'timestamp': '19:13', 'writer': 'emma', 'magos': 'musicus', 'message': 'lorem ipsum 4' });
+
 /*
 {{#each MyApp.listController}}
   {{firstName}} {{lastName}}
