@@ -97,12 +97,15 @@ App.Font = Em.Object.extend({
   family: { family: 'Verdana' },
   size: 14,
   color: '#cf0808',
-  bgcolor: '#141a9c'
+  bgColor: '#141a9c'
 });
 
 App.fontsController = Em.ArrayController.create({
   content: [],
-  selected: App.Font.create()
+  selected: App.Font.create(),
+  save: function() {
+    console.log('save');
+  }
 });
 
 var googleFontsUrl = "https://www.googleapis.com/webfonts/v1/webfonts?sort=alpha&key=AIzaSyBdhX1T_3kNk8WFXNzTpnBshi6vg3GKlWU";
@@ -117,7 +120,7 @@ App.fontPreview = Em.View.extend({
   familyBinding: 'App.fontsController.selected.family.family',
   sizeBinding: 'App.fontsController.selected.size',
   colorBinding: 'App.fontsController.selected.color',
-  bgColorBinding: 'App.fontsController.selected.bgcolor',
+  bgColorBinding: 'App.fontsController.selected.bgColor',
   cssFamily: '',
   cssSize: '',
   cssColor: '',
@@ -145,7 +148,23 @@ App.fontPreview = Em.View.extend({
 
   }.observes('bgColor')
 
+});
 
+App.FontForm = Em.View.extend({
+    tagName: 'form',
+    classNames: ['vertical-form'],
+    controller: null,
+
+    submit: function(event) {
+      event.preventDefault();
+      //
+      var hash = this.get('controller').get('selected').getProperties('family', 'size', 'color', 'bgColor');
+
+      console.log(JSON.stringify(hash));
+
+      // send to node
+
+    }
 });
 
 /*
@@ -190,5 +209,6 @@ App.LanguageSelectionView = Ember.View.extend({
 });
 
 App.languagesController.set('selected', App.languagesController.objectAt(0));
+
 
 

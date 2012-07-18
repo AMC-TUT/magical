@@ -59,18 +59,13 @@
     </script>
 
     <script type="text/x-handlebars">
-    <form class="form-vertical" style="margin: 40px auto; width: 400px;">
+    {{#view App.FontForm controllerBinding="App.fontsController"}}
     <fieldset>
     <div class="dialog-action action-group">
     <div class="control-group">
     <label class="control-label" for="dialog-action">Font Family</label>
     <div class="controls">
-    {{view Ember.Select class="span12"
-      contentBinding="App.fontsController"
-      valueBinding="content.family"
-      optionLabelPath="content.family"
-      optionValuePath="content.family"
-      selectionBinding="App.fontsController.selected.family"}}
+    {{view Ember.Select class="span12" contentBinding="App.fontsController" valueBinding="content.family" optionLabelPath="content.family" optionValuePath="content.family" selectionBinding="App.fontsController.selected.family"}}
     </div>
     </div>
 
@@ -91,7 +86,7 @@
     <div class="control-group">
     <label class="control-label" for="">Background Color</label>
     <div class="controls">
-    {{view Ember.TextField type="color" class="span12" valueBinding="App.fontsController.selected.bgcolor"}}
+    {{view Ember.TextField type="color" class="span12" valueBinding="App.fontsController.selected.bgColor"}}
     </div>
     </div>
 
@@ -112,11 +107,11 @@
     </div>
 
     <div class="form-actions">
-    <button class="btn btn-info btn-back-potion"><i class="icon-arrow-left"></i></button>
+      <button class="btn btn-info btn-back-potion" type="submit"><i class="icon-arrow-left"></i>Back Button</button>
     </div>
 
     </fieldset>
-    </form>
+    {{/view}}
     </script>
 
     <script type="text/x-handlebars">
