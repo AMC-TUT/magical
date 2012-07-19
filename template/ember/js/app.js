@@ -1,5 +1,12 @@
 var App = Ember.Application.create();
 
+App.User = Ember.Object.create({
+  username: 'matti.vanhanen',
+  magos: 'principes',
+  firstName: 'Matti'
+});
+
+
 App.pressa = Ember.Object.extend({
   contentBinding: 'App.selectedPressaController.content'
 });
@@ -177,27 +184,58 @@ App.Shout = Ember.Object.extend({
   timestamp: '',
   writer: '',
   magos: '',
-  message: ''
+  message: '',
+  time: function() {
+    var dt = new Date( this.get('timestamp') * 1000 ); // to javascript timestamp
+    var hours = dt.getHours();
+    var minutes = dt.getMinutes();
+    var seconds = dt.getSeconds();
+
+    if (hours < 10) hours = '0' + hours;
+    if (minutes < 10) minutes = '0' + minutes;
+    if (seconds < 10) seconds = '0' + seconds;
+
+    return hours + ":" + minutes + ":" + seconds;
+
+  }.property('timestamp').cacheable()
+
 });
 
-App.shoutboxController = Ember.ArrayController.create({
+App.shoutsController = Ember.ArrayController.create({
   content: []
 });
 
-App.shoutboxView = Ember.View.extend({
-
+App.ShoutsView = Ember.View.extend({
+  tagName: 'table',
+  contentBinding: Ember.Binding.oneWay('App.shoutsController.content')
 });
 
-App.shoutboxController.get('content').pushObject({ 'timestamp': '12:13', 'writer': 'teemu', 'magos': 'principes', 'message': 'lorem ipsum 1' });
-App.shoutboxController.get('content').pushObject({ 'timestamp': '13:13', 'writer': 'matti', 'magos': 'physicus', 'message': 'lorem ipsum 2' });
-App.shoutboxController.get('content').pushObject({ 'timestamp': '19:13', 'writer': 'maija', 'magos': 'artifex', 'message': 'lorem ipsum 3' });
-App.shoutboxController.get('content').pushObject({ 'timestamp': '19:13', 'writer': 'emma', 'magos': 'musicus', 'message': 'lorem ipsum 4' });
+App.ShoutForm = Em.View.extend({
+    tagName: 'form',
+    classNames: ['well', 'form-inline'],
+    controller: null,
+    textField: null,
 
-/*
-{{#each MyApp.listController}}
-  {{firstName}} {{lastName}}
-{{/each}}
-*/
+    submit: function(event) {
+      event.preventDefault();
+
+      var message = this.getPath('textField.value');
+
+      if(!message.length) return;
+
+      var firstName = App.User.get('firstName');
+      var magos = App.User.get('magos');
+      var timestamp = Math.round((new Date()).getTime() / 1000); // to unix timestamp
+
+      var shout = App.Shout.create({ 'timestamp': timestamp, 'firstName': firstName, 'magos': magos, 'message': message });
+
+      App.shoutsController.get('content').pushObject(shout);
+
+      // send to node
+
+      this.setPath('textField.value', null);
+    }
+});
 
 /**
  *
@@ -223,7 +261,7 @@ App.languagesController.set('content', languages);
 
 App.LangList = Ember.View.extend({
   classNames: ['btn-group'],
-  contentBinding: 'App.languagesController.selected',
+  //contentBinding: 'App.languagesController.selected',
   click: function(event) {
     App.languagesController.set('selected', this.get('language'));
   }

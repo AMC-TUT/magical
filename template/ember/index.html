@@ -50,9 +50,9 @@
     </a>
     <ul>
     {{#each App.languagesController}}
-    {{#view App.LangList tagName="li" languageBinding="this"}}
-    <a href="#"><img {{bindAttr src="language.flag"}} class="icon-flag"> {{language.title}}</a>
-    {{/view}}
+      {{#view App.LangList tagName="li" languageBinding="this"}}
+        <a href="#"><img {{bindAttr src="language.flag"}} class="icon-flag"> {{language.title}}</a>
+      {{/view}}
     {{/each}}
     </ul>
     {{/view}}
@@ -121,7 +121,6 @@
     </script>
 
     <script type="text/x-handlebars">
-      {{#view App.shoutboxView}}
             <div class="magos-shoutbox">
               <div class="navbar">
                 <div class="navbar-inner">
@@ -138,19 +137,20 @@
                     <div class="nav-collapse shoutbox-collapse">
                       <div class="magos-shoutbox-log">
                         <table>
-                          {{#each shoutboxController}}
-                          {{log timestamp}}
-                            <tr>
-                              <td>{{timestamp}}</td><td>{{writer}}</td><td>{{message}}</td>
-                            </tr>
-                          {{/each}}
+                          {{#view App.ShoutsView}}
+                            {{#each content}}
+                              <tr>
+                                <td>{{time}}</td><td>{{firstName}}</td><td>{{message}}</td>
+                              </tr>
+                            {{/each}}
+                          {{/view}}
                         </table>
                       </div>
 
-                      <form class="well form-inline">
-                        <input type="text" class="input" placeholder="Shout">
-                        <button class="btn btn-info">Shout</button>
-                      </form>
+                      {{#view App.ShoutForm controllerBinding="App.shoutsController"}}
+                        {{view Ember.TextField type="text" class="input" viewName="textField" placeholder="Shout"}}
+                        <button type="submit" class="btn btn-info">Shout</button>
+                      {{/view}}
                     </div>
 
                   </div>
@@ -158,7 +158,6 @@
               </div>
 
             </div>
-      {{/view}}
     </script>
 
     <script src="js/libs/jquery-1.7.2.min.js"></script>
