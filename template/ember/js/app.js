@@ -1,11 +1,21 @@
 var App = Ember.Application.create();
 
-App.User = Ember.Object.create({
-  username: 'matti.vanhanen',
-  magos: 'principes',
-  firstName: 'Matti'
+App.User = Ember.Object.extend({
+  userName: '',
+  magos: '',
+  firstName: '',
+  lastName: '',
+  active: false,
+  grid: true,
+  lang: 'fi',
+  theme: 'dark'
 });
 
+App.userController = Ember.Object.create({
+  user: null
+});
+
+App.userController.set('user', App.User.create({ 'userName': 'matti.vanhanen', 'magos': 'principes', 'firstName': 'Matti'}));
 
 App.pressa = Ember.Object.extend({
   contentBinding: 'App.selectedPressaController.content'
@@ -223,8 +233,8 @@ App.ShoutForm = Em.View.extend({
 
       if(!message.length) return;
 
-      var firstName = App.User.get('firstName');
-      var magos = App.User.get('magos');
+      var firstName = App.userController.getPath('user.firstName');
+      var magos = App.userController.getPath('user.magos');
       var timestamp = Math.round((new Date()).getTime() / 1000); // to unix timestamp
 
       var shout = App.Shout.create({ 'timestamp': timestamp, 'firstName': firstName, 'magos': magos, 'message': message });

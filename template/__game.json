@@ -137,16 +137,16 @@ var Game = {
         },
         {
             name: "Brick",
-            id: "brick-full-sprite",
+            id: "brick-sprite",
             type: "file", // file || blob
-            content: "brick-full",
+            content: "brick",
             frameCount: 0
         },
         {
              name: "Brick Half",
-             id: "brick-sprite",
+             id: "brick-half-sprite",
              type: "file", // file || blob
-             content: "brick",
+             content: "brick-half",
              frameCount: 0
          }
     ],
@@ -158,7 +158,7 @@ var Game = {
             {
                 type: "super-mario",
                 position: {
-                    x: 4, 
+                    x: 4,
                     y: 1
                 }
             },
@@ -342,23 +342,9 @@ var Game = {
                 }
             }
         }
-    ],
-    shoutbox: [
-        {
-            datetime: "2012-06-06 12:12",
-            role: "musicus",
-            firstName: "Francesca",
-            msg: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pharetra aliquet lorem, ut convallis ante rutrum id."
-        },
-        {
-            datetime: "2012-06-06 12:14",
-            role: "musicus",
-            firstName: "Francesca",
-            msg: "Lorem ipsum pharetra aliquet lorem, ut convallis ante rutrum id."
-        }
     ]
-};
-
+}
+/*
 var User = {
     preferences: {
         lang: "fi",
@@ -385,3 +371,5 @@ var Users = [
         firstName: "Lorem"
     }
 ];
+
+*/

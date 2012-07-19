@@ -330,6 +330,8 @@ $(function() {
 
 });
 
+//(function($) {
+
 var socket = io.connect('http://localhost/editor');
 
 socket.on('connecting', function() {
@@ -374,3 +376,5 @@ var msg = 'jokin viesti kaikille editorin käyttäjille';
 socket.emit('chat-message', msg, function(message) {
   console.log(message);
 });
+
+//})(jQuery);

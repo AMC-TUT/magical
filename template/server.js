@@ -1,5 +1,7 @@
 
 var express = require('express'),
+  http = require('http'),
+  fs = require('fs'),
   app = express.createServer(),
   _ = require('underscore')._,
   io = require('socket.io').listen(app);
@@ -9,7 +11,7 @@ io.enable('browser client etag'); // apply etag caching logic based on version n
 io.enable('browser client gzip'); // gzip the file
 //io.set('log level', 0); // reduce logging
 
-app.use('/assets', express.static(__dirname + '/assets'));
+app.use('/static', express.static(__dirname + '/static'));
 
 app.configure('development',
 function() {
@@ -60,14 +62,14 @@ var chat = io.of('/chat').on('connection', function (client) {
 });
 */
 
-var rooms = [
+/*
   { slug: "super-magos",
     members: [
       {
         uid: "teemu",
         magos: "principes"
       }
-    ],
+    ]/*,
     users: [
         {
           // id: 23320239309932,
@@ -83,7 +85,8 @@ var rooms = [
         {
           magos: "musicus"
         }
-    ],
+    ]*/
+    /*,
     game: {
         info: {
             "title": "Super Mario",
@@ -92,8 +95,14 @@ var rooms = [
             "clonable": false
         }
       }
-    }
+    },
+    components: [
+      { slug: 'player'}
+    ]
 ];
+*/
+
+var rooms = [];
 
 var editor = io.of('/editor').on('connection', function (socket) {
 
@@ -102,16 +111,16 @@ var editor = io.of('/editor').on('connection', function (socket) {
   });
 
   socket.on('get-game', function(slug, fn) {
-    
+
     slug = _.isString(slug) ? slug : '';
 
     var room = _.find(rooms, function(room) { return room.slug === slug; });
-    
+
     var game = (_.isObject(room) && _.isObject(room.game)) ? room.game : 'error! there was error while getting the game ' + slug;
 
     fn(game);
   });
-  
+
 
   socket.on('set-user-credentials', function (credentials, fn) {
 
@@ -153,8 +162,36 @@ var editor = io.of('/editor').on('connection', function (socket) {
     });
 
     var room = _.find(rooms, function(obj) { return obj.slug === slug; });
-    
+
     if(!_.isObject(room)) {
+
+      // http://nodejs.org/docs/v0.4.5/api/http.html#http.request
+      // get room from server (REST, Django)
+      /*
+      var options = {
+        host: 'dev',
+        port: 4000,
+        path: '/static/game.json'
+      };
+
+      console.log(JSON.stringify(options))
+
+      http.get(options, function(res) {
+        console.log('OKOKOKOKOKOKOK');
+        console.log("Got response: " + res.statusCode);
+      }).on('error', function(e) {
+        console.log('EORORORORROEOEOOROE');
+        console.log("Got error: " + e.message);
+      });
+      */
+
+      var json = fs.readFileSync('static/game.json', 'utf8');
+
+      var room = JSON.parse(json);
+
+      console.log(room);
+
+      rooms.push(room);
       // create room if it not exists
 
       // and fetch game information from db
@@ -162,19 +199,19 @@ var editor = io.of('/editor').on('connection', function (socket) {
 
     if(credentials.role === "student") {
       //
-      var member = _.find(room.members, function(obj) { return obj.uid === credentials.uid; });
+      var author = _.find(room.authors, function(obj) { return obj.uid === credentials.uid; });
 
-      if(_.isObject(member)) {
+      if(_.isObject(author)) {
 
         // roles that are not in use right now
         var magoses = _.filter(room.users, function(obj) { return _.isUndefined(obj.uid); });
 
         // try first join as own role and if that is reserved join first one which is free
-        var user = _.find(magoses, function(obj) { return obj.magos === member.magos; });
+        var user = _.find(magoses, function(obj) { return obj.magos === author.magos; });
 
         if(!_.isUndefined(user)) {
           //
-          user = _.find(room.users, function(obj) { return obj.magos === member.magos; });
+          user = _.find(room.users, function(obj) { return obj.magos === author.magos; });
           user.uid = credentials.uid;
           user.role = credentials.role; //'student';
           user.id = socket.id;
@@ -207,7 +244,7 @@ var editor = io.of('/editor').on('connection', function (socket) {
 
           // emit message to other users
           io.sockets.in(slug).emit('new user logged in', user);
-          
+
           fn('successfully joined to room \n - room: ' + slug + ' \n - magos: ' + user.magos);
 
         }
