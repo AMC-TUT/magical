@@ -1,0 +1,4 @@
+magical
+=======
+
+Magical Project
