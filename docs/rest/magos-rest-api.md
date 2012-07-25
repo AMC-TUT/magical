@@ -39,9 +39,9 @@ GET /v1/tools/crystalball/lists
 
 #### Request
 
-GET /v1/tools/crystalball/lists/:name
+GET /v1/tools/crystalball/lists/:list
 
-*   :name List name in slug format
+*   :list Name of the List in slug format
 
 #### Response
 
@@ -57,4 +57,19 @@ GET /v1/tools/crystalball/lists/:name
 **Notice**
 
 *   Auth required for this API
+
+### Add Log Entry
+
+#### Request
+
+POST /v1/logs/:log
+
+*   :log editor|user|game (database table)
+
+**Params**
+*   type Event type
+*   value Value for Event type
+*   game Game *identifier*. Mandatory for game and editor logs
+
+**POHDITTAVAKSI & PÄÄTETTÄVÄKSI KUN KÄYTETÄÄN PELIN SLUG STRINGIÄ MUUTEN PELISSÄ YLEISESTI NIIN OLISI MAHDOLLISESTI PAREMPI KÄYTTÄÄ NYKYISESTÄ TIETOKANTA TAULUSTA POIKETEN PELIN SLUGIA ID:N SIJAAN TÄSSÄ**
 
