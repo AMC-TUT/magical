@@ -1,6 +1,9 @@
 # MAGOS REST API
 
-A server responses are in JSON format
+**Notice**
+
+*   A server responses are in JSON format
+*   Standard HTTP Status Codes are used as response codes (http://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
 
 
 
@@ -26,7 +29,6 @@ GET /v1/tools/crystalball/lists
 
 #### Response
 
-**Data**
 [{ "first-list": "First List", "second-list": "Second List" }]
 
 **Attributes**
@@ -43,13 +45,16 @@ GET /v1/tools/crystalball/lists/:name
 
 #### Response
 
-**Data**
-
 [{ "type": "verb", "word": "run" }, { "type": "adjective", "word": "yellow" }, { "type": "substantive", "word": "snow" }]
 
 **Attributes**
-
-*   type: [verb|substantive|adjective]
+*   type: verb|substantive|adjective
 *   word
 
+
+## Logging
+
+**Notice**
+
+*   Auth required for this API
 
