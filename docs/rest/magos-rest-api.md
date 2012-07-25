@@ -11,6 +11,7 @@ A server responses are in JSON format
 
 ## Idea Tool (Crystal Ball)
 
+
 **Notice**
 
 *   Auth required for this API
@@ -19,10 +20,36 @@ A server responses are in JSON format
 
 ### Get Word Lists
 
+#### Request
+
 GET /v1/tools/crystalball/lists
+
+#### Response
+
+**Data**
+[{ "first-list": "First List", "second-list": "Second List" }]
+
+**Attributes**
+*   slug
+*   name
 
 ### Get Word List with Words
 
-GET /v1/tools/crystalball/lists/:slug
+#### Request
 
-*   :slug List name in slug format
+GET /v1/tools/crystalball/lists/:name
+
+*   :name List name in slug format
+
+#### Response
+
+**Data**
+
+[{ "type": "verb", "word": "run" }, { "type": "adjective", "word": "yellow" }, { "type": "substantive", "word": "snow" }]
+
+**Attributes**
+
+*   type: [verb|substantive|adjective]
+*   word
+
+
