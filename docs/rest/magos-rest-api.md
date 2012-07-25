@@ -14,12 +14,15 @@ A server responses are in JSON format
 **Notice**
 
 *   Auth required for this API
+*   Data is shown based on user's organization
 *   Content updating is done through Django Admin pages
 
 ### Get Word Lists
 
-GET /tools/crystalball/lists
+GET /v1/tools/crystalball/lists
 
 ### Get Word List with Words
 
-GET /tools/crystalball/list/:slug
+GET /v1/tools/crystalball/lists/:slug
+
+*   :slug List name in slug format
