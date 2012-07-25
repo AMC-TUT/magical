@@ -1,3 +1,7 @@
+
+[Markdown syntax](https://github.com/fletcher/MultiMarkdown/blob/master/Documentation/Markdown%20Syntax.md)
+
+
 # MAGOS REST API
 
 **Notice**
