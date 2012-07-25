@@ -29,7 +29,7 @@ GET /v1/tools/crystalball/lists
 
 #### Response
 
-[{ "first-list": "First List", "second-list": "Second List" }]
+`[{ "first-list": "First List", "second-list": "Second List" }]`
 
 **Attributes**
 *   slug
@@ -45,7 +45,7 @@ GET /v1/tools/crystalball/lists/:list
 
 #### Response
 
-[{ "type": "verb", "word": "run" }, { "type": "adjective", "word": "yellow" }, { "type": "substantive", "word": "snow" }]
+`[{ "type": "verb", "word": "run" }, { "type": "adjective", "word": "yellow" }, { "type": "substantive", "word": "snow" }]`
 
 **Attributes**
 *   type: verb|substantive|adjective
