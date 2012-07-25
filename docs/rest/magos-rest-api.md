@@ -31,9 +31,10 @@ GET /v1/tools/crystalball/lists
 
     [
         {
-            "first-list": "First List",
-            "second-list": "Second List"
-        }
+            "slug": "first-list",
+            "name": "First List"
+        },
+        ...
     ]
 
 **Attributes**
@@ -59,10 +60,7 @@ GET /v1/tools/crystalball/lists/:list
             "type": "adjective",
             "word": "yellow"
         },
-        {
-            "type": "substantive",
-            "word": "snow"
-        }
+        ...
     ]
 
 **Attributes**
@@ -120,12 +118,78 @@ PUT /v1/reviews/:game
 *   comment (optional, max length 255 characters)
 
 
-
-
-
+* * *
 
 
 ## Editor
+
+### Get Images
+
+#### Request
+
+GET /v1/images
+
+**Params**
+*   type 0|1 (image|anim sprite) (optional)
+*   limit (default 50)
+*   offset (default 0)
+
+
+**TIEDOSTOJEN TALLENNUSTAPA PÄÄTETTÄVÄ**
+
+#### Response
+
+    [
+        {
+            "name": "Big Stone",
+            "slug": "big-stone",
+            "type": 1,
+            "state": 1,
+            "file": "http://.." | Base64 endcoded string
+        },
+        ...
+    ]
+
+**Attributes**
+*   name
+*   slug
+*   type
+*   state
+*   file
+
+### Add Image
+
+#### Request
+
+POST /v1/images
+
+**Params**
+*   name Name of the Image
+*   file Image file (file | encoded string)
+*   type 0|1 (image|anim sprite)
+*   state 0|1 (private|public)
+
+### Update Image
+
+#### Request
+
+PUT /v1/images/:image
+
+*   :image Image's slug
+
+**Params**
+*   state 0|1
+
+### Get Audios
+
+#### Request
+
+GET /v1/audios
+
+**Params**
+*   limit (default 50)
+*   offset (default 0)
+
 
 
 
