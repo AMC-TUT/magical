@@ -13,8 +13,8 @@ A server responses are in JSON format
 
 **Notice**
 
-*Auth required for this API
-*Content updating is done through Django Admin pages
+*   Auth required for this API
+*   Content updating is done through Django Admin pages
 
 ### Get Word Lists
 
