@@ -1,5 +1,5 @@
 
-[Markdown syntax](https://github.com/fletcher/MultiMarkdown/blob/master/Documentation/Markdown%20Syntax.md)
+[Markdown Document Syntax](https://github.com/fletcher/MultiMarkdown/blob/master/Documentation/Markdown%20Syntax.md)
 
 
 # MAGOS REST API
@@ -8,10 +8,6 @@
 
 *   A server responses are in JSON format
 *   Standard HTTP Status Codes are used as response codes (http://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
-
-
-
-
 
 
 
@@ -49,7 +45,11 @@ GET /v1/tools/crystalball/lists/:list
 
 #### Response
 
-`[{ "type": "verb", "word": "run" }, { "type": "adjective", "word": "yellow" }, { "type": "substantive", "word": "snow" }]`
+    [
+        { "type": "verb", "word": "run" },
+        { "type": "adjective", "word": "yellow" },
+        { "type": "substantive", "word": "snow" }
+    ]
 
 **Attributes**
 *   type: verb|substantive|adjective
