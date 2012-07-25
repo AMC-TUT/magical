@@ -117,10 +117,12 @@ PUT /v1/reviews/:game
 
 **Params**
 *   stars Value between 1-5
-*   comment (optional)
+*   comment (optional, max length 255 characters)
 
 
-* * *
+
+
+
 
 
 ## Editor
