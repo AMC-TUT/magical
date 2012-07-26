@@ -1,4 +1,10 @@
 
+THIS IS DEPRICATED. CHECK OUT WIKI PAGES: https://github.com/AMC-TUT/magical/wiki/magos-restful-api
+
+****
+
+
+
 [Markdown Document Syntax](https://github.com/fletcher/MultiMarkdown/blob/master/Documentation/Markdown%20Syntax.md)
 
 
