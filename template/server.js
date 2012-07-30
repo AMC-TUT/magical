@@ -1,6 +1,7 @@
 
 var express = require('express'),
   http = require('http'),
+  querystring = require('querystring'),
   fs = require('fs'),
   app = express.createServer(),
   _ = require('underscore')._,
@@ -303,7 +304,7 @@ var editor = io.of('/editor').on('connection', function (socket) {
     port: 80,
     path: '/genova/fakeGame.json'
   };
-
+/*
   http.get(options, function(res) {
     console.log("\nGot response statusCode: " + res.statusCode);
 
@@ -315,4 +316,39 @@ var editor = io.of('/editor').on('connection', function (socket) {
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
   });
+  */
+
+var myMagos = myMagos || {};
+
+myMagos.logEvent = function(log, type, value, game) {
+
+  var log = log || "";
+
+  // query string
+  var query = {};
+  query.type = type || "";
+  query.value = value || "";
+  query.game = game || "";
+  //
+  query = querystring.stringify(query);
+
+  console.log(query);
+  // settings for server connection
+  options = {
+    host: 'sportti.dreamschool.fi',
+    port: 80,
+    path: '/genova/fake200.json' + query, // :log
+    method: 'GET' // POST
+  };
+
+  // send log
+  http.request(options, function(res) {
+    console.log("Logging statusCode: " + res.statusCode);
+  }).on('error', function(e) {
+    console.log("Logging error: " + e.message);
+  });
+
+};
+
+// myMagos.logEvent("user", "event", "some value", "super-magos");
 
