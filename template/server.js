@@ -278,3 +278,25 @@ var editor = io.of('/editor').on('connection', function (socket) {
   });
 
 });
+
+  // http://nodejs.org/docs/v0.4.5/api/http.html#http.request
+  // get room from server (REST, Django)
+  var options = {
+    host: 'sportti.dreamschool.fi',
+    port: 80,
+    path: '/genova/fake200.json'
+  };
+  //console.log(JSON.stringify(options))
+
+  http.get(options, function(res) {
+    console.log("Got response statusCode: " + res.statusCode);
+
+    res.on('data', function (json) {
+      var data = JSON.parse(json);
+      console.log(data);
+    });
+
+  }).on('error', function(e) {
+    console.log("Got error: " + e.message);
+  });
+
