@@ -165,26 +165,6 @@ var editor = io.of('/editor').on('connection', function (socket) {
 
     if(!_.isObject(room)) {
 
-      // http://nodejs.org/docs/v0.4.5/api/http.html#http.request
-      // get room from server (REST, Django)
-      /*
-      var options = {
-        host: 'dev',
-        port: 4000,
-        path: '/static/game.json'
-      };
-
-      console.log(JSON.stringify(options))
-
-      http.get(options, function(res) {
-        console.log('OKOKOKOKOKOKOK');
-        console.log("Got response: " + res.statusCode);
-      }).on('error', function(e) {
-        console.log('EORORORORROEOEOOROE');
-        console.log("Got error: " + e.message);
-      });
-      */
-
       var json = fs.readFileSync('static/game.json', 'utf8');
 
       var room = JSON.parse(json);
@@ -289,7 +269,43 @@ var editor = io.of('/editor').on('connection', function (socket) {
   //console.log(JSON.stringify(options))
 
   http.get(options, function(res) {
-    console.log("Got response statusCode: " + res.statusCode);
+    console.log("\nGot response statusCode: " + res.statusCode);
+
+    res.on('data', function (json) {
+      var data = JSON.parse(json);
+      console.log(data);
+    });
+
+  }).on('error', function(e) {
+    console.log("Got error: " + e.message);
+  });
+
+  options = {
+    host: 'sportti.dreamschool.fi',
+    port: 80,
+    path: '/genova/fakeUser.json'
+  };
+
+  http.get(options, function(res) {
+    console.log("\nGot response statusCode: " + res.statusCode);
+
+    res.on('data', function (json) {
+      var data = JSON.parse(json);
+      console.log(data);
+    });
+
+  }).on('error', function(e) {
+    console.log("Got error: " + e.message);
+  });
+
+  options = {
+    host: 'sportti.dreamschool.fi',
+    port: 80,
+    path: '/genova/fakeGame.json'
+  };
+
+  http.get(options, function(res) {
+    console.log("\nGot response statusCode: " + res.statusCode);
 
     res.on('data', function (json) {
       var data = JSON.parse(json);

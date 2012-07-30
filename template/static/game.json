@@ -8,8 +8,7 @@
             {
                 "username": "lorem",
                 "roles": [
-                    "artifex",
-                    "musicus"
+                    "artifex"
                 ],
                 "firstName": "Lorem",
                 "lastName": "Ipsum"
