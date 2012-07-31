@@ -1,3 +1,6 @@
+
+Ember.LOG_BINDINGS = true;
+
 var App = Ember.Application.create();
 
 App.User = Ember.Object.extend({
@@ -257,7 +260,7 @@ App.Language = Em.Object.extend({
   title: null,
   domain: null,
   flag: function() {
-    return '../assets/img/lang-ico/' + this.get('domain') + '.png';
+    return '../static/img/lang-ico/' + this.get('domain') + '.png';
   }.property('domain').cacheable()
 });
 
