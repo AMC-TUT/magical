@@ -304,19 +304,19 @@ var editor = io.of('/editor').on('connection', function (socket) {
     port: 80,
     path: '/genova/fakeGame.json'
   };
-/*
+
   http.get(options, function(res) {
     console.log("\nGot response statusCode: " + res.statusCode);
 
     res.on('data', function (json) {
-      var data = JSON.parse(json);
-      console.log(data);
+      //var body = JSON.parse(json);
+      //console.log(body);
     });
 
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
   });
-  */
+
 
 var myMagos = myMagos || {};
 
