@@ -14,16 +14,14 @@ io.enable('browser client gzip'); // gzip the file
 
 app.use('/static', express.static(__dirname + '/static'));
 
-app.configure('development',
-function() {
+app.configure('development', function() {
     app.use(express.errorHandler({
         dumpExceptions: true,
         showStack: true
     }));
 });
 
-app.configure('production',
-function() {
+app.configure('production', function() {
     app.use(express.errorHandler());
 });
 
@@ -108,7 +106,7 @@ var rooms = [];
 var editor = io.of('/editor').on('connection', function (socket) {
 
   socket.on('connect', function() {
-      console.log('client connected, client id: ' + socket.id);
+    console.log('client connected, client id: ' + socket.id);
   });
 
   socket.on('get-game', function(slug, fn) {
@@ -117,6 +115,37 @@ var editor = io.of('/editor').on('connection', function (socket) {
 
     var room = _.find(rooms, function(room) { return room.slug === slug; });
 
+    //
+    if(_.isUndefined(room)) {
+
+      options = { host: 'sportti.dreamschool.fi', port: 80, path: '/genova/fakeGame.json?' + slug };
+
+      http.get(options, function(res) {
+        // set encoding to result set
+        res.setEncoding('utf8');
+
+        console.log("\nGot response statusCode from fakeGame: " + res.statusCode);
+
+        res.on('data', function (data) {
+
+          console.log(data);
+          //
+          room = data;
+          //
+          rooms.push(room);
+
+          room = JSON.stringify(data);
+
+          console.log(room);
+        });
+
+      }).on('error', function(e) {
+        console.log("Got error: " + e.message);
+      });
+
+    }
+
+    //
     var game = (_.isObject(room) && _.isObject(room.game)) ? room.game : 'error! there was error while getting the game ' + slug;
 
     fn(game);
@@ -293,24 +322,6 @@ var editor = io.of('/editor').on('connection', function (socket) {
     res.on('data', function (json) {
       var data = JSON.parse(json);
       console.log(data);
-    });
-
-  }).on('error', function(e) {
-    console.log("Got error: " + e.message);
-  });
-
-  options = {
-    host: 'sportti.dreamschool.fi',
-    port: 80,
-    path: '/genova/fakeGame.json'
-  };
-
-  http.get(options, function(res) {
-    console.log("\nGot response statusCode: " + res.statusCode);
-
-    res.on('data', function (json) {
-      //var body = JSON.parse(json);
-      //console.log(body);
     });
 
   }).on('error', function(e) {

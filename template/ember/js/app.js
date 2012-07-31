@@ -10,8 +10,7 @@ App.User = Ember.Object.extend({
   lastName: '',
   active: false,
   grid: true,
-  lang: 'fi',
-  theme: 'dark'
+  lang: 'fi'
 });
 
 App.userController = Ember.Object.create({
@@ -286,6 +285,17 @@ App.LanguageSelectionView = Ember.View.extend({
 });
 
 App.languagesController.set('selected', App.languagesController.objectAt(0));
+
+
+App.DataSource = Ember.Object.extend({
+  getBooks: function(callback) {
+    jQuery.get('/books.json', function(data) {
+      callback(data);
+    });
+  }
+});
+
+App.dataSource = App.DataSource.create();
 
 
 
