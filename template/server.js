@@ -140,46 +140,19 @@ var editor = io.of('/editor').on('connection', function (socket) {
 
       request('http://sportti.dreamschool.fi/genova/fakeGame.json?' + slug, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-          console.log(body) // print the result
-
+          //
           var room = JSON.parse(body);
-
+          //
           rooms.push(room);
-
+          //
           fn(room);
         }
       });
 
-      /* THIS OPTION IS WITHOUT REQUEST PLUGIN
-            options = { host: 'sportti.dreamschool.fi', port: 80, path: '/genova/fakeGame.json?' + slug };
-
-            http.get(options, function(res) {
-              // set encoding to result set
-              res.setEncoding('utf8');
-
-              var data = '';
-
-              res.on('data', function (chunk){
-                data += chunk;
-              });
-
-              res.on('end',function(){
-                var room = JSON.parse(data);
-
-                rooms.push(room);
-
-                fn(room);
-              });
-
-            }).on('error', function(e) {
-              console.log("Got error: " + e.message);
-            });
-      */
-
     } else {
 
-          //
-      var game = (_.isObject(room) && _.isObject(room.game)) ? room.game : 'error! there was error while getting the game ' + slug;
+      //
+      //var game = (_.isObject(room) && _.isObject(room.game)) ? room.game : 'error! there was error while getting the game ' + slug;
 
       fn(game);
 
