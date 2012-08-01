@@ -103,7 +103,7 @@ $(function() {
 
     $(".chest-item").draggable({
         helper: "clone",
-        snap: ".canvas-cell:empty", 
+        snap: ".canvas-cell:empty",
         snapMode: "inner" /*,
         start: function(event, ui) {
           var $draggable = $(ui.draggable);
@@ -135,7 +135,7 @@ $(function() {
             $img.draggable({
                 //zIndex: 9999,
                 helper: "original",
-                snap: ".canvas-cell:empty", 
+                snap: ".canvas-cell:empty",
                 snapMode: "inner",
                 revert: function(valid) {
                     if (!valid) $(this).remove();
@@ -233,7 +233,7 @@ $(function() {
         250,
         function() {
             $container.find('.magos-potions.potions').show('slide', {
-                direction: "right" 
+                direction: "right"
             }, 250);
         });
         /*
@@ -276,10 +276,10 @@ $(function() {
 
         $tgt.closest('.action-group').remove();
     });
-    
+
 
     // modals
-    
+
     $(".add-item").on('click tap', function(event) {
         event.preventDefault();
 
@@ -342,31 +342,32 @@ socket.on('connect', function () {
   console.log('connected to magos!');
 });
 
-socket.emit('set-user-credentials', {"firstname": "Teemu", 'uid': "teemu", "role": "student"}, function (data) {
+socket.emit('set-user-credentials', {"firstName": "Matti", 'userName': "matti.vanhanen", "role": "student"}, function (data) {
   console.log(data);
 });
 
 var slug = "super-magos";
 
 socket.emit('get-game', slug, function(data) {
-  console.log(data);
+    var game = data;
+    console.log(game);
 });
 
 // update, delete, insert
 var attr = { action: 'update' };
 socket.emit('set-game-attr', attr, function(data) {
-  
-})
 
+})
+/*
 socket.emit('join-room', slug, function (data) {
   console.log( data );
   /*
   socket.emit('get room members', { 'game': 'super-magos' }, function(data) {
     console.log(data);
   });
-  */
+  * /
 });
-
+*/
 socket.on('chat-message', function (message) {
   console.log('chat message comming...');
   console.log(message);

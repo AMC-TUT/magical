@@ -1,6 +1,7 @@
 
 var express = require('express'),
   http = require('http'),
+  request = require('request'),
   querystring = require('querystring'),
   fs = require('fs'),
   app = express.createServer(),
@@ -109,62 +110,6 @@ var editor = io.of('/editor').on('connection', function (socket) {
     console.log('client connected, client id: ' + socket.id);
   });
 
-  socket.on('get-game', function(slug, fn) {
-
-    slug = _.isString(slug) ? slug : '';
-
-    var room = _.find(rooms, function(room) { return room.slug === slug; });
-
-    //
-    if(_.isUndefined(room)) {
-
-      options = { host: 'sportti.dreamschool.fi', port: 80, path: '/genova/fakeGame.json?' + slug };
-
-      http.get(options, function(res) {
-        // set encoding to result set
-        res.setEncoding('utf8');
-
-        console.log("\nGot response statusCode from fakeGame: " + res.statusCode);
-
-        res.on('data', function (data) {
-
-          console.log(data);
-          //
-          room = data;
-          //
-          rooms.push(room);
-
-          room = JSON.stringify(data);
-
-          console.log(room);
-        });
-
-      }).on('error', function(e) {
-        console.log("Got error: " + e.message);
-      });
-
-    }
-
-    //
-    var game = (_.isObject(room) && _.isObject(room.game)) ? room.game : 'error! there was error while getting the game ' + slug;
-
-    fn(game);
-  });
-
-
-  socket.on('set-user-credentials', function (credentials, fn) {
-
-    socket.set('credentials', credentials, function () { });
-
-    var uid = "";
-    socket.get('credentials', function (err, credentials) {
-      uid = credentials.uid;
-    });
-
-    fn('user´s credentials saved');
-
-  });
-
   socket.on('chat-message', function (message, fn) {
 
     if(_.isString(message)) {
@@ -184,6 +129,77 @@ var editor = io.of('/editor').on('connection', function (socket) {
 
   });
 
+  socket.on('get-game', function(slug, fn) {
+
+    slug = _.isString(slug) ? slug : '';
+
+    var room = _.find(rooms, function(room) { return room.slug === slug; });
+
+    //
+    if(_.isUndefined(room)) {
+
+      request('http://sportti.dreamschool.fi/genova/fakeGame.json?' + slug, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          console.log(body) // print the result
+
+          var room = JSON.parse(body);
+
+          rooms.push(room);
+
+          fn(room);
+        }
+      });
+
+      /* THIS OPTION IS WITHOUT REQUEST PLUGIN
+            options = { host: 'sportti.dreamschool.fi', port: 80, path: '/genova/fakeGame.json?' + slug };
+
+            http.get(options, function(res) {
+              // set encoding to result set
+              res.setEncoding('utf8');
+
+              var data = '';
+
+              res.on('data', function (chunk){
+                data += chunk;
+              });
+
+              res.on('end',function(){
+                var room = JSON.parse(data);
+
+                rooms.push(room);
+
+                fn(room);
+              });
+
+            }).on('error', function(e) {
+              console.log("Got error: " + e.message);
+            });
+      */
+
+    } else {
+
+          //
+      var game = (_.isObject(room) && _.isObject(room.game)) ? room.game : 'error! there was error while getting the game ' + slug;
+
+      fn(game);
+
+    }
+
+  });
+
+  socket.on('set-user-credentials', function (credentials, fn) {
+
+    socket.set('credentials', credentials, function () { });
+
+    var uid = "";
+    socket.get('credentials', function (err, credentials) {
+      uid = credentials.uid;
+    });
+
+    fn('user´s credentials saved');
+
+  });
+
   socket.on('join-room', function (slug, fn) {
 
     var credentials = {};
@@ -199,7 +215,7 @@ var editor = io.of('/editor').on('connection', function (socket) {
 
       var room = JSON.parse(json);
 
-      console.log(room);
+      console.log(room.title);
 
       rooms.push(room);
       // create room if it not exists
@@ -289,6 +305,7 @@ var editor = io.of('/editor').on('connection', function (socket) {
 
 });
 
+/*
   // http://nodejs.org/docs/v0.4.5/api/http.html#http.request
   // get room from server (REST, Django)
   var options = {
@@ -327,7 +344,7 @@ var editor = io.of('/editor').on('connection', function (socket) {
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
   });
-
+*/
 
 var myMagos = myMagos || {};
 
@@ -362,4 +379,80 @@ myMagos.logEvent = function(log, type, value, game) {
 };
 
 // myMagos.logEvent("user", "event", "some value", "super-magos");
+
+/*
+
+        "sceneElements": [
+            {
+                "name": "Background Image",
+                "type": "background-image",
+                "icon": "/assets/img/icons/background-image.png",
+                "available": [
+                    "intro",
+                    "game",
+                    "outro"
+                ],
+                "potions": []
+            },
+            {
+                "name": "Timer",
+                "type": "timer",
+                "icon": "/assets/img/icons/timer.png",
+                "available": [
+                    "game"
+                ],
+                "potions": [
+                    "font"
+                ]
+            },
+            {
+                "name": "Dialog",
+                "type": "dialog",
+                "icon": "/assets/img/icons/dialog.png",
+                "available": [
+                    "game"
+                ],
+                "potions": [
+                    "font",
+                    "dialog"
+                ]
+            },
+            {
+                "name": "Highscore",
+                "type": "highscore",
+                "icon": "/assets/img/icons/highscore.png",
+                "available": [
+                    "intro",
+                    "outro"
+                ],
+                "potions": [
+                    "font"
+                ]
+            },
+            {
+                "name": "Volume",
+                "type": "volume",
+                "icon": "/assets/img/icons/volume.png",
+                "available": [
+                    "intro",
+                    "game",
+                    "outro"
+                ],
+                "potions": []
+            },
+            {
+                "name": "Start Game",
+                "type": "start-button",
+                "icon": "/assets/img/icons/start-button.png",
+                "available": [
+                    "intro",
+                    "outro"
+                ],
+                "potions": [
+                    "font"
+                ]
+            }
+        ]
+
+*/
 
