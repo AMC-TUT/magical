@@ -1,5 +1,6 @@
 
 var express = require('express'),
+  params = require('express-params'),
   http = require('http'),
   request = require('request'),
   querystring = require('querystring'),
@@ -12,6 +13,8 @@ io.enable('browser client minification'); // send minified client
 io.enable('browser client etag'); // apply etag caching logic based on version number
 io.enable('browser client gzip'); // gzip the file
 //io.set('log level', 0); // reduce logging
+
+params.extend(app);
 
 app.use('/static', express.static(__dirname + '/static'));
 
@@ -27,87 +30,41 @@ app.configure('production', function() {
 });
 
 // Routes
-app.get('/:slug[a-zA-Z0-9]+',
-function(req, res) {
-    res.sendfile(__dirname + '/index.html');
+
+app.param('slug', /[a-zA-Z0-9-]+$/);
+
+app.get('/game/:slug', function(req, res) {
+  res.sendfile(__dirname + '/game/index.html');
 });
 
-app.listen(4000,
-function() {
+app.get('/:slug', function(req, res) {
+  res.sendfile(__dirname + '/index.html');
+});
+
+app.listen(4000, function() {
     console.log('Express server listening on port %d in %s mode', app.address().port, app.settings.env);
 });
 
 var questions = [],
-  qid = 0;
+  qid = 0,
+  rooms = [];
 
-/*
-var editor = io.of('/editor').on('connection', function(client) {
-
-  editor.on('connect', function() {
-      console.log('CLIENT ID: ' + client.id);
-      editor.emit('user connected');
-  });
-
-  editor.on('disconnect', function() {
-      // socket.broadcast.emit('user disconnected');
-  });
-
-});
-*/
-
-/*
-var chat = io.of('/chat').on('connection', function (client) {
-  client.emit('a message', client.id );
-  chat.emit('a message', everyone: 'in', '/chat': 'will get' });
-});
-*/
-
-/*
-  { slug: "super-magos",
-    members: [
-      {
-        uid: "teemu",
-        magos: "principes"
-      }
-    ]/*,
-    users: [
-        {
-          // id: 23320239309932,
-          // uid: "teemu",
-          magos: "principes"
-        },
-        {
-          magos: "physicus"
-        },
-        {
-          magos: "artifex"
-        },
-        {
-          magos: "musicus"
-        }
-    ]*/
-    /*,
-    game: {
-        info: {
-            "title": "Super Mario",
-            "slug": "super-mario",
-            "public": false,
-            "clonable": false
-        }
-      }
-    },
-    components: [
-      { slug: 'player'}
-    ]
-];
-*/
-
-var rooms = [];
-
-var editor = io.of('/editor').on('connection', function (socket) {
+var editor = io.of('/editor').authorization(function (handshakeData, callback) {
+    console.dir(handshakeData);
+    handshakeData.foo = 'baz';
+    callback(null, true);
+  }).on('connection', function (socket) {
 
   socket.on('connect', function() {
     console.log('client connected, client id: ' + socket.id);
+  });
+
+  socket.on('connect_failed', function (reason) {
+    console.error('unable to connect to namespace', reason);
+  });
+
+  socket.on('connect', function () {
+    console.info('sucessfully established a connection with the namespace');
   });
 
   socket.on('chat-message', function (message, fn) {
@@ -119,9 +76,9 @@ var editor = io.of('/editor').on('connection', function (socket) {
         credentials = _credentials;
       });
 
-      message = { 'name': credentials.firstname, 'magos': credentials.magos, 'message': message };
+      message = { 'name': credentials.firstName, 'magos': credentials.magos, 'message': message };
 
-      socket.broadcast.in('super-magos').emit('chat-message', message);
+      socket.broadcast.in(credentials.slug).emit('chat-message', message);
 
       fn(message);
 
@@ -138,7 +95,8 @@ var editor = io.of('/editor').on('connection', function (socket) {
     //
     if(_.isUndefined(room)) {
 
-      request('http://sportti.dreamschool.fi/genova/fakeGame.json?' + slug, function (error, response, body) {
+      // make request
+      request.get('http://sportti.dreamschool.fi/genova/fakeGame.json?' + slug, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           //
           var room = JSON.parse(body);
@@ -150,12 +108,8 @@ var editor = io.of('/editor').on('connection', function (socket) {
       });
 
     } else {
-
-      //
-      //var game = (_.isObject(room) && _.isObject(room.game)) ? room.game : 'error! there was error while getting the game ' + slug;
-
-      fn(game);
-
+      // return found game object
+      fn(room);
     }
 
   });
@@ -164,10 +118,12 @@ var editor = io.of('/editor').on('connection', function (socket) {
 
     socket.set('credentials', credentials, function () { });
 
-    var uid = "";
+    var userName = "";
     socket.get('credentials', function (err, credentials) {
-      uid = credentials.uid;
+      userName = credentials.userName;
     });
+
+    console.log(credentials);
 
     fn('user´s credentials saved');
 
@@ -198,12 +154,12 @@ var editor = io.of('/editor').on('connection', function (socket) {
 
     if(credentials.role === "student") {
       //
-      var author = _.find(room.authors, function(obj) { return obj.uid === credentials.uid; });
+      var author = _.find(room.authors, function(obj) { return obj.userName === credentials.userName; });
 
       if(_.isObject(author)) {
 
         // roles that are not in use right now
-        var magoses = _.filter(room.users, function(obj) { return _.isUndefined(obj.uid); });
+        var magoses = _.filter(room.users, function(obj) { return _.isUndefined(obj.userName); });
 
         // try first join as own role and if that is reserved join first one which is free
         var user = _.find(magoses, function(obj) { return obj.magos === author.magos; });
@@ -211,12 +167,13 @@ var editor = io.of('/editor').on('connection', function (socket) {
         if(!_.isUndefined(user)) {
           //
           user = _.find(room.users, function(obj) { return obj.magos === author.magos; });
-          user.uid = credentials.uid;
+          user.userName = credentials.userName;
           user.role = credentials.role; //'student';
           user.id = socket.id;
 
           credentials['magos'] = user.magos;
           credentials['room'] = slug;
+          credentials['slug'] = slug;
           socket.set('credentials', credentials, function () { });
 
           socket.join(slug);
@@ -228,10 +185,10 @@ var editor = io.of('/editor').on('connection', function (socket) {
 
         } else {
 
-          var freeone = _.find(magoses, function(obj) { return _.isUndefined(obj.uid); });
+          var freeone = _.find(magoses, function(obj) { return _.isUndefined(obj.userName); });
 
           user = _.find(room.users, function(obj) { return obj.magos === freeone.magos; });
-          user.uid = credentials.uid;
+          user.userName = credentials.userName;
           user.role = credentials.role; //'student';
           user.id = socket.id;
 
@@ -429,3 +386,62 @@ myMagos.logEvent = function(log, type, value, game) {
 
 */
 
+/*
+var editor = io.of('/editor').on('connection', function(client) {
+
+  editor.on('connect', function() {
+      console.log('CLIENT ID: ' + client.id);
+      editor.emit('user connected');
+  });
+
+  editor.on('disconnect', function() {
+      // socket.broadcast.emit('user disconnected');
+  });
+
+});
+*/
+
+/*
+var chat = io.of('/chat').on('connection', function (client) {
+  client.emit('a message', client.id );
+  chat.emit('a message', everyone: 'in', '/chat': 'will get' });
+});
+*/
+
+/*
+  { slug: "super-magos",
+    members: [
+      {
+        userName: "teemu",
+        magos: "principes"
+      }
+    ],
+    users: [
+        {
+          // id: 23320239309932,
+          // userName: "teemu",
+          magos: "principes"
+        },
+        {
+          magos: "physicus"
+        },
+        {
+          magos: "artifex"
+        },
+        {
+          magos: "musicus"
+        },
+    game: {
+        info: {
+            "title": "Super Mario",
+            "slug": "super-mario",
+            "public": false,
+            "clonable": false
+        }
+      }
+    },
+    components: [
+      { slug: 'player'}
+    ]
+];
+*/

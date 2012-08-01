@@ -332,6 +332,9 @@ $(function() {
 
 //(function($) {
 
+var pathname = window.location.pathname;
+var slug = pathname.replace(/^\//, '').replace(/\/$/, '');
+
 var socket = io.connect('http://localhost/editor');
 
 socket.on('connecting', function() {
@@ -342,11 +345,9 @@ socket.on('connect', function () {
   console.log('connected to magos!');
 });
 
-socket.emit('set-user-credentials', {"firstName": "Matti", 'userName': "matti.vanhanen", "role": "student"}, function (data) {
+socket.emit('set-user-credentials', {"firstName": "Matti", 'userName': "matti.vanhanen", "role": "student", "slug": slug }, function (data) {
   console.log(data);
 });
-
-var slug = "super-magos";
 
 socket.emit('get-game', slug, function(data) {
     var game = data;
