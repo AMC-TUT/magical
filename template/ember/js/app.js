@@ -259,7 +259,7 @@ App.Language = Em.Object.extend({
   title: null,
   domain: null,
   flag: function() {
-    return '../static/img/lang-ico/' + this.get('domain') + '.png';
+    return '../static/img/flags/' + this.get('domain') + '.png';
   }.property('domain').cacheable()
 });
 
