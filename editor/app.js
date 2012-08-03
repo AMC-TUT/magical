@@ -1,13 +1,19 @@
 
 var express = require('express'),
   params = require('express-params'),
-  http = require('http'),
+  //http = require('http'),
   request = require('request'),
   querystring = require('querystring'),
   fs = require('fs'),
-  app = express.createServer(),
-  _ = require('underscore')._,
-  io = require('socket.io').listen(app);
+  //app = express.createServer(),
+  _ = require('underscore')._;
+  //io = require('socket.io').listen(app);
+
+
+var app = express(),
+  http = require('http'),
+  server = http.createServer(app),
+  io = require('socket.io').listen(server);
 
 io.enable('browser client minification');
 io.enable('browser client etag');
@@ -41,9 +47,7 @@ app.get('/:slug', function(req, res) {
   res.sendfile(__dirname + '/index.html');
 });
 
-app.listen(4000, function() {
-    console.log('Express server listening on port %d in %s mode', app.address().port, app.settings.env);
-});
+server.listen(4000);
 
 var questions = [],
   qid = 0,
@@ -114,23 +118,18 @@ var editor = io.of('/editor').authorization(function (handshakeData, callback) {
 
   });
 
-  socket.on('get-languages', function(slug, fn) {
-
-      // make request
-      request.get('http://sportti.dreamschool.fi/genova/fakeLanguages.json', function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-          //
-          fn( JSON.parse(body) );
-
-        } else if(error) {
-          console.log("ERROR while getting languages");
-          //
-          var empty = [];
-          //
-          fn(empty);
-        }
-      });
-
+  socket.on('getLanguages', function(noob, fn) {
+    // make request
+    request.get('http://sportti.dreamschool.fi/genova/fakeLanguages.json', function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        //
+        fn(JSON.parse(body));
+      } else if(error) {
+        console.log("ERROR while getting languages");
+        //
+        fn([]);
+      }
+    });
   });
 
   socket.on('set-user-credentials', function (credentials, fn) {
@@ -161,7 +160,7 @@ var editor = io.of('/editor').authorization(function (handshakeData, callback) {
 
       var json = fs.readFileSync('static/game.json', 'utf8');
 
-      var room = JSON.parse(json);
+      room = JSON.parse(json);
 
       console.log(room.title);
 
