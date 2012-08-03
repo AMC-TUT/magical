@@ -8,46 +8,43 @@ Em.LOG_BINDINGS = true;
 /**************************
 * Language
 **************************/
- App.Language = Em.Object.extend({
+
+App.Language = Em.Object.extend({
   title: null,
-  domain: null,
+  slug: null,
+  code: null,
   flag: function() {
-    return '../static/img/flags/' + this.get('domain') + '.png';
-  }.property('domain').cacheable()
+    return '../static/img/flags/' + this.get('code') + '.png';
+  }.property('code').cacheable()
 });
 
- App.languagesController = Em.ArrayController.create({
+App.languagesController = Em.ArrayController.create({
   content: [],
   selected: null,
   populate: function() {
     var controller = this;
+
     App.dataSource.getLanguages(function(data) {
+      // set content
       controller.set('content', data);
+      // set as default language, updated when user preferences loaded
+      App.languagesController.set('selected', App.languagesController.objectAt(0));
+
     });
+
   }
 });
-/*
- var languages = [
-   App.Language.create({ title: 'English', domain: 'uk' }),
-   App.Language.create({ title: 'Ελληνικά', domain: 'gr' }),
-   App.Language.create({ title: 'italiano', domain: 'it' }),
-   App.Language.create({ title: 'suomi', domain: 'fi' })
- ];
-*/
- App.languagesController.set('content', languages);
 
- App.LangList = Em.View.extend({
+App.LangList = Em.View.extend({
   click: function(event) {
     App.languagesController.set('selected', this.get('language'));
   }
 });
 
- App.LanguageSelectionView = Em.View.extend({
+App.LanguageSelectionView = Em.View.extend({
   classNames: ['btn-group'],
   contentBinding: 'App.languagesController.selected'
 });
-
-App.languagesController.set('selected', App.languagesController.objectAt(0));
 
 /**************************
 * Data Source
@@ -56,17 +53,23 @@ App.languagesController.set('selected', App.languagesController.objectAt(0));
 App.DataSource = Ember.Object.extend({
   store: null,
   getLanguages: function(callback) {
-    var store = this.store;
+    //var store = this.store;
 
-    /*jQuery.get('/books.json', function(data) {
-      store.pushObjects(data);
-      callback(store);
-    });*/
     socket.emit('getLanguages', '', function(data) {
-      console.log('getLanguages')
-      console.log(data);
-      store.pushObjects(data);
-      callback(store);
+      var languages = [];
+
+      _.each(data, function(obj) {
+        languages.push(
+          App.Language.create({
+            'title': obj.title,
+            'slug': obj.slug,
+            'code': obj.code
+          })
+        );
+      });
+
+      // store.pushObjects(languages);
+      callback(languages);
     });
 
   }
@@ -111,8 +114,10 @@ socket.on('connect', function () {
   console.log('Socket.IO - Connected to magos');
 });
 
-var dataSource = App.DataSource.create();
-dataSource.getLanguages();
+//var dataSource = App.DataSource.create();
+//dataSource.getLanguages();
+
+App.languagesController.populate();
 
 // (function init() {
 // })();
