@@ -18,16 +18,22 @@ Em.LOG_BINDINGS = true;
 
  App.languagesController = Em.ArrayController.create({
   content: [],
-  selected: null
+  selected: null,
+  populate: function() {
+    var controller = this;
+    App.dataSource.getLanguages(function(data) {
+      controller.set('content', data);
+    });
+  }
 });
-
+/*
  var languages = [
    App.Language.create({ title: 'English', domain: 'uk' }),
    App.Language.create({ title: 'Ελληνικά', domain: 'gr' }),
    App.Language.create({ title: 'italiano', domain: 'it' }),
    App.Language.create({ title: 'suomi', domain: 'fi' })
  ];
-
+*/
  App.languagesController.set('content', languages);
 
  App.LangList = Em.View.extend({
