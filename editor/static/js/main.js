@@ -19,6 +19,20 @@ App.Author = Em.Object.extend({
 });
 
 /**************************
+* User Controller
+**************************/
+
+App.userController = Em.Object.create({ // ObjectController
+  content: App.Author.create({
+    userName: 'matti.vanhanen',
+    firstName: 'Matti',
+    lastName: 'Vanhanen',
+    magos: 'principes',
+    role: 'student'
+  })
+});
+
+/**************************
 * Game
 **************************/
 
@@ -116,6 +130,73 @@ App.LanguageSelectionView = Em.View.extend({
 });
 
 /**************************
+* ShoutBox
+**************************/
+
+App.Shout = Ember.Object.extend({
+  timestamp: '',
+  writer: '',
+  magos: '',
+  message: '',
+  time: function() {
+    var dt = new Date( this.get('timestamp') * 1000 ); // to javascript timestamp
+    var hours = dt.getHours();
+    var minutes = dt.getMinutes();
+    var seconds = dt.getSeconds();
+
+    if (hours < 10) hours = '0' + hours;
+    if (minutes < 10) minutes = '0' + minutes;
+    if (seconds < 10) seconds = '0' + seconds;
+
+    return hours + ":" + minutes + ":" + seconds;
+
+  }.property('timestamp').cacheable()
+
+});
+
+App.shoutsController = Ember.ArrayController.create({
+  content: [
+    App.Shout.create({ // initial content - welcome message
+      'timestamp': Math.round((new Date()).getTime() / 1000),
+      'firstName': 'Superioux',
+      'magos': 'superioux',
+      'message': 'Welcome to Magos'
+    })
+  ]
+});
+
+App.ShoutsView = Ember.View.extend({
+  tagName: 'table',
+  contentBinding: Ember.Binding.oneWay('App.shoutsController.content')
+});
+
+App.ShoutForm = Em.View.extend({
+    tagName: 'form',
+    classNames: ['form-inline'],
+    controller: null,
+    textField: null,
+    firstNameBinding: Ember.Binding.oneWay('App.userController.content.firstName'),
+    magosBinding: Ember.Binding.oneWay('App.userController.content.magos'),
+    submit: function(event) {
+      event.preventDefault();
+
+      var message = this.getPath('textField.value');
+
+      if(!message.length) return;
+
+      var timestamp = Math.round((new Date()).getTime() / 1000); // to unix timestamp
+
+      var shout = App.Shout.create({ 'timestamp': timestamp, 'firstName': this.firstName, 'magos': this.magos, 'message': message });
+
+      App.shoutsController.get('content').pushObject(shout);
+
+      // send to node
+
+      this.setPath('textField.value', null);
+    }
+});
+
+/**************************
 * Views
 **************************/
 
@@ -164,7 +245,7 @@ App.DataSource = Ember.Object.extend({
 
     socket.emit('joinGame', slug, function(data) {
       var game = App.Game.create();
-      console.log(data);
+      // console.log(data);
 
       game.set('title', data.title);
       game.set('slug', data.slug);

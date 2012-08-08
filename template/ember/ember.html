@@ -121,43 +121,42 @@
     </script>
 
     <script type="text/x-handlebars">
-            <div class="magos-shoutbox">
-              <div class="navbar">
-                <div class="navbar-inner">
-                  <div class="container">
+      <div class="magos-shoutbox">
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="container">
 
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".shoutbox-collapse">
-                      <span class="icon-bar"></span>
-                      <span class="icon-bar"></span>
-                      <span class="icon-bar"></span>
-                    </a>
+              <a class="btn btn-navbar" data-toggle="collapse" data-target=".shoutbox-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </a>
 
-                    <h3>Shoutbox</h3>
+              <h3>Shoutbox</h3>
 
-                    <div class="nav-collapse shoutbox-collapse">
-                      <div class="magos-shoutbox-log">
-                        <table>
-                          {{#view App.ShoutsView}}
-                            {{#each content}}
-                              <tr>
-                                <td>{{time}}</td><td>{{firstName}}</td><td>{{message}}</td>
-                              </tr>
-                            {{/each}}
-                          {{/view}}
-                        </table>
-                      </div>
-
-                      {{#view App.ShoutForm controllerBinding="App.shoutsController"}}
-                        {{view Ember.TextField type="text" class="input" viewName="textField" placeholder="Shout"}}
-                        <button type="submit" class="btn btn-info">Shout</button>
-                      {{/view}}
-                    </div>
-
-                  </div>
+              <div class="nav-collapse shoutbox-collapse">
+                <div class="magos-shoutbox-log">
+                  <table>
+                    {{#view App.ShoutsView}}
+                      {{#each content}}
+                        <tr>
+                          <td>{{time}}</td><td>{{firstName}}</td><td>{{message}}</td>
+                        </tr>
+                      {{/each}}
+                    {{/view}}
+                  </table>
                 </div>
-              </div>
 
+                {{#view App.ShoutForm controllerBinding="App.shoutsController"}}
+                  {{view Ember.TextField type="text" class="input" viewName="textField" placeholder="Shout"}}
+                  <button type="submit" class="btn btn-info">Shout</button>
+                {{/view}}
+
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
     </script>
 
     <script src="js/libs/jquery-1.7.2.min.js"></script>
