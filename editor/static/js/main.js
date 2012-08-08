@@ -177,6 +177,7 @@ App.ShoutForm = Em.View.extend({
     textField: null,
     firstNameBinding: Ember.Binding.oneWay('App.userController.content.firstName'),
     magosBinding: Ember.Binding.oneWay('App.userController.content.magos'),
+    slugBinding: Ember.Binding.oneWay('App.gameController.content.slug'),
     submit: function(event) {
       event.preventDefault();
 
@@ -186,11 +187,20 @@ App.ShoutForm = Em.View.extend({
 
       var timestamp = Math.round((new Date()).getTime() / 1000); // to unix timestamp
 
-      var shout = App.Shout.create({ 'timestamp': timestamp, 'firstName': this.firstName, 'magos': this.magos, 'message': message });
+      var shout = { 'timestamp': timestamp, 'firstName': this.firstName, 'magos': this.magos, 'message': message };
+      var shoutObj = App.Shout.create(shout);
 
-      App.shoutsController.get('content').pushObject(shout);
+      App.shoutsController.get('content').pushObject(shoutObj);
 
       // send to node
+      var controller = this;
+
+      // add slug for shout
+      shout.slug = this.slug;
+
+      App.dataSource.shout(shout, function(data) {
+        // do something with callback
+      });
 
       this.setPath('textField.value', null);
     }
@@ -222,7 +232,12 @@ App.PublishedView = Em.View.extend({
 **************************/
 
 App.DataSource = Ember.Object.extend({
-  store: null,
+
+  shout: function(shout, callback) {
+    socket.emit('shout', shout, function(data) {
+      callback(data);
+    });
+  },
   getLanguages: function(callback) {
     socket.emit('getLanguages', '', function(data) {
       var languages = [];
@@ -245,7 +260,6 @@ App.DataSource = Ember.Object.extend({
 
     socket.emit('joinGame', slug, function(data) {
       var game = App.Game.create();
-      // console.log(data);
 
       game.set('title', data.title);
       game.set('slug', data.slug);
@@ -337,6 +351,13 @@ socket.on('connecting', function() {
 
 socket.on('connect', function () {
   console.log('Socket.IO - Connected to magos');
+});
+
+// receive shout
+socket.on('shout', function (shout) {
+  if(_.isObject(shout)) {
+    App.shoutsController.get('content').pushObject( App.Shout.create(shout) );
+  }
 });
 
 App.languagesController.populate();

@@ -71,20 +71,25 @@ var editor = io.of('/editor').authorization(function (handshakeData, callback) {
     console.info('sucessfully established a connection with the namespace');
   });
 
-  socket.on('chat-message', function (message, fn) {
+  socket.on('shout', function (shout, fn) {
+    console.log("Shout: " + JSON.stringify(shout) + "\n");
 
-    if(_.isString(message)) {
-
+    if(_.isObject(shout)) {
+      /*
       var credentials = {};
       socket.get('credentials', function (err, _credentials) {
         credentials = _credentials;
       });
+      //console.log(credentials.slug);
+      //message = { 'name': credentials.firstName, 'magos': credentials.magos, 'message': message };
+      */
 
-      message = { 'name': credentials.firstName, 'magos': credentials.magos, 'message': message };
+      var slug = shout.slug;
+      delete shout.slug;
 
-      socket.broadcast.in(credentials.slug).emit('chat-message', message);
+      socket.broadcast.in(slug).emit('shout', shout);
 
-      fn(message);
+      fn(shout);
 
     }
 
@@ -93,6 +98,8 @@ var editor = io.of('/editor').authorization(function (handshakeData, callback) {
   socket.on('joinGame', function(slug, fn) {
 
     slug = _.isString(slug) ? slug : '';
+
+    socket.join(slug); // move to other event
 
     var room = _.find(rooms, function(room) { return room.slug === slug; });
 
@@ -134,7 +141,7 @@ var editor = io.of('/editor').authorization(function (handshakeData, callback) {
 
   socket.on('set-user-credentials', function (credentials, fn) {
 
-    socket.set('credentials', credentials, function () { });
+    socket.set('credentials', credentials, function () {});
 
     var userName = "";
     socket.get('credentials', function (err, credentials) {
