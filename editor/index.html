@@ -11,71 +11,92 @@
 <body>
   <script type="text/x-handlebars">
   <div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-      <div class="container-fluid">
+  <div class="navbar-inner">
+  <div class="container-fluid">
 
-        <a class="brand" href="#">Magos</a>
+  {{#view App.TitleView}} {{title}} {{/view}}
 
-        <div class="btn-toolbar general-toolbar pull-right">
-          <div class="btn-group">
-            <button class="btn btn-info btn-grid active"><i class="icon-th icon-white"></i></button>
-          </div>
+  <div class="btn-toolbar general-toolbar pull-right">
+    <div class="btn-group">
+      <button class="btn btn-info btn-grid active"><i class="icon-th icon-white"></i></button>
+    </div>
 
-          <div class="btn-group">
-            <button class="btn btn-info"><i class="icon-book icon-white"></i></button>
-          </div>
+    <div class="btn-group">
+      <button class="btn btn-info"><i class="icon-book icon-white"></i></button>
+    </div>
 
-          <div class="btn-group">
-            <button class="btn btn-info"><i class="icon-info-sign icon-white"></i></button>
-          </div>
+    <div class="btn-group">
+      <button class="btn btn-info"><i class="icon-info-sign icon-white"></i></button>
+    </div>
 
-          <div class="btn-group btn-group-theme">
-            <a class="btn btn-info" href="#">Light</a>
-            <a class="btn btn-info active" href="#">Dark</a>
-          </div>
+    <div class="btn-group btn-group-theme">
+      <a class="btn btn-info" href="#">Light</a>
+      <a class="btn btn-info active" href="#">Dark</a>
+    </div>
 
-          <!-- language -->
-          {{#view App.LanguageSelectionView class="btn-group btn-group-language"}}
-          <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#">
-            <img {{bindAttr src="content.flag"}} />&nbsp;&nbsp;<span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu">
-          {{#each App.languagesController}}
-            {{#view App.LangList tagName="li" languageBinding="this"}}
-            {{log language.flag}}
-              <a href="#"><img {{bindAttr src="language.flag"}} class="icon-flag">&nbsp;&nbsp;{{language.title}}</a>
-            {{/view}}
-          {{/each}}
-          </ul>
-          {{/view}}
+    {{#view App.LanguageSelectionView class="btn-group btn-group-language"}}
 
-        </div>
+    <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#">
+      <img {{bindAttr src="flag"}} />&nbsp;&nbsp;<span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+    {{#each App.languagesController}}
+      {{#view App.LangList tagName="li"}}
+            {{log flag}}
+      <a href="#"><img {{bindAttr src="flag"}} class="icon-flag">&nbsp;&nbsp;{{title}}</a>
+      {{/view}}
+    {{/each}}
+    </ul>
+    {{/view}}
 
-        <div class="btn-toolbar pull-right game-toolbar">
+    </div>
 
-          <div class="btn-group btn-group-scene">
-            <button class="btn btn-primary">Intro</button>
-            <button class="btn btn-primary active">Game</button>
-            <button class="btn btn-primary">Outro</button>
-          </div>
+    <div class="btn-toolbar pull-right game-toolbar">
 
-          <div class="btn-group">
-            <button class="btn btn-success">Run Game</button>
-          </div>
+      <div class="btn-group btn-group-scene">
+        <button class="btn btn-primary">Intro</button>
+        <button class="btn btn-primary active">Game</button>
+        <button class="btn btn-primary">Outro</button>
+      </div>
 
-          <div class="btn-group btn-group-state">
-            <a class="btn btn-success" href="#">Public</a>
-            <a class="btn btn-success active" href="#">Private</a>
-          </div>
-        </div>
+      <div class="btn-group">
+        <button class="btn btn-success">Run Game</button>
+      </div>
+
+      {{#view App.PublishedView}}
+        <button {{bindAttr class="privateState:active alwaysTrue:btn alwaysTrue:btn-success"}} type="submit">Public</button>
+        <button {{bindAttr class="publicState:active alwaysTrue:btn alwaysTrue:btn-success"}} type="submit">Private</button>
+      {{/view}}
 
       </div>
+
     </div>
+  </div>
   </div>
   </script>
 
-  <div class="container">
 
+
+  <div class="container-fluid">
+
+    <div class="row-fluid">
+
+      <div class="span9">
+
+
+      <!-- shoutbox -->
+
+      <script type="text/x-handlebars"></script>
+
+      <!--/ shoutbox -->
+
+      </div><!--/ left side-->
+
+      <div class="span3">
+
+      </div><!--/ right span -->
+
+    </div>
 
     <hr>
 
@@ -84,7 +105,13 @@
     </footer>
 
   </div>
-
+  <script type="text/javascript">
+  ENV = {
+    CP_DEFAULT_CACHEABLE: true,
+    //VIEW_PRESERVES_CONTEXT: true,
+    RAISE_ON_DEPRECATION: true
+  };
+  </script>
   <script src="/static/js/vendor/jquery.min.js"></script>
   <script src="/static/js/vendor/jquery-ui.min.js"></script>
   <script src="/static/js/vendor/bootstrap.min.js"></script>

@@ -90,7 +90,7 @@ var editor = io.of('/editor').authorization(function (handshakeData, callback) {
 
   });
 
-  socket.on('get-game', function(slug, fn) {
+  socket.on('joinGame', function(slug, fn) {
 
     slug = _.isString(slug) ? slug : '';
 
