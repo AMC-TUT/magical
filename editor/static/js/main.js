@@ -97,9 +97,6 @@ App.languagesController = Em.ArrayController.create({
       controller.set('content', data);
       // set as default language, updated when user preferences loaded
       controller.set('selected', controller.objectAt(0));
-
-      console.log(controller.content);
-      console.log(controller.selected);
     });
   },
   selectedObserver: function() {

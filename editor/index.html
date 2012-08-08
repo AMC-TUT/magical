@@ -37,13 +37,12 @@
     {{#view App.LanguageSelectionView class="btn-group btn-group-language"}}
 
     <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#">
-      <img {{bindAttr src="flag"}} />&nbsp;&nbsp;<span class="caret"></span>
+      <img {{bindAttr src="content.flag"}} />&nbsp;&nbsp;<span class="caret"></span>
     </a>
     <ul class="dropdown-menu">
     {{#each App.languagesController}}
-      {{#view App.LangList tagName="li"}}
-            {{log flag}}
-      <a href="#"><img {{bindAttr src="flag"}} class="icon-flag">&nbsp;&nbsp;{{title}}</a>
+      {{#view App.LangList tagName="li" languageBinding="this"}}
+      <a href="#"><img {{bindAttr src="language.flag"}} class="icon-flag">&nbsp;&nbsp;{{language.title}}</a>
       {{/view}}
     {{/each}}
     </ul>
