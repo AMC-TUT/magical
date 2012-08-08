@@ -162,8 +162,8 @@ App.shoutsController = Ember.ArrayController.create({
       'magos': 'superioux',
       'message': 'Welcome to Magos'
     })
-  ]
-});
+    ]
+  });
 
 App.ShoutsView = Ember.View.extend({
   tagName: 'table',
@@ -171,19 +171,19 @@ App.ShoutsView = Ember.View.extend({
 });
 
 App.ShoutForm = Em.View.extend({
-    tagName: 'form',
-    classNames: ['form-inline'],
-    controller: null,
-    textField: null,
-    firstNameBinding: Ember.Binding.oneWay('App.userController.content.firstName'),
-    magosBinding: Ember.Binding.oneWay('App.userController.content.magos'),
-    slugBinding: Ember.Binding.oneWay('App.gameController.content.slug'),
-    submit: function(event) {
-      event.preventDefault();
+  tagName: 'form',
+  classNames: ['form-inline'],
+  controller: null,
+  textField: null,
+  firstNameBinding: Ember.Binding.oneWay('App.userController.content.firstName'),
+  magosBinding: Ember.Binding.oneWay('App.userController.content.magos'),
+  slugBinding: Ember.Binding.oneWay('App.gameController.content.slug'),
+  submit: function(event) {
+    event.preventDefault();
 
-      var message = this.getPath('textField.value');
+    var message = this.getPath('textField.value');
 
-      if(!message.length) return;
+    if(!message.length) return;
 
       var timestamp = Math.round((new Date()).getTime() / 1000); // to unix timestamp
 
@@ -204,7 +204,7 @@ App.ShoutForm = Em.View.extend({
 
       this.setPath('textField.value', null);
     }
-});
+  });
 
 /**************************
 * Views
@@ -249,7 +249,7 @@ App.DataSource = Ember.Object.extend({
             'slug': obj.slug,
             'code': obj.code
           })
-        );
+          );
       });
 
       callback(languages);
