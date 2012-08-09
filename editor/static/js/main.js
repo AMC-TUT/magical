@@ -114,7 +114,7 @@ App.languagesController = Em.ArrayController.create({
     });
   },
   selectedObserver: function() {
-    console.log("SELECTED MUUTTUI")
+    // TODO save language preference
   }.observes('selected')
 });
 
