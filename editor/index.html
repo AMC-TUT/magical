@@ -83,7 +83,6 @@
       <div class="span9">
 
       <script type="text/x-handlebars">
-      {{! Chests }}
         <div class="row-fluid">
 
           <div class="span3 chest-container scene-chest-container">
@@ -99,8 +98,21 @@
 
           <div class="span9 chest-container chest-container">
             <ul class="chest item-chest">
-              <li class="add-item" title="Add New Item" rel="tooltip"></li>
-              <li class="remove-item" title="Remove Item" rel="tooltip"></li>
+              {{#each App.componentsController}}
+                {{#view App.ComponentsView tagName="li" itemBinding="this" classNameBindings="uiSelected"}}
+                <img class="game-item" {{bindAttr class="item.active"}} {{bindAttr src="item.icon"}} {{bindAttr alt="item.title"}} {{bindAttr title="item.title"}} rel="tooltip" /></li>
+                {{/view}}
+              {{/each}}
+
+              {{#view App.AddComponentView tagName="li" itemBinding="this" class="add-item" title="Add New Item" rel="tooltip"}}
+                <img class="game-item" src="/static/img/components/add.png" alt="Add New Item" title="Add New Item" rel="tooltip">
+              {{/view}}
+
+              {{#view App.RemoveComponentView tagName="li" itemBinding="this" class="remove-item" title="Remove Item" rel="tooltip"}}
+                <img class="game-item" src="/static/img/components/trash.png" alt="Remove Item" title="Remove Item" rel="tooltip">
+              {{/view}}
+
+
             </ul>
             <div class="clearfix"></div>
           </div>
@@ -163,6 +175,34 @@
     </footer>
 
   </div>
+
+
+  <script type="text/x-handlebars">
+  <div class="modal fade hide" id="dialog-new-item">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <h3>Add New Item</h3>
+    </div>
+    {{#view App.AddItemForm}}
+    <div class="modal-body">
+        <fieldset>
+          <div class="control-group" style="margin-bottom: 0;">
+            <label class="control-label" style="font-weight:bold;" for="input01">Give item some descriptive name</label>
+            <div class="controls">
+              {{view Ember.TextField valueBinding="itemTitle" class="input-xlarge" placeholder="Item Name"}}
+              <p class="help-block">Notice! Every item must have an unique name!</p>
+            </div>
+          </div>
+        </fieldset>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal">Cancel</button>
+      <button class="btn btn-success" type="submit">Add Item</button>
+    </div>
+    {{/view}}
+  </div>
+  </script>
+
   <script type="text/javascript">
   ENV = {
     CP_DEFAULT_CACHEABLE: true,

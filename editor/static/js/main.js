@@ -7,6 +7,19 @@
  // Em.VIEW_PRESERVES_CONTEXT = true;
 
 /**************************
+* NumberField, ColorField
+**************************/
+
+App.NumberField = Ember.TextField.extend({
+  attributeBindings: ['min', 'max'],
+  type: 'number'
+});
+
+App.ColorField = Ember.TextField.extend({
+  type: 'color'
+});
+
+/**************************
 * Author
 **************************/
 
@@ -147,6 +160,119 @@ App.SceneComponentsView = Em.View.extend({
     });
 
     this.set('uiSelected', true);
+  }
+});
+
+
+/**************************
+* Component
+**************************/
+
+App.Component = Em.Object.extend({
+  title: null,
+  slug: null,
+  active: false,
+  icon : function() {
+    return '../static/game/sprites/' + this.get('slug') + '.png';
+  }.property('slug')
+});
+
+App.componentsController = Em.ArrayController.create({
+  content: [],
+  selected: null,
+  populate: function() {
+    //
+    var array = [];
+    //
+    array.push( App.Component.create({ title: 'Player', slug: 'player' }) );
+    array.push( App.Component.create({ title: 'Brick', slug: 'brick' }) );
+    array.push( App.Component.create({ title: 'Water', slug: 'water' }) );
+    array.push( App.Component.create({ title: 'Painting', slug: 'painting' }) );
+
+    this.set('content', array);
+    /*
+    var controller = this;
+
+    App.dataSource.getSceneComponents(function(data) {
+      // set content
+      controller.set('content', data);
+    });
+*/
+},
+selectedObserver: function() {
+    //
+    var items = this.get('content');
+    var selected = this.get('selected');
+    //
+    _.each(items, function(item) {
+      item.set('active', false);
+    });
+    //
+    selected.set('active', true);
+    //
+  }.observes('selected')
+});
+
+App.ComponentsView = Em.View.extend({
+  classNameBindings: ['uiSelected'],
+  uiSelected: false,
+  contentBinding: 'App.componentsController.content',
+  click: function(event) {
+    var selected = this.get('item');
+    var items = this.get('content');
+
+    // set selected component
+    App.componentsController.set('selected', selected);
+
+    // this could be done more efficiently
+    var siblings = this.$().siblings('li');
+    // loop siblings and remove ui-selected class
+    _.each(siblings, function(sibling) {
+      var view = Ember.View.views[ $(sibling).attr('id') ];
+      view.set('uiSelected', false);
+    });
+
+    this.set('uiSelected', true);
+  }
+});
+
+App.componentsController.populate();
+
+App.AddComponentView = Em.View.extend({
+  click: function(event) {
+    // open bootstrap dialog
+    $('#dialog-new-item').modal().on('show', function () {
+      $(this).find('input').val('');
+      $(this).find('.control-group').removeClass('error');
+    })
+  }
+});
+
+App.AddItemForm = Em.View.extend({
+  tagName: 'form',
+  classNames: ['vertical-form'],
+  itemTitle: null,
+  submit: function(event) {
+    event.preventDefault();
+      //
+      var itemTitle = this.get('itemTitle');
+      //
+      if(!itemTitle.length) return;
+
+      console.log(itemTitle);
+     // var hash = this.get('controller').get('selected').getProperties('family', 'size', 'color', 'bgColor');
+
+     // console.log(JSON.stringify(hash));
+
+      // send to node
+
+      this.set('itemTitle', null);
+    }
+  });
+
+App.RemoveComponentView = Em.View.extend({
+  click: function(event) {
+    alert("remove item action");
   }
 });
 
