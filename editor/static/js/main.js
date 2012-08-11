@@ -171,10 +171,11 @@ App.SceneComponentsView = Em.View.extend({
 App.Component = Em.Object.extend({
   title: null,
   slug: null,
+  sprite: null,
   active: false,
   icon : function() {
-    return '../static/game/sprites/' + this.get('slug') + '.png';
-  }.property('slug')
+    return '../static/game/sprites/' + this.get('sprite') + '.png';
+  }.property('sprite')
 });
 
 App.componentsController = Em.ArrayController.create({
@@ -184,10 +185,10 @@ App.componentsController = Em.ArrayController.create({
     //
     var array = [];
     //
-    array.push( App.Component.create({ title: 'Player', slug: 'player' }) );
-    array.push( App.Component.create({ title: 'Brick', slug: 'brick' }) );
-    array.push( App.Component.create({ title: 'Water', slug: 'water' }) );
-    array.push( App.Component.create({ title: 'Painting', slug: 'painting' }) );
+    array.push( App.Component.create({ title: 'Player', slug: 'player', sprite: 'player' }) );
+    array.push( App.Component.create({ title: 'Brick', slug: 'brick', sprite: 'brick' }) );
+    array.push( App.Component.create({ title: 'Water', slug: 'water', sprite: 'water' }) );
+    array.push( App.Component.create({ title: 'Painting', slug: 'painting', sprite: 'painting' }) );
 
     this.set('content', array);
     /*
@@ -199,6 +200,11 @@ App.componentsController = Em.ArrayController.create({
     });
 */
 },
+contentObserver: function() {
+  // update draggable binding
+  $(".game-item").draggable({ helper: "clone" });
+
+}.observes('content'),
 selectedObserver: function() {
     //
     var items = this.get('content');
@@ -253,20 +259,24 @@ App.AddItemForm = Em.View.extend({
   classNames: ['vertical-form'],
   itemTitle: null,
   submit: function(event) {
+    // TODO enter ei toimi
     event.preventDefault();
       //
       var itemTitle = this.get('itemTitle');
       //
       if(!itemTitle.length) return;
 
-      console.log(itemTitle);
-     // var hash = this.get('controller').get('selected').getProperties('family', 'size', 'color', 'bgColor');
+      var safeSlug = createSlug(itemTitle);
+      var item = App.Component.create({ title: itemTitle, slug: safeSlug, sprite: 'empty' });
 
-     // console.log(JSON.stringify(hash));
+      App.componentsController.get('content').pushObject(item);
+
+      $('#dialog-new-item').modal('hide');
 
       // send to node
 
       this.set('itemTitle', null);
+
     }
   });
 
@@ -576,5 +586,42 @@ App.gameController.populate();
 
 // (function init() {
 // })();
+
+/**************************
+* jQuery UI parts
+**************************/
+
+// $(".game-item").draggable({ helper: "clone" });
+
+/*
+$(".chest").selectable({
+  filter: "> li:not(:empty)"
+});
+*/
+/**************************
+* Helper functions
+**************************/
+
+var createSlug = function(str) {
+  // get trimmed string
+  var filename = str.trim();
+
+  // replace all not suitable characters and lowercase
+  filename = filename.replace(/[^a-z0-9_-]/gi, '-').toLowerCase();
+
+  // remove all double or more dashes with one
+  filename = filename.replace(/-+/gi, '-');
+
+  // remove dashes from begin and end of the string
+  filename = filename.replace(/^-/, '');
+  filename = filename.replace(/-$/, '');
+
+  // limit the string length
+  // filename = filename.substring(0, 25);
+
+  // return ready string
+  return filename;
+}
+
 
 }(window.App = window.App || Em.Application.create(), jQuery));

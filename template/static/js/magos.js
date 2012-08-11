@@ -279,7 +279,7 @@ $(function() {
 
 
     // modals
-
+/*
     $(".add-item").on('click tap', function(event) {
         event.preventDefault();
 
@@ -288,7 +288,7 @@ $(function() {
           $(this).find('.control-group').removeClass('error');
         })
     });
-
+*/
     $('.modal .btn').on('click tap', function(event) {
       event.preventDefault();
 
