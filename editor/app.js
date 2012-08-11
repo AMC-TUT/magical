@@ -1,23 +1,22 @@
 
-var express = require('express'),
-  params = require('express-params'),
+var fs = require('fs'),
+express = require('express'),
+params = require('express-params'),
   //http = require('http'),
   request = require('request'),
   querystring = require('querystring'),
-  fs = require('fs'),
   //app = express.createServer(),
   _ = require('underscore')._;
   //io = require('socket.io').listen(app);
 
-
-var app = express(),
+  var app = express(),
   http = require('http'),
   server = http.createServer(app),
   io = require('socket.io').listen(server);
 
-io.enable('browser client minification');
-io.enable('browser client etag');
-io.enable('browser client gzip');
+  io.enable('browser client minification');
+  io.enable('browser client etag');
+  io.enable('browser client gzip');
 //io.set('log level', 0); // reduce logging
 
 params.extend(app);
@@ -25,14 +24,14 @@ params.extend(app);
 app.use('/static', express.static(__dirname + '/static'));
 
 app.configure('development', function() {
-    app.use(express.errorHandler({
-        dumpExceptions: true,
-        showStack: true
-    }));
+  app.use(express.errorHandler({
+    dumpExceptions: true,
+    showStack: true
+  }));
 });
 
 app.configure('production', function() {
-    app.use(express.errorHandler());
+  app.use(express.errorHandler());
 });
 
 // Routes
@@ -50,14 +49,14 @@ app.get('/:slug', function(req, res) {
 server.listen(4000);
 
 var questions = [],
-  qid = 0,
-  rooms = [];
+qid = 0,
+rooms = [];
 
 var editor = io.of('/editor').authorization(function (handshakeData, callback) {
-    console.dir(handshakeData);
-    handshakeData.foo = 'baz';
-    callback(null, true);
-  }).on('connection', function (socket) {
+  console.dir(handshakeData);
+  handshakeData.foo = 'baz';
+  callback(null, true);
+}).on('connection', function (socket) {
 
   socket.on('connect', function() {
     console.log('client connected, client id: ' + socket.id);
@@ -123,6 +122,15 @@ var editor = io.of('/editor').authorization(function (handshakeData, callback) {
       fn(room);
     }
 
+  });
+
+  socket.on('getSceneComponents', function (noop, fn) {
+      // read json file
+      var json = fs.readFileSync('static/json/sceneComponents.json', 'utf8');
+      // parse obj's
+      var sceneComponents = JSON.parse(json);
+      // return components
+      fn(sceneComponents);
   });
 
   socket.on('getLanguages', function(noob, fn) {
@@ -250,7 +258,7 @@ var editor = io.of('/editor').authorization(function (handshakeData, callback) {
     fn(members);
   });
 */
-  socket.on('disconnect', function() {
+socket.on('disconnect', function() {
     // user = _.find(rooms.)
 
     console.info('user ' + socket.id + ' disconnected from magos!');
@@ -409,7 +417,7 @@ myMagos.logEvent = function(log, type, value, game) {
             }
         ]
 
-*/
+        */
 
 /*
 var editor = io.of('/editor').on('connection', function(client) {

@@ -83,30 +83,29 @@
       <div class="span9">
 
       <script type="text/x-handlebars">
-      {{! Chest }}
-
+      {{! Chests }}
         <div class="row-fluid">
-          <div class="span3 chest-container game-chest-container">
-            <ul class="chest game-chest">
-              <li>
-                <img class="game-item" src="/static/img/components/time.png" alt="Time" title="Time" rel="tooltip" /></li>
-              <li><img class="game-item" src="/static/img/components/background.png" alt="Background Image" title="Background Image" rel="tooltip" data-url="/static/img/bg.jpeg" /></li>
-              <li><img class="game-item" src="/static/img/components/dialog.png" alt="Dialog" title="Dialog" rel="tooltip" /></li>
-              <li><img class="game-item" src="/static/img/components/highscore.png" alt="Highscore" title="Highscore" rel="tooltip" /></li>
-              <li><img class="game-item" src="/static/img/components/volume-btn.png" alt="Volume" title="Volume On/Off" rel="tooltip" /></li>
-              <li><img class="game-item" src="/static/img/components/play-btn.png" alt="Start New Game Button" title="Start New Game Button" rel="tooltip" /></li>
+
+          <div class="span3 chest-container scene-chest-container">
+            <ul class="chest scene-chest">
+              {{#each App.sceneComponentsController}}
+                {{#view App.SceneComponentsView tagName="li" itemBinding="this" classNameBindings="uiSelected"}}
+                <img class="scene-item" {{bindAttr class="item.active"}} {{bindAttr src="item.icon"}} {{bindAttr alt="item.title"}} {{bindAttr title="item.title"}} rel="tooltip" /></li>
+                {{/view}}
+              {{/each}}
             </ul>
             <div class="clearfix"></div>
           </div>
-          <div class="span9 chest-container item-chest-container">
+
+          <div class="span9 chest-container chest-container">
             <ul class="chest item-chest">
               <li class="add-item" title="Add New Item" rel="tooltip"></li>
-              <li class="trash-item" title="Trash" rel="tooltip"></li>
+              <li class="remove-item" title="Remove Item" rel="tooltip"></li>
             </ul>
             <div class="clearfix"></div>
           </div>
-        </div>
 
+        </div>
       </script>
 
       <script type="text/x-handlebars">
@@ -148,8 +147,6 @@
           </div>
         </div>
       </script>
-
-      <!--/ shoutbox -->
 
       </div><!--/ left side-->
 

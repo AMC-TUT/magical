@@ -63,7 +63,7 @@ App.gameController = Em.Object.create({
     });
   },
   titleObserver: function() {
-    console.log("TITLE MUUTTUI")
+    //
   }.observes('title')
 });
 
@@ -85,6 +85,69 @@ App.Revision = Em.Object.extend({
 App.Scene = Em.Object.extend({
   name: null,
   elements: []
+});
+
+/**************************
+* SceneComponent
+**************************/
+
+App.SceneComponent = Em.Object.extend({
+  title: null,
+  slug: null,
+  scenes: [],
+  potions: [],
+  active: false,
+  icon : function() {
+    return '../static/img/components/' + this.get('slug') + '.png';
+  }.property('slug')
+});
+
+App.sceneComponentsController = Em.ArrayController.create({
+  content: [],
+  selected: null,
+  populate: function() {
+    var controller = this;
+
+    App.dataSource.getSceneComponents(function(data) {
+      // set content
+      controller.set('content', data);
+    });
+  },
+  selectedObserver: function() {
+    //
+    var items = this.get('content');
+    var selected = this.get('selected');
+    //
+    _.each(items, function(item) {
+      item.set('active', false);
+    });
+    //
+    selected.set('active', true);
+    //
+  }.observes('selected')
+});
+
+App.SceneComponentsView = Em.View.extend({
+  classNameBindings: ['uiSelected'],
+  uiSelected: false,
+  contentBinding: 'App.sceneComponentsController.content',
+  click: function(event) {
+    var selected = this.get('item');
+    var items = this.get('content');
+
+    // set selected component
+    App.sceneComponentsController.set('selected', selected);
+
+    // this could be done more efficiently
+    var siblings = this.$().siblings('li');
+    // loop siblings and remove ui-selected class
+    _.each(siblings, function(sibling) {
+      var view = Ember.View.views[ $(sibling).attr('id') ];
+      view.set('uiSelected', false);
+    });
+
+    this.set('uiSelected', true);
+  }
 });
 
 /**************************
@@ -150,7 +213,7 @@ App.Shout = Ember.Object.extend({
 
     return hours + ":" + minutes + ":" + seconds;
 
-  }.property('timestamp').cacheable()
+  }.property('timestamp')
 
 });
 
@@ -237,6 +300,25 @@ App.DataSource = Ember.Object.extend({
     socket.emit('shout', shout, function(data) {
       callback(data);
     });
+  },
+  getSceneComponents: function(callback) {
+    socket.emit('getSceneComponents', '', function(data) {
+      var components = [];
+
+      _.each(data, function(obj) {
+        components.push(
+          App.SceneComponent.create({
+            "slug": obj.slug,
+            "title": obj.title,
+            "scenes": obj.scenes,
+            "potions": obj.potions
+          })
+          );
+      });
+
+      callback(components);
+    });
+
   },
   getLanguages: function(callback) {
     socket.emit('getLanguages', '', function(data) {
@@ -361,6 +443,8 @@ socket.on('shout', function (shout) {
 });
 
 App.languagesController.populate();
+
+App.sceneComponentsController.populate();
 
 App.gameController.populate();
 

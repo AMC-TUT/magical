@@ -1,0 +1,57 @@
+[
+  {
+    "title": "Background Image",
+    "slug": "background-image",
+    "scenes": [],
+    "potions": [
+      "image",
+      "sound"
+    ]
+  },
+  {
+    "title": "Time",
+    "slug": "time",
+    "scenes": [
+      "game"
+    ],
+    "potions": [
+      "font"
+    ]
+  },
+  {
+    "title": "Dialog",
+    "slug": "dialog",
+    "scenes": [
+      "game"
+    ],
+    "potions": [
+      "font"
+    ]
+  },
+  {
+    "title": "Highscore",
+    "slug": "highscore",
+    "scenes": [
+      "intro",
+      "outro"
+    ],
+    "potions": [
+      "font"
+    ]
+  },
+  {
+    "title": "Volume",
+    "slug": "volume",
+    "scenes": [],
+    "potions": []
+  },
+  {
+    "title": "Play Button",
+    "slug": "play",
+    "scenes": [
+      "intro",
+      "outro"
+    ],
+    "potions": []
+  }
+]
