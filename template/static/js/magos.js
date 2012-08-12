@@ -183,13 +183,14 @@ $(function() {
             }
         }
     });
-
+/*
     //
     $('[rel^="tooltip"]').tooltip({
         delay: { show: 500, hide: 100 },
         placement: "top"
     });
-
+*/
+/*
     $('.btn-grid').on('click tap', function(event) {
         event.preventDefault();
 
@@ -199,7 +200,7 @@ $(function() {
 
         $tgt.toggleClass('active');
     });
-
+*/
     $('.btn-group-theme .btn, .btn-group-state .btn, .btn-group-scene .btn').on('click tap',
     function(event) {
         event.preventDefault();
@@ -210,7 +211,7 @@ $(function() {
 
         $tgt.addClass("active");
     });
-
+/*
     $('.btn-group-theme .btn').on('click tap',
     function(event) {
         event.preventDefault();
@@ -221,7 +222,7 @@ $(function() {
 
         $tgt.addClass("active, btn-success");
     });
-
+*/
     $('.btn-back-potion').on('click tap',
     function(event) {
         event.preventDefault();
@@ -279,7 +280,6 @@ $(function() {
         $tgt.closest('.action-group').remove();
     });
 
-
     // modals
 /*
     $(".add-item").on('click tap', function(event) {
@@ -291,6 +291,7 @@ $(function() {
         })
     });
 */
+/*
     $('.modal .btn').on('click tap', function(event) {
       event.preventDefault();
 
@@ -329,7 +330,7 @@ $(function() {
       }
 
     });
-
+*/
 });
 
 //(function($) {
@@ -371,6 +372,7 @@ socket.emit('join-room', slug, function (data) {
   * /
 });
 */
+/*
 socket.on('chat-message', function (message) {
   console.log('chat message comming...');
   console.log(message);
@@ -380,5 +382,6 @@ var msg = 'jokin viesti kaikille editorin käyttäjille';
 socket.emit('chat-message', msg, function(message) {
   console.log(message);
 });
+*/
 
 //})(jQuery);

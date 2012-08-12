@@ -145,7 +145,7 @@ App.SceneComponentsView = Em.View.extend({
   uiSelected: false,
   contentBinding: 'App.sceneComponentsController.content',
   didInsertElement: function() {
-    this.$('> img').tooltip();
+    this.$('> img').tooltip({delay: { show: 500, hide: 100 }, placement: "top"});
   },
   click: function(event) {
     var selected = this.get('item');
@@ -202,12 +202,7 @@ App.componentsController = Em.ArrayController.create({
       controller.set('content', data);
     });
 */
-}, /*,
-contentObserver: function() {
-  // update draggable binding
-  $(".game-item").draggable({ helper: "clone" });
-
-}.observes('content'), */
+},
 selectedObserver: function() {
     //
     var items = this.get('content');
@@ -219,7 +214,11 @@ selectedObserver: function() {
     //
     selected.set('active', true);
     //
-  }.observes('selected')
+  }.observes('selected'),
+  removeItem: function(propName, value){
+    var obj = this.findProperty(propName, value);
+    this.removeObject(obj);
+  }
 });
 
 App.ComponentsView = Em.View.extend({
@@ -227,7 +226,7 @@ App.ComponentsView = Em.View.extend({
   uiSelected: false,
   contentBinding: 'App.componentsController.content',
   didInsertElement: function() {
-    this.$('> img').tooltip();
+    this.$('> img').tooltip({delay: { show: 500, hide: 100 }, placement: "top"});
 
     this.$("> img").draggable({
         helper: "clone",
@@ -269,7 +268,7 @@ App.AddComponentView = Em.View.extend({
     })
   },
   didInsertElement: function() {
-    this.$('> img').tooltip();
+    this.$('> img').tooltip({delay: { show: 500, hide: 100 }, placement: "top"});
   }
 });
 
@@ -292,7 +291,7 @@ App.AddItemForm = Em.View.extend({
 
       $('#dialog-new-item').modal('hide');
 
-      // send to node
+      // TODO send to node
 
       this.set('itemTitle', null);
 
@@ -300,27 +299,28 @@ App.AddItemForm = Em.View.extend({
   });
 
 App.RemoveComponentView = Em.View.extend({
-  /* click: function(event) {
-    alert("remove item action");
-  }, */
+  //contentBinding: 'App.componentsController.content',
   didInsertElement: function() {
-    this.$('> img').tooltip();
+    var view = this;
 
-    this.$('> img').droppable({
+    view.$('> img').tooltip({delay: { show: 500, hide: 100 }, placement: "top"});
+
+    view.$().droppable({
         greedy: true,
         accept: ".game-item",
-        activeClass: "item-chest-hover",
-        hoverClass: "item-chest-active",
+        activeClass: "ui-state-target",
+        hoverClass: "ui-state-active",
         drop: function(event, ui) {
             $draggable = $(ui.draggable);
-            alert('moi')
-            if($draggable.hasClass('game-item')) { // chest item
-              // ember stuff
-              // $draggable.parent().remove();
-            } else { // canvas-item
-              // ember stuff
-              // $draggable.remove();
-            }
+
+            var selectedView = Ember.View.views[ $draggable.parent().attr('id') ];
+            var selectedItem = selectedView.get('item');
+            var slug = selectedItem.get('slug');
+
+            // TODO check that there is no istances of item in canvases
+
+            App.componentsController.removeItem('slug', slug);
+
         }
     });
   }
@@ -633,11 +633,22 @@ App.gameController.populate();
 
 // $(".game-item").draggable({ helper: "clone" });
 
-/*
-$(".chest").selectable({
-  filter: "> li:not(:empty)"
+// show/hide grid button TODO replace with ember object
+$('.btn-grid').on('click tap', function(event) {
+  event.preventDefault();
+  $tgt = $(event.target);
+  $('.canvas table td').toggleClass('gridless');
+  $tgt.toggleClass('active');
 });
-*/
+
+// theme switcher TODO replace with ember object
+$('.btn-group-theme .btn').on('click tap', function(event) {
+  event.preventDefault();
+  $tgt = $(event.target);
+  $tgt.siblings().removeClass("active, btn-success");
+  $tgt.addClass("active, btn-success");
+});
+
 /**************************
 * Helper functions
 **************************/
