@@ -89,9 +89,11 @@ $(function() {
     });
 
     /* magos component selectable */
+    /*
     $(".chest").selectable({
         filter: "> li:not(:empty)"
     });
+    */
     /*
     $(".chest-item, .game-item").on('click tap', function(event) {
         $tgt = $(event.target);
@@ -100,7 +102,7 @@ $(function() {
     */
     /* magos chest & game item image */
     $(".game-item").draggable({ helper: "clone" });
-
+/*
     $(".chest-item").draggable({
         helper: "clone",
         snap: ".canvas-cell:empty",
@@ -108,9 +110,9 @@ $(function() {
         start: function(event, ui) {
           var $draggable = $(ui.draggable);
           $draggable.parent().trigger('selected').addClass('ui-selected');
-        }*/
+        }* /
     });
-
+*/
     $(".canvas-cell:empty").droppable({
         greedy: true,
         accept: ".chest-item, .canvas-item",
@@ -154,10 +156,10 @@ $(function() {
         drop: function(event, ui) {
             $draggable = $(ui.draggable);
 
-            if($draggable.hasClass('chest-item')) { // chest item
+            if($draggable.hasClass('game-item')) {
               // ember stuff
               $draggable.parent().remove();
-            } else { // canvas-item
+            } else {
               // ember stuff
               $draggable.remove();
             }

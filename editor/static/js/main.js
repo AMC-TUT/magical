@@ -144,6 +144,9 @@ App.SceneComponentsView = Em.View.extend({
   classNameBindings: ['uiSelected'],
   uiSelected: false,
   contentBinding: 'App.sceneComponentsController.content',
+  didInsertElement: function() {
+    this.$('> img').tooltip();
+  },
   click: function(event) {
     var selected = this.get('item');
     var items = this.get('content');
@@ -199,12 +202,12 @@ App.componentsController = Em.ArrayController.create({
       controller.set('content', data);
     });
 */
-},
+}, /*,
 contentObserver: function() {
   // update draggable binding
   $(".game-item").draggable({ helper: "clone" });
 
-}.observes('content'),
+}.observes('content'), */
 selectedObserver: function() {
     //
     var items = this.get('content');
@@ -223,6 +226,19 @@ App.ComponentsView = Em.View.extend({
   classNameBindings: ['uiSelected'],
   uiSelected: false,
   contentBinding: 'App.componentsController.content',
+  didInsertElement: function() {
+    this.$('> img').tooltip();
+
+    this.$("> img").draggable({
+        helper: "clone",
+        snap: ".canvas-cell:empty",
+        snapMode: "inner" /*,
+        start: function(event, ui) {
+          var $draggable = $(ui.draggable);
+          $draggable.parent().trigger('selected').addClass('ui-selected');
+        }*/
+    });
+  },
   click: function(event) {
     var selected = this.get('item');
     var items = this.get('content');
@@ -251,6 +267,9 @@ App.AddComponentView = Em.View.extend({
       $(this).find('input').val('');
       $(this).find('.control-group').removeClass('error');
     })
+  },
+  didInsertElement: function() {
+    this.$('> img').tooltip();
   }
 });
 
@@ -281,8 +300,29 @@ App.AddItemForm = Em.View.extend({
   });
 
 App.RemoveComponentView = Em.View.extend({
-  click: function(event) {
+  /* click: function(event) {
     alert("remove item action");
+  }, */
+  didInsertElement: function() {
+    this.$('> img').tooltip();
+
+    this.$('> img').droppable({
+        greedy: true,
+        accept: ".game-item",
+        activeClass: "item-chest-hover",
+        hoverClass: "item-chest-active",
+        drop: function(event, ui) {
+            $draggable = $(ui.draggable);
+            alert('moi')
+            if($draggable.hasClass('game-item')) { // chest item
+              // ember stuff
+              // $draggable.parent().remove();
+            } else { // canvas-item
+              // ember stuff
+              // $draggable.remove();
+            }
+        }
+    });
   }
 });
 
