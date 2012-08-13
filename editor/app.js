@@ -46,6 +46,11 @@ app.get('/:slug', function(req, res) {
   res.sendfile(__dirname + '/index.html');
 });
 
+// fallback response
+app.get('/', function(req, res) {
+  res.send('Hello from Magos');
+});
+
 server.listen(9001);
 
 var questions = [],
