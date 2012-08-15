@@ -634,20 +634,46 @@ App.gameController.populate();
 // $(".game-item").draggable({ helper: "clone" });
 
 // show/hide grid button TODO replace with ember object
-$('.btn-grid').on('click tap', function(event) {
+$(document).on('click tap', '.btn-grid', function(event) {
   event.preventDefault();
-  $tgt = $(event.target);
+  $tgt = $(event.target).closest('.btn');
+
   $('.canvas table td').toggleClass('gridless');
+  console.log('click')
   $tgt.toggleClass('active');
 });
 
 // theme switcher TODO replace with ember object
-$('.btn-group-theme .btn').on('click tap', function(event) {
+$(document).on('click tap', '.btn-group-theme .btn', function(event) {
   event.preventDefault();
   $tgt = $(event.target);
+  console.log('click')
   $tgt.siblings().removeClass("active, btn-success");
   $tgt.addClass("active, btn-success");
 });
+
+// help TODO replace with ember object
+$(document).on('click tap', '.btn-group-help .btn', function(event) {
+  event.preventDefault();
+  $tgt = $(event.target).closest('.btn');
+  $tgt.toggleClass('active');
+
+  $('body').toggleClass('help');
+
+  // TODO .touch action for tablets
+  $('body').find('.help-popover').each(function(index) {
+    /*
+    var $this = $(this);
+    var placement = $this.data('placement');
+    var classList = $this.attr('class').replace(/\s+/g, '.');
+    console.log(classList); placement
+    */
+    $('body').popover({ selector: '.help .help-popover', 'placement': 'bottom', 'delay': { show: 500, hide: 100 } });
+  });
+
+
+});
+
 
 /**************************
 * Helper functions
