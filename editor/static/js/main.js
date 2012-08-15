@@ -669,6 +669,7 @@ $(document).on('click tap', '.btn-group-help .btn', function(event) {
 
   // TODO .touch action for tablets
   // $('body').find('.help-popover').each(function(index) { });
+  // TODO <a class="close" href="#">&times;</a>
   $('body').popover({ selector: '.help .help-popover', 'placement': 'bottom', 'delay': { show: 500, hide: 100 } });
 
 });
