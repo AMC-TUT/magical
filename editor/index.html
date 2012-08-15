@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Magical">
   <link href="/static/css/main.css" rel="stylesheet">
+  <link id="theme" href="/static/css/dark.css" rel="stylesheet">
 </head>
 
 <body>
@@ -31,8 +32,8 @@
     </div>
 
     <div class="btn-group btn-group-theme">
-      <a class="btn btn-info" href="#">Light</a>
-      <a class="btn btn-info active" href="#">Dark</a>
+      <a class="btn btn-info" data-theme="light" href="#">Light</a>
+      <a class="btn btn-info active" data-theme="dark" href="#">Dark</a>
     </div>
 
     {{#view App.LanguageSelectionView class="btn-group btn-group-language"}}
@@ -63,8 +64,8 @@
         <button class="btn btn-primary">Outro</button>
       </div>
 
-      <div class="btn-group btn-group-run-game help-popover" data-placement="bottom" title="Run Game" data-content="Short and informative text to describe what is the function of this button">
-        <button class="btn btn-success">Run Game</button>
+      <div class="btn-group btn-group-preview help-popover" data-placement="bottom" title="Preview" data-content="Short and informative text to describe what is the function of this button">
+        <button class="btn btn-success">Preview</button>
       </div>
 
       {{#view App.PublishedView}}
@@ -116,7 +117,6 @@
               {{#view App.RemoveComponentView tagName="li" itemBinding="this" class="remove-item" title="Remove Item"}}
                 <img class="game-item" src="/static/img/components/trash.png" alt="Remove Item" title="Remove Item">
               {{/view}}
-
 
             </ul>
             <div class="clearfix"></div>

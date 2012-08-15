@@ -646,10 +646,17 @@ $(document).on('click tap', '.btn-grid', function(event) {
 // theme switcher TODO replace with ember object
 $(document).on('click tap', '.btn-group-theme .btn', function(event) {
   event.preventDefault();
-  $tgt = $(event.target);
-  console.log('click')
-  $tgt.siblings().removeClass("active, btn-success");
-  $tgt.addClass("active, btn-success");
+  $tgt = $(event.target).closest('.btn');
+
+  $tgt.siblings().removeClass("active");
+  $tgt.addClass("active");
+
+  // TODO Update theme
+  var theme = $tgt.data('theme');
+  var href = "/static/css/"+theme+".css";
+  $(document).find('#theme').attr('href', href);
+
+
 });
 
 // help TODO replace with ember object
@@ -661,16 +668,8 @@ $(document).on('click tap', '.btn-group-help .btn', function(event) {
   $('body').toggleClass('help');
 
   // TODO .touch action for tablets
-  $('body').find('.help-popover').each(function(index) {
-    /*
-    var $this = $(this);
-    var placement = $this.data('placement');
-    var classList = $this.attr('class').replace(/\s+/g, '.');
-    console.log(classList); placement
-    */
-    $('body').popover({ selector: '.help .help-popover', 'placement': 'bottom', 'delay': { show: 500, hide: 100 } });
-  });
-
+  // $('body').find('.help-popover').each(function(index) { });
+  $('body').popover({ selector: '.help .help-popover', 'placement': 'bottom', 'delay': { show: 500, hide: 100 } });
 
 });
 
