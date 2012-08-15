@@ -666,7 +666,6 @@ $(document).on('click tap', '.btn-group-help .btn', function(event) {
 
 });
 
-
 /**************************
 * Helper functions
 **************************/
