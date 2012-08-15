@@ -117,27 +117,15 @@ App.SceneComponent = Em.Object.extend({
 
 App.sceneComponentsController = Em.ArrayController.create({
   content: [],
-  selected: null,
-  populate: function() {
-    var controller = this;
+// selected: null,
+populate: function() {
+  var controller = this;
 
-    App.dataSource.getSceneComponents(function(data) {
+  App.dataSource.getSceneComponents(function(data) {
       // set content
       controller.set('content', data);
     });
-  },
-  selectedObserver: function() {
-    //
-    var items = this.get('content');
-    var selected = this.get('selected');
-    //
-    _.each(items, function(item) {
-      item.set('active', false);
-    });
-    //
-    selected.set('active', true);
-    //
-  }.observes('selected')
+  }
 });
 
 App.SceneComponentsView = Em.View.extend({
@@ -149,29 +137,16 @@ App.SceneComponentsView = Em.View.extend({
   },
   click: function(event) {
     var selected = this.get('item');
-    var items = this.get('content');
-
-    // set selected component
-    App.sceneComponentsController.set('selected', selected);
-
-    // this could be done more efficiently
-    var siblings = this.$().siblings('li');
-    // loop siblings and remove ui-selected class
-    _.each(siblings, function(sibling) {
-      var view = Ember.View.views[ $(sibling).attr('id') ];
-      view.set('uiSelected', false);
-    });
-
-    this.set('uiSelected', true);
+    //
+    App.selectedComponentController.set('content', selected);
   }
 });
 
-
 /**************************
-* Component
+* GameComponent
 **************************/
 
-App.Component = Em.Object.extend({
+App.GameComponent = Em.Object.extend({
   title: null,
   slug: null,
   sprite: null,
@@ -181,85 +156,60 @@ App.Component = Em.Object.extend({
   }.property('sprite')
 });
 
-App.componentsController = Em.ArrayController.create({
+App.gameComponentsController = Em.ArrayController.create({
   content: [],
-  selected: null,
   populate: function() {
     //
     var array = [];
     //
-    array.push( App.Component.create({ title: 'Player', slug: 'player', sprite: 'player' }) );
-    array.push( App.Component.create({ title: 'Brick', slug: 'brick', sprite: 'brick' }) );
-    array.push( App.Component.create({ title: 'Water', slug: 'water', sprite: 'water' }) );
-    array.push( App.Component.create({ title: 'Painting', slug: 'painting', sprite: 'painting' }) );
+    array.push( App.GameComponent.create({ title: 'Player', slug: 'player', sprite: 'player' }) );
+    array.push( App.GameComponent.create({ title: 'Brick', slug: 'brick', sprite: 'brick' }) );
+    array.push( App.GameComponent.create({ title: 'Water', slug: 'water', sprite: 'water' }) );
+    array.push( App.GameComponent.create({ title: 'Painting', slug: 'painting', sprite: 'painting' }) );
 
     this.set('content', array);
-    /*
-    var controller = this;
 
-    App.dataSource.getSceneComponents(function(data) {
+    //var controller = this;
+
+    //App.dataSource.getSceneComponents(function(data) {
       // set content
-      controller.set('content', data);
-    });
-*/
-},
-selectedObserver: function() {
-    //
-    var items = this.get('content');
-    var selected = this.get('selected');
-    //
-    _.each(items, function(item) {
-      item.set('active', false);
-    });
-    //
-    selected.set('active', true);
-    //
-  }.observes('selected'),
+     // controller.set('content', data);
+    // });
+
+  },
   removeItem: function(propName, value){
     var obj = this.findProperty(propName, value);
     this.removeObject(obj);
   }
 });
 
-App.ComponentsView = Em.View.extend({
+App.GameComponentsView = Em.View.extend({
   classNameBindings: ['uiSelected'],
   uiSelected: false,
-  contentBinding: 'App.componentsController.content',
+  contentBinding: 'App.gameComponentsController.content',
   didInsertElement: function() {
     this.$('> img').tooltip({delay: { show: 500, hide: 100 }, placement: "top"});
 
     this.$("> img").draggable({
-        helper: "clone",
-        snap: ".canvas-cell:empty",
+      helper: "clone",
+      snap: ".canvas-cell:empty",
         snapMode: "inner" /*,
         start: function(event, ui) {
           var $draggable = $(ui.draggable);
           $draggable.parent().trigger('selected').addClass('ui-selected');
         }*/
-    });
+      });
   },
   click: function(event) {
     var selected = this.get('item');
-    var items = this.get('content');
-
     // set selected component
-    App.componentsController.set('selected', selected);
-
-    // this could be done more efficiently
-    var siblings = this.$().siblings('li');
-    // loop siblings and remove ui-selected class
-    _.each(siblings, function(sibling) {
-      var view = Ember.View.views[ $(sibling).attr('id') ];
-      view.set('uiSelected', false);
-    });
-
-    this.set('uiSelected', true);
+    App.selectedComponentController.set('content', selected);
   }
 });
 
-App.componentsController.populate();
+App.gameComponentsController.populate();
 
-App.AddComponentView = Em.View.extend({
+App.AddGameComponentView = Em.View.extend({
   click: function(event) {
     // open bootstrap dialog
     $('#dialog-new-item').modal().on('show', function () {
@@ -269,6 +219,33 @@ App.AddComponentView = Em.View.extend({
   },
   didInsertElement: function() {
     this.$('> img').tooltip({delay: { show: 500, hide: 100 }, placement: "top"});
+  }
+});
+
+App.RemoveGameComponentView = Em.View.extend({
+  didInsertElement: function() {
+    var view = this;
+
+    view.$('> img').tooltip({delay: { show: 500, hide: 100 }, placement: "top"});
+
+    view.$().droppable({
+      greedy: true,
+      accept: ".game-item",
+      activeClass: "ui-state-target",
+      hoverClass: "ui-state-active",
+      drop: function(event, ui) {
+        $draggable = $(ui.draggable);
+
+        var selectedView = Ember.View.views[ $draggable.parent().attr('id') ];
+        var selectedItem = selectedView.get('item');
+        var slug = selectedItem.get('slug');
+
+            // TODO check that there is no istances of item in canvases
+
+            App.gameComponentsController.removeItem('slug', slug);
+
+          }
+        });
   }
 });
 
@@ -285,7 +262,7 @@ App.AddItemForm = Em.View.extend({
       if(!itemTitle.length) return;
 
       var safeSlug = createSlug(itemTitle);
-      var item = App.Component.create({ title: itemTitle, slug: safeSlug, sprite: 'empty' });
+      var item = App.GameComponent.create({ title: itemTitle, slug: safeSlug, sprite: 'empty' });
 
       App.componentsController.get('content').pushObject(item);
 
@@ -298,32 +275,47 @@ App.AddItemForm = Em.View.extend({
     }
   });
 
-App.RemoveComponentView = Em.View.extend({
-  //contentBinding: 'App.componentsController.content',
-  didInsertElement: function() {
-    var view = this;
+/**************************
+* Selected Component
+**************************/
 
-    view.$('> img').tooltip({delay: { show: 500, hide: 100 }, placement: "top"});
+App.selectedComponentController = Em.Object.create({
+  content: null,
+  sceneComponentsBinding: 'App.sceneComponentsController.content',
+  gameComponentsBinding: 'App.gameComponentsController.content',
+  contentObserver: function() {
+    //
+    var selected = this.get('content');
+    var sceneItems = $('.scene-chest').find('li');
+    var gameItems = $('.item-chest').find('li');
 
-    view.$().droppable({
-        greedy: true,
-        accept: ".game-item",
-        activeClass: "ui-state-target",
-        hoverClass: "ui-state-active",
-        drop: function(event, ui) {
-            $draggable = $(ui.draggable);
+    // loop elements and remove ui-selected class
+    _.each(sceneItems, function(item) {
+      var view = Ember.View.views[ $(item).attr('id') ];
+      var component = view.get('item');
 
-            var selectedView = Ember.View.views[ $draggable.parent().attr('id') ];
-            var selectedItem = selectedView.get('item');
-            var slug = selectedItem.get('slug');
-
-            // TODO check that there is no istances of item in canvases
-
-            App.componentsController.removeItem('slug', slug);
-
-        }
+      view.set('uiSelected', component === selected ? true : false);
     });
-  }
+
+    _.each(gameItems, function(item) {
+      var view = Ember.View.views[ $(item).attr('id') ];
+      var component = view.get('item');
+
+      view.set('uiSelected', component === selected ? true : false);
+    });
+
+    //
+    var sceneComponents = this.get('sceneComponents');
+    var gameComponents = this.get('gameComponents');
+    var items = sceneComponents.concat(gameComponents);
+
+    _.each(items, function(item) {
+      item.set('active', false);
+    });
+
+    selected.set('active', true);
+
+  }.observes('content')
 });
 
 /**************************
