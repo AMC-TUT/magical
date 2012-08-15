@@ -1,0 +1,59 @@
+<html>
+<head>
+	<title>Crystall Ball</title>
+	<link href='http://fonts.googleapis.com/css?family=Loved+by+the+King' rel='stylesheet' type='text/css'>
+	<!--link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet"-->
+
+	<style>
+		#crystalBall {
+			display: block;
+			position: absolute;
+		}
+		#crystalBallLens {
+			width: 407px;
+			height: 407px;
+			background-image: url('CrystalBall.png');
+			opacity: 0.5;
+			position: absolute;
+		}
+		#crystalBallCanvas {
+			position: absolute;
+		}
+		#contentHolder {
+			width: 407px;
+			height: 200px;
+			font-family: 'Loved by the King', cursive;
+			font-size: 64px;
+			text-align: center;
+			margin-top: 140px;
+			position: absolute;
+		}
+		.active {
+			border: 1px solid red;
+		}
+		.unselectable { 
+			-moz-user-select: none; 
+			-khtml-user-select: none; 
+			-webkit-user-select: none; 
+			-o-user-select: none; 
+		}
+	</style>
+	
+	<script>
+	</script>
+	
+</head>
+<body>
+	<div id="crystalBall">
+		<canvas id='crystalBallCanvas' width='407px' height='407px'></canvas>
+		<div id="crystalBallLens">
+			<div id="contentHolder" class="unselectable"></div>
+		</div>
+	</div>
+	
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+	<script src="js/main.js"></script>
+	<script src="http://remote-tilt.com/js/device-motion-polyfill.js"></script>
+</body>
+</html>
