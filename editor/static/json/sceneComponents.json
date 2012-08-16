@@ -2,7 +2,11 @@
   {
     "title": "Background Image",
     "slug": "background-image",
-    "scenes": [],
+    "scenes": [
+      "intro",
+      "game",
+      "outro"
+    ],
     "potions": [
       "image",
       "sound"
@@ -42,7 +46,11 @@
   {
     "title": "Volume",
     "slug": "volume",
-    "scenes": [],
+    "scenes": [
+      "intro",
+      "game",
+      "outro"
+    ],
     "potions": []
   },
   {

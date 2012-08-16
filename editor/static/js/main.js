@@ -108,20 +108,41 @@ App.SceneComponent = Em.Object.extend({
   title: null,
   slug: null,
   scenes: [],
-  potions: [],
+  potions: null,
   active: false,
   icon : function() {
     return '../static/img/components/' + this.get('slug') + '.png';
-  }.property('slug')
+  }.property('slug'),
+  potionsStr: function() {
+    var potions = this.get('potions');
+    var potionsStr = '';
+
+    _.each(potions, function(potion) {
+      potionsStr += 'p-'+potion+' ';
+    });
+
+    return potionsStr.trim();
+
+  }.property('potions'),
+  scenesStr: function() {
+    var scenes = this.get('scenes');
+    var scenesStr = '';
+
+    _.each(scenes, function(scene) {
+      scenesStr += 's-'+scene+' ';
+    });
+
+    return scenesStr.trim();
+
+  }.property('scenes')
 });
 
 App.sceneComponentsController = Em.ArrayController.create({
   content: [],
-// selected: null,
-populate: function() {
-  var controller = this;
+  populate: function() {
+    var controller = this;
 
-  App.dataSource.getSceneComponents(function(data) {
+    App.dataSource.getSceneComponents(function(data) {
       // set content
       controller.set('content', data);
     });
@@ -129,11 +150,12 @@ populate: function() {
 });
 
 App.SceneComponentsView = Em.View.extend({
+  contentBinding: 'App.sceneComponentsController.content',
   classNameBindings: ['uiSelected'],
   uiSelected: false,
-  contentBinding: 'App.sceneComponentsController.content',
+  alwaysTrue: true,
   didInsertElement: function() {
-    this.$('> img').tooltip({delay: { show: 500, hide: 100 }, placement: "top"});
+    this.$('> img').tooltip({delay: { show: 500, hide: 100 }, placement: 'top'});
   },
   click: function(event) {
     var selected = this.get('item');
@@ -176,16 +198,17 @@ App.gameComponentsController = Em.ArrayController.create({
      // controller.set('content', data);
     // });
 
-  },
-  removeItem: function(propName, value){
-    var obj = this.findProperty(propName, value);
-    this.removeObject(obj);
-  }
+},
+removeItem: function(propName, value){
+  var obj = this.findProperty(propName, value);
+  this.removeObject(obj);
+}
 });
 
 App.GameComponentsView = Em.View.extend({
   classNameBindings: ['uiSelected'],
   uiSelected: false,
+  alwaysTrue: true,
   contentBinding: 'App.gameComponentsController.content',
   didInsertElement: function() {
     this.$('> img').tooltip({delay: { show: 500, hide: 100 }, placement: "top"});
@@ -316,6 +339,40 @@ App.selectedComponentController = Em.Object.create({
     selected.set('active', true);
 
   }.observes('content')
+});
+
+/**************************
+* InfoBox Views
+**************************/
+
+App.InfoBoxPrincipesView = Em.View.extend({
+  contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content'),
+  classNames: ['infobox-skillset', 'infobox-principes']
+});
+
+App.InfoBoxCollisionView = Em.View.extend({
+  tagName: 'table',
+  classNames: ['table', 'infobox', 'infobox-collision'],
+  contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content'),
+  content: null,
+  emptyView: Ember.View.extend({
+    template: Ember.Handlebars.compile("The collection is empty")
+  })
+});
+
+App.InfoBoxPhysicusView = Em.View.extend({
+  contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content'),
+  classNames: ['infobox-skillset', 'infobox-physicus']
+});
+
+App.InfoBoxArtifexView = Em.View.extend({
+  contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content'),
+  classNames: ['infobox-skillset', 'infobox-artifex']
+});
+
+App.InfoBoxMusicusView = Em.View.extend({
+  contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content'),
+  classNames: ['infobox-skillset', 'infobox-musicus']
 });
 
 /**************************

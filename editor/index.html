@@ -95,7 +95,7 @@
             <ul class="chest scene-chest">
               {{#each App.sceneComponentsController}}
                 {{#view App.SceneComponentsView tagName="li" itemBinding="this" classNameBindings="uiSelected"}}
-                <img class="scene-item" {{bindAttr class="item.active"}} {{bindAttr src="item.icon"}} {{bindAttr alt="item.title"}} {{bindAttr title="item.title"}} /></li>
+                <img {{bindAttr class="item.active item.potionsStr item.scenesStr alwaysTrue:scene-item"}} {{bindAttr src="item.icon"}} {{bindAttr alt="item.title"}} {{bindAttr title="item.title"}} /></li>
                 {{/view}}
               {{/each}}
             </ul>
@@ -144,7 +144,7 @@
 
                 <div class="row-fluid">
                   <div class="span4">
-                    <div class="infobox-skillset infobox-physicus">
+                    {{#view App.InfoBoxPhysicusView}}
                       <h4>Controls</h4>
                       <table class="table infobox infobox-controls">
                         <tr>
@@ -160,8 +160,9 @@
                           <td>Snap to Grid</td><td>Yes/No</td>
                         </tr>
                       </table>
+
                       <h4>Collision</h4>
-                      <table class="table infobox infobox-collision">
+                      {{#view App.InfoBoxCollisionView}}
                         <tr>
                           <th>Target</th><th>Action</th>
                         </tr>
@@ -171,7 +172,8 @@
                         <tr>
                           <td>Brick</td><td>push target</td>
                         </tr>
-                      </table>
+                      {{/view}}
+
                       <h4>Gravitation</h4>
                       <table class="table infobox infobox-gravitation">
                         <tr>
@@ -181,11 +183,13 @@
                           <td>Direction</td><td>Inverted</td>
                         </tr>
                       </table>
-                    </div>
+                    {{/view}}
+
                   </div><!--/span-->
 
                   <div class="span4">
-                    <div class="infobox-skillset infobox-principes">
+
+                    {{#view App.InfoBoxPrincipesView}}
                       <h4>Score</h4>
                       <table class="table infobox infobox-controls">
                         <tr>
@@ -213,11 +217,13 @@
                           <td>---</td><td></td>
                         </tr>
                       </table>
-                    </div>
+                    {{/view}}
+
                   </div><!--/span-->
 
                   <div class="span4">
-                    <div class="infobox-skillset infobox-artifex">
+
+                    {{#view App.InfoBoxArtifexView itemBinding="this"}}
                       <h4>Image</h4>
                       <table class="table infobox infobox-image">
                         <tr>
@@ -233,9 +239,9 @@
                           <td>---</td><td>---</td>
                         </tr>
                       </table>
-                    </div>
+                    {{/view}}
 
-                    <div class="infobox-skillset infobox-musicus">
+                    {{#view App.InfoBoxMusicusView}}
                       <h4>Audio</h4>
                       <table class="table infobox infobox-audio">
                         <tr>
@@ -245,7 +251,7 @@
                           <td>---</td><td>---</td>
                         </tr>
                       </table>
-                    </div>
+                    {{/view}}
 
                   </div><!--/span-->
 
