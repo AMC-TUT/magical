@@ -127,142 +127,135 @@
 
       <script type="text/x-handlebars">
       {{! InfoBox }}
-      <div class="infobox-container main-sortable well">
-        <div class="span12">
-          <div class="magos-infobox">
+      <div class="magos-infobox well">
+        <div class="navbar">
+          <div class="navbar-inner navbar-inner-in-well">
+            <div class="container">
 
-            <div class="navbar">
-              <div class="navbar-inner navbar-inner-in-well">
-                <div class="container">
+              <a class="btn btn-navbar" data-toggle="collapse" data-target=".infobox-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </a>
 
-                  <a class="btn btn-navbar" data-toggle="collapse" data-target=".infobox-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                  </a>
+              <h3>Element Information</h3>
 
-                  <h3>Element Information</h3>
+              <div class="nav-collapse infobox-collapse">
 
-                  <div class="nav-collapse infobox-collapse">
+                <div class="row-fluid">
+                  <div class="span4">
+                    <div class="infobox-skillset infobox-physicus">
+                      <h4>Controls</h4>
+                      <table class="table infobox infobox-controls">
+                        <tr>
+                          <td>Method</td><td>Fourway</td>
+                        </tr>
+                        <tr>
+                          <td>Speed</td><td>3</td>
+                        </tr>
+                        <tr>
+                          <td>Jump Height</td><td>12</td>
+                        </tr>
+                        <tr>
+                          <td>Snap to Grid</td><td>Yes/No</td>
+                        </tr>
+                      </table>
+                      <h4>Collision</h4>
+                      <table class="table infobox infobox-collision">
+                        <tr>
+                          <th>Target</th><th>Action</th>
+                        </tr>
+                        <tr>
+                          <td>Stone</td><td>destroy target</td>
+                        </tr>
+                        <tr>
+                          <td>Brick</td><td>push target</td>
+                        </tr>
+                      </table>
+                      <h4>Gravitation</h4>
+                      <table class="table infobox infobox-gravitation">
+                        <tr>
+                          <td>Strength</td><td>2</td>
+                        </tr>
+                        <tr>
+                          <td>Direction</td><td>Inverted</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div><!--/span-->
 
-                    <div class="row-fluid">
-                      <div class="span4">
-                        <div class="infobox-skillset infobox-physicus">
-                          <h4>Controls</h4>
-                          <table class="table infobox infobox-controls">
-                            <tr>
-                              <td>Method</td><td>Fourway</td>
-                            </tr>
-                            <tr>
-                              <td>Speed</td><td>3</td>
-                            </tr>
-                            <tr>
-                              <td>Jump Height</td><td>12</td>
-                            </tr>
-                            <tr>
-                              <td>Snap to Grid</td><td>Yes/No</td>
-                            </tr>
-                          </table>
-                          <h4>Collision</h4>
-                          <table class="table infobox infobox-collision">
-                            <tr>
-                              <th>Target</th><th>Action</th>
-                            </tr>
-                            <tr>
-                              <td>Stone</td><td>destroy target</td>
-                            </tr>
-                            <tr>
-                              <td>Brick</td><td>push target</td>
-                            </tr>
-                          </table>
-                          <h4>Gravitation</h4>
-                          <table class="table infobox infobox-gravitation">
-                            <tr>
-                              <td>Strength</td><td>2</td>
-                            </tr>
-                            <tr>
-                              <td>Direction</td><td>Inverted</td>
-                            </tr>
-                          </table>
-                        </div>
-                      </div><!--/span-->
+                  <div class="span4">
+                    <div class="infobox-skillset infobox-principes">
+                      <h4>Score</h4>
+                      <table class="table infobox infobox-controls">
+                        <tr>
+                          <th>Action</th><th>Score</th>
+                        </tr>
+                        <tr>
+                          <td style="white-space:nowrap;">Stone collision</td><td>10</td>
+                        </tr>
+                      </table>
+                      <h4>Font</h4>
+                      <table class="table infobox infobox-gravitation">
+                        <tr>
+                          <th>Type</th><th>Value</th>
+                        </tr>
+                        <tr>
+                          <td>Family</td><td>Gothica</td>
+                        </tr>
+                        <tr>
+                          <td>Size</td><td>14</td>
+                        </tr>
+                      </table>
+                      <h4>Dialog</h4>
+                      <table class="table infobox infobox-collision">
+                        <tr>
+                          <td>---</td><td></td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div><!--/span-->
 
-                      <div class="span4">
-                        <div class="infobox-skillset infobox-principes">
-                          <h4>Score</h4>
-                          <table class="table infobox infobox-controls">
-                            <tr>
-                              <th>Action</th><th>Score</th>
-                            </tr>
-                            <tr>
-                              <td style="white-space:nowrap;">Stone collision</td><td>10</td>
-                            </tr>
-                          </table>
-                          <h4>Font</h4>
-                          <table class="table infobox infobox-gravitation">
-                            <tr>
-                              <th>Type</th><th>Value</th>
-                            </tr>
-                            <tr>
-                              <td>Family</td><td>Gothica</td>
-                            </tr>
-                            <tr>
-                              <td>Size</td><td>14</td>
-                            </tr>
-                          </table>
-                          <h4>Dialog</h4>
-                          <table class="table infobox infobox-collision">
-                            <tr>
-                              <td>---</td><td></td>
-                            </tr>
-                          </table>
-                        </div>
-                      </div><!--/span-->
-
-                      <div class="span4">
-                        <div class="infobox-skillset infobox-artifex">
-                          <h4>Image</h4>
-                          <table class="table infobox infobox-image">
-                            <tr>
-                              <td>---</td><td></td>
-                            </tr>
-                          </table>
-                          <h4>Animation</h4>
-                          <table class="table infobox infobox-animation">
-                            <tr>
-                              <th>Action</th><th>Animation</th>
-                            </tr>
-                            <tr>
-                              <td>---</td><td>---</td>
-                            </tr>
-                          </table>
-                        </div>
-
-                        <div class="infobox-skillset infobox-musicus">
-                          <h4>Audio</h4>
-                          <table class="table infobox infobox-audio">
-                            <tr>
-                              <th>Action</th><th>Audio</th>
-                            </tr>
-                            <tr>
-                              <td>---</td><td>---</td>
-                            </tr>
-                          </table>
-                        </div>
-
-                      </div><!--/span-->
-
-                      <div class="clearfix"></div>
+                  <div class="span4">
+                    <div class="infobox-skillset infobox-artifex">
+                      <h4>Image</h4>
+                      <table class="table infobox infobox-image">
+                        <tr>
+                          <td>---</td><td></td>
+                        </tr>
+                      </table>
+                      <h4>Animation</h4>
+                      <table class="table infobox infobox-animation">
+                        <tr>
+                          <th>Action</th><th>Animation</th>
+                        </tr>
+                        <tr>
+                          <td>---</td><td>---</td>
+                        </tr>
+                      </table>
                     </div>
 
-                  </div>
+                    <div class="infobox-skillset infobox-musicus">
+                      <h4>Audio</h4>
+                      <table class="table infobox infobox-audio">
+                        <tr>
+                          <th>Action</th><th>Audio</th>
+                        </tr>
+                        <tr>
+                          <td>---</td><td>---</td>
+                        </tr>
+                      </table>
+                    </div>
+
+                  </div><!--/span-->
+
+                  <div class="clearfix"></div>
                 </div>
+
               </div>
             </div>
-
           </div>
         </div>
-
       </div>
       </script>
 

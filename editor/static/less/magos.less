@@ -106,3 +106,73 @@
 .help, .help .btn {
   cursor: help !important;
 }
+
+.magos-infobox {
+
+  h4 {
+    text-shadow:0 2px 6px #000;
+    color: @white;
+  }
+
+  h4:not(:first-child) {
+    margin-top: 10px;
+  }
+
+  .infobox-skillset {
+    padding:10px;color:#fff;border-radius:3px;
+  }
+
+  .infobox-skillset.infobox-musicus {
+    margin-top:10px;
+  }
+
+  .infobox-physicus {
+    background-color: @physicus;
+  }
+
+  .infobox-principes {
+    background-color: @principes;
+  }
+
+  .infobox-musicus {
+    background-color: @musicus;
+  }
+
+  .infobox-artifex {
+    background-color: @artifex;
+  }
+
+  .infobox-physicus, .infobox-principes,
+  .infobox-musicus, .infobox-artifex {
+    .magos-gradient();
+  }
+
+  .table {
+    margin-bottom: 0;
+
+    tr:first-child th, tr:first-child td {
+      border-top: 0;
+    }
+
+    td:first-child {
+      width: 33%;
+      white-space: nowrap;
+    }
+
+    th, td {
+      padding: 5px 5px;
+      border-top: 1px solid rgba(221,221,221,0.06);
+    }
+
+  }
+
+}
+
+
+.magos-infobox h4{text-shadow:0 2px 6px #000;}
+.magos-infobox .infobox-skillset{padding:10px;color:#fff;border-radius:3px;}
+.magos-infobox .infobox-skillset.infobox-musicus{margin-top:10px;}
+.magos-infobox .table{margin-bottom:0;}
+.magos-infobox .table tr:first-child th,.magos-infobox .table tr:first-child td{border-top:0;}
+.magos-infobox .table td:first-child{width:33%;white-space:nowrap;}
+.magos-infobox .table th,.magos-infobox .table td{padding:5px 5px;border-top:1px solid rgba(221,221,221,0.06);}
