@@ -10,6 +10,7 @@
 </head>
 
 <body>
+
   <script type="text/x-handlebars">
   <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
@@ -59,9 +60,12 @@
     <div class="btn-toolbar pull-right game-toolbar">
 
       <div class="btn-group btn-group-scene">
-        <button class="btn btn-primary">Intro</button>
-        <button class="btn btn-primary active">Game</button>
-        <button class="btn btn-primary">Outro</button>
+
+      {{#each App.scenesController}}
+        {{#view App.SelectSceneBtn tagName="button" sceneBinding="this"}}
+          {{scene.name}}
+        {{/view}}
+      {{/each}}
       </div>
 
       <div class="btn-group btn-group-preview help-popover" data-placement="bottom" title="Preview" data-content="Play your game as it is now. Use this to test that everything works the way you wanted.">
@@ -69,8 +73,8 @@
       </div>
 
       {{#view App.PublishedView}}
-        <button {{bindAttr class="privateState:active alwaysTrue:btn alwaysTrue:btn-success"}} type="submit">Public</button>
-        <button {{bindAttr class="publicState:active alwaysTrue:btn alwaysTrue:btn-success"}} type="submit">Private</button>
+        <button {{bindAttr class="privateState:active alwaysTrue:btn alwaysTrue:btn-success"}}>Public</button>
+        <button {{bindAttr class="publicState:active alwaysTrue:btn alwaysTrue:btn-success"}}>Private</button>
       {{/view}}
 
       </div>
@@ -79,8 +83,6 @@
   </div>
   </div>
   </script>
-
-
 
   <div class="container-fluid">
 

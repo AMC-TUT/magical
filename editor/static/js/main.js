@@ -3,6 +3,8 @@
 
 (function(App, $, undefined){
 
+// "use strict";
+
  // Em.LOG_BINDINGS = true;
  // Em.VIEW_PRESERVES_CONTEXT = true;
 
@@ -70,7 +72,6 @@ App.gameController = Em.Object.create({
     App.dataSource.joinGame(function(data) {
       // set content
       controller.set('content', data);
-      //
       // console.log(data);
       // console.log(controller.get('content').get('title'));
     });
@@ -91,15 +92,84 @@ App.Revision = Em.Object.extend({
   sprites: []
 });
 
+App.revisionController = Em.Object.create({
+  contentBinding: 'App.gameController.content.revision',
+  contentObserver: function() {
+    // content changed
+    console.log('contentObserver event');
+
+  }.observes('content')
+});
+
 /**************************
 * Scene
 **************************/
 
 App.Scene = Em.Object.extend({
   name: null,
-  elements: []
+  elements: [],
+  active: false
 });
 
+App.scenesController = Em.ArrayController.create({
+  contentBinding: 'App.revisionController.content.scenes',
+  selectedBinding: 'App.revisionController.content.scenes.firstObject',
+  selectedObserver: function() {
+    var controller = this;
+
+    var selected = controller.get('selected');
+    var items = controller.get('content');
+
+    _.each(items, function(item) {
+      item.set('active', false);
+    });
+
+    if(!_.isNull(selected)) selected.set('active', true);
+
+  }.observes('selected')
+});
+/*
+Em.ContainerView.create({
+  childViews: ['btnView'],
+
+  btnView: Em.View.extend({
+    templateName: '',
+    contentBinding: 'App.scenesController.content'
+  })
+});
+*/
+
+App.SelectSceneView = Em.View.extend({
+  contentBinding: 'App.scenesController.content',
+  classNames: ['btn-group', 'btn-group-scene'],
+  alwaysTrue: true,
+  click: function(event) {
+    var $tgt = $(event.target);
+
+    var view = Ember.View.views[ $tgt.parent().attr('id') ];
+    var selected = view.get('item');
+    // set selected component
+    App.selectedComponentController.set('content', selected);
+
+  }
+});
+
+App.SelectSceneBtn = Em.View.extend({
+  classNames: ['btn', 'btn-primary'],
+  classNameBindings: ['scene.active'],
+  click: function(event) {
+    //
+    App.scenesController.set('selected', this.get('scene'));
+  }
+});
+/*
+App.ScenesView = Em.View.extend({
+  contentBinding: 'App.scenesController.content',
+  classNames: ['btn-group', 'btn-group-scene'],
+  classNameBindings: ['active'],
+  alwaysTrue: true
+});
+*/
 /**************************
 * SceneComponent
 **************************/
@@ -156,10 +226,23 @@ App.SceneComponentsView = Em.View.extend({
   alwaysTrue: true,
   didInsertElement: function() {
     this.$('> img').tooltip({delay: { show: 500, hide: 100 }, placement: 'top'});
+
+    this.$("> img").draggable({
+      helper: "clone",
+      snap: ".canvas-cell:empty",
+      snapMode: "inner",
+      start: function() {
+        var view = Ember.View.views[ $(this).parent().attr('id') ];
+
+        var selected = view.get('item');
+        // set selected component
+        App.selectedComponentController.set('content', selected);
+      }
+    });
   },
   click: function(event) {
     var selected = this.get('item');
-    //
+    // set selected component
     App.selectedComponentController.set('content', selected);
   }
 });
@@ -216,18 +299,23 @@ App.GameComponentsView = Em.View.extend({
     this.$("> img").draggable({
       helper: "clone",
       snap: ".canvas-cell:empty",
-        snapMode: "inner" /*,
-        start: function(event, ui) {
-          var $draggable = $(ui.draggable);
-          $draggable.parent().trigger('selected').addClass('ui-selected');
-        }*/
-      });
+      snapMode: "inner",
+      start: function() {
+        var view = Ember.View.views[ $(this).parent().attr('id') ];
+
+        var selected = view.get('item');
+        // set selected component
+        App.selectedComponentController.set('content', selected);
+      }
+    });
   },
-  click: function(event) {
-    var selected = this.get('item');
-    // set selected component
-    App.selectedComponentController.set('content', selected);
-  }
+  eventManager: Ember.Object.create({
+    click: function(event, view) {
+      var selected = view.get('item');
+      // set selected component
+      App.selectedComponentController.set('content', selected);
+    }
+  })
 });
 
 App.gameComponentsController.populate();
@@ -257,7 +345,7 @@ App.RemoveGameComponentView = Em.View.extend({
       activeClass: "ui-state-target",
       hoverClass: "ui-state-active",
       drop: function(event, ui) {
-        $draggable = $(ui.draggable);
+        var $draggable = $(ui.draggable);
 
         var selectedView = Ember.View.views[ $draggable.parent().attr('id') ];
         var selectedItem = selectedView.get('item');
@@ -374,6 +462,7 @@ App.InfoBoxMusicusView = Em.View.extend({
   contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content'),
   classNames: ['infobox-skillset', 'infobox-musicus']
 });
+
 
 /**************************
 * Language

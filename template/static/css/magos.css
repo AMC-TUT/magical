@@ -11,6 +11,7 @@ body { margin: 0 auto; }
 .magos-potions .table{margin:10px 0;}
 .magos-potions .table td{border:0;font-weight:700;line-height:30px;padding:4px 8px;text-shadow:0 2px 6px #000;}
 .magos-potions .table td:first-child{width:31px;text-align:center;}
+/*
 .magos-infobox h4{text-shadow:0 2px 6px #000;}
 .magos-infobox .infobox-skillset{padding:10px;color:#fff;border-radius:3px;}
 .magos-infobox .infobox-skillset.infobox-musicus{margin-top:10px;}
@@ -18,6 +19,7 @@ body { margin: 0 auto; }
 .magos-infobox .table tr:first-child th,.magos-infobox .table tr:first-child td{border-top:0;}
 .magos-infobox .table td:first-child{width:33%;white-space:nowrap;}
 .magos-infobox .table th,.magos-infobox .table td{padding:5px 5px;border-top:1px solid rgba(221,221,221,0.06);}
+*/
 .magos-image{position:absolute;right:10px;top:10px;cursor:move;border:1px solid rgba(98,18,131,0.5);padding:4px 7px 6px;border-radius:4px;box-shadow:inset 0 0 10px #333;}
 .magos-potions.principes .magos-image{border:1px solid rgba(98,18,131,0.5);}
 .magos-potions.artifex .magos-image{border:1px solid rgba(24,85,22,0.56);}
@@ -33,6 +35,7 @@ body { margin: 0 auto; }
 .magos-potions.musicus .potion-icon{border:1px solid rgba(5,58,68,0.5);}
 .well{padding:0;border:0;box-shadow:none;margin:0;background:rgba(19,19,19,0.87);}
 .well .well{background:transparent;}
+
 .chest-container{border-radius:6px;padding:5px;margin-bottom:10px;}
 .item-chest-container{background:-webkit-linear-gradient(top,rgb(158,108,2) 0%,#412D04 100% );}
 .game-chest-container{background:-webkit-linear-gradient(top,#6E1B8F 0%,#2F0B3D 100% );}
@@ -45,6 +48,7 @@ body { margin: 0 auto; }
 .chest li.ui-selected{background:#EEA200;}
 .game-chest li.ui-state-active,.game-chest li.ui-selected{background:#C73DFF;}
 .chest li img{cursor:move;}
+
 .canvas-container{background:#2C2929;padding: 1px;margin-bottom:10px;}
 .canvas{margin:0 auto;padding:0;background-color:#000;position:relative;}
 .canvas table.table-grid { background-size:cover;background-repeat:no-repeat; }
@@ -73,11 +77,13 @@ hr{border-top:1px solid #3D3C3C;border-bottom:1px solid #5A5959;}
 .magos-potions-container-active .magos-potions{box-shadow:0 0 20px #15FC15;}
 .main-sortable{padding:3px 0 0;box-sizing:border-box;margin-bottom:10px;}
 .main-sortable > div[class*="span"] { margin-left:0;margin-bottom:10px;}
-.magos-shoutbox,.magos-infobox{background:#2C2929;border-radius:6px;padding:10px;} /*69*/
+/*
+.magos-shoutbox,.magos-infobox{background:#2C2929;border-radius:6px;padding:10px;}
 .magos-shoutbox input[type=text]{height:20px; line-height:20px; width:-webkit-calc(100% - 81px);box-shadow:inset 0 0 6px black;border-color:#2C2929;color:#444;}
 .magos-shoutbox-log{color:#555;line-height:1.4;font-size:1.1em;overflow:hidden;margin:10px 0 0;padding:5px;background:#EEE;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);-moz-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);-webkit-transition:border linear 0.2s,box-shadow linear 0.2s;-moz-transition:border linear 0.2s,box-shadow linear 0.2s;-ms-transition:border linear 0.2s,box-shadow linear 0.2s;-o-transition:border linear 0.2s,box-shadow linear 0.2s;transition:border linear 0.2s,box-shadow linear 0.2s;background-color:white;border:1px solid #CCC;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;box-shadow:inset 0 0 6px black;border-color:#2C2929;margin-bottom:5px;overflow-y:auto;height:120px;}
 .magos-shoutbox table td {vertical-align:top;}
 .icon-flag{margin-right:5px;}
+*/
 .magos-form{padding:10px;}
 .magos-form legend{font-size:14px;color:#fff;font-weight:bold;padding:0 0 10px 0;margin-bottom:0;line-height:1em;border-bottom:0;}
 .magos-form label{color:#fff;}
