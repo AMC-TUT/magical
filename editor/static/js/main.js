@@ -209,6 +209,7 @@ App.SceneComponent = Em.Object.extend({
 
 App.sceneComponentsController = Em.ArrayController.create({
   content: [],
+  selectedSceneName: 'App.scenesController.selected.name',
   populate: function() {
     var controller = this;
 
@@ -216,7 +217,31 @@ App.sceneComponentsController = Em.ArrayController.create({
       // set content
       controller.set('content', data);
     });
-  }
+  },
+  available: function() {
+
+    //var array = _.filter(content, function(comp){ return num % 2 === 0; });
+    var components = this.get('content');
+    var selectedSceneName =this.get('selectedSceneName');
+
+console.log(components);
+console.log(selectedSceneName);
+
+    var array = _.filter(components, function(component) {
+      var str = component.scenes.join(' ');
+      var reg = '/' + selectedSceneName + '/g';
+      return str.match(reg);
+    });
+    /*
+    _.each(components, function(component) {
+      var array = [];
+      //var filtered = _.filter(component.);
+    });
+    */
+    console.log(array);
+    return array;
+
+  }.property('content', 'selectedSceneName')
 });
 
 App.SceneComponentsView = Em.View.extend({
@@ -262,26 +287,17 @@ App.GameComponent = Em.Object.extend({
 });
 
 App.gameComponentsController = Em.ArrayController.create({
-  content: [],
+  contentBinding: 'App.scenesController.selected.gameComponents',
+  /*
   populate: function() {
-    //
-    var array = [];
-    //
-    array.push( App.GameComponent.create({ title: 'Player', slug: 'player', sprite: 'player' }) );
-    array.push( App.GameComponent.create({ title: 'Brick', slug: 'brick', sprite: 'brick' }) );
-    array.push( App.GameComponent.create({ title: 'Water', slug: 'water', sprite: 'water' }) );
-    array.push( App.GameComponent.create({ title: 'Painting', slug: 'painting', sprite: 'painting' }) );
+    var controller = this;
 
-    this.set('content', array);
-
-    //var controller = this;
-
-    //App.dataSource.getSceneComponents(function(data) {
-      // set content
-     // controller.set('content', data);
-    // });
-
-},
+    App.dataSource.getSceneComponents(function(data) {
+    // set content
+      controller.set('content', data);
+    });
+  */
+ //},
 removeItem: function(propName, value){
   var obj = this.findProperty(propName, value);
   this.removeObject(obj);
@@ -318,7 +334,7 @@ App.GameComponentsView = Em.View.extend({
   })
 });
 
-App.gameComponentsController.populate();
+// App.gameComponentsController.populate();
 
 App.AddGameComponentView = Em.View.extend({
   click: function(event) {
@@ -351,12 +367,12 @@ App.RemoveGameComponentView = Em.View.extend({
         var selectedItem = selectedView.get('item');
         var slug = selectedItem.get('slug');
 
-            // TODO check that there is no istances of item in canvases
+        // TODO check that there is no istances of item in canvases
 
-            App.gameComponentsController.removeItem('slug', slug);
+        App.gameComponentsController.removeItem('slug', slug);
 
-          }
-        });
+      }
+    });
   }
 });
 
@@ -367,21 +383,21 @@ App.AddItemForm = Em.View.extend({
   submit: function(event) {
     // TODO enter ei toimi
     event.preventDefault();
-      //
-      var itemTitle = this.get('itemTitle');
-      //
-      if(!itemTitle.length) return;
+    //
+    var itemTitle = this.get('itemTitle');
+    //
+    if(!itemTitle.length) return;
 
-      var safeSlug = createSlug(itemTitle);
-      var item = App.GameComponent.create({ title: itemTitle, slug: safeSlug, sprite: 'empty' });
+    var safeSlug = createSlug(itemTitle);
+    var item = App.GameComponent.create({ title: itemTitle, slug: safeSlug, sprite: 'empty' });
 
-      App.componentsController.get('content').pushObject(item);
+    App.componentsController.get('content').pushObject(item);
 
-      $('#dialog-new-item').modal('hide');
+    $('#dialog-new-item').modal('hide');
 
-      // TODO send to node
+    // TODO send to node
 
-      this.set('itemTitle', null);
+    this.set('itemTitle', null);
 
     }
   });
@@ -695,11 +711,25 @@ App.DataSource = Ember.Object.extend({
 
       var scenes = [];
       _.each(revision.scenes, function(scene) {
+
+        var sceneArray = [];
+        _.each(scene.sceneComponents, function(component) {
+           sceneArray.push( App.SceneComponent.create({ title: component.title, slug: component.slug, sprite: component.sprite }) );
+           // TODO component properties
+        });
+
+        var gameArray = [];
+        _.each(scene.gameComponents, function(component) {
+           gameArray.push( App.GameComponent.create({ title: component.title, slug: component.slug, sprite: component.sprite }) );
+           // TODO component properties
+        });
+
         //
         var obj = App.Scene.create({
-          'name': scene.name,
-          'elements': [] // TODO
-        });
+          name: scene.name,
+          sceneComponents: sceneArray,
+          gameComponents: gameArray
+        }); // TODO
         //
         scenes.push(obj);
       });

@@ -2,12 +2,9 @@
 var fs = require('fs'),
 express = require('express'),
 params = require('express-params'),
-  //http = require('http'),
   request = require('request'),
   querystring = require('querystring'),
-  //app = express.createServer(),
   _ = require('underscore')._;
-  //io = require('socket.io').listen(app);
 
   var app = express(),
   http = require('http'),
@@ -17,7 +14,7 @@ params = require('express-params'),
   io.enable('browser client minification');
   io.enable('browser client etag');
   io.enable('browser client gzip');
-//io.set('log level', 0); // reduce logging
+  // io.set('log level', 0); // reduce logging
 
 params.extend(app);
 
