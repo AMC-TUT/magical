@@ -3,10 +3,11 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 import datetime
+#from apps.game.signals import create_user_profile
 
 class Role(models.Model):
     """User role model"""
-    name = models.CharField(max_length=45)
+    name = models.CharField(max_length=45, null=False, blank=False)
     permission_level = models.IntegerField()
 
     class Meta:
@@ -19,9 +20,9 @@ class Role(models.Model):
 
 class Language(models.Model):
     """Language model"""
-    title = models.CharField(max_length=45)
-    slug = models.SlugField(max_length=45, unique=True)
-    code = models.CharField(max_length=2)
+    title = models.CharField(max_length=45, null=False, blank=False)
+    slug = models.SlugField(max_length=45, unique=True, null=False, blank=False)
+    code = models.CharField(max_length=2, null=False, blank=False)
 
     class Meta:
         verbose_name = _('language')
@@ -33,8 +34,8 @@ class Language(models.Model):
 
 class Country(models.Model):
     """Country model"""
-    name = models.CharField(max_length=45)
-    slug = models.SlugField(max_length=45)
+    name = models.CharField(max_length=45, null=False, blank=False)
+    slug = models.SlugField(max_length=45, null=False, blank=False)
 
     class Meta:
         verbose_name = _('country')
@@ -46,8 +47,8 @@ class Country(models.Model):
 
 class Organization(models.Model):
     """Organization model"""
-    name = models.CharField(max_length=100)
-    slug = models.SlugField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, null=False, blank=False)
+    slug = models.SlugField(max_length=100, null=False, blank=False, unique=True)
     country = models.ForeignKey(Country)
     language = models.ForeignKey(Language)
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -71,13 +72,26 @@ class OrganizationMembership(models.Model):
         verbose_name_plural = _('organization has users')
 
     def __unicode__(self):
-        return u"%s, %s" % (self.user, self.organization)
+        return u"%s, %s" % (self.organization, self.user)
 
+        
+class Disability(models.Model):
+    """Disability model"""
+    name = models.CharField(max_length=45, null=False, blank=False)
+    description = models.TextField(null=False, blank=False)
+ 
+    class Meta:
+        verbose_name = _('disability')
+        verbose_name_plural = _('disabilities')
 
+    def __unicode__(self):
+        return self.name
+
+        
 class GameType(models.Model):
     """Game type model"""
-    name = models.CharField(max_length=45)
-    slug = models.SlugField(max_length=45)
+    name = models.CharField(max_length=45, null=False, blank=False)
+    slug = models.SlugField(max_length=45, unique=True, null=False, blank=False)
  
     class Meta:
         verbose_name = _('game type')
@@ -87,54 +101,145 @@ class GameType(models.Model):
     def __unicode__(self):
         return self.name
 
-class Disability(models.Model):
-    """Disability model"""
-    name = models.CharField(max_length=45)
-    description = models.TextField()
- 
+
+class Achievement(models.Model):
+    """Achievement model"""
+    name = models.CharField(max_length=45, null=False, blank=False)
+    slug = models.SlugField(max_length=45, null=False, blank=False, unique=True)
+    points = models.IntegerField(null=False, blank=False)
+    image = models.CharField(max_length=100, null=True, blank=True)
+    users = models.ManyToManyField(User, through='AchievementMembership')
+
     class Meta:
-        verbose_name = _('disability')
-        verbose_name_plural = _('disabilities')
+        verbose_name = _('achievement')
+        verbose_name_plural = _('achievements')
 
     def __unicode__(self):
         return self.name
 
+        
+class AchievementMembership(models.Model):
+    user = models.ForeignKey(User)
+    achievement = models.ForeignKey(Achievement)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    
+    class Meta:
+        unique_together = (('user','achievement'),)
+        verbose_name = _('user has achievement')
+        verbose_name_plural = _('user has achievement')
 
+    def __unicode__(self):
+        return u"%s, %s" % (self.user, self.achievement)
+
+        
 class UserProfile(models.Model):
     """User profile model. This expands User model of Django."""
     user = models.OneToOneField(User, primary_key=True)
 
     year_of_birth = models.IntegerField(null=True, blank=True)
     grade = models.IntegerField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    group = models.BooleanField(null=False, blank=False, default=False)
     language = models.ForeignKey(Language)
     role = models.ForeignKey(Role)
     disability = models.ForeignKey(Disability, null=True, blank=True)
     country = models.ForeignKey(Country, null=True, blank=True)
-
-    #created = models.DateTimeField(auto_now_add=True,default=datetime.date.today)
-    modified = models.DateTimeField(auto_now=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = _('user profile')
         verbose_name_plural = _('user profiles')
-        #db_table = 'user_profiles'
 
     def __unicode__(self):
-        return "%s's profile" % self.user
+        return u"%s's profile" % self.user
 
-   
+class Game(models.Model):
+    """Game model"""
+    title = models.CharField(max_length=45, null=False, blank=False)
+    slug = models.SlugField(max_length=45, null=False, blank=False, unique=True)
+    type = models.ForeignKey(GameType)
+    state = models.IntegerField(null=False, blank=False, default=0)
+    image = models.CharField(max_length=100, null=True, blank=True)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    cloned = models.IntegerField(null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True, default=datetime.date.today)
+    updated = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = _('game')
+        verbose_name_plural = _('games')
+
+    def __unicode__(self):
+        return u"%s" % self.title
+
+        
+class Revision(models.Model):
+    """Game revision model"""
+    game = models.ForeignKey(Game)
+    inserted = models.DateTimeField(auto_now_add=True,default=datetime.date.today)
+    updated = models.DateTimeField(auto_now=True)
+    data = models.TextField(null=True, blank=True)
+    
+    class Meta:
+        verbose_name = _('revision')
+        verbose_name_plural = _('revisions')
+
+    def __unicode__(self):
+        return u"%s (revision %s)" % (self.game, self.inserted)
+
+    
+        
+class Review(models.Model):
+    """Review model"""
+    user = models.ForeignKey(User)
+    game = models.ForeignKey(Game)
+    stars = models.IntegerField(null=True, blank=True)
+    comment = models.CharField(max_length=255, null=True, blank=True)
+    inserted = models.DateTimeField(auto_now_add=True,default=datetime.date.today)
+    updated = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        unique_together = (('user','game'),)
+        verbose_name = _('review')
+        verbose_name_plural = _('reviews')
+
+    def __unicode__(self):
+        return u"%s, %s" % (self.game, self.user)
+
+        
+class Author(models.Model):
+    """Author model"""
+    user = models.ForeignKey(User)
+    game = models.ForeignKey(Game)
+    inserted = models.DateTimeField(auto_now_add=True,default=datetime.date.today)
+    updated = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        unique_together = (('user','game'),)
+        verbose_name = _('author')
+        verbose_name_plural = _('authors')
+
+    def __unicode__(self):
+        return u"%s, %s" % (self.game, self.user)
+
+        
 def create_user_profile(sender, instance, created, **kwargs):
     profile = None
+    default_lang, lang_created = Language.objects.get_or_create(code='fi', title='suomi', slug='finnish')
+    default_role, role_created = Role.objects.get_or_create(name='musicus', permission_level=1)
+    
     if created:
-       profile, created = UserProfile.objects.get_or_create(user=instance)  
+        try:
+            profile, created = UserProfile.objects.get(user=instance)
+        except UserProfile.DoesNotExist:
+            profile = UserProfile.objects.create(user = instance, language=default_lang, role=default_role)
+            profile.save()
     else:
         try:
             profile = instance.get_profile()
-	except UserProfile.DoesNotExist:
-	    profile = UserProfile.objects.create(user = instance)
-        profile.save()
+        except UserProfile.DoesNotExist:
+            profile = UserProfile.objects.create(user = instance, language=default_lang, role=default_role)
+            profile.save()
 
 # Automagically create a profile when user is created
-post_save.connect(create_user_profile, sender=User) 
-
-  
+post_save.connect(create_user_profile, sender=User)
