@@ -473,14 +473,10 @@ App.InfoBoxControlsView = Em.View.extend({
 App.InfoBoxControlsView = Em.View.extend();
 App.InfoBoxCollisionView = Em.View.extend();
 App.InfoBoxGravitationView = Em.View.extend();
-
 App.InfoBoxScoreView = Em.View.extend();
-// App.InfoBoxFontView = Em.View.extend();
 App.InfoBoxDialogView = Em.View.extend();
-
 App.InfoBoxSpriteView = Em.View.extend();
 App.InfoBoxAnimationView = Em.View.extend();
-
 App.InfoBoxAudioView = Em.View.extend();
 
 App.InfoBoxFontView = Em.View.extend({

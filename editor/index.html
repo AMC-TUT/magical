@@ -186,12 +186,29 @@
                       <tr>
                         <th>Target</th><th>Action</th>
                       </tr>
-                      <tr>
-                        <td>Stone</td><td>destroy target</td>
-                      </tr>
-                      <tr>
-                        <td>Brick</td><td>push target</td>
-                      </tr>
+
+                      {{#if content.properties.collisions.length}}
+                        {{#each content.properties.collisions}}
+                        <tr>
+                          <td>
+                            {{#if target}} {{target}} {{else}} ---{{/if}}
+                          </td>
+                          <td>
+                            {{#if event}} {{event}} {{else}} ---{{/if}}
+                          </td>
+                        </tr>
+                        {{/each}}
+                      {{else}}
+                        <tr>
+                          <td>
+                            ---
+                          </td>
+                          <td>
+                            ---
+                          </td>
+                        </tr>
+                      {{/if}}
+
                       {{/view}}
 
                       <h4>Gravitation</h4>
