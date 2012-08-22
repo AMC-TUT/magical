@@ -410,9 +410,10 @@ App.selectedComponentController = Em.Object.create({
   contentObserver: function() {
     //
     var selected = this.get('content');
-    console.log(JSON.stringify(this.getPath('content')));
     var sceneItems = $('.scene-chest').find('li');
     var gameItems = $('.item-chest').find('li');
+
+    console.log(JSON.stringify(this.getPath('content')));
 
     // loop elements and remove ui-selected class
     _.each(sceneItems, function(item) {
@@ -457,15 +458,6 @@ Em.ContainerView.create({
     templateName: '',
     contentBinding: 'App.scenesController.content'
   })
-});
-*/
-/*
-App.InfoBoxControlsView = Em.View.extend({
-  contentBinding: 'App.selectedComponentController.content',
-  classNames: ['infobox-skillset', 'infobox-physicus'],
-  contentObserver: function() {
-    //
-  }.observes('content')
 });
 */
 
@@ -515,49 +507,6 @@ App.InfoBoxFontView = Em.View.extend({
   }.observes('bgColor')
 
 });
-
-/*
-App.InfoView = Em.View.extend({
-  contentBinding: 'App.selectedComponentController.content',
-  classNames: ['infobox-skillset', 'infobox-physicus'],
-  contentObserver: function() {
-   // console.log('vittu saatana perkele');
-  }.observes('content')
-  /*snapToGrid: function() {
-    return this.grid ? "True" : "False";
-  }.property('grid'),* /
-});
-*/
-/*
-App.InfoBoxCollisionView = Em.View.extend({
-  tagName: 'table',
-  classNames: ['table', 'infobox', 'infobox-collision']//,
-  //contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content'),
-  //content: null//,
-  //emptyView: Ember.View.extend({
-  //  template: Ember.Handlebars.compile("The collection is empty")
-  //})
-});
-*/
-/*
-App.InfoBoxPrincipesView = Em.View.extend({
-  //contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content.properties'),
-  classNames: ['infobox-skillset', 'infobox-principes'],
-  contentObserver: function() {
-    console.log('content.@each observer event');
-  }.observes('content.@each')
-});
-
-App.InfoBoxArtifexView = Em.View.extend({
-  //contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content'),
-  classNames: ['infobox-skillset', 'infobox-artifex']
-});
-
-App.InfoBoxMusicusView = Em.View.extend({
- // contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content'),
-  classNames: ['infobox-skillset', 'infobox-musicus']
-});
-*/
 
 /**************************
 * Language

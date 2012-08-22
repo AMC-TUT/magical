@@ -187,7 +187,7 @@
                         <th>Target</th><th>Action</th>
                       </tr>
 
-                      {{#if content.properties.collisions.length}}
+                      {{#if content.properties.collisions}}
                         {{#each content.properties.collisions}}
                         <tr>
                           <td>
@@ -199,16 +199,8 @@
                         </tr>
                         {{/each}}
                       {{else}}
-                        <tr>
-                          <td>
-                            ---
-                          </td>
-                          <td>
-                            ---
-                          </td>
-                        </tr>
+                        <tr><td> ---</td><td> ---</td></tr>
                       {{/if}}
-
                       {{/view}}
 
                       <h4>Gravitation</h4>
