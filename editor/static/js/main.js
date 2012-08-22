@@ -128,16 +128,6 @@ App.scenesController = Em.ArrayController.create({
 
   }.observes('selected')
 });
-/*
-Em.ContainerView.create({
-  childViews: ['btnView'],
-
-  btnView: Em.View.extend({
-    templateName: '',
-    contentBinding: 'App.scenesController.content'
-  })
-});
-*/
 
 App.SelectSceneView = Em.View.extend({
   contentBinding: 'App.scenesController.content',
@@ -162,14 +152,7 @@ App.SelectSceneBtn = Em.View.extend({
     App.scenesController.set('selected', this.get('scene'));
   }
 });
-/*
-App.ScenesView = Em.View.extend({
-  contentBinding: 'App.scenesController.content',
-  classNames: ['btn-group', 'btn-group-scene'],
-  classNameBindings: ['active'],
-  alwaysTrue: true
-});
-*/
+
 /**************************
 * SceneComponent
 **************************/
@@ -209,7 +192,8 @@ App.SceneComponent = Em.Object.extend({
 
 App.sceneComponentsController = Em.ArrayController.create({
   content: [],
-  selectedSceneName: 'App.scenesController.selected.name',
+  selectedSceneBinding: 'App.scenesController.selected.sceneComponents', // NOT IN USE
+  selectedSceneNameBinding: 'App.scenesController.selected.name',
   populate: function() {
     var controller = this;
 
@@ -219,26 +203,17 @@ App.sceneComponentsController = Em.ArrayController.create({
     });
   },
   available: function() {
-
-    //var array = _.filter(content, function(comp){ return num % 2 === 0; });
     var components = this.get('content');
     var selectedSceneName =this.get('selectedSceneName');
+    var array = [];
 
-console.log(components);
-console.log(selectedSceneName);
-
-    var array = _.filter(components, function(component) {
-      var str = component.scenes.join(' ');
-      var reg = '/' + selectedSceneName + '/g';
-      return str.match(reg);
-    });
-    /*
     _.each(components, function(component) {
-      var array = [];
-      //var filtered = _.filter(component.);
+      var str = component.scenes.join(' ');
+      var reg = new RegExp(selectedSceneName);
+
+      if(str.match(reg)) array.push(component);
     });
-    */
-    console.log(array);
+
     return array;
 
   }.property('content', 'selectedSceneName')
@@ -279,29 +254,43 @@ App.SceneComponentsView = Em.View.extend({
 App.GameComponent = Em.Object.extend({
   title: null,
   slug: null,
-  sprite: null,
+  properties: null,
   active: false,
   icon : function() {
-    return '../static/game/sprites/' + this.get('sprite') + '.png';
-  }.property('sprite')
+    return '../static/game/sprites/' + this.getPath('properties.sprite') + '.png';
+  }.property('properties'),
+  snapToGrid: function() {
+    var snap = this.getPath('properties.controls.grid');
+
+    if(snap === false) {
+      return "No";
+    } else if(snap === true) {
+      return "Yes";
+    } else {
+      return snap;
+    }
+
+  }.property('properties'),
+  directionStr: function() {
+    var dir = this.getPath('properties.gravitation.direction');
+
+    if(dir === false) {
+      return "Inverted";
+    } else if(dir === true) {
+      return "Normal";
+    } else {
+      return dir;
+    }
+
+  }.property('properties')
 });
 
 App.gameComponentsController = Em.ArrayController.create({
   contentBinding: 'App.scenesController.selected.gameComponents',
-  /*
-  populate: function() {
-    var controller = this;
-
-    App.dataSource.getSceneComponents(function(data) {
-    // set content
-      controller.set('content', data);
-    });
-  */
- //},
-removeItem: function(propName, value){
-  var obj = this.findProperty(propName, value);
-  this.removeObject(obj);
-}
+  removeItem: function(propName, value){
+    var obj = this.findProperty(propName, value);
+    this.removeObject(obj);
+  }
 });
 
 App.GameComponentsView = Em.View.extend({
@@ -333,8 +322,6 @@ App.GameComponentsView = Em.View.extend({
     }
   })
 });
-
-// App.gameComponentsController.populate();
 
 App.AddGameComponentView = Em.View.extend({
   click: function(event) {
@@ -389,9 +376,19 @@ App.AddItemForm = Em.View.extend({
     if(!itemTitle.length) return;
 
     var safeSlug = createSlug(itemTitle);
-    var item = App.GameComponent.create({ title: itemTitle, slug: safeSlug, sprite: 'empty' });
+    var obj = {
+      title: itemTitle,
+      slug: safeSlug,
+      properties: {
+        sprite: 'empty'
+      }
+    };
 
-    App.componentsController.get('content').pushObject(item);
+    var item = App.GameComponent.create(obj);
+
+    App.gameComponentsController.get('content').pushObject(item);
+
+    // App.selectedComponentController.set('content', item);
 
     $('#dialog-new-item').modal('hide');
 
@@ -399,8 +396,8 @@ App.AddItemForm = Em.View.extend({
 
     this.set('itemTitle', null);
 
-    }
-  });
+  }
+});
 
 /**************************
 * Selected Component
@@ -413,6 +410,7 @@ App.selectedComponentController = Em.Object.create({
   contentObserver: function() {
     //
     var selected = this.get('content');
+    console.log(JSON.stringify(this.getPath('content')));
     var sceneItems = $('.scene-chest').find('li');
     var gameItems = $('.item-chest').find('li');
 
@@ -442,6 +440,9 @@ App.selectedComponentController = Em.Object.create({
 
     selected.set('active', true);
 
+    //console.log('new selected component:');
+    //console.log(this.getPath('content.properties.sprite'))
+
   }.observes('content')
 });
 
@@ -449,36 +450,118 @@ App.selectedComponentController = Em.Object.create({
 * InfoBox Views
 **************************/
 
-App.InfoBoxPrincipesView = Em.View.extend({
-  contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content'),
-  classNames: ['infobox-skillset', 'infobox-principes']
-});
-
-App.InfoBoxCollisionView = Em.View.extend({
-  tagName: 'table',
-  classNames: ['table', 'infobox', 'infobox-collision'],
-  contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content'),
-  content: null,
-  emptyView: Ember.View.extend({
-    template: Ember.Handlebars.compile("The collection is empty")
+/*
+Em.ContainerView.create({
+  childViews: ['btnView'],
+  btnView: Em.View.extend({
+    templateName: '',
+    contentBinding: 'App.scenesController.content'
   })
 });
+*/
+/*
+App.InfoBoxControlsView = Em.View.extend({
+  contentBinding: 'App.selectedComponentController.content',
+  classNames: ['infobox-skillset', 'infobox-physicus'],
+  contentObserver: function() {
+    //
+  }.observes('content')
+});
+*/
 
-App.InfoBoxPhysicusView = Em.View.extend({
-  contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content'),
-  classNames: ['infobox-skillset', 'infobox-physicus']
+// TODO make these child views
+App.InfoBoxControlsView = Em.View.extend();
+App.InfoBoxCollisionView = Em.View.extend();
+App.InfoBoxGravitationView = Em.View.extend();
+
+App.InfoBoxScoreView = Em.View.extend();
+// App.InfoBoxFontView = Em.View.extend();
+App.InfoBoxDialogView = Em.View.extend();
+
+App.InfoBoxSpriteView = Em.View.extend();
+App.InfoBoxAnimationView = Em.View.extend();
+
+App.InfoBoxAudioView = Em.View.extend();
+
+App.InfoBoxFontView = Em.View.extend({
+  tagName: 'div',
+  classNames: ['font-preview'],
+  contentBinding: 'App.selectedComponentController.content',
+  familyBinding: 'App.selectedComponentController.content.properties.font.family',
+  sizeBinding: 'App.selectedComponentController.content.properties.font.size',
+  colorBinding: 'App.selectedComponentController.content.properties.font.color',
+  bgColorBinding: 'App.selectedComponentController.content.properties.font.background',
+  cssFamily: '',
+  cssSize: '',
+  cssColor: '',
+  cssBgColor: '',
+
+  attributeBindings: ['style'],
+  familyObserver: function() {
+    //
+    this.set('cssFamily', 'font-family:' + this.get('family') + ';');
+
+  }.observes('family'),
+  sizeObserver: function() {
+    //
+    this.set('cssSize', 'font-size:' + this.get('size') + 'px;');
+
+  }.observes('size'),
+  colorObserver: function() {
+    //
+    this.set('cssColor', 'color:' + this.get('color') + ';');
+
+  }.observes('color'),
+  bgcolorObserver: function() {
+    //
+    this.set('cssBgColor', 'background-color:' + this.get('bgColor') + ';');
+
+  }.observes('bgColor')
+
+});
+
+/*
+App.InfoView = Em.View.extend({
+  contentBinding: 'App.selectedComponentController.content',
+  classNames: ['infobox-skillset', 'infobox-physicus'],
+  contentObserver: function() {
+   // console.log('vittu saatana perkele');
+  }.observes('content')
+  /*snapToGrid: function() {
+    return this.grid ? "True" : "False";
+  }.property('grid'),* /
+});
+*/
+/*
+App.InfoBoxCollisionView = Em.View.extend({
+  tagName: 'table',
+  classNames: ['table', 'infobox', 'infobox-collision']//,
+  //contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content'),
+  //content: null//,
+  //emptyView: Ember.View.extend({
+  //  template: Ember.Handlebars.compile("The collection is empty")
+  //})
+});
+*/
+/*
+App.InfoBoxPrincipesView = Em.View.extend({
+  //contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content.properties'),
+  classNames: ['infobox-skillset', 'infobox-principes'],
+  contentObserver: function() {
+    console.log('content.@each observer event');
+  }.observes('content.@each')
 });
 
 App.InfoBoxArtifexView = Em.View.extend({
-  contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content'),
+  //contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content'),
   classNames: ['infobox-skillset', 'infobox-artifex']
 });
 
 App.InfoBoxMusicusView = Em.View.extend({
-  contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content'),
+ // contentBinding: Ember.Binding.oneWay('App.selectedComponentController.content'),
   classNames: ['infobox-skillset', 'infobox-musicus']
 });
-
+*/
 
 /**************************
 * Language
@@ -714,15 +797,15 @@ App.DataSource = Ember.Object.extend({
 
         var sceneArray = [];
         _.each(scene.sceneComponents, function(component) {
-           sceneArray.push( App.SceneComponent.create({ title: component.title, slug: component.slug, sprite: component.sprite }) );
+         sceneArray.push( App.SceneComponent.create({ title: component.title, slug: component.slug, properties: component.properties }) );
            // TODO component properties
-        });
+         });
 
         var gameArray = [];
         _.each(scene.gameComponents, function(component) {
-           gameArray.push( App.GameComponent.create({ title: component.title, slug: component.slug, sprite: component.sprite }) );
+         gameArray.push( App.GameComponent.create({ title: component.title, slug: component.slug, properties: component.properties }) );
            // TODO component properties
-        });
+         });
 
         //
         var obj = App.Scene.create({
