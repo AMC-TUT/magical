@@ -282,6 +282,18 @@ App.GameComponent = Em.Object.extend({
       return dir;
     }
 
+  }.property('properties'),
+  filteredScoreEvents: function() {
+    var collisions = this.getPath('properties.collisions');
+
+    if(_.isObject(collisions)) {
+      var withScores = collisions.filterProperty('score');
+      console.log(withScores);
+      return withScores;
+    } else {
+      return false;
+    }
+
   }.property('properties')
 });
 

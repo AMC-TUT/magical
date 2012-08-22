@@ -231,9 +231,15 @@
                         <tr>
                           <th>Action</th><th>Score</th>
                         </tr>
-                        <tr>
-                          <td style="white-space:nowrap;">Stone collision</td><td>10</td>
-                        </tr>
+                        {{#if content.filteredScoreEvents}}
+                        {{#each content.filteredScoreEvents}}
+                          <tr>
+                            <td>Collision {{target}}</td><td>{{score}}</td>
+                          </tr>
+                        {{/each}}
+                        {{else}}
+                          <tr><td> ---</td><td> ---</td></tr>
+                        {{/if}}
                       {{/view}}
 
                       <h4>Font</h4>
