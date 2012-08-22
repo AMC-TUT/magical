@@ -228,8 +228,8 @@
                       {{/view}}
 
                       <h4>Font</h4>
+                      {{#if App.selectedComponentController.content.properties.font}}
                       {{#view App.InfoBoxFontView}}
-                      {{#if family}}
                         <div  {{bindAttr style="cssBgColor"}}>
                           <div  {{bindAttr style="cssColor"}}>
                             <div  {{bindAttr style="cssSize"}}>
@@ -239,8 +239,10 @@
                             </div>
                           </div>
                         </div>
-                      {{else}} ---{{/if}}
                       {{/view}}
+                      {{else}}
+                        <div class="font-preview"> ---</div>
+                      {{/if}}
 
                       <h4>Dialog</h4>
                       {{#view App.InfoBoxDialogView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-dialog"}}
