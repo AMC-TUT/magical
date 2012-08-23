@@ -289,13 +289,28 @@ App.GameComponent = Em.Object.extend({
     }
 
   }.property('properties'),
+  /*,
+  propertiesBinding: function() {
+
+    var collisions = this.getPath('properties.collisions').filterProperty('audio');
+
+    _.each(collisions, function(collision) {
+      var slug = collision.get('audio.slug');
+      var audioSrc = "/static/game/audio/ogg/"+slug+".ogg";
+      console.log(collision);
+      console.log(audioSrc)
+      collision.setPath('audio.audioSrc', audioSrc);
+    });
+
+  }.property('properties'),
+  */
+  /*,
   audioMp3Src: function() {
     var collisions = this.getPath('properties.collisions').filterProperty('audio');
 
-    console.log('mp3 aidio');
     console.log(collisions);
 
-    if(_.isObject(audio)) {
+    if(_.isObject(collisions)) {
       return '/static/game/audios/mp3/'+audio.slug+'.mp3';
     }
   }.property('properties'),
@@ -304,7 +319,7 @@ App.GameComponent = Em.Object.extend({
     if(_.isObject(audio)) {
       return '/static/game/audios/ogg/'+audio.slug+'.ogg';
     }
-  }.property('content'),
+  }.property('content'), */
   filteredScoreEvents: function() {
     var collisions = this.getPath('properties.collisions');
 
