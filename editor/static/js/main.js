@@ -1,6 +1,12 @@
 
 /* Magos Editor */
 
+// @codekit-prepend "vendor/jquery.min.js"
+// @codekit-prepend "vendor/jquery-ui.min.js"
+// @codekit-prepend "vendor/bootstrap.min.js"
+// @codekit-prepend "vendor/ember.js"
+// @codekit-prepend "plugins.js"
+
 (function(App, $, undefined){
 
 // "use strict";
@@ -283,16 +289,32 @@ App.GameComponent = Em.Object.extend({
     }
 
   }.property('properties'),
+  audioMp3Src: function() {
+    var collisions = this.getPath('properties.collisions').filterProperty('audio');
+
+    console.log('mp3 aidio');
+    console.log(collisions);
+
+    if(_.isObject(audio)) {
+      return '/static/game/audios/mp3/'+audio.slug+'.mp3';
+    }
+  }.property('properties'),
+  audioOggSrc: function() {
+    var audio = this.getPath('content.properties.collisions');
+    if(_.isObject(audio)) {
+      return '/static/game/audios/ogg/'+audio.slug+'.ogg';
+    }
+  }.property('content'),
   filteredScoreEvents: function() {
     var collisions = this.getPath('properties.collisions');
 
-    if(_.isObject(collisions)) {
-      var withScores = collisions.filterProperty('score');
-      console.log(withScores);
-      return withScores;
-    } else {
-      return false;
-    }
+    return _.isObject(collisions) ? collisions.filterProperty('score') : false;
+
+  }.property('properties'),
+  filteredAudioEvents: function() {
+    var collisions = this.getPath('properties.collisions');
+
+    return _.isObject(collisions) ? collisions.filterProperty('audio') : false;
 
   }.property('properties')
 });
@@ -865,6 +887,15 @@ $(document).on('click tap', '.btn-group-theme .btn', function(event) {
   $(document).find('#theme').attr('href', href);
 
 
+});
+
+// play button for infobox audio play button
+$(document).on('click tap', '.btn-play', function(event) {
+  event.preventDefault();
+  // return first one
+  var $audio = $(event.target).closest('td').find('audio')[0];
+  // play audio
+  $audio.play();
 });
 
 // help TODO replace with ember object

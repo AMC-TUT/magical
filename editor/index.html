@@ -245,10 +245,10 @@
                       <h4>Font</h4>
                       {{#if App.selectedComponentController.content.properties.font}}
                       {{#view App.InfoBoxFontView}}
-                        <div  {{bindAttr style="cssBgColor"}}>
-                          <div  {{bindAttr style="cssColor"}}>
-                            <div  {{bindAttr style="cssSize"}}>
-                              <div  {{bindAttr style="cssFamily"}}>
+                        <div {{bindAttr style="cssBgColor"}}>
+                          <div {{bindAttr style="cssColor"}}>
+                            <div {{bindAttr style="cssSize"}}>
+                              <div {{bindAttr style="cssFamily"}}>
                                 {{family}}
                               </div>
                             </div>
@@ -288,7 +288,7 @@
                           <th>Action</th><th>Animation</th>
                         </tr>
                         <tr>
-                          <td>---</td><td>---</td>
+                          <td> ---</td><td> ---</td>
                         </tr>
                       {{/view}}
 
@@ -297,13 +297,34 @@
                     <div class="infobox-skillset infobox-musicus">
 
                       <h4>Audio</h4>
+
                       {{#view App.InfoBoxAudioView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-audio"}}
                         <tr>
-                          <th>Action</th><th>Audio</th>
+                          <th>Action</th><th>Audio</th><th>Plays</th>
                         </tr>
-                        <tr>
-                          <td>---</td><td>---</td>
-                        </tr>
+
+                        {{#if content.filteredAudioEvents}}
+                        {{#each content.filteredAudioEvents}}
+                          <tr>
+                            <td>
+                              {{event}}
+                            </td>
+                            <td>
+                              <audio>
+                              {{log this.audioMp3Src }}
+                                <source {{bindAttr src="audioMp3Src"}} type="audio/mpeg" />
+                                <source {{bindAttr src="audioOggSrc"}} type="audio/ogg" />
+                              </audio>
+                              <button class="btn btn-success btn-mini btn-play"><i class="icon-play icon-white"></i></button>
+                            </td>
+                            <td>
+                              {{audio.playCount}}
+                            </td>
+                          </tr>
+                        {{/each}}
+                        {{else}}
+                          <tr><td> ---</td><td> ---</td><td> ---</td></tr>
+                        {{/if}}
                       {{/view}}
 
                     </div>
