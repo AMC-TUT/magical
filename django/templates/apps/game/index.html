@@ -1,0 +1,449 @@
+{% extends "apps/game/game_base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <div id="ajaxFilters"></div>
+    <div id="ajaxGames"></div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+$(document).ready(function() {
+	var device = {
+        "iphone" : (navigator.userAgent.indexOf("iPhone") != -1 || navigator.userAgent.indexOf("iPod") != -1),
+        "ipad" : (navigator.userAgent.indexOf("iPad") != -1),
+        "android" : (navigator.userAgent.indexOf("Android") != -1),
+        "nokiaN9" : (navigator.userAgent.indexOf("NokiaN9") != -1)
+    };
+    device.desktop = !device.iphone && !device.ipad && !device.android;
+    device.iOS = device.iphone || device.ipad;
+    device.touchEnabled = device.iphone || device.ipad || device.android || device.nokiaN9;
+	
+	var $indMedView = $("<div>").attr('id', 'indMedView');
+    var $mediBagLabel = $("<div>").attr('id', 'mediBagLabel');
+    var $indicationList = $("<div>").attr('id', 'indicationList');
+    var $restrictionList = $("<div>").attr('id', 'restrictionList');
+    var $medicineList = $("<div>").attr('id', 'medicineList');
+    var $medicineArrow = $("<div>").attr('id', 'medicineArrow');
+    var $medicineDetails = $("<div>").attr('id', 'medicineDetails').addClass('shadow');
+    var $sourceInfo = $("<div>").attr('id', 'sourceInfo');
+	
+    function redirectToLogin() {
+    	window.location.href = '{{ login_url }}';
+    }
+    
+	// Django Ajax CSRF token setup
+	$.ajaxSetup({
+	     beforeSend: function(xhr, settings) {
+	         function getCookie(name) {
+	             var cookieValue = null;
+	             if (document.cookie && document.cookie != '') {
+	                 var cookies = document.cookie.split(';');
+	                 for (var i = 0; i < cookies.length; i++) {
+	                     var cookie = jQuery.trim(cookies[i]);
+	                     // Does this cookie string begin with the name we want?
+	                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
+	                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	                     break;
+	                 }
+	             }
+	         }
+	         return cookieValue;
+	         }
+	         if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+	             // Only send the token to relative URLs i.e. locally.
+	             xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+	         }
+	     }
+	});
+	
+    function listGames() {
+        $.ajax({
+            dataType : 'html',
+            type : 'GET',
+            url : '/game/ajax_list_games/',
+            success : function(data, textStatus, jqXHR) {
+                console.log('Foo');
+                $('#ajaxGames').html(data);
+                //bindAnimalIcons();
+                /*
+                if($('#ajaxBags').is(':empty')) {
+                    getBags();                	
+                }
+                */
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                $('#errors').html('Error in XHR request.<br/> ' + errorThrown).show();
+            }
+        });
+    } // getFilters
+
+    function setFilter(animalId, filterOn) {
+    	var action = (filterOn) ? 'on' : 'off';
+    	$.ajax({
+            dataType : 'json',
+            type : 'POST',
+            url : '/bags/ajax_set_filter/' + action + '/' + animalId + '/',
+            success : function(data, textStatus, jqXHR) {
+           		if (data.hasOwnProperty('not_authenticated')) {
+            		redirectToLogin();
+            		return;
+            	}
+                getFilters();
+                var bagId = $indMedView.data('bagId');
+                if (bagId) {
+                    getIndications(bagId);                	
+                }
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                $('#errors').html('Error in XHR request.<br/> ' + errorThrown).show();
+            }
+        });
+    } //setFilter
+	
+    function setIndication(bagId, animalGroupId, indId, indOn) {
+    	var action = (indOn) ? 'on' : 'off';
+        $.ajax({
+            dataType : 'json',
+            type : 'POST',
+            url : '/bags/ajax_set_indication/' + action + '/' + bagId + '/' + animalGroupId + '/' + indId + '/',
+            success : function(data, textStatus, jqXHR) {
+                if (data.hasOwnProperty('not_authenticated')) {
+                    redirectToLogin();
+                    return;
+                }
+                getIndications(bagId);
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                $('#errors').html('Error in XHR request.<br/> ' + errorThrown).show();
+            }
+        });
+    }
+    
+    function setRestriction(bagId, animalGroupId, restMemId, restOn) {
+        var action = (restOn) ? 'on' : 'off';
+        $.ajax({
+            dataType : 'json',
+            type : 'POST',
+            url : '/bags/ajax_set_restriction/' + action + '/' + bagId + '/' + restMemId + '/',
+            success : function(data, textStatus, jqXHR) {
+                if (data.hasOwnProperty('not_authenticated')) {
+                    redirectToLogin();
+                    return;
+                }
+                getRestrictions(bagId);
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                $('#errors').html('Error in XHR request.<br/> ' + errorThrown).show();
+            }
+        });
+    }
+    
+    
+    function toggleMedicine(delMedicine, bagId, medId) {
+    	var action = (delMedicine) ? 'on' : 'off';
+        $.ajax({
+            dataType : 'json',
+            type : 'POST',
+            url : '/bags/ajax_toggle_med/' + action +  '/' + bagId + '/' + medId + '/',
+            success : function(data, textStatus, jqXHR) {
+                if (data.hasOwnProperty('not_authenticated')) {
+                    redirectToLogin();
+                    return;
+                }
+                getIndications(bagId);                  
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                $('#errors').html('Error in XHR request.<br/> ' + errorThrown).show();
+            }
+        });
+    } //removeMedicine
+    
+    
+	function getBags() {	
+	    $.ajax({
+	        dataType : 'html',
+	        type : 'GET',
+	        url : '/bags/ajax_list_bags/',
+	        success : function(data, textStatus, jqXHR) {
+	            $('#ajaxBags').html(data);
+	            // init bagSlider plugin
+	            $('#bags').bagSlider({
+	                width : 960,
+	                device : device
+	            });
+	            bindBagOpen();
+	        },
+	        error : function(jqXHR, textStatus, errorThrown) {
+	            $('#errors').html('Error in XHR request.<br/> ' + errorThrown).show();
+	        }
+	    });
+	} // getBags
+
+	
+    function getSourceInfo() {    
+        $.ajax({
+            dataType : 'html',
+            type : 'GET',
+            url : '/bags/ajax_source_info/',
+            success : function(data, textStatus, jqXHR) {
+                $sourceInfo.html(data);                
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                $('#errors').html('Error in XHR request.<br/> ' + errorThrown).show();
+            }
+        });
+    } // getBags
+
+    function getHandledIndications(bagId) {
+    	$('.indication').removeClass('notHandled');
+    	$.ajax({
+            dataType : 'json',
+            type : 'GET',
+            url : '/bags/ajax_get_unhandled_indications/' + bagId + '/',
+            success : function(data, textStatus, jqXHR) {
+            	if (data.hasOwnProperty('ag_inds')) {
+                    var ag_inds = data['ag_inds'];
+            		//console.log(data['ag_inds']);
+                    for (var ag_id in ag_inds) {
+                    	var ind_ids = ag_inds[ag_id];
+                        for (var j in ind_ids) {
+                            var ind_id = ind_ids[j];
+                            $('#indicationId_' + ag_id + '_' + ind_id).addClass('notHandled');
+                        }
+                    }
+                }
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                $('#errors').html('Error in XHR request.<br/> ' + errorThrown).show();
+            }
+        });     
+    }    
+    
+    function getMedicines(bagId) {
+        $.ajax({
+            dataType : 'html',
+            type : 'GET',
+            url : '/bags/ajax_get_medicines/' + bagId + '/',
+            success : function(data, textStatus, jqXHR) {
+            	getHandledIndications(bagId);
+                $medicineList.html(data);
+                bindMedicineClick();
+                bindRemoveMedClick();
+                bindRestoreMedClick();
+                adjustLayout();
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                $('#errors').html('Error in XHR request.<br/> ' + errorThrown).show();
+            }
+        });		
+	}
+    
+    function getRestrictions(bagId) {
+        $.ajax({
+            dataType : 'html',
+            type : 'GET',
+            url : '/bags/ajax_get_restrictions/' + bagId + '/',
+            success : function(data, textStatus, jqXHR) {
+                $restrictionList.html(data);
+                bindRestritionClick();
+                getMedicines(bagId);
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                $('#errors').html('Error in XHR request.<br/> ' + errorThrown).show();
+            }
+        });
+    } // getRestrictions    
+    
+    function getIndications(bagId) {
+    	$.ajax({
+            dataType : 'html',
+            type : 'GET',
+            url : '/bags/ajax_get_indications/' + bagId + '/',
+            success : function(data, textStatus, jqXHR) {
+            	$indicationList.html(data);
+            	bindIndicationsClose();
+            	bindIndicationClick();
+            	getRestrictions(bagId);
+            	getMedicines(bagId);
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                $('#errors').html('Error in XHR request.<br/> ' + errorThrown).show();
+            }
+        });
+    } // getIndications
+
+    
+    function getMedicineDetails(bagId, medId) {
+    	$.ajax({
+            dataType : 'html',
+            type : 'GET',
+            url : '/bags/ajax_get_medicine_details/' + bagId + '/' + medId + '/',
+            success : function(data, textStatus, jqXHR) {
+                $medicineDetails.html(data);
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                $('#errors').html('Error in XHR request.<br/> ' + errorThrown).show();
+            }
+        });
+    }
+
+    function openBag(bagId) {
+        $('#content .container').append($indMedView);
+        $indMedView.data('bagId', bagId);
+        $indMedView.append($mediBagLabel);
+        // set title for the bag
+        var bagLabel = $('#bag_' + bagId + ' .drugType').text();
+        $mediBagLabel.html('<h1>' + bagLabel + '</h1>');
+        $indMedView.append($indicationList);
+        $indMedView.append($restrictionList);
+        $indMedView.append($medicineList);
+        $indMedView.append($sourceInfo);
+        getIndications(bagId);
+        getSourceInfo();
+    }
+    
+    function bindAnimalIcons() {
+        $('div.animalIcons').delegate('div.animalIcon','click', function(event){
+            if ($(this).hasClass('on')) {
+                $(this).removeClass('on').addClass('off');
+            } else if ($(this).hasClass('off')) {
+                $(this).removeClass('off').addClass('on');                      
+            }
+            var filterOn = $(this).hasClass('on');
+            var iconId = $(this).attr('id');
+            var animalId = iconId.replace('animalId_', '');
+            setFilter(animalId, filterOn);
+        });
+    }
+
+    function bindBagOpen() {
+   		$('#bags').delegate('div.bagOpen', 'click', function(event) {
+    		var $target = $(event.target);
+    		var bagTxt = $target.parent('li').attr('id');
+    	    var bagArr = bagTxt.split('_');
+    	    var bagId = bagArr[bagArr.length-1];
+    		openBag(bagId);
+    	});
+    }
+    
+    function bindIndicationsClose() {
+        $('#close_indications').click(function(event){
+        	$indMedView.remove();
+        	removeMedicineDetails();
+        	adjustLayout();
+        });
+    }
+    
+    function bindIndicationClick() {
+    	$('ul.indications').delegate('li a.indication', 'click', function(event) {
+            var $target = $(this);
+            var indTxt = $target.attr('id');
+            var indArr = indTxt.split('_');
+            var animalGroupId = indArr[indArr.length-2];
+            var indId = indArr[indArr.length-1];
+            
+            var indOn = $target.hasClass('off');
+            if ($target.hasClass('on')) {
+                $target.removeClass('on').addClass('off');
+            } else if ($target.hasClass('off')) {
+            	$target.removeClass('off').addClass('on');                      
+            }
+            //console.log(indOn);
+            var bagId = $indMedView.data('bagId');
+            //console.log('BAGID: ' + bagId);
+            setIndication(bagId, animalGroupId, indId, indOn);
+        });
+    }
+    
+    function bindRestritionClick() {
+    	$('ul.restrictions').delegate('li a.restriction', 'click', function(event) {
+            var $target = $(this);
+            var restTxt = $target.attr('id');
+            var restArr = restTxt.split('_');
+            var animalGroupId = restArr[restArr.length-2];
+            var restMemId = restArr[restArr.length-1];
+            //console.log('AnimalGroup: ' + animalGroupId);
+            //console.log('Restriction: ' + restMemId);
+            var restOn = $target.hasClass('off');
+            if ($target.hasClass('on')) {
+                $target.removeClass('on').addClass('off');
+            } else if ($target.hasClass('off')) {
+                $target.removeClass('off').addClass('on');                      
+            }
+            //console.log(restOn);
+            var bagId = $indMedView.data('bagId');
+            //console.log('BAGID: ' + bagId);
+            setRestriction(bagId, animalGroupId, restMemId, restOn);
+        });
+    }
+    
+    function removeMedicineDetails() {
+    	$medicineDetails.remove();
+        $medicineArrow.remove();
+    }
+    
+    function medicineDetails(bagId,medId, $target) {
+    	removeMedicineDetails();
+    	$target.append($medicineArrow);
+    	$target.append($medicineDetails);
+    	//$medicineList.append($medicineDetails);
+    	getMedicineDetails(bagId, medId);
+    }
+    
+    function bindMedicineClick() {
+    	$('ul.medicines').delegate('li a.medicine', 'click', function(event) {
+    	    var $target = $(this);
+            var medTxt = $target.attr('id');
+            var medArr = medTxt.split('_');
+            var medId = medArr[medArr.length-1];
+            //console.log(medId);
+            if ($target.hasClass('on')) {
+                $target.removeClass('on').addClass('off');
+            } else {
+                $('li a', $medicineList).removeClass('on');
+                $target.removeClass('off').addClass('on');
+            }
+            var medOn = $target.hasClass('on');
+            if (medOn) {
+            	var bagId = $indMedView.data('bagId');
+                medicineDetails(bagId, medId, $target);
+            } else {
+            	removeMedicineDetails();
+            }
+        });
+    }
+
+    function bindRemoveMedClick() {
+        $('ul.medicines').delegate('li div.removeMedicine', 'click', function(event) {
+            var $target = $(this);
+            var medTxt = $target.attr('id');
+            var medArr = medTxt.split('_');
+            var medId = medArr[medArr.length-1];
+            var bagId = $indMedView.data('bagId');
+            toggleMedicine(true, bagId, medId);
+        });
+    }
+    
+    function bindRestoreMedClick() {
+        $('ul.delMedicines').delegate('li a.medicine', 'click', function(event) {
+            var $target = $(this);
+            var medTxt = $target.attr('id');
+            var medArr = medTxt.split('_');
+            var medId = medArr[medArr.length-1];
+            var bagId = $indMedView.data('bagId');
+            toggleMedicine(false, bagId, medId);
+        });
+    }
+    
+    function adjustLayout() {
+        var contentHeight = $indMedView.height();
+       	$('#content .container').css('height', contentHeight + 64 + 'px');
+    }
+    
+    listGames();
+    
+    
+}); // document ready
+</script>
+{% endblock %}

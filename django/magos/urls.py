@@ -14,9 +14,12 @@ v1_api.register(UserResource())
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'magos.views.home', name='home'),
+    url(r'^$', 'apps.game.views.home', name='home'),
     # url(r'^magos/', include('magos.foo.urls')),
+    url(r'^game/', include('apps.game.urls')),
 
+    #url(r'^accounts/logout/$', 'django.contrib.auth.views.logout'),
+    
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
