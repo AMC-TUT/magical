@@ -28,7 +28,7 @@ App.ColorField = Ember.TextField.extend({
 });
 
 /**************************
-* Author
+* User
 **************************/
 
 App.Author = Em.Object.extend({
@@ -40,18 +40,21 @@ App.Author = Em.Object.extend({
 });
 
 /**************************
-* User Controller
+* Users Controller
 **************************/
 
-App.userController = Em.Object.create({ // ObjectController
-  content: App.Author.create({
-    userName: 'matti.vanhanen',
-    firstName: 'Matti',
-    lastName: 'Vanhanen',
-    magos: 'principes',
-    role: 'student'
-  })
+App.usersController = Em.ArrayController.create({
+  content: [],
+  user: null
 });
+
+App.usersController.get('content').pushObject(
+  App.Author.create({ userName: 'matti.vanhanen', firstName: 'Matti', lastName: 'Vanhanen', magos: 'principes', role: 'student' })
+);
+
+// TODO
+var user = App.usersController.get('content').findProperty('userName', 'matti.vanhanen');
+App.usersController.set('user', user);
 
 /**************************
 * Game
@@ -380,10 +383,14 @@ App.AddGameComponentView = Em.View.extend({
       $(this).find('.control-group').removeClass('error');
     })
   },
-  didInsertElement: function() {
+  didInsertElement: function() { // TODO Screenshot
     this.$('> img').tooltip({delay: { show: 500, hide: 100 }, placement: "top"});
   }
 });
+
+/**************************
+* Remove Game Components
+**************************/
 
 App.RemoveGameComponentView = Em.View.extend({
   didInsertElement: function() {
@@ -411,6 +418,10 @@ App.RemoveGameComponentView = Em.View.extend({
     });
   }
 });
+
+/**************************
+* Dialog Add Component
+**************************/
 
 App.AddItemForm = Em.View.extend({
   tagName: 'form',
@@ -495,6 +506,23 @@ App.selectedComponentController = Em.Object.create({
 
   }.observes('content')
 });
+
+/**************************
+* Potion
+**************************/
+
+
+/**************************
+* Potions Controller
+**************************/
+
+
+
+/**************************
+* Potions Views
+**************************/
+
+
 
 /**************************
 * InfoBox Views
