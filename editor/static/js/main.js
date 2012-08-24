@@ -511,6 +511,9 @@ App.selectedComponentController = Em.Object.create({
 * Potion
 **************************/
 
+App.Potion = Em.Object.extend({
+
+});
 
 /**************************
 * Potions Controller

@@ -1,66 +1,87 @@
 [
-    {
-        "magos": "principes",
-        "potions": [
-            {
-                "title": "font",
-                "properties": {
-                    "family": "Arial",
-                    "size": 14,
-                    "color": "#000000",
-                    "background": "#FFFFFF"
-                }
-            },
-            {
-                "title": "score",
-                "properties": {
-                    "events": [],
-                    "score"
-                }
-            },
-            {
-                "title": "dialog",
-                "properties": {}
-            }
-        ]
-    },
-    {
-        "magos": "physicus",
-        "potions": [
-            {
-                "title": "controls",
-                "properties": [
-                    {
-                        "methods": [
-                            "twoway",
-                            "fourway",
-                            "multiway"
-                        ],
-                        "speed": 4,
-                        "jumpHeight": 14,
-                        "grid": true,
-                        "snapToGrid": false
-                    }
-                ]
-            },
-            {
-                "title": "collision",
-                "properties": [
-                    {
-                        "target": null,
-                        "event": null
-                    }
-                ]
-            },
-            {
-                "title": "gravitation",
-                "properties": [
-                    {
-                        "strength": 4,
-                        "direction": true
-                    }
-                ]
-            }
-        ]
-    }
+  {
+    "magos": "principes",
+    "potions": [
+      {
+        "title": "font",
+        "properties": {
+            "family": "Arial",
+            "size": 14,
+            "color": "#000000",
+            "background": "#FFFFFF"
+        }
+      },
+      {
+        "title": "score",
+        "properties": {
+          "events": [],
+          "score"
+        }
+      },
+      {
+        "title": "dialog",
+        "properties": {}
+      }
+    ]
+  },
+  {
+    "magos": "physicus",
+    "potions": [
+      {
+        "title": "controls",
+        "properties": {
+            "methods": ["twoway", "fourway", "multiway"],
+            "speed": 4,
+            "jumpHeight": 14,
+            "grid": true,
+            "snapToGrid": false
+        }
+      },
+      {
+        "title": "collision",
+        "properties": {
+            "events": [],
+            "target": null
+        }
+      },
+      {
+        "title": "gravitation",
+        "properties": {
+            "strength": 4,
+            "direction": true
+        }
+      }
+    ]
+  },
+  {
+    "magos": "artifex",
+    "potions": [
+      {
+        "title": "image",
+        "properties": {
+            "sprite": null
+        }
+      },
+      {
+        "title": "animation",
+        "properties": {
+          "events": null,
+          "sprite": null
+        }
+      }
+    ]
+  },
+  {
+    "magos": "musicus",
+    "potions": [
+      {
+        "title": "audio",
+        "properties": {
+            "events": [],
+            "audio": null,
+            "plays": 0
+        }
+      }
+    ]
+  }
 ]
