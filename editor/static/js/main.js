@@ -536,6 +536,7 @@ App.potionsController = Em.ArrayController.create({
 App.Magos = Em.Object.extend({
   user: null,
   magos: null,
+  busy: false,
   potions: []
 });
 
