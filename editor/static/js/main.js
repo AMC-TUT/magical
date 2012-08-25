@@ -1,6 +1,7 @@
 
 /* Magos Editor */
 
+// @codekit-prepend "require.js"
 // @codekit-prepend "vendor/jquery.min.js"
 // @codekit-prepend "vendor/jquery-ui.min.js"
 // @codekit-prepend "vendor/bootstrap.min.js"
@@ -512,20 +513,40 @@ App.selectedComponentController = Em.Object.create({
 **************************/
 
 App.Potion = Em.Object.extend({
-
+  magos: null,
+  potions: []
 });
 
 /**************************
 * Potions Controller
 **************************/
 
-
+App.potionsController = Em.ArrayController.create({
+  content: []
+});
 
 /**************************
 * Potions Views
 **************************/
 
+/**************************
+* Magos
+**************************/
 
+App.Magos = Em.Object.extend({
+  user: null,
+  magos: null,
+  potions: []
+});
+
+/**************************
+* Magos Controller
+**************************/
+
+App.magosesController = Em.ArrayController.create({
+  content: [],
+  selected: null
+});
 
 /**************************
 * InfoBox Views
