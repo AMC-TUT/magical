@@ -130,9 +130,18 @@ var editor = io.of('/editor').authorization(function (handshakeData, callback) {
       // read json file
       var json = fs.readFileSync('static/json/sceneComponents.json', 'utf8');
       // parse obj's
-      var sceneComponents = JSON.parse(json);
+      var result = JSON.parse(json);
       // return components
-      fn(sceneComponents);
+      fn(result);
+  });
+
+  socket.on('getSkillsets', function (noop, fn) {
+      // read json file
+      var json = fs.readFileSync('static/json/skillsets.json', 'utf8');
+      // parse obj's
+      var result = JSON.parse(json);
+      // return components
+      fn(result);
   });
 
   socket.on('getLanguages', function(noob, fn) {

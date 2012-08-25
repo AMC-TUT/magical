@@ -545,7 +545,33 @@ App.Magos = Em.Object.extend({
 
 App.magosesController = Em.ArrayController.create({
   content: [],
-  selected: null
+  selected: null,
+  populate: function() {
+    var controller = this;
+
+    App.dataSource.getSkillsets(function(data) {
+      // set content
+      controller.set('content', data);
+      // set selected
+      var user = App.usersController.get('user');
+      // get role which is marked as user's role
+      var magos = controller.get('content').findProperty('magos', user.get('magos'));
+
+      if(_.isNull(magos.get('user'))) {
+        // set user in its old role
+        magos.set('user', user);
+      } else {
+        // if user's old role is taken take the first free one
+        var freeMagos = controller.get('content').findProperty('user', null);
+        if(_.isObject(freeMagos)) {
+          freeMagos.set('user', user);
+        } else {
+          alert('there is no free roles. this should have never happened!');
+        }
+
+      }
+    });
+  }
 });
 
 /**************************
@@ -697,8 +723,8 @@ App.ShoutForm = Em.View.extend({
   classNames: ['form-inline'],
   controller: null,
   textField: null,
-  firstNameBinding: Ember.Binding.oneWay('App.userController.content.firstName'),
-  magosBinding: Ember.Binding.oneWay('App.userController.content.magos'),
+  firstNameBinding: Ember.Binding.oneWay('App.usersController.user.firstName'),
+  magosBinding: Ember.Binding.oneWay('App.usersController.user.magos'),
   slugBinding: Ember.Binding.oneWay('App.gameController.content.slug'),
   submit: function(event) {
     event.preventDefault();
@@ -758,6 +784,22 @@ App.DataSource = Ember.Object.extend({
   shout: function(shout, callback) {
     socket.emit('shout', shout, function(data) {
       callback(data);
+    });
+  },
+  getSkillsets: function(callback) {
+    socket.emit('getSkillsets', '', function(data) {
+      var components = [];
+
+      _.each(data, function(obj) {
+        components.push(
+          App.Magos.create({
+            "magos" : obj.magos,
+            "potions": obj.potions
+          })
+        );
+      });
+
+      callback(components);
     });
   },
   getSceneComponents: function(callback) {
@@ -920,6 +962,8 @@ App.languagesController.populate();
 App.sceneComponentsController.populate();
 
 App.gameController.populate();
+
+App.magosesController.populate();
 
 // (function init() {
 // })();
