@@ -569,11 +569,15 @@ App.magosesController = Em.ArrayController.create({
         } else {
           alert('there is no free roles. this should have never happened!');
         }
-
       }
     });
   }
 });
+
+App.MagosView = Em.CollectionView.extend({
+  contentBinding: 'App.magosesController.content',
+  classNames: ['sortable-item']
+})
 
 /**************************
 * InfoBox Views
