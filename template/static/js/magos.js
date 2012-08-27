@@ -337,7 +337,7 @@ $(function() {
 
 var pathname = window.location.pathname;
 var slug = pathname.replace(/^\//, '').replace(/\/$/, '');
-
+/*
 var socket = io.connect('http://localhost/editor');
 
 socket.on('connecting', function() {
@@ -362,6 +362,7 @@ var attr = { action: 'update' };
 socket.emit('set-game-attr', attr, function(data) {
 
 })
+*/
 /*
 socket.emit('join-room', slug, function (data) {
   console.log( data );

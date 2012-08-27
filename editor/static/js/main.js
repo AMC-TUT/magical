@@ -580,11 +580,12 @@ App.magosesController = Em.ArrayController.create({
 App.MagosView = Em.View.extend({
   contentBinding: 'App.magosesController.content',
   classNames: ['sidebar', 'sortable-area'],
-  contentObserver: function() {
+  didInsertElement: function() {
+    var $sortableArea = this.$();
 
-    Em.run.next(function() {
+    return Em.run.next(function() {
       //
-      $(".sortable-area").sortable({
+      $sortableArea.sortable({
         placeholder: "sortable-highlight",
         items: "> .sortable-item",
         handle: "h3",
@@ -593,11 +594,20 @@ App.MagosView = Em.View.extend({
         forceHelperSize: true
       });
       //
-      $(".sortable-area").disableSelection();
+      $sortableArea.disableSelection();
 
-    })
+      $('.busy-icon').tooltip({delay: { show: 500, hide: 100 }, placement: 'left'});
 
-  }.observes('content.@each')
+    });
+  },
+  busyObserver: function() {
+    console.log("EM EM EM");
+    return Em.run.next(function() {
+      return Em.run.next(function() {
+        $('.busy-icon').tooltip({delay: { show: 500, hide: 100 }, placement: 'left'});
+      });
+    });
+  }.observes('content.@each.user.busy')
 
 })
 

@@ -381,25 +381,22 @@
       </div><!--/ left side-->
 
       <div class="span3">
-        <div class="">
           <script type="text/x-handlebars">
-
           {{#view App.MagosView}}
             {{#each content}}
               <div class="sortable-item well">
-
               {{#if user}}
                 <h3>{{user.firstName}}</h3>
 
                 {{#if user.busy}}
-                  <img src="/static/img/icons/busy.png" class="busy-icon" />
+                  <img src="/static/img/icons/busy.png" class="busy-icon" title="User is busy right now" />
                 {{else}}
-                  <img src="/static/img/icons/available.png" class="busy-icon" />
+                  <img src="/static/img/icons/available.png" class="busy-icon" title="You can change the roles with the user" />
                 {{/if}}
 
               {{else}}
                 <h3 class="capitalize">{{magos}}</h3>
-                <img src="/static/img/icons/available.png" class="busy-icon" />
+                <img src="/static/img/icons/available.png" class="busy-icon" title="User is busy right now" />
               {{/if}}
 
                 <div {{bindAttr class="magos:magos-potions magos"}}>
