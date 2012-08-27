@@ -381,30 +381,46 @@
       </div><!--/ left side-->
 
       <div class="span3">
-        <div class="well sidebar-nav sortable-area">
+        <div class="">
+          <script type="text/x-handlebars">
 
-
-          <div class="magos-sortable-item">
           {{#view App.MagosView}}
-            <h2>Nathalie</h2>
-            <img src="/static/img/icons/busy.png" class="magos-status-icon" />
-            <div class="magos-potions-container">
+            {{#each content}}
+              <div class="sortable-item well">
 
-              <div class="magos-potions potions principes">
-                <img class="magos-image" src="/static/img/icons/principes.png" alt="" style="width: 41px;padding: 4px 9px;" />
-                <table class="table">
-                  <tbody>
-                    <tr><td><img class="potion-icon" data-potion="score" src="/static/img/icons/potion.png" alt="" /></td><td>Score</td></tr>
-                    <tr><td><img class="potion-icon" data-potion="dialog" src="/static/img/icons/potion.png" alt="" /></td><td>Dialog</td></tr>
-                    <tr><td><img class="potion-icon" data-potion="font" src="/static/img/icons/potion.png" alt="" /></td><td>Font</td></tr>
-                  </tbody>
-                </table>
+              {{#if user}}
+                <h3>{{user.firstName}}</h3>
+
+                {{#if user.busy}}
+                  <img src="/static/img/icons/busy.png" class="busy-icon" />
+                {{else}}
+                  <img src="/static/img/icons/available.png" class="busy-icon" />
+                {{/if}}
+
+              {{else}}
+                <h3 class="capitalize">{{magos}}</h3>
+                <img src="/static/img/icons/available.png" class="busy-icon" />
+              {{/if}}
+
+                <div {{bindAttr class="magos:magos-potions magos"}}>
+
+                    <img class="magos-icon" src="/static/img/icons/principes.png" alt="" style="width: 41px;padding: 4px 9px;" />
+                    <table class="table">
+                      <tbody>
+                        <tr><td><img class="potion-icon" data-potion="score" src="/static/img/icons/potion.png" alt="" /></td><td>Score</td></tr>
+                        <tr><td><img class="potion-icon" data-potion="dialog" src="/static/img/icons/potion.png" alt="" /></td><td>Dialog</td></tr>
+                        <tr><td><img class="potion-icon" data-potion="font" src="/static/img/icons/potion.png" alt="" /></td><td>Font</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+
               </div>
-            </div>
+            {{/each}}
+
           {{/view}}
 
-        </div>
-
+          </script>
+        </div><!--/ sortable area -->
       </div><!--/ right span -->
 
     </div>

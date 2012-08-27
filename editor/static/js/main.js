@@ -37,6 +37,7 @@ App.Author = Em.Object.extend({
   firstName: null,
   lastName: null,
   magos: null,
+  busy: false,
   role: 'student'
 });
 
@@ -536,8 +537,10 @@ App.potionsController = Em.ArrayController.create({
 App.Magos = Em.Object.extend({
   user: null,
   magos: null,
-  busy: false,
-  potions: []
+  potions: [],
+  busy: function() {
+    return this.getPath('user.busy');
+  }.property('user')
 });
 
 /**************************
@@ -574,9 +577,28 @@ App.magosesController = Em.ArrayController.create({
   }
 });
 
-App.MagosView = Em.CollectionView.extend({
+App.MagosView = Em.View.extend({
   contentBinding: 'App.magosesController.content',
-  classNames: ['sortable-item']
+  classNames: ['sidebar', 'sortable-area'],
+  contentObserver: function() {
+
+    Em.run.next(function() {
+      //
+      $(".sortable-area").sortable({
+        placeholder: "sortable-highlight",
+        items: "> .sortable-item",
+        handle: "h3",
+        axis: "y",
+        opacity: 0.8,
+        forceHelperSize: true
+      });
+      //
+      $(".sortable-area").disableSelection();
+
+    })
+
+  }.observes('content.@each')
+
 })
 
 /**************************

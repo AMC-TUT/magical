@@ -192,3 +192,87 @@
   }
 
 }
+
+.sidebar {
+  color: @sidebarColor;
+  padding: 10px;
+
+  h3 {
+    cursor: move;
+  }
+
+  .sortable-item {
+    position: relative;
+    .box-sizing(border-box);
+  }
+
+  .busy-icon {
+    position: absolute;
+    right: 10px;
+    top: 7px;
+  }
+
+  .magos-potions {
+    position: relative;
+    padding-right: 60px;
+    min-height: 97px;
+    margin-top: 10px;
+    color: @white;
+    .border-radius(4px);
+    .magos-gradient();
+
+    .magos-icon {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      cursor: move;
+      border: 0;
+      padding: 4px 7px 6px;
+      border-radius: 4px;
+      box-shadow: inset 0 0 10px #333
+    }
+
+    .table td {
+      border: 0;
+      font-weight: 700;
+      line-height: 30px;
+      padding: 4px 8px;
+      text-shadow: 0 2px 6px black;
+    }
+
+    .table td:first-child {
+      width: 31px;
+      text-align: center;
+    }
+
+  }
+
+  .magos-potions.principes {
+    background-color: @principes;
+    border: 1px solid darken(@principes, 10%);
+  }
+
+  .magos-potions.physicus {
+    background-color: @physicus;
+    border: 1px solid darken(@physicus, 10%);
+  }
+
+  .magos-potions.artifex {
+    background-color: @artifex;
+    border: 1px solid darken(@artifex, 20%);
+  }
+
+  .magos-potions.musicus {
+    background-color: @musicus;
+    border: 1px solid darken(@musicus, 2%);
+  }
+
+  .sortable-highlight {
+    margin: 0 0 @baseMargin 0;
+    height: 40px;
+    background: darken(@green, 15%);
+    border: 1px solid darken(@green, 20%);
+    .border-radius(6px);
+  }
+
+}
