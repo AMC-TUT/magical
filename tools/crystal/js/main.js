@@ -34,7 +34,7 @@ $(document).ready(function() {
 				startDragging();
 				
 				$("#contentHolder").text("");
-				
+				console.log("mousemove")
 				$("#crystalBall").mousemove(function() {
 					shakeListener();
 				});
@@ -72,8 +72,6 @@ $(document).ready(function() {
 	//Activates or deactivates shaking
 	function setShaking(activate) {
 		if(arguments.length == 0 || activate) {
-			//setTimeout(startShaking, 2000);
-	        //startShaking();
 	        enableMotionDetection();
 		}
 		else {
@@ -82,17 +80,9 @@ $(document).ready(function() {
 		}
 	}
 
-	//Shaking starts. Reverse effect is played first if effect is at the end
-	/*function startShaking() {
-		if(motionListener == null) {
-			enableMotionDetection();
-			//motionListener = window.addEventListener("devicemotion", motionHandler, true);
-		}
-		reverseEffect();
-	}*/
-
+	//Activates or deactivates crystall ball shaking
 	function enableMotionDetection() {
-		console.log("enableMotionDetection");
+		orientation = null;
 		motionListener = window.addEventListener("devicemotion", motionHandler, true);
 		/*motionListener = window.addEventListener("devicemotion", function(evt) {
 			var accelTreshold = 6;
@@ -104,17 +94,17 @@ $(document).ready(function() {
 		}, true);*/
 	}
 
+	//Shake action
 	function motionHandler(evt) {
 		//console.log("motionHandler");
 		if(orientation == null) {
-			console.log("reverseEffect");
 			reverseEffect();
 		}
 		var accelTreshold = 6;
 		var distance = Math.sqrt(evt.accelerationIncludingGravity.x * evt.accelerationIncludingGravity.x + evt.accelerationIncludingGravity.y * evt.accelerationIncludingGravity.y);
-		//console.log("distance: "+distance);
+		
 		orientation = new Object({x:evt.accelerationIncludingGravity.x, y:evt.accelerationIncludingGravity.y});
-		//console.log("orientation: "+orientation.x+", "+orientation.y);
+		
 		if(distance >= accelTreshold) {
 			shakeListener();
 		}
@@ -122,6 +112,8 @@ $(document).ready(function() {
 
 	function reverseEffect() {
 		if(shakeDecayInterval == null) {
+			$("#contentHolder").text("");
+
 			setColorDecay(100, "1,-2,0");
 			
 			//Start word clearing effect (i.e. return color to original)
@@ -148,17 +140,13 @@ $(document).ready(function() {
 					else {
 						shakeReverse = false;
 						window.clearInterval(reverseInterval);
-
-						if(accelometer) {
-							//console.log("reverseStep");
-							//motionListener = window.addEventListener("devicemotion", motionHandler, true);
-						}
 					}
 				}
 			}
 		}
 	}	
 	
+	//Action whenever shaking or dragging is on
 	function shakeListener() {
 		var shakeTreshold = 100;
 
@@ -187,13 +175,11 @@ $(document).ready(function() {
 
 		if(accelometer) {
 			setTimeout(enableMotionDetection, 2000);
-			orientation = null;
-			console.log("orientation: "+orientation);
 		}
 		else {
 			stopDragging();
-			setDragging(false);//cancel dragging/shaking
-			setDragging();
+			//setDragging(false);//cancel dragging
+			//setDragging();
 		}
 		moveToCenter(true);
 	}
@@ -255,6 +241,7 @@ $(document).ready(function() {
 
 			$object.animate({left:centerX, top:centerY}, duration, "easeOutElastic")
 		}
+		stopDragging();
 	}
 });
 
