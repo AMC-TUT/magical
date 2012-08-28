@@ -87,7 +87,7 @@
 
     <div class="row-fluid">
 
-      <div class="span9">
+      <div class="span9 sortable-mainarea">
 
       <script type="text/x-handlebars">
         <div class="row-fluid">
@@ -139,10 +139,9 @@
                 <span class="icon-bar"></span>
               </a>
 
-              <h3>Element Information</h3>
+              <h3 class="sortable-handle">Element Information</h3>
 
               <div class="nav-collapse infobox-collapse">
-
 
                 <div class="row-fluid">
 
@@ -351,7 +350,7 @@
                   <span class="icon-bar"></span>
                 </a>
 
-                <h3>Shoutbox</h3>
+                <h3 class="sortable-handle">Shoutbox</h3>
 
                 <div class="nav-collapse shoutbox-collapse">
                   <div class="magos-shoutbox-log">
@@ -386,7 +385,7 @@
             {{#each content}}
               <div class="sortable-item well">
               {{#if user}}
-                <h3>{{user.firstName}}</h3>
+                <h3 class="sortable-handle">{{user.firstName}}</h3>
 
                 {{#if user.busy}}
                   <img src="/static/img/icons/busy.png" class="busy-icon" title="User is busy right now" />
@@ -395,18 +394,18 @@
                 {{/if}}
 
               {{else}}
-                <h3 class="capitalize">{{magos}}</h3>
-                <img src="/static/img/icons/available.png" class="busy-icon" title="User is busy right now" />
+                <h3 class="capitalize sortable-handle">{{magos}}</h3>
+                <img src="/static/img/icons/available.png" class="busy-icon" title="You can change the roles with the user" />
               {{/if}}
 
                 <div {{bindAttr class="magos:magos-potions magos"}}>
 
-                    <img class="magos-icon" src="/static/img/icons/principes.png" alt="" style="width: 41px;padding: 4px 9px;" />
+                    <img class="magos-icon inner-shadow" {{bindAttr src="icon"}} alt="" />
                     <table class="table">
                       <tbody>
-                        <tr><td><img class="potion-icon" data-potion="score" src="/static/img/icons/potion.png" alt="" /></td><td>Score</td></tr>
-                        <tr><td><img class="potion-icon" data-potion="dialog" src="/static/img/icons/potion.png" alt="" /></td><td>Dialog</td></tr>
-                        <tr><td><img class="potion-icon" data-potion="font" src="/static/img/icons/potion.png" alt="" /></td><td>Font</td></tr>
+                        <tr><td><img class="potion-icon inner-shadow" data-potion="score" src="/static/img/icons/potion.png" alt="" /></td><td>Score</td></tr>
+                        <tr><td><img class="potion-icon inner-shadow" data-potion="dialog" src="/static/img/icons/potion.png" alt="" /></td><td>Dialog</td></tr>
+                        <tr><td><img class="potion-icon inner-shadow" data-potion="font" src="/static/img/icons/potion.png" alt="" /></td><td>Font</td></tr>
                       </tbody>
                     </table>
                   </div>

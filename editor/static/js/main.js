@@ -540,7 +540,11 @@ App.Magos = Em.Object.extend({
   potions: [],
   busy: function() {
     return this.getPath('user.busy');
-  }.property('user')
+  }.property('user'),
+  icon: function() {
+    var magos = this.get('magos');
+    return '/static/img/icons/'+magos+'.png';
+  }.property('magos')
 });
 
 /**************************
@@ -579,7 +583,7 @@ App.magosesController = Em.ArrayController.create({
 
 App.MagosView = Em.View.extend({
   contentBinding: 'App.magosesController.content',
-  classNames: ['sidebar', 'sortable-area'],
+  classNames: ['sidebar', 'sortable-sidearea'],
   didInsertElement: function() {
     var $sortableArea = this.$();
 
@@ -600,7 +604,7 @@ App.MagosView = Em.View.extend({
 
     });
   },
-  busyObserver: function() {
+  busyObserver: function() { // TODO
     console.log("EM EM EM");
     return Em.run.next(function() {
       return Em.run.next(function() {
@@ -1045,6 +1049,17 @@ $(document).on('click tap', '.btn-play', function(event) {
   // play audio
   $audio.play();
 });
+
+// main area sortable elements (shoutbox, infobox)
+$('.sortable-mainarea').sortable({
+  placeholder: "sortable-highlight",
+  items: "> .ember-view",
+  handle: ".sortable-handle",
+  axis: "y",
+  opacity: 0.8,
+  forceHelperSize: true
+});
+$('.sortable-mainarea').disableSelection();
 
 // help TODO replace with ember object
 $(document).on('click tap', '.btn-group-help .btn', function(event) {

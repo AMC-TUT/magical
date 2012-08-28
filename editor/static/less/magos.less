@@ -193,12 +193,20 @@
 
 }
 
+.sortable-handle {
+  cursor: move;
+}
+
+.sortable-highlight {
+  margin: 0 0 @baseMargin 0;
+  height: 40px;
+  background: darken(@green, 15%);
+  border: 1px solid darken(@green, 20%);
+  .border-radius(6px);
+}
+
 .sidebar {
   color: @sidebarColor;
-
-  h3 {
-    cursor: move;
-  }
 
   .sortable-item {
     position: relative;
@@ -220,7 +228,7 @@
     .border-radius(4px);
     .magos-gradient();
 
-    .icon-placeholder {
+    .inner-shadow {
       cursor: move;
       border: 0;
       padding: 4px 7px 6px;
@@ -232,6 +240,10 @@
       position: absolute;
       right: 10px;
       top: 10px;
+      width: 60px;
+      height: 80px;
+      padding: 4px 9px;
+      .box-sizing(border-box);
     }
 
     .potion-icon {
@@ -271,14 +283,6 @@
   .magos-potions.musicus {
     background-color: @musicus;
     border: 1px solid darken(@musicus, 2%);
-  }
-
-  .sortable-highlight {
-    margin: 0 0 @baseMargin 0;
-    height: 40px;
-    background: darken(@green, 15%);
-    border: 1px solid darken(@green, 20%);
-    .border-radius(6px);
   }
 
 }

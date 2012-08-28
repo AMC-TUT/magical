@@ -738,18 +738,18 @@ a.label:hover,a.badge:hover{color:#ffffff;text-decoration:none;cursor:pointer;}
 .magos-infobox .table td:first-child{width:33%;white-space:nowrap;}
 .magos-infobox .table th,.magos-infobox .table td{padding:5px 5px;border-top:1px solid rgba(221, 221, 221, 0.06);}
 .magos-infobox .table .sprite{margin-top:10px;}
-.sidebar{color:#0088cc;}.sidebar h3{cursor:move;}
-.sidebar .sortable-item{position:relative;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;}
+.sortable-handle{cursor:move;}
+.sortable-highlight{margin:0 0 10px 0;height:40px;background:#2f6f2f;border:1px solid #285d28;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;}
+.sidebar{color:#0088cc;}.sidebar .sortable-item{position:relative;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;}
 .sidebar .busy-icon{position:absolute;right:10px;top:7px;}
-.sidebar .magos-potions{position:relative;padding-right:60px;min-height:97px;margin-top:10px;color:#ffffff;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;background-image:-webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-ms-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.53));}.sidebar .magos-potions .icon-placeholder{cursor:move;border:0;padding:4px 7px 6px;border-radius:4px;box-shadow:inset 0 0 10px #333;}
-.sidebar .magos-potions .magos-icon{position:absolute;right:10px;top:10px;}
+.sidebar .magos-potions{position:relative;padding-right:60px;min-height:97px;margin-top:10px;color:#ffffff;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;background-image:-webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-ms-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.53));}.sidebar .magos-potions .inner-shadow{cursor:move;border:0;padding:4px 7px 6px;border-radius:4px;box-shadow:inset 0 0 10px #333;}
+.sidebar .magos-potions .magos-icon{position:absolute;right:10px;top:10px;width:60px;height:80px;padding:4px 9px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;}
 .sidebar .magos-potions .table td{border:0;font-weight:700;line-height:30px;padding:4px 8px;text-shadow:0 2px 6px black;}
 .sidebar .magos-potions .table td:first-child{width:31px;text-align:center;}
 .sidebar .magos-potions.principes{background-color:#621283;border:1px solid #400c56;}
 .sidebar .magos-potions.physicus{background-color:#095766;border:1px solid #052f37;}
 .sidebar .magos-potions.artifex{background-color:#40b83d;border:1px solid #256b24;}
 .sidebar .magos-potions.musicus{background-color:#090d66;border:1px solid #080c5d;}
-.sidebar .sortable-highlight{margin:0 0 10px 0;height:40px;background:#2f6f2f;border:1px solid #285d28;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;}
 .pull-right{float:right;}
 .pull-left{float:left;}
 .hide{display:none;}
