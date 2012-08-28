@@ -5,23 +5,7 @@ from apps.game.models import Language, UserProfile, Role
 from tastypie.authentication import BasicAuthentication
 from tastypie.authorization import DjangoAuthorization
 from django.conf.urls import url
-
-class RoleResource(ModelResource):
-    class Meta:
-        queryset = Role.objects.all()
-
-    def dehydrate(self, bundle):
-        # return only flat name field for role
-        return bundle.data['name']
-
-class ProfileLanguageResource(ModelResource):
-    class Meta:
-        queryset = Language.objects.all()
-
-    def dehydrate(self, bundle):
-        # return only flat title field for language
-        return bundle.data['title']    
-        
+      
 class LanguageResource(ModelResource):
     class Meta:
         queryset = Language.objects.all()
@@ -30,8 +14,8 @@ class LanguageResource(ModelResource):
         include_resource_uri = False
         
 class UserProfileResource(ModelResource):
-    role = fields.ForeignKey(RoleResource, 'role', full=True)
-    language = fields.ForeignKey(ProfileLanguageResource, 'language', full=True)
+    role = fields.CharField(attribute='role__name') # flat value
+    language = fields.CharField(attribute='language__title') # flat value
     class Meta:
         queryset = UserProfile.objects.all()
         resource_name = 'user_profile'
@@ -40,7 +24,9 @@ class UserProfileResource(ModelResource):
         include_resource_uri = False
 
 class UserResource(ModelResource):
-    profile = fields.ForeignKey(UserProfileResource, 'userprofile', full=True)
+    language = fields.CharField(attribute='userprofile__language__title')
+    role = fields.CharField(attribute='userprofile__role__name')
+    
     class Meta:
         #queryset = User.objects.all().order_by('-last_name', '-first_name')
         queryset = User.objects.all()
@@ -49,8 +35,8 @@ class UserResource(ModelResource):
         ordering = ['-last_name', '-first_name']
         resource_name = 'users'
         excludes = ['id', 'email', 'password', 'is_active', 'is_staff', 'is_superuser', 'date_joined', 'last_login']
-        field_list_to_remove = ['profile'] # remove these in list view
-        #fields = ['username', 'first_name', 'last_name']
+        field_list_to_remove = ['language', 'role'] # remove these in list view
+        
         include_absolute_uri = False
         include_resource_uri = False
         allowed_methods = ["get"]
