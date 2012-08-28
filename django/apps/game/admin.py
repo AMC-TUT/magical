@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from apps.game.models import UserProfile, Country, Language, \
     Organization, OrganizationMembership, Role, Disability, \
     Achievement, AchievementMembership, Game, GameType, Author, \
-    Revision
+    Revision, Image, Audio
     
 
 admin.site.unregister(User)
@@ -30,3 +30,5 @@ admin.site.register(Game)
 admin.site.register(GameType)
 admin.site.register(Author)
 admin.site.register(Revision)
+admin.site.register(Image)
+admin.site.register(Audio)

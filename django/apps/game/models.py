@@ -153,6 +153,62 @@ class UserProfile(models.Model):
     def __unicode__(self):
         return u"%s's profile" % self.user
 
+        
+class Image(models.Model):
+    name = models.CharField(max_length=45, null=False, blank=False)
+    slug = models.SlugField(max_length=45, null=False, blank=False, unique=True)
+    width = models.IntegerField(null=False, blank=False)
+    height = models.IntegerField(null=False, blank=False)
+    file = models.ImageField(upload_to='images', height_field='height', width_field='width')
+    type = models.IntegerField(null=False, blank=False, default=0)
+    state = models.IntegerField(null=False, blank=False, default=0)
+    author = models.ForeignKey(User)
+    
+    cloned = models.ForeignKey(
+        'self', 
+        blank=True, 
+        null=True, 
+        help_text="Cloned image",
+        related_name="cloned_image_set"
+    )
+
+    created = models.DateTimeField(auto_now_add=True, default=datetime.date.today)
+    updated = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = _('image')
+        verbose_name_plural = _('images')
+
+    def __unicode__(self):
+        return u"%s" % self.name
+
+
+class Audio(models.Model):
+    name = models.CharField(max_length=45, null=False, blank=False)
+    slug = models.SlugField(max_length=45, null=False, blank=False, unique=True)
+    file = models.FileField(upload_to='audio')
+    state = models.IntegerField(null=False, blank=False, default=0)
+    author = models.ForeignKey(User)
+    
+    cloned = models.ForeignKey(
+        'self', 
+        blank=True, 
+        null=True, 
+        help_text="Cloned audio file",
+        related_name="cloned_audio_set"
+    )
+
+    created = models.DateTimeField(auto_now_add=True, default=datetime.date.today)
+    updated = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = _('audio')
+        verbose_name_plural = _('audios')
+
+    def __unicode__(self):
+        return u"%s" % self.name
+
+        
 class Game(models.Model):
     """Game model"""
     title = models.CharField(max_length=45, null=False, blank=False)
@@ -226,7 +282,7 @@ class Author(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     profile = None
     default_lang, lang_created = Language.objects.get_or_create(code='fi', title='suomi', slug='finnish')
-    default_role, role_created = Role.objects.get_or_create(name='musicus', permission_level=1)
+    default_role, role_created = Role.objects.get_or_create(name='student', permission_level=1)
     
     if created:
         try:

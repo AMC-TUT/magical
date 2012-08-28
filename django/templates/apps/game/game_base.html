@@ -1,3 +1,6 @@
+{% load url from future %}
+{% load i18n %}
+{% load login_form %}
 <!DOCTYPE html>
 <html lang="fi">
   <head>
@@ -30,21 +33,10 @@
           <a class="brand" href="#">Magos</a>
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
-            
-              {% if user.is_authenticated %}
-                <a href="#" class="navbar-link">{{ user.username }}</a> | <a id="logout" href="/game/logout/">{% trans "Logout" %}</a>
+              {% if not user.is_authenticated %}
+                  {% login_form %}
               {% else %}
-              
-                <form method="post" action="{% url auth_login %}">
-                    {% csrf_token %}
-                    <p><label for="id_username">Username:</label> <input id="id_username" type="text" name="username" maxlength="30" /></p>
-                    <p><label for="id_password">Password:</label> <input type="password" name="password" id="id_password" /></p>
-
-                    <input type="submit" value="Log in" />
-                    <input type="hidden" name="next" value="" />
-                </form>
-
-  
+                <a href="#" class="navbar-link">{{ user.username }}</a> | <a id="logout" href="/game/logout/">{% trans "Logout" %}</a>
               {% endif %}
             </p>
             <ul class="nav">
@@ -57,27 +49,21 @@
         </div>
       </div>
     </div>
-    
-    <div id="errors"></div>   
-    
-    <header class="shadow">
-      <div class="container">
-        {% if user.is_authenticated %}
-	      <div id="userInfo">{{ user.username }} | <a id="logout" href="/accounts/logout/">{% trans "Logout" %}</a></div>
-	    {% endif %}
-      </div>
+        
     </header>
     
     <div class="container">
         {% block content %}{% endblock %}
     </div>
 
-    <div class="row">
-        <div class="span4">
-            <p>Magos</p>          
-        </div>
-        <div class="span8">
-            <p>TTY</p>          
+    <div id="footer" class="container">
+        <div class="row">
+            <div class="span4">
+                <p>Magos</p>          
+            </div>
+            <div class="span8">
+                <p>TTY</p>          
+            </div>
         </div>
     </div>
 

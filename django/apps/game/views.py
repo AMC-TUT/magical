@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 from django.template import RequestContext
 from django.http import HttpResponse, Http404, HttpResponseNotAllowed
 from django.contrib.auth.decorators import login_required
@@ -7,13 +7,14 @@ from django.utils import simplejson
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 
+from django.contrib.auth.forms import AuthenticationForm
+
 from apps.game.models import Game
 
 def home(request):
     tpl = 'apps/game/index.html'
     user = request.user    
-    return render_to_response(tpl, {'user' : user},
-                          context_instance=RequestContext(request))
+    return render(request, tpl, {'user': user})
 
 def logout_view(request):
     logout(request)

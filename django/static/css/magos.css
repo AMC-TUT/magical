@@ -15,3 +15,6 @@ h1.ajax-loading {
     padding: 0;
 }
 
+#loginForm {
+    float:right;
+}
