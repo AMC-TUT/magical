@@ -6,15 +6,22 @@ from tastypie.authentication import BasicAuthentication
 from tastypie.authorization import DjangoAuthorization
 from django.conf.urls import url
 
-
 class RoleResource(ModelResource):
     class Meta:
         queryset = Role.objects.all()
-        resource_name = 'role'
-        fields = ['name']
-        include_absolute_uri = False
-        include_resource_uri = False
 
+    def dehydrate(self, bundle):
+        # return only flat name field for role
+        return bundle.data['name']
+
+class ProfileLanguageResource(ModelResource):
+    class Meta:
+        queryset = Language.objects.all()
+
+    def dehydrate(self, bundle):
+        # return only flat title field for language
+        return bundle.data['title']    
+        
 class LanguageResource(ModelResource):
     class Meta:
         queryset = Language.objects.all()
@@ -24,7 +31,7 @@ class LanguageResource(ModelResource):
         
 class UserProfileResource(ModelResource):
     role = fields.ForeignKey(RoleResource, 'role', full=True)
-    language = fields.ForeignKey(LanguageResource, 'language', full=True)
+    language = fields.ForeignKey(ProfileLanguageResource, 'language', full=True)
     class Meta:
         queryset = UserProfile.objects.all()
         resource_name = 'user_profile'
