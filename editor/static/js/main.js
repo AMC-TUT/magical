@@ -538,13 +538,20 @@ App.Magos = Em.Object.extend({
   user: null,
   magos: null,
   potions: [],
+  userActiveBinding: 'App.usersController.user',
   busy: function() {
     return this.getPath('user.busy');
   }.property('user'),
   icon: function() {
     var magos = this.get('magos');
     return '/static/img/icons/'+magos+'.png';
-  }.property('magos')
+  }.property('magos'),
+  activeUser: function() {
+    var user = this.get('user');
+    var active = this.get('userActive');
+
+    return Em.isEqual(user, active);
+  }.property('user', 'userActive')
 });
 
 /**************************
@@ -553,7 +560,7 @@ App.Magos = Em.Object.extend({
 
 App.magosesController = Em.ArrayController.create({
   content: [],
-  selected: null,
+  selectedBinding: 'App.usersController.user.magos',
   populate: function() {
     var controller = this;
 
@@ -611,7 +618,7 @@ App.MagosView = Em.View.extend({
         $('.busy-icon').tooltip({delay: { show: 500, hide: 100 }, placement: 'left'});
       });
     });
-  }.observes('content.@each.user.busy')
+  }.observes('content.@each.busy')
 
 })
 
@@ -1053,7 +1060,7 @@ $(document).on('click tap', '.btn-play', function(event) {
 // main area sortable elements (shoutbox, infobox)
 $('.sortable-mainarea').sortable({
   placeholder: "sortable-highlight",
-  items: "> .ember-view",
+  items: "> .ember-view:not(:first)",
   handle: ".sortable-handle",
   axis: "y",
   opacity: 0.8,

@@ -21,6 +21,13 @@
       {
         "title": "dialog",
         "properties": {}
+      },
+      {
+        "title": "text",
+        "properties": {
+          "events": [],
+          "text": null
+        }
       }
     ]
   },
