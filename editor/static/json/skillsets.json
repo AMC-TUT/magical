@@ -57,6 +57,33 @@
             "strength": 4,
             "direction": true
         }
+      },
+      {
+        "title": "type",
+        "properties": {
+          "types": [
+            {
+              "title": "block",
+              "properties": []
+            },
+            {
+              "title": "collectible",
+              "properties": []
+            },
+            {
+              "title": "pushable",
+              "properties": []
+            },
+            {
+              "title": "player",
+              "properties": []
+            },
+            {
+              "title": "enemy",
+              "properties": []
+            }
+          ]
+        }
       }
     ]
   },

@@ -336,6 +336,12 @@ App.GameComponent = Em.Object.extend({
 
     return _.isObject(collisions) ? collisions.filterProperty('audio') : false;
 
+  }.property('properties'),
+  filteredTextEvents: function() {
+    var collisions = this.getPath('properties.collisions');
+
+    return _.isObject(collisions) ? collisions.filterProperty('text') : false;
+
   }.property('properties')
 });
 
@@ -587,7 +593,11 @@ App.magosesController = Em.ArrayController.create({
     });
   }
 });
-
+/*
+$(".potion-icon").draggable({
+  helper: "clone"
+});
+*/
 App.MagosView = Em.View.extend({
   contentBinding: 'App.magosesController.content',
   classNames: ['sidebar', 'sortable-sidearea'],
@@ -642,6 +652,7 @@ App.InfoBoxCollisionView = Em.View.extend();
 App.InfoBoxGravitationView = Em.View.extend();
 App.InfoBoxScoreView = Em.View.extend();
 App.InfoBoxDialogView = Em.View.extend();
+App.InfoBoxTextView = Em.View.extend();
 App.InfoBoxSpriteView = Em.View.extend();
 App.InfoBoxAnimationView = Em.View.extend();
 App.InfoBoxAudioView = Em.View.extend();

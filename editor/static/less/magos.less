@@ -231,6 +231,13 @@
     .border-radius(4px);
     .magos-gradient();
 
+    &.selected-magos {
+      .draggable-item {
+        cursor: move;
+        opacity: 1;
+      }
+    }
+
     .inner-shadow {
       border: 0;
       padding: 4px 7px 6px;
@@ -246,10 +253,11 @@
       height: 80px;
       padding: 4px 9px;
       .box-sizing(border-box);
+      cursor: move;
     }
 
     .potion-icon {
-
+      opacity: .4;
     }
 
     .table td {
@@ -287,4 +295,10 @@
     border: 1px solid darken(@musicus, 2%);
   }
 
+}
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

@@ -261,8 +261,24 @@
                       <h4>Dialog</h4>
                       {{#view App.InfoBoxDialogView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-dialog"}}
                         <tr>
-                          <td>---</td><td></td>
+                          <th>Action</th><th>Participants</th>
                         </tr>
+                      {{/view}}
+
+                      <h4>Text</h4>
+                      {{#view App.InfoBoxTextView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-text"}}
+                        <tr>
+                          <th>Action</th><th>Text</th>
+                        </tr>
+                        {{#if content.filteredTextEvents}}
+                        {{#each content.filteredTextEvents}}
+                          <tr>
+                            <td>Collision {{target}}</td><td class="ellipsis">{{text.text}}</td>
+                          </tr>
+                        {{/each}}
+                        {{else}}
+                          <tr><td> ---</td><td> ---</td></tr>
+                        {{/if}}
                       {{/view}}
 
                     </div>
@@ -398,17 +414,14 @@
                 <img src="/static/img/icons/available.png" class="busy-icon" title="You can change the roles with the user" style="opacity: 0.4;" />
               {{/if}}
 
-{{log activeUser}}
-{{log magos}}
-
               <div {{bindAttr class="magos:magos-potions magos activeUser:selected-magos"}}>
-                  <img class="magos-icon inner-shadow" {{bindAttr src="icon"}} alt="" />
+                  <img class="magos-icon inner-shadow draggable-item" {{bindAttr src="icon"}} alt="" />
                   <table class="table">
                     <tbody>
                       {{#each potions}}
                       <tr>
                         <td>
-                          <img {{bindAttr class="magos:potion-icon magos:inner-shadow"}} {{bindAttr data-potion="title"}} src="/static/img/icons/potion.png" {{bindAttr alt="title"}} />
+                          <img class="potion-icon inner-shadow draggable-item" {{bindAttr data-potion="title"}} src="/static/img/icons/potion.png" {{bindAttr alt="title"}} />
                         </td>
                         <td class="capitalize">
                           {{title}}
