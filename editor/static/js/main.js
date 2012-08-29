@@ -614,10 +614,17 @@ App.MagosView = Em.View.extend({
         opacity: 0.8,
         forceHelperSize: true
       });
+
       //
       $sortableArea.disableSelection();
 
+      //
       $('.busy-icon').tooltip({delay: { show: 500, hide: 100 }, placement: 'left'});
+
+      //
+      $('.potion-icon').draggable('destroy');
+      $('.selected-magos .potion-icon').draggable({ helper: 'clone' });
+
 
     });
   },
