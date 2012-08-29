@@ -359,26 +359,71 @@ App.GameComponentsView = Em.View.extend({
   alwaysTrue: true,
   contentBinding: 'App.gameComponentsController.content',
   didInsertElement: function() {
-    this.$('> img').tooltip({delay: { show: 500, hide: 100 }, placement: "top"});
+    var $li = this.$();
 
-    this.$("> img").draggable({
-      helper: "clone",
-      snap: ".canvas-cell:empty",
-      snapMode: "inner",
-      start: function() {
-        var view = Ember.View.views[ $(this).parent().attr('id') ];
+  //  Em.run.next(function() {
 
-        var selected = view.get('item');
-        // set selected component
-        App.selectedComponentController.set('content', selected);
-      }
+      $li.find('> img').tooltip({delay: { show: 500, hide: 100 }, placement: 'top'});
+
+      $li.find('> img').draggable({
+        helper: "clone",
+        snap: ".canvas-cell:empty",
+        snapMode: "inner",
+        start: function() {
+          var view = Ember.View.views[ $(this).parent().attr('id') ];
+
+          var selected = view.get('item');
+          // set selected component
+          App.selectedComponentController.set('content', selected);
+        }
+      });
+
+      $li.droppable({
+        greedy: true,
+        accept: ".potion-icon",
+        activeClass: "ui-state-target",
+        hoverClass: "ui-state-active",
+        drop: function(event, ui) {
+          var $tgt = $(this),
+            view = Em.View.views[$tgt.attr('id')],
+            selected = view.get('item');
+
+          // set selected component
+          App.selectedComponentController.set('content', selected);
+          // set user busy
+          App.usersController.setPath('user.busy', true);
+
+          var $draggable = $(ui.draggable),
+            $container = $draggable.closest('.magos-potions'),
+            potion = $draggable.data('potion');
+
+          $container.hide("slide", { direction: "right" }, 250, function() {
+              $container.siblings('.magos-potions.' + potion).show('slide', { direction: "left" }, 250);
+          });
+        }
     });
+
+  //  });
+
   },
   eventManager: Ember.Object.create({
     click: function(event, view) {
       var selected = view.get('item');
       // set selected component
       App.selectedComponentController.set('content', selected);
+      // if user busy, set not busy
+      if(App.usersController.getPath('user.busy')) {
+        App.usersController.setPath('user.busy', false);
+      }
+
+      // if potion form open
+      var $magos = $('.selected-magos');
+      if($magos.is(':hidden')) {
+        $magos.siblings('.magos-potions').hide('slide', { direction: 'left' }, 250, function() {
+          $magos.show('slide', { direction: 'right' }, 250);
+        });
+      }
+
     }
   })
 });
@@ -604,7 +649,9 @@ App.MagosView = Em.View.extend({
   didInsertElement: function() {
     var $sortableArea = this.$();
 
-    return Em.run.next(function() {
+    console.log('MagosView::didInsertElement');
+
+    Em.run.next(function() {
       //
       $sortableArea.sortable({
         placeholder: "sortable-highlight",
@@ -614,30 +661,41 @@ App.MagosView = Em.View.extend({
         opacity: 0.8,
         forceHelperSize: true
       });
-
       //
       $sortableArea.disableSelection();
-
-      //
-      $('.busy-icon').tooltip({delay: { show: 500, hide: 100 }, placement: 'left'});
-
-      //
-      $('.potion-icon').draggable('destroy');
-      $('.selected-magos .potion-icon').draggable({ helper: 'clone' });
-
 
     });
   },
   busyObserver: function() { // TODO
-    console.log("EM EM EM");
+    console.log("MagosView::Observer");
+
     return Em.run.next(function() {
       return Em.run.next(function() {
         $('.busy-icon').tooltip({delay: { show: 500, hide: 100 }, placement: 'left'});
+
+        $('.potion-icon').draggable('destroy');
+        $('.selected-magos .potion-icon').draggable({ helper: 'clone' });
       });
     });
-  }.observes('content.@each.busy')
 
+  }.observes('content.@each.busy')
 })
+
+App.MagosComponentPropertyView = Em.View.extend({
+  removeComponentProperty: function(event) {
+    event.preventDefault();
+
+    var $tgt = $(event.target);
+    var $view = $tgt.closest('.ember-view');
+    var view = Ember.View.views[ $view.attr('id') ];
+
+    view.get('content').removeObject('score');
+
+
+
+    console.log('App.MagosComponentPropertyView')
+  }
+});
 
 /**************************
 * InfoBox Views
@@ -1073,6 +1131,24 @@ $(document).on('click tap', '.btn-play', function(event) {
   var $audio = $(event.target).closest('td').find('audio')[0];
   // play audio
   $audio.play();
+});
+
+$(document).on('click tap', '.btn-back-potion', function(event) {
+  event.preventDefault();
+
+  // if user busy, set not busy
+  if(App.usersController.getPath('user.busy')) {
+    App.usersController.setPath('user.busy', false);
+  }
+
+  // if potion form open
+  var $magos = $('.selected-magos');
+  if($magos.is(':hidden')) {
+    $magos.siblings('.magos-potions').hide('slide', { direction: 'left' }, 250, function() {
+      $magos.show('slide', { direction: 'right' }, 250);
+    });
+  }
+
 });
 
 // main area sortable elements (shoutbox, infobox)

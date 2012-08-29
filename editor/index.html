@@ -84,9 +84,7 @@
   </script>
 
   <div class="container-fluid">
-
     <div class="row-fluid">
-
       <div class="span9 sortable-mainarea">
 
       <script type="text/x-handlebars">
@@ -112,11 +110,11 @@
               {{/each}}
 
               {{#view App.AddGameComponentView tagName="li" itemBinding="this" class="add-item" title="Add New Item"}}
-                <img class="game-item" src="/static/img/components/add.png" alt="Add New Item" title="Add New Item">
+                <img class="action-item" src="/static/img/components/add.png" alt="Add New Item" title="Add New Item">
               {{/view}}
 
               {{#view App.RemoveGameComponentView tagName="li" itemBinding="this" class="remove-item" title="Remove Item"}}
-                <img class="game-item" src="/static/img/components/trash.png" alt="Remove Item" title="Remove Item">
+                <img class="action-item" src="/static/img/components/trash.png" alt="Remove Item" title="Remove Item">
               {{/view}}
 
             </ul>
@@ -431,6 +429,70 @@
                     </tbody>
                   </table>
                 </div>
+
+                {{#if activeUser}}
+
+                {{! Score}}
+
+                <div {{bindAttr class="magos:magos-potions magos magos:score magos:hide"}} style="display:none;">
+                <form class="form-vertical">
+                  <fieldset>
+                    <legend>Scores</legend>
+
+                    {{#if App.selectedComponentController.content.filteredScoreEvents}}
+                    {{#each App.selectedComponentController.content.filteredScoreEvents}}
+                      {{#view App.MagosComponentPropertyView contentBinding="this"}}
+                      <div class="action-group">
+                        <div class="control-group">
+                          <button {{action "removeComponentProperty"}} class="btn btn-danger btn-del-action pull-right"><i class="icon-minus icon-white"></i></button>
+                          <label class="control-label">Action</label>
+                          <div class="controls">
+                            <select class="span12" disabled="disabled">
+                              <option>Collision {{content.target}}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="control-group">
+                          <label class="control-label">Score</label>
+                          <div class="controls">
+                            {{view App.NumberField class="input" min="-1000" max="1000" valueBinding="content.score"}}
+                          </div>
+                        </div>
+                      </div>
+                      {{/view}}
+                    {{/each}}
+
+                    {{else}}
+                      <div class="action-group">
+                        <div class="control-group">
+                          <label class="control-label">Action</label>
+                          <div class="controls">
+                            <select class="span12">
+                              <option>---</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="control-group">
+                          <label class="control-label">Score</label>
+                          <div class="controls">
+                            {{view App.NumberField class="input" min="-1000" max="1000" valueBinding="score"}}
+                          </div>
+                        </div>
+                      </div>
+                    {{/if}}
+
+
+                    <div class="form-actions">
+                      <button class="btn btn-info btn-back-potion"><i class="icon-arrow-left icon-white"></i></button>
+                      <button class="btn btn-success btn-add-action pull-right"><i class="icon-plus icon-white"></i></button>
+                    </div>
+
+                    </fieldset>
+                  </form>
+                </div>
+
+                  {{/if}}
+
               </div>
             {{/each}}
 
