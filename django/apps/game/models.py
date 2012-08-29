@@ -1,4 +1,4 @@
-from django.db import models
+﻿from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
@@ -53,7 +53,7 @@ class Organization(models.Model):
     language = models.ForeignKey(Language)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True)
-    users = models.ManyToManyField(User, through='OrganizationMembership')
+    #users = models.ManyToManyField(User, through='OrganizationMembership')
 
     class Meta:
         verbose_name = _('organization')
@@ -61,7 +61,7 @@ class Organization(models.Model):
 
     def __unicode__(self):
         return self.name
-
+"""
 class OrganizationMembership(models.Model):
     user = models.ForeignKey(User)
     organization = models.ForeignKey(Organization)
@@ -73,7 +73,7 @@ class OrganizationMembership(models.Model):
 
     def __unicode__(self):
         return u"%s, %s" % (self.organization, self.user)
-
+"""
         
 class Disability(models.Model):
     """Disability model"""
@@ -135,7 +135,7 @@ class AchievementMembership(models.Model):
 class UserProfile(models.Model):
     """User profile model. This expands User model of Django."""
     user = models.OneToOneField(User, primary_key=True)
-
+    organization = models.ForeignKey(Organization)
     year_of_birth = models.IntegerField(null=True, blank=True)
     grade = models.IntegerField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
@@ -281,20 +281,22 @@ class Author(models.Model):
         
 def create_user_profile(sender, instance, created, **kwargs):
     profile = None
+    default_country, country_created = Country.objects.get_or_create(name='Suomi', slug='finland')
     default_lang, lang_created = Language.objects.get_or_create(code='fi', title='suomi', slug='finnish')
     default_role, role_created = Role.objects.get_or_create(name='student', permission_level=1)
+    default_organization, organization_created = Organization.objects.get_or_create(name='TTY', slug='tty', language=default_lang, country=default_country)
     
     if created:
         try:
             profile, created = UserProfile.objects.get(user=instance)
         except UserProfile.DoesNotExist:
-            profile = UserProfile.objects.create(user = instance, language=default_lang, role=default_role)
+            profile = UserProfile.objects.create(user = instance, language=default_lang, role=default_role, organization=default_organization)
             profile.save()
     else:
         try:
             profile = instance.get_profile()
         except UserProfile.DoesNotExist:
-            profile = UserProfile.objects.create(user = instance, language=default_lang, role=default_role)
+            profile = UserProfile.objects.create(user = instance, language=default_lang, role=default_role, organization=default_organization)
             profile.save()
 
 # Automagically create a profile when user is created
