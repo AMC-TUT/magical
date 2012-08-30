@@ -1063,8 +1063,9 @@ App.Store = Ember.ArrayProxy.extend({});
 
 var pathname = window.location.pathname;
 var slug = pathname.replace(/^\//, '').replace(/\/$/, '');
+var domain = window.location.hostname;
 
-var socket = io.connect('http://localhost/editor');
+var socket = io.connect('http://'+domain+'/editor');
 
 socket.on('connecting', function() {
   console.log('Socket.IO - Connecting to magos');
