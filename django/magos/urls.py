@@ -2,6 +2,7 @@
 from apps.game.api import UserResource
 #from tastypie.api import Api
 from djangorestframework.views import ListOrCreateModelView, InstanceModelView
+from django.conf import settings
 
 from django.contrib import admin
 admin.autodiscover()
@@ -12,8 +13,6 @@ admin.autodiscover()
 
 #language_resource = LanguageResource()
 #user_resource = UserResource()
-
-
 
 
 urlpatterns = patterns('',
@@ -42,3 +41,10 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 )
+
+if settings.DEBUG:
+    # static files (images, css, javascript, etc.)
+    urlpatterns += patterns('',
+        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+        'document_root': settings.MEDIA_ROOT}))
+

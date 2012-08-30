@@ -1,8 +1,11 @@
 from django.conf.urls.defaults import patterns, url
-from apps.api.views import UsersListView, UserDetailView, LanguagesListView, HighscoreListView
+from apps.api.views import UsersListView, UserDetailView, LanguagesListView, HighscoreListView, \
+    GameReviewView
 
 urlpatterns = patterns('',
     # EDITOR
+    # game reviews
+    url(r'^reviews$', GameReviewView.as_view(), name='game-review-view'),
     
     # users
     url(r'^users$', UsersListView.as_view(), name='users-list-view'),

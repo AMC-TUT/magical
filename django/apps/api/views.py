@@ -9,14 +9,15 @@ from django.shortcuts import redirect
 from django.core import serializers
 from django.utils.decorators import method_decorator
 
-from apps.game.models import Game, Language, Highscore
+from apps.game.models import Game, Language, Highscore, Review
 from django.contrib.auth.models import User
-
+from django.db import IntegrityError
 from apps.api.json_utils import JSONSerializer, json_response_from
 
 from djangorestframework.compat import View
-from djangorestframework.mixins import ResponseMixin
+from djangorestframework.mixins import RequestMixin, ResponseMixin
 from djangorestframework.renderers import DEFAULT_RENDERERS
+from djangorestframework.parsers import DEFAULT_PARSERS
 from djangorestframework.response import Response
 from djangorestframework.reverse import reverse
 from djangorestframework.authentication import UserLoggedInAuthentication
@@ -26,6 +27,107 @@ from django.contrib.auth.decorators import login_required
 # Testing with CURL
 # curl -X GET http://localhost:8000/api/v1/users/ -i
 # curl -X POST -d score=235 http://localhost:8000/api/v1/highscores/super-mario -i
+
+class GameReviewView(RequestMixin, ResponseMixin, View):
+    renderers = DEFAULT_RENDERERS
+    parsers = DEFAULT_PARSERS 
+    def post(self, request):
+        session_user = request.user
+	if not session_user.is_authenticated():
+            response = Response(403, {'statusCode': 403, 'message' : 'Not authorized'})
+            return self.render(response)
+	game_list = request.POST.getlist('game', None)
+	game_slug = None
+        if game_list and len(game_list):
+	    game_slug = game_list[0]
+	if game_slug:
+	    try:
+                game = Game.objects.get(slug=game_slug)
+            except Game.DoesNotExist:
+                response = Response(404, {'statusCode': 404, 'message' : 'Game not found'})
+                return self.render(response)
+        # have to get the latest revision
+        #game_rev = game.get_latest_revision()
+        comment = None
+        comment_list = request.POST.getlist('comment', None)
+        if comment_list and len(comment_list):
+            comment = comment_list[0]
+	# how many stars
+	stars_list = request.POST.getlist('stars', None)
+	stars = None
+        if stars_list and len(stars_list):
+            stars = stars_list[0]
+        if stars:
+            try:
+                stars = int(stars)
+		if 0 < stars <= 5:
+                    # store valid new review
+		    review = Review(user=session_user, game=game, stars=stars, comment=comment)
+                    review.save()
+                    response=Response(200,{'statusCode' : 200 })
+                    return self.render(response)
+            except (ValueError, IntegrityError) as e:
+                pass
+        response=Response(400,{'message':'Invalid data'})
+        return self.render(response)
+
+
+    def put(self, request):
+	put_data = self.DATA
+        session_user = request.user
+	if not session_user.is_authenticated():
+            response = Response(403, {'statusCode': 403, 'message' : 'Not authorized'})
+            return self.render(response)
+	game_list = put_data.getlist('game', None)
+	game_slug = None
+        if game_list and len(game_list):
+	    game_slug = game_list[0]
+	if game_slug:
+	    try:
+                game = Game.objects.get(slug=game_slug)
+            except Game.DoesNotExist:
+                response = Response(404, {'statusCode': 404, 'message' : 'Game not found'})
+                return self.render(response)
+        
+ 	#tmp_user = User.objects.get(id=1)
+	# have to get the latest revision
+        #game_rev = game.get_latest_revision()
+        comment = None
+        comment_list = put_data.getlist('comment', None)
+        if comment_list and len(comment_list):
+            comment = comment_list[0]
+	# how many stars
+	stars_list = put_data.getlist('stars', None)
+	stars = None
+        if stars_list and len(stars_list):
+            stars = stars_list[0]
+        if stars:
+            try:
+                stars = int(stars)
+ 		if 0 < stars <= 5:
+            	    # store updated review
+		    review = None
+		    try:
+	    	        review = Review.objects.get(user=session_user, game=game)
+         	    except Review.DoesNotExist:
+		        review = Review(user=session_user, game=game, stars=0)
+	            review.stars = stars
+		    review.comment = comment
+		    review.save()
+                    response=Response(200,{'statusCode' : 200 })
+                    return self.render(response)
+            except (ValueError, IntegrityError) as e:
+                pass
+        response=Response(400,{'message':'Invalid data'})
+        return self.render(response)
+ 
+    
+    @method_decorator(csrf_exempt)
+    def dispatch(self,*args,**kwargs):
+        return super(GameReviewView,self).dispatch(*args,**kwargs)
+        
+
+
 
 class HighscoreListView(ResponseMixin, View):
     renderers = DEFAULT_RENDERERS
