@@ -1,10 +1,10 @@
-from django.contrib import admin
+﻿from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from apps.game.models import UserProfile, Country, Language, \
-    Organization, OrganizationMembership, Role, Disability, \
+    Organization, Role, Disability, \
     Achievement, AchievementMembership, Game, GameType, Author, \
-    Revision, Image, Audio
+    Revision, Image, Audio, Review, Highscore
     
 
 admin.site.unregister(User)
@@ -20,7 +20,6 @@ admin.site.register(User, UserProfileAdmin)
 admin.site.register(Language)
 admin.site.register(Country)
 admin.site.register(Organization)
-admin.site.register(OrganizationMembership)
 admin.site.register(Disability)
 admin.site.register(Role)
 
@@ -32,3 +31,5 @@ admin.site.register(Author)
 admin.site.register(Revision)
 admin.site.register(Image)
 admin.site.register(Audio)
+admin.site.register(Review)
+admin.site.register(Highscore)

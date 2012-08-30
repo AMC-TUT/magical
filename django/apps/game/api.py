@@ -1,11 +1,18 @@
-﻿from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
-from tastypie import fields
+﻿#from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
+#from tastypie import fields
 from django.contrib.auth.models import User
 from apps.game.models import Language, UserProfile, Role
-from tastypie.authentication import BasicAuthentication
-from tastypie.authorization import DjangoAuthorization
+#from tastypie.authentication import BasicAuthentication
+#from tastypie.authorization import DjangoAuthorization
 from django.conf.urls import url
-      
+
+from djangorestframework.resources import ModelResource
+
+class UserResource(ModelResource):
+    model = User
+
+    
+    """      
 class LanguageResource(ModelResource):
     class Meta:
         queryset = Language.objects.all()
@@ -46,10 +53,8 @@ class UserResource(ModelResource):
         }
 
     def alter_list_data_to_serialize(self, request, to_be_serialized):
-        """
-        A hook to alter list data just before it gets serialized & sent to the user.
-        Useful for restructuring/renaming aspects of the what's going to be sent.
-        """
+        #A hook to alter list data just before it gets serialized & sent to the user.
+        #Useful for restructuring/renaming aspects of the what's going to be sent.
         for obj in to_be_serialized['objects']:
             for field_name in self._meta.field_list_to_remove:
                 del obj.data[field_name]
@@ -60,5 +65,5 @@ class UserResource(ModelResource):
             url(r"^(?P<resource_name>%s)/(?P<username>[\w\d_.-]+)/$" % self._meta.resource_name, self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
         ]
         
-
+"""
 

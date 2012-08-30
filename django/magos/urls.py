@@ -1,16 +1,20 @@
-from django.conf.urls import patterns, include, url
-from apps.game.api import UserResource, LanguageResource
-from tastypie.api import Api
-# Uncomment the next two lines to enable the admin:
+﻿from django.conf.urls import patterns, include, url
+from apps.game.api import UserResource
+#from tastypie.api import Api
+from djangorestframework.views import ListOrCreateModelView, InstanceModelView
+
 from django.contrib import admin
 admin.autodiscover()
 
-v1_api = Api(api_name='v1')
-v1_api.register(LanguageResource())
-v1_api.register(UserResource())
+#v1_api = Api(api_name='v1')
+#v1_api.register(LanguageResource())
+#v1_api.register(UserResource())
 
 #language_resource = LanguageResource()
 #user_resource = UserResource()
+
+
+
 
 urlpatterns = patterns('',
     # Examples:
@@ -26,7 +30,15 @@ urlpatterns = patterns('',
     # REST API
     #(r'^api/', include(user_resource.urls)),
     #(r'^api/', include(language_resource.urls)),
-    (r'^api/', include(v1_api.urls)),
+    #(r'^api/', include(v1_api.urls)),
+    url(r'^restframework', include('djangorestframework.urls', namespace='djangorestframework')),
+    
+    #url(r'^api/v1/users(/)?$', ListOrCreateModelView.as_view(resource=UserResource)),
+    #url(r'^api/v1/users/(?P<pk>[^/]+)/$', InstanceModelView.as_view(resource=UserResource)),
+    
+    #url(r'^api/users(/)?$', 'apps.game.views.api_users'),
+    url(r'^api/v1/', include('apps.api.urls')),
+    
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 )

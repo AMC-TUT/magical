@@ -53,7 +53,6 @@ class Organization(models.Model):
     language = models.ForeignKey(Language)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True)
-    #users = models.ManyToManyField(User, through='OrganizationMembership')
 
     class Meta:
         verbose_name = _('organization')
@@ -61,19 +60,6 @@ class Organization(models.Model):
 
     def __unicode__(self):
         return self.name
-"""
-class OrganizationMembership(models.Model):
-    user = models.ForeignKey(User)
-    organization = models.ForeignKey(Organization)
-
-    class Meta:
-        unique_together = (('user','organization'),)
-        verbose_name = _('organization has user')
-        verbose_name_plural = _('organization has users')
-
-    def __unicode__(self):
-        return u"%s, %s" % (self.organization, self.user)
-"""
         
 class Disability(models.Model):
     """Disability model"""
@@ -225,6 +211,9 @@ class Game(models.Model):
         verbose_name = _('game')
         verbose_name_plural = _('games')
 
+    def get_latest_revision(self):
+        return Revision.objects.filter(game=self).latest('inserted')
+    
     def __unicode__(self):
         return u"%s" % self.title
 
@@ -239,11 +228,27 @@ class Revision(models.Model):
     class Meta:
         verbose_name = _('revision')
         verbose_name_plural = _('revisions')
-
+    
+    def get_latest_revision(self, game):
+        return self.objects.filter(game=game).latest('inserted')
+        
     def __unicode__(self):
         return u"%s (revision %s)" % (self.game, self.inserted)
 
+
+class Highscore(models.Model):
+    """Highscore model"""
+    user = models.ForeignKey(User)
+    game = models.ForeignKey(Revision)
+    score = models.IntegerField(null=False, blank=False, default=0)
     
+    class Meta:
+        verbose_name = _('highscore')
+        verbose_name_plural = _('highscores')
+
+    def __unicode__(self):
+        return u"%s, %s, %s" % (self.game, self.user, self.score)
+        
         
 class Review(models.Model):
     """Review model"""

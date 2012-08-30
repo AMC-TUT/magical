@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response, render
+﻿from django.shortcuts import render_to_response, render
 from django.template import RequestContext
 from django.http import HttpResponse, Http404, HttpResponseNotAllowed
 from django.contrib.auth.decorators import login_required
@@ -6,10 +6,12 @@ from django.conf import settings
 from django.utils import simplejson
 from django.contrib.auth import logout
 from django.shortcuts import redirect
+from django.core import serializers
 
 from django.contrib.auth.forms import AuthenticationForm
 
 from apps.game.models import Game
+from django.contrib.auth.models import User
 
 def home(request):
     tpl = 'apps/game/index.html'
@@ -38,3 +40,14 @@ def ajax_list_games(request):
     games = Game.objects.all()
     data = { 'games': games }
     return render_to_response( tpl, data, context_instance = RequestContext(request))
+
+
+def api_users(request, foo):
+    users = User.objects.all()
+    data = serializers.serialize('json', users, fields=('first_name','last_name'))
+    
+    #response_data = dict()
+    #response_data['users'] = items
+    
+    #json_data = simplejson.dumps(data)
+    return HttpResponse(data, mimetype="application/json")

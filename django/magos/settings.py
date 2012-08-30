@@ -1,4 +1,4 @@
-import apps
+﻿import apps
 
 import sys
 if "C:\\work\\projektit\\mag\\magical\\django" not in sys.path:
@@ -134,6 +134,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 AUTH_PROFILE_MODULE = 'game.UserProfile'
 
+LOGIN_URL = '/game/login'
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -148,7 +149,8 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'apps.game',
     'django_extensions',
-    'tastypie',
+    #'tastypie',
+    'djangorestframework',
     'south',
 )
 
