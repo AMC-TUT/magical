@@ -2,8 +2,7 @@
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
-import datetime
-#from apps.game.signals import create_user_profile
+import datetime, mimetypes
 
 class Role(models.Model):
     """User role model"""
@@ -161,6 +160,17 @@ class Image(models.Model):
     created = models.DateTimeField(auto_now_add=True, default=datetime.date.today)
     updated = models.DateTimeField(auto_now=True)
     
+    @property
+    def image_url( self ):
+        try:
+            # would be better to use python-magic for mimetype?
+            mimetype, encoding = mimetypes.guess_type(self.file.name)
+            img = open( self.file.path, "rb")
+            data = img.read()
+            return "data:%s;base64,%s" % (mimetype, data.encode('base64'))
+        except IOError:
+            return self.file.url
+
     class Meta:
         verbose_name = _('image')
         verbose_name_plural = _('images')
@@ -186,6 +196,17 @@ class Audio(models.Model):
 
     created = models.DateTimeField(auto_now_add=True, default=datetime.date.today)
     updated = models.DateTimeField(auto_now=True)
+
+    @property
+    def audio_url( self ):
+        try:
+            # would be better to use python-magic for mimetype?
+            mimetype, encoding = mimetypes.guess_type(self.file.name)
+            img = open( self.file.path, "rb")
+            data = img.read()
+            return "data:%s;base64,%s" % (mimetype, data.encode('base64'))
+        except IOError:
+            return self.file.url
     
     class Meta:
         verbose_name = _('audio')
