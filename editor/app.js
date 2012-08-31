@@ -1,12 +1,14 @@
 
 var fs = require('fs'),
-express = require('express'),
-params = require('express-params'),
+  express = require('express'),
+  params = require('express-params'),
   request = require('request'),
   querystring = require('querystring'),
   _ = require('underscore')._;
+ // connect = require('connect');
+  // redis = require("redis");
 
-  var app = express(),
+var app = express(),
   http = require('http'),
   server = http.createServer(app),
   io = require('socket.io').listen(server);
@@ -15,6 +17,12 @@ params = require('express-params'),
   io.enable('browser client etag');
   io.enable('browser client gzip');
   // io.set('log level', 0); // reduce logging
+
+//var parseCookie = require('connect').utils.parseJSONCookie;
+var MemStore = express.session.MemoryStore;
+
+//var json = JSON.stringify({ vittu: 'paa' });
+//console.log(parseCookie());
 
 params.extend(app);
 
@@ -31,6 +39,45 @@ app.configure('production', function() {
   app.use(express.errorHandler());
 });
 
+app.use(express.cookieParser()); // TODO replace memstore with redisstore
+app.use(express.session({ key: 'express.sid', secret: '4YaA3x2Sbv97Q7A3G4qdxSZwqzHbn9', store: MemStore({ reapInterval: 60000 * 10 }) })); // , store: new RedisStore
+
+io.configure(function () {
+  // connection types
+  io.set('transports', ['websocket', 'xhr-polling']); // 'flashsocket',
+  // authentication
+  io.set('authorization', function (handshakeData, callback) {
+
+    // check if there's a cookie header
+    if (handshakeData.headers.cookie) {
+        // if there is, parse the cookie
+
+
+ //     handshakeData.cookie = connect.utils.parseJSONCookie(handshakeData.headers.cookie);
+
+   //     handshakeData.cookie = express.parseCookie(handshakeData.headers.cookie);
+//console.log("VITTU SAATANA!")
+//console.log(handshakeData.headers.cookie);
+//console.log(express.cookieParser(handshakeData.headers.cookie));
+//console.log(handshakeData.headers.cookie['express.sid']);
+        // note that you will need to use the same key to grad the
+        // session id, as you specified in the Express setup.
+ //       handshakeData.sessionID = handshakeData.headers.cookie['express.sid'];
+
+ //       console.log('session auth socket.io setistä: ' + handshakeData.sessionID);
+
+    } else {
+       // if there isn't, turn down the connection with a message
+       // and leave the function.
+       return accept('No cookie transmitted.', false);
+    }
+    // accept the incoming connection
+    //accept(null, true);
+
+    callback(null, true); // error first callback style
+  });
+});
+
 // Routes
 
 app.param('slug', /[a-zA-Z0-9-]+$/);
@@ -39,7 +86,20 @@ app.get('/game/:slug', function(req, res) {
   res.sendfile(__dirname + '/game/index.html');
 });
 
-app.get('/:slug', function(req, res) {
+app.get('/editor/:slug', function(req, res) {
+
+  if(_.isUndefined(req.session.user)) {
+    req.session.user = "matti.vanhanen";
+    req.session.role = "student";
+    console.log("SET REQUEST SESSION:");
+    console.log(" - user: " + req.session.user);
+  } else {
+    console.log("GET REQUEST SESSION:");
+    console.log(" - user: " + req.session.user);
+  }
+  console.log('req.sessionID')
+  console.log(req.session);
+
   res.sendfile(__dirname + '/index.html');
 });
 
@@ -50,15 +110,19 @@ app.get('/', function(req, res) {
 
 server.listen(9001);
 
-var questions = [],
-qid = 0,
-rooms = [];
+var rooms = [];
 
-var editor = io.of('/editor').authorization(function (handshakeData, callback) {
+var editor = io.of('/editor') /*.authorization(function (handshakeData, callback) {
+
   console.dir(handshakeData);
   handshakeData.foo = 'baz';
   callback(null, true);
-}).on('connection', function (socket) {
+
+  }) */
+  .on('connection', function (socket) {
+
+  console.log('socket.handshake.user: ');
+  console.dir(socket.handshake.user);
 
   socket.on('connect', function() {
     console.log('client connected, client id: ' + socket.id);
@@ -66,6 +130,10 @@ var editor = io.of('/editor').authorization(function (handshakeData, callback) {
 
   socket.on('connect_failed', function (reason) {
     console.error('unable to connect to namespace', reason);
+  });
+
+  socket.on('error', function (reason){
+    console.error('Unable to connect Socket.IO', reason);
   });
 
   socket.on('connect', function () {

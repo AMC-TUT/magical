@@ -689,10 +689,13 @@ App.MagosComponentPropertyView = Em.View.extend({
     var $view = $tgt.closest('.ember-view');
     var view = Ember.View.views[ $view.attr('id') ];
 
-    view.get('content').removeObject('score');
+    var content  = view.getPath('content');
+
+    delete content['score'];
 
 
 
+    console.log(score);
     console.log('App.MagosComponentPropertyView')
   }
 });
@@ -1063,12 +1066,16 @@ App.Store = Ember.ArrayProxy.extend({});
 
 var pathname = window.location.pathname;
 var slug = pathname.replace(/^\//, '').replace(/\/$/, '');
-var domain = window.location.hostname;
 
-var socket = io.connect('http://'+domain+'/editor');
+var address = 'http://'+window.location.hostname+'/editor';
+var socket = io.connect(address);
 
 socket.on('connecting', function() {
   console.log('Socket.IO - Connecting to magos');
+});
+
+socket.on('connect_failed', function (reason) {
+  console.error('unable to connect to namespace', reason);
 });
 
 socket.on('connect', function () {
@@ -1121,8 +1128,6 @@ $(document).on('click tap', '.btn-group-theme .btn', function(event) {
   var theme = $tgt.data('theme');
   var href = "/static/css/"+theme+".css";
   $(document).find('#theme').attr('href', href);
-
-
 });
 
 // play button for infobox audio play button
