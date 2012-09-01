@@ -95,7 +95,7 @@ app.get('/game/:slug', function(req, res) {
 app.get('/editor/:slug', function(req, res) {
 
   var slug = req.params.slug[0];
-  console.log(req)
+  console.log(req);
 
   if(_.isUndefined(req.session.user)) {
     req.session.user = "matti.vanhanen";
