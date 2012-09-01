@@ -108,7 +108,8 @@ app.get('/editor/:slug', function(req, res) {
   }
   console.log('req.sessionID')
   console.log(req.session);
-
+  console.log("__dirname");
+  console.log(__dirname);
   res.sendfile(__dirname + '/index.html');
 });
 
