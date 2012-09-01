@@ -42,6 +42,12 @@ app.configure('production', function() {
 app.use(express.cookieParser()); // TODO replace memstore with redisstore
 app.use(express.session({ key: 'express.sid', secret: '4YaA3x2Sbv97Q7A3G4qdxSZwqzHbn9', store: MemStore({ reapInterval: 60000 * 10 }) })); // , store: new RedisStore
 
+app.use(function(err, req, res, next){
+  console.error(err.stack);
+  res.send(500, 'Something broke!');
+});
+
+
 io.configure(function () {
   // connection types
   io.set('transports', ['websocket', 'xhr-polling']); // 'flashsocket',
@@ -87,6 +93,9 @@ app.get('/game/:slug', function(req, res) {
 });
 
 app.get('/editor/:slug', function(req, res) {
+
+  var slug = req.params.slug[0];
+  console.log(req)
 
   if(_.isUndefined(req.session.user)) {
     req.session.user = "matti.vanhanen";
