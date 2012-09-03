@@ -1,4 +1,8 @@
 
+.game-scene .game-item {
+  cursor: move;
+}
+
 .chest-container {
   padding: 5px;
   margin-bottom: @baseMargin;
@@ -23,12 +27,12 @@
       text-align: center;
     }
 
-    .game-item, .scene-item {
-      cursor: move;
-    }
-
     .add-item .action-item {
       cursor: pointer;
+    }
+
+    .principes-magos .scene-item {
+      cursor: move;
     }
 
     .ui-state-target {
@@ -369,3 +373,26 @@
   max-width: 100px;
 }
 
+.canvas {
+  .canvas-table {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: #111;
+    margin: 0 auto;
+
+    tr, td {
+      margin: 0;
+      padding: 0;
+      border-collapse: collapse;
+      border: 0;
+      .box-sizing(border-box);
+    }
+
+    td {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #222;
+    }
+
+  }
+}

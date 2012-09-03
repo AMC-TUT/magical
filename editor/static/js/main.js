@@ -52,7 +52,7 @@ App.usersController = Em.ArrayController.create({
 
 App.usersController.get('content').pushObject(
   App.Author.create({ userName: 'matti.vanhanen', firstName: 'Matti', lastName: 'Vanhanen', magos: 'principes', role: 'student' })
-);
+  );
 
 // TODO
 var user = App.usersController.get('content').findProperty('userName', 'matti.vanhanen');
@@ -100,7 +100,9 @@ App.Revision = Em.Object.extend({
   authors: [],
   scenes: [],
   audios: [],
-  sprites: []
+  sprites: [],
+  gameComponents: [],
+  sceneComponents: []
 });
 
 App.revisionController = Em.Object.create({
@@ -128,6 +130,7 @@ App.scenesController = Em.ArrayController.create({
   selectedObserver: function() {
     var controller = this;
 
+    var sceneName = this.getPath('selected.name');
     var selected = controller.get('selected');
     var items = controller.get('content');
 
@@ -136,6 +139,14 @@ App.scenesController = Em.ArrayController.create({
     });
 
     if(!_.isNull(selected)) selected.set('active', true);
+
+    // console.log(sceneName)
+
+    if(sceneName !== 'intro' && sceneName !== 'outro') {
+      $('body').addClass('game-scene');
+    } else {
+      $('body').removeClass('game-scene');
+    }
 
   }.observes('selected')
 });
@@ -346,7 +357,7 @@ App.GameComponent = Em.Object.extend({
 });
 
 App.gameComponentsController = Em.ArrayController.create({
-  contentBinding: 'App.scenesController.selected.gameComponents',
+  contentBinding: 'App.gameController.content.revision.gameComponents', // 'App.scenesController.selected.gameComponents',
   removeItem: function(propName, value){
     var obj = this.findProperty(propName, value);
     this.removeObject(obj);
@@ -357,58 +368,122 @@ App.GameComponentsView = Em.View.extend({
   classNameBindings: ['uiSelected'],
   uiSelected: false,
   alwaysTrue: true,
+  sceneBinding: Ember.Binding.oneWay('App.scenesController.selected.name'),
   contentBinding: 'App.gameComponentsController.content',
-  didInsertElement: function() {
-    var $li = this.$();
+  sceneObserver: function() {
 
-  //  Em.run.next(function() {
+    var scene = this.get('scene');
 
-      $li.find('> img').tooltip({delay: { show: 500, hide: 100 }, placement: 'top'});
+    if( scene !== 'intro' && scene !== 'outro') {
 
-      $li.find('> img').draggable({
-        helper: "clone",
-        snap: ".canvas-cell:empty",
-        snapMode: "inner",
-        start: function() {
-          var view = Ember.View.views[ $(this).parent().attr('id') ];
+      var $chest = $('.game-container .item-chest');
 
-          var selected = view.get('item');
-          // set selected component
-          App.selectedComponentController.set('content', selected);
-        }
+      $chest.find('li').each(function(index) {
+        $li = $(this);
+
+        if(!$li.hasClass('add-item') && !$li.hasClass('remove-item')) {
+
+          // ---
+          $li.find('> img').draggable({
+            helper: "clone",
+            snap: ".canvas-cell:empty",
+            snapMode: "inner",
+            start: function() {
+              var view = Ember.View.views[ $(this).parent().attr('id') ];
+
+              var selected = view.get('item');
+              // set selected component
+              App.selectedComponentController.set('content', selected);
+            }
+          });
+
+          // ---
+          $li.droppable({
+            greedy: true,
+            accept: ".potion-icon",
+            activeClass: "ui-state-target",
+            hoverClass: "ui-state-active",
+            drop: function(event, ui) {
+              var $tgt = $(this),
+              view = Em.View.views[$tgt.attr('id')],
+              selected = view.get('item');
+
+              // set selected component
+              App.selectedComponentController.set('content', selected);
+              // set user busy
+              App.usersController.setPath('user.busy', true);
+
+              var $draggable = $(ui.draggable),
+              $container = $draggable.closest('.magos-potions'),
+              potion = $draggable.data('potion');
+
+              $container.hide("slide", { direction: "right" }, 250, function() {
+                $container.siblings('.magos-potions.' + potion).show('slide', { direction: "left" }, 250);
+              });
+            }
+          });
+
+        } // if
+
       });
 
-      $li.droppable({
-        greedy: true,
-        accept: ".potion-icon",
-        activeClass: "ui-state-target",
-        hoverClass: "ui-state-active",
-        drop: function(event, ui) {
-          var $tgt = $(this),
+}
+
+}.observes('scene'),
+didInsertElement: function() {
+  var $li = this.$();
+
+    $li.find('> img').tooltip({delay: { show: 500, hide: 100 }, placement: 'top'});
+
+    var scene = this.get('scene');
+
+    if( scene !== 'intro' && scene !== 'outro') {
+
+        // ---
+        $li.find('> img').draggable({
+          helper: "clone",
+          snap: ".canvas-cell:empty",
+          snapMode: "inner",
+          start: function() {
+            var view = Ember.View.views[ $(this).parent().attr('id') ];
+
+            var selected = view.get('item');
+            // set selected component
+            App.selectedComponentController.set('content', selected);
+          }
+        });
+        // ---
+        $li.droppable({
+          greedy: true,
+          accept: ".potion-icon",
+          activeClass: "ui-state-target",
+          hoverClass: "ui-state-active",
+          drop: function(event, ui) {
+            var $tgt = $(this),
             view = Em.View.views[$tgt.attr('id')],
             selected = view.get('item');
 
-          // set selected component
-          App.selectedComponentController.set('content', selected);
-          // set user busy
-          App.usersController.setPath('user.busy', true);
+            // set selected component
+            App.selectedComponentController.set('content', selected);
+            // set user busy
+            App.usersController.setPath('user.busy', true);
 
-          var $draggable = $(ui.draggable),
+            var $draggable = $(ui.draggable),
             $container = $draggable.closest('.magos-potions'),
             potion = $draggable.data('potion');
 
-          $container.hide("slide", { direction: "right" }, 250, function() {
+            $container.hide("slide", { direction: "right" }, 250, function() {
               $container.siblings('.magos-potions.' + potion).show('slide', { direction: "left" }, 250);
-          });
-        }
-    });
+            });
+          }
+        });
+        // ---
+      }
 
-  //  });
-
-  },
-  eventManager: Ember.Object.create({
-    click: function(event, view) {
-      var selected = view.get('item');
+    },
+    eventManager: Ember.Object.create({
+      click: function(event, view) {
+        var selected = view.get('item');
       // set selected component
       App.selectedComponentController.set('content', selected);
       // if user busy, set not busy
@@ -426,7 +501,7 @@ App.GameComponentsView = Em.View.extend({
 
     }
   })
-});
+  });
 
 App.AddGameComponentView = Em.View.extend({
   click: function(event) {
@@ -623,6 +698,10 @@ App.magosesController = Em.ArrayController.create({
       // get role which is marked as user's role
       var magos = controller.get('content').findProperty('magos', user.get('magos'));
 
+      if(user.get('magos') === 'principes') {
+        $('.chest-container').addClass('principes-magos');
+      }
+
       if(_.isNull(magos.get('user'))) {
         // set user in its old role
         magos.set('user', user);
@@ -636,7 +715,15 @@ App.magosesController = Em.ArrayController.create({
         }
       }
     });
-  }
+  },
+  selectedObserver: function() {
+    var magos = this.get('selected');
+    if(magos !== 'principes') {
+      $('.chest-container').removeClass('principes-magos');
+    } else {
+      $('.chest-container').addClass('principes-magos');
+    }
+  }.observes('selected')
 });
 /*
 $(".potion-icon").draggable({
@@ -692,8 +779,6 @@ App.MagosComponentPropertyView = Em.View.extend({
     var content  = view.getPath('content');
 
     delete content['score'];
-
-
 
     console.log(score);
     console.log('App.MagosComponentPropertyView')
@@ -923,7 +1008,7 @@ App.DataSource = Ember.Object.extend({
             "magos" : obj.magos,
             "potions": obj.potions
           })
-        );
+          );
       });
 
       callback(components);
@@ -1007,6 +1092,12 @@ App.DataSource = Ember.Object.extend({
         authors.push(obj);
       });
 
+      var gameComponentsA = [];
+      _.each(revision.gameComponents, function(component) {
+       gameComponentsA.push( App.GameComponent.create({ title: component.title, slug: component.slug, properties: component.properties }) );
+         // TODO component properties
+       });
+
       var scenes = [];
       _.each(revision.scenes, function(scene) {
 
@@ -1025,8 +1116,8 @@ App.DataSource = Ember.Object.extend({
         //
         var obj = App.Scene.create({
           name: scene.name,
-          sceneComponents: sceneArray,
-          gameComponents: gameArray
+          sceneComponents: sceneArray, // DEPR.
+          gameComponents: gameArray // DEPR.
         }); // TODO
         //
         scenes.push(obj);
@@ -1039,14 +1130,14 @@ App.DataSource = Ember.Object.extend({
         'authors': authors,
         'scenes': scenes,
         'audios': audios,
-        'sprites': sprites
+        'sprites': sprites,
+        'gameComponents': gameComponentsA
       };
 
       game.set('revision', rev);
 
       callback(game);
     });
-
 }
 });
 
@@ -1065,7 +1156,7 @@ App.Store = Ember.ArrayProxy.extend({});
 **************************/
 
 var pathname = window.location.pathname;
-var slug = pathname.replace(/^\//, '').replace(/\/$/, '');
+var slug = pathname.replace(/^\/editor\//, '').replace(/\/$/, '');
 
 var address = 'http://'+window.location.hostname+'/editor';
 var socket = io.connect(address);
