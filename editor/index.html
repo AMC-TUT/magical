@@ -68,7 +68,7 @@
       </div>
 
       <div class="btn-group btn-group-preview help-popover" data-placement="bottom" title="Preview" data-content="Play your game as it is now. Use this to test that everything works the way you wanted.">
-        <button class="btn btn-success">Preview</button>
+        <button class="btn btn-success btn-preview">Preview</button>
       </div>
 
       {{#view App.PublishedView}}
@@ -117,6 +117,12 @@
           <!-- intro -->
           <div class="canvas-pane canvas-div canvas-outro" style="display:none;"></div>
           <!--/ intro -->
+
+          <!-- preview -->
+          <div class="canvas-pane canvas-div canvas-preview" style="display:none;">
+            <iframe id="preview" src="/game/super-magos" seamless></iframe>
+          </div>
+          <!--/ preview -->
 
         </div><!-- canvas well -->
       </div>

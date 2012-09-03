@@ -334,11 +334,14 @@
 }
 
 .calc-width(@calc) {
- // width: -webkit-calc(@calc);
+  width: -webkit-calc(@calc);
+  width: -moz-calc(@calc);
+  width: calc(@calc);
+}
+
+.calc-max-width(@calc) {
   max-width: -webkit-calc(@calc);
- // width: -moz-calc(@calc);
   max-width: -moz-calc(@calc);
- // width: calc(@calc);
   max-width: calc(@calc);
 }
 

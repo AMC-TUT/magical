@@ -127,6 +127,7 @@ App.Scene = Em.Object.extend({
 App.scenesController = Em.ArrayController.create({
   contentBinding: 'App.revisionController.content.scenes',
   selectedBinding: 'App.revisionController.content.scenes.firstObject',
+  firstRun: 1,
   selectedObserver: function() {
     var controller = this;
 
@@ -134,26 +135,27 @@ App.scenesController = Em.ArrayController.create({
     var selected = controller.get('selected');
     var items = controller.get('content');
 
-    _.each(items, function(item) {
-      item.set('active', false);
-    });
+    _.each(items, function(item) { item.set('active', false); });
 
     if(!_.isNull(selected)) selected.set('active', true);
-
-    // console.log(sceneName)
 
     if(sceneName !== 'intro' && sceneName !== 'outro') {
       $('body').addClass('game-scene');
     } else {
       $('body').removeClass('game-scene');
     }
-/*
-    $containter = $('.canvas > .canvas-pane:visible');
 
-    $container.hide("slide", { direction: "right" }, 250, function() {
-      $container.siblings('.canvas-'+sceneName).show('slide', { direction: "left" }, 250);
-    });
-*/
+    if(this.get('firstRun') < 0) {
+      Em.run.next(function() {
+        var $container = $('.canvas > .canvas-pane:visible');
+        $container.hide("slide", { direction: "right" }, 250, function() {
+          $container.siblings('.canvas-'+sceneName).show('slide', { direction: "left" }, 250);
+        });
+      });
+    }
+
+    this.set('firstRun', this.get('firstRun') - 1); // TODO ugly first b/e runs twice at first so make false after second run
+
   }.observes('selected')
 });
 
@@ -439,11 +441,11 @@ App.GameComponentsView = Em.View.extend({
 didInsertElement: function() {
   var $li = this.$();
 
-    $li.find('> img').tooltip({delay: { show: 500, hide: 100 }, placement: 'top'});
+  $li.find('> img').tooltip({delay: { show: 500, hide: 100 }, placement: 'top'});
 
-    var scene = this.get('scene');
+  var scene = this.get('scene');
 
-    if( scene !== 'intro' && scene !== 'outro') {
+  if( scene !== 'intro' && scene !== 'outro') {
 
         // ---
         $li.find('> img').draggable({
@@ -1207,9 +1209,7 @@ App.magosesController.populate();
 $(document).on('click tap', '.btn-grid', function(event) {
   event.preventDefault();
   $tgt = $(event.target).closest('.btn');
-
-  $('.canvas table td').toggleClass('gridless');
-  console.log('click')
+  $('.canvas .canvas-table td').toggleClass('gridless');
   $tgt.toggleClass('active');
 });
 
@@ -1234,6 +1234,19 @@ $(document).on('click tap', '.btn-play', function(event) {
   var $audio = $(event.target).closest('td').find('audio')[0];
   // play audio
   $audio.play();
+});
+
+$(document).on('click tap', '.btn-preview', function(event) {
+  event.preventDefault();
+
+  var preview = document.getElementById("preview").contentWindow;
+  preview.postMessage(slug, 'http://dev:9001');
+
+  var $container = $('.canvas > .canvas-pane:visible');
+  $container.hide("slide", { direction: "right" }, 250, function() {
+    $container.siblings('.canvas-preview').show('slide', { direction: "left" }, 250);
+  });
+
 });
 
 $(document).on('click tap', '.btn-back-potion', function(event) {

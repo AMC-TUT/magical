@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!--[if lt IE 9]> <html class="lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Preview</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <style>
+  body { background: #FFF; }
+  </style>
+</head>
+<body>
+  <script>
+  window.onmessage = function(e){
+    loadGame(e.data);
+    // if ( e.origin !== "http://html5demos.com" ) { return; }
+    // document.getElementById("test").innerHTML = e.origin + " said: " + e.data;
+  };
+
+  function loadGame(slug) {
+    alert(slug);
+  };
+  </script>
+  <div id="test"></div>
+</body>
+</html>
