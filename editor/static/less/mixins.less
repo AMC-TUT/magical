@@ -334,9 +334,18 @@
 }
 
 .calc-width(@calc) {
-  width: -webkit-calc(@calc);
-  width: -moz-calc(@calc);
-  width: calc(@calc);
+ // width: -webkit-calc(@calc);
+  max-width: -webkit-calc(@calc);
+ // width: -moz-calc(@calc);
+  max-width: -moz-calc(@calc);
+ // width: calc(@calc);
+  max-width: calc(@calc);
+}
+
+.calc-height(@calc) {
+  height: -webkit-calc(@calc);
+  height: -moz-calc(@calc);
+  height: calc(@calc);
 }
 
 .magos-gradient() {

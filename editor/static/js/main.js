@@ -147,7 +147,13 @@ App.scenesController = Em.ArrayController.create({
     } else {
       $('body').removeClass('game-scene');
     }
+/*
+    $containter = $('.canvas > .canvas-pane:visible');
 
+    $container.hide("slide", { direction: "right" }, 250, function() {
+      $container.siblings('.canvas-'+sceneName).show('slide', { direction: "left" }, 250);
+    });
+*/
   }.observes('selected')
 });
 
@@ -160,6 +166,7 @@ App.SelectSceneView = Em.View.extend({
 
     var view = Ember.View.views[ $tgt.parent().attr('id') ];
     var selected = view.get('item');
+
     // set selected component
     App.selectedComponentController.set('content', selected);
 
@@ -170,7 +177,6 @@ App.SelectSceneBtn = Em.View.extend({
   classNames: ['btn', 'btn-primary'],
   classNameBindings: ['scene.active'],
   click: function(event) {
-    //
     App.scenesController.set('selected', this.get('scene'));
   }
 });
