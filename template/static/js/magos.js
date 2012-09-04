@@ -223,6 +223,7 @@ $(function() {
         $tgt.addClass("active, btn-success");
     });
 */
+/*
     $('.btn-back-potion').on('click tap',
     function(event) {
         event.preventDefault();
@@ -239,6 +240,7 @@ $(function() {
                 direction: "right"
             }, 250);
         });
+*/
         /*
         var $potions = $tgt.closest('.magos-potions'),
         $actions = $potions.find('.collision-action:not(:first-child)');

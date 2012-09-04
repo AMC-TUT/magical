@@ -68,6 +68,7 @@ App.Game = Em.Object.extend({
   type: null,
   state: 0,
   cloned: 0,
+  canvas: null,
   description: null,
   authors: [],
   revision: null,
@@ -128,6 +129,11 @@ App.scenesController = Em.ArrayController.create({
   contentBinding: 'App.revisionController.content.scenes',
   selectedBinding: 'App.revisionController.content.scenes.firstObject',
   firstRun: 1,
+  init: function() {
+    Em.run.next(function() {
+      initCanvasDroppable();
+    });
+  },
   selectedObserver: function() {
     var controller = this;
 
@@ -148,10 +154,15 @@ App.scenesController = Em.ArrayController.create({
     if(this.get('firstRun') < 0) {
       Em.run.next(function() {
         var $container = $('.canvas > .canvas-pane:visible');
+        $container.fadeOut(250, function() {
+          $container.siblings('.canvas-'+sceneName).fadeIn(250);
+        });
+        /*
         $container.hide("slide", { direction: "right" }, 250, function() {
           $container.siblings('.canvas-'+sceneName).show('slide', { direction: "left" }, 250);
         });
-      });
+      */
+    });
     }
 
     this.set('firstRun', this.get('firstRun') - 1); // TODO ugly first b/e runs twice at first so make false after second run
@@ -259,7 +270,7 @@ App.SceneComponentsView = Em.View.extend({
 
     this.$("> img").draggable({
       helper: "clone",
-      snap: ".canvas-cell:empty",
+      //snap: ".canvas-cell:empty",
       snapMode: "inner",
       start: function() {
         var view = Ember.View.views[ $(this).parent().attr('id') ];
@@ -1069,6 +1080,7 @@ App.DataSource = Ember.Object.extend({
       game.set('type', data.type);
       game.set('state', data.state);
       game.set('cloned', data.cloned);
+      game.set('canvas', data.canvas);
 
       game.set('href', window.location.href);
 
@@ -1239,14 +1251,43 @@ $(document).on('click tap', '.btn-play', function(event) {
 $(document).on('click tap', '.btn-preview', function(event) {
   event.preventDefault();
 
-  var preview = document.getElementById("preview").contentWindow;
-  preview.postMessage(slug, 'http://dev:9001');
+  $modal = $('#dialog-preview');
 
-  var $container = $('.canvas > .canvas-pane:visible');
-  $container.hide("slide", { direction: "right" }, 250, function() {
-    $container.siblings('.canvas-preview').show('slide', { direction: "left" }, 250);
+  if(!$modal.hasClass('styled')) {
+    // count & set dialog size
+    var canvas = App.gameController.content.canvas,
+    rows = canvas.rows,
+    columns = canvas.columns,
+    blockSize = canvas.blockSize;
+
+    var dWidth = 15 + (blockSize * columns);
+    var dHeight = (15 + 15 + 58 + 46) + (blockSize * rows);
+    var dbHeight = blockSize * rows;
+
+    $modal.css({ width: dWidth+'px', height: dHeight+'px' });
+    $modal.find('.modal-body').css({ height: dbHeight+'px' });
+    $modal.addClass('styled');
+  }
+
+  $modal.one('show', function () {
+    var win = document.getElementById("preview").contentWindow;
+    win.postMessage(slug, window.location.origin);
   });
 
+  $modal.find('button').on('click tap', function(event) { $modal.modal('hide'); });
+
+  $modal.modal();
+
+});
+
+$(document).on('click tap', '.btn-gameinfo', function(event) {
+  event.preventDefault();
+
+  $modal = $('#dialog-info');
+
+  $modal.find('button').on('click tap', function(event) { $modal.modal('hide'); });
+
+  $modal.modal();
 });
 
 $(document).on('click tap', '.btn-back-potion', function(event) {
@@ -1264,8 +1305,74 @@ $(document).on('click tap', '.btn-back-potion', function(event) {
       $magos.show('slide', { direction: 'right' }, 250);
     });
   }
-
 });
+
+// canvas
+
+function initCanvasDroppable() {
+
+  $(".canvas-cell:empty").droppable({
+    greedy: true,
+    accept: ".game-item",
+    activeClass: "canvas-cell-hover",
+    hoverClass: "canvas-cell-active",
+    drop: function(event, ui) {
+      var $tgt = $(this);
+        //
+        if (!$tgt.is(":empty")) {
+          return false;
+        }
+
+        var $draggable = $(ui.draggable),
+        $img = '';
+
+        if($draggable.hasClass('game-item')) {
+          $img = $draggable.clone().removeAttr('data-original-title rel alt class style').addClass('canvas-item');
+        } else {
+          $img = $draggable.removeAttr('data-original-title rel alt class style').addClass('canvas-item');
+        }
+
+        $img.draggable({
+            //zIndex: 9999,
+            helper: "original",
+            snap: ".canvas-cell:empty",
+            snapMode: "inner",
+            revert: function(valid) {
+              if (!valid) $(this).remove();
+            }
+          });
+
+        $tgt.append( $img );
+      }
+    });
+
+  $(".canvas-pane").droppable({
+    greedy: true,
+    accept: ".scene-item",
+    activeClass: "canvas-hover",
+    hoverClass: "canvas-active",
+    drop: function(event, ui) {
+
+var pos = ui.position; //, dPos = $(this).offset();
+  alert(", Top: " + pos.top + ", Left: " + pos.left);
+
+/*
+      var $tgt = $(this);
+      var $el = $(ui.draggable);
+      var bgimg = $el.data('url');
+
+      if(bgimg.length) {
+        $(tgt).css({
+          "background-image": 'url(' + bgimg + ')'
+        });
+      }
+      */
+    }
+  });
+
+};
+
+// /canvas
 
 // main area sortable elements (shoutbox, infobox)
 $('.sortable-mainarea').sortable({

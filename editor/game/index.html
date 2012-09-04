@@ -16,13 +16,13 @@
   window.onmessage = function(e){
     loadGame(e.data);
     // if ( e.origin !== "http://html5demos.com" ) { return; }
-    // document.getElementById("test").innerHTML = e.origin + " said: " + e.data;
+
   };
 
   function loadGame(slug) {
-    alert(slug);
+    document.getElementById("test").innerHTML = "Preview (" + slug + ")";
   };
   </script>
-  <div id="test"></div>
+  <div id="test">Preview (default)</div>
 </body>
 </html>

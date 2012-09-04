@@ -25,11 +25,11 @@
     </div>
 
     <div class="btn-group">
-      <button class="btn btn-info"><i class="icon-book icon-white"></i></button>
+      <button class="btn btn-info btn-magosbook"><i class="icon-book icon-white"></i></button>
     </div>
 
     <div class="btn-group">
-      <button class="btn btn-info"><i class="icon-info-sign icon-white"></i></button>
+      <button class="btn btn-info btn-gameinfo"><i class="icon-info-sign icon-white"></i></button>
     </div>
 
     <div class="btn-group btn-group-theme">
@@ -117,12 +117,6 @@
           <!-- intro -->
           <div class="canvas-pane canvas-div canvas-outro" style="display:none;"></div>
           <!--/ intro -->
-
-          <!-- preview -->
-          <div class="canvas-pane canvas-div canvas-preview" style="display:none;">
-            <iframe id="preview" src="/game/super-magos" seamless></iframe>
-          </div>
-          <!--/ preview -->
 
         </div><!-- canvas well -->
       </div>
@@ -553,7 +547,45 @@
 
   </div>
 
+  <!-- preview -->
+  <script type="text/x-handlebars">
+  <div class="modal fade hide" id="dialog-preview">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <h3>Game Preview</h3>
+    </div>
+    <div class="modal-body">
+      <iframe id="preview" src="/game/super-magos" seamless></iframe>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-info btn-close" type="submit">Close</button>
+    </div>
+  </div>
+  </script>
 
+  <!-- info -->
+  <script type="text/x-handlebars">
+  <div class="modal fade hide" id="dialog-info">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <h3>Game Info</h3>
+    </div>
+    <div class="modal-body">
+      <p>Snippet: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          consequat.</p>
+      <p>Duis aute irure dolor in reprehenderit in voluptate velit esse
+          cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+          proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-info btn-close" type="submit">Close</button>
+    </div>
+  </div>
+  </script>
+
+  <!-- add new item -->
   <script type="text/x-handlebars">
   <div class="modal fade hide" id="dialog-new-item">
     <div class="modal-header">
