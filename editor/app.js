@@ -106,7 +106,7 @@ app.get('/editor/:slug', function(req, res) {
     console.log("GET REQUEST SESSION:");
     console.log(" - user: " + req.session.user);
   }
-  console.log('req.sessionID')
+  console.log('req.sessionID');
   console.log(req.session);
   console.log("__dirname");
   console.log(__dirname);
