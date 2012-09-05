@@ -92,6 +92,10 @@ app.get('/game/:slug', function(req, res) {
   res.sendfile(__dirname + '/game/index.html');
 });
 
+app.get('/tools/crystal', function(req, res) {
+  res.sendfile(__dirname + '/../tools/crystal/index.html');
+});
+
 app.get('/editor/:slug', function(req, res) {
 
   var slug = req.params.slug[0];

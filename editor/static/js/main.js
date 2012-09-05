@@ -278,7 +278,14 @@ App.SceneComponentsView = Em.View.extend({
         var selected = view.get('item');
         // set selected component
         App.selectedComponentController.set('content', selected);
-      }
+      },
+      stop: function(event, ui) {
+        console.log('saving');
+      } /*,
+      helper: function(event, ui) {
+        console.log($(ui).safeClone());
+        return $(ui).safeClone();
+      } */
     });
   },
   click: function(event) {
@@ -547,19 +554,25 @@ App.RemoveGameComponentView = Em.View.extend({
 
     view.$().droppable({
       greedy: true,
-      accept: ".game-item",
+      accept: ".game-item, .canvas-item",
       activeClass: "ui-state-target",
       hoverClass: "ui-state-active",
       drop: function(event, ui) {
         var $draggable = $(ui.draggable);
 
-        var selectedView = Ember.View.views[ $draggable.parent().attr('id') ];
-        var selectedItem = selectedView.get('item');
-        var slug = selectedItem.get('slug');
+        if($draggable.hasClass("canvas-item")) {
 
-        // TODO check that there is no istances of item in canvases
+          $draggable.remove();
 
-        App.gameComponentsController.removeItem('slug', slug);
+        } else {
+
+          var selectedView = Ember.View.views[ $draggable.parent().attr('id') ];
+          var selectedItem = selectedView.get('item');
+          var slug = selectedItem.get('slug');
+
+          // TODO check that there is no istances of item in canvases
+          App.gameComponentsController.removeItem('slug', slug);
+        }
 
       }
     });
@@ -1348,19 +1361,68 @@ function initCanvasDroppable() {
 
   $(".canvas-pane").droppable({
     greedy: true,
-    accept: ".scene-item",
+    accept: ".scene-item, .canvas-item",
     activeClass: "canvas-hover",
     hoverClass: "canvas-active",
     drop: function(event, ui) {
 
-var pos = ui.position; //, dPos = $(this).offset();
-  alert(", Top: " + pos.top + ", Left: " + pos.left);
+      var elPos = ui.position;
+      var elOffset = ui.offset;
+      var tgtOffset = $(this).offset();
 
-/*
+      var newPosX = parseInt(elOffset.left - tgtOffset.left, 10);
+      var newPosY = parseInt(elOffset.top - tgtOffset.top, 10);
+      var newStyle = { 'top': newPosY, 'left': newPosX, 'position': 'absolute' };
+
+      var $draggable = $(ui.draggable);
       var $tgt = $(this);
-      var $el = $(ui.draggable);
-      var bgimg = $el.data('url');
+      var $img = {};
 
+      if($draggable.hasClass('cloned')) {
+        $img = $draggable;
+      } else {
+        $img = $draggable.clone().removeAttr('data-original-title rel alt class style ui-draggable').addClass('canvas-item cloned');
+        $img.css(newStyle);
+      }
+
+      console.log($img);
+
+      $tgt.append($img);
+
+      $img.draggable({
+        zIndex: 9999,
+        stop: function(event, ui) {
+          $(ui.draggable).draggable('destroy');
+         // $(ui.draggable).destroy();
+          console.log('hello');
+        },
+   /*     revert: function(valid) {
+          if (!valid) $(this).remove();
+        },
+        revertDuration: 250, */
+        helper: 'original' }); // containment: ".canvas"
+
+
+      var view = Ember.View.views[ $draggable.attr('id') ];
+
+      //var selected = view.get('item');
+      //console.log(view);
+
+
+      /*{
+        snap: ".canvas-pane",
+        revert: function(valid) {
+          if (!valid) $(this).remove();
+        }
+      });
+
+ //     $tgt.append( $img );
+      //} else {
+      //  $img = $draggable.removeAttr('data-original-title rel alt class style').addClass('canvas-item');
+      //}
+
+      //var bgimg = $el.data('url');
+      /*
       if(bgimg.length) {
         $(tgt).css({
           "background-image": 'url(' + bgimg + ')'
@@ -1369,7 +1431,20 @@ var pos = ui.position; //, dPos = $(this).offset();
       */
     }
   });
+/*
+  $(".canvas").droppable({
+    greedy: false,
+    accept: ".canvas-item",
+    activeClass: "canvas-hover-remove",
+    hoverClass: "canvas-active-remove",
+    drop: function(event, ui) {
+      var $tgt = $(this);
+      var $draggable = $(ui.draggable);
 
+      $draggable.remove();
+    }
+  });
+*/
 };
 
 // /canvas
