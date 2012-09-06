@@ -84,13 +84,8 @@ App.gameController = Em.Object.create({
     App.dataSource.joinGame(function(data) {
       // set content
       controller.set('content', data);
-      // console.log(data);
-      // console.log(controller.get('content').get('title'));
     });
-  },
-  titleObserver: function() {
-    //
-  }.observes('title')
+  }
 });
 
 /**************************
@@ -107,12 +102,7 @@ App.Revision = Em.Object.extend({
 });
 
 App.revisionController = Em.Object.create({
-  contentBinding: 'App.gameController.content.revision',
-  contentObserver: function() {
-    // content changed
-    console.log('contentObserver event');
-
-  }.observes('content')
+  contentBinding: 'App.gameController.content.revision'
 });
 
 /**************************
@@ -122,12 +112,38 @@ App.revisionController = Em.Object.create({
 App.Scene = Em.Object.extend({
   name: null,
   elements: [],
-  active: false
+  active: false /*,
+  rowsBinding: Ember.Binding.oneWay('App.gameController.content.canvas.rows'),
+  columnsBinding: Ember.Binding.oneWay('App.gameController.content.canvas.columns'),
+  arrayColumns: function() {
+    var columns = this.get('columns');
+    var array = [];
+
+    for (var i=0;i<columns;i=i+1) {
+      array.push(i);
+    }
+    return array;
+  }.property('columns'),
+  arrayRows: function() {
+    var rows = this.get('rows');
+    var array = [];
+
+    for (var i=0;i<rows;i=i+1) {
+      array.push(i);
+    }
+    return array;
+  }.property('rows'),
+  blockSize: Ember.Binding.oneWay('App.gameController.canvas.blockSize'),
+  gameScenes: function() {
+
+  }.property('content')
+  */
 });
 
 App.scenesController = Em.ArrayController.create({
   contentBinding: 'App.revisionController.content.scenes',
   selectedBinding: 'App.revisionController.content.scenes.firstObject',
+  gameScenes: [],
   firstRun: 1,
   init: function() {
     Em.run.next(function() {
@@ -157,18 +173,110 @@ App.scenesController = Em.ArrayController.create({
         $container.fadeOut(250, function() {
           $container.siblings('.canvas-'+sceneName).fadeIn(250);
         });
-        /*
-        $container.hide("slide", { direction: "right" }, 250, function() {
-          $container.siblings('.canvas-'+sceneName).show('slide', { direction: "left" }, 250);
-        });
-      */
-    });
+      });
     }
 
     this.set('firstRun', this.get('firstRun') - 1); // TODO ugly first b/e runs twice at first so make false after second run
 
   }.observes('selected')
 });
+
+/*
+App.gameScenesController = Em.ArrayController.create({
+  content: [],
+  scenesBinding: Ember.Binding.oneWay('App.scenesController.content'),
+  rowsBinding: Ember.Binding.oneWay('App.gameController.content.canvas.rows'),
+  columnsBinding: Ember.Binding.oneWay('App.gameController.content.canvas.columns'),
+  scenesObserver: function() {
+    //
+    var scenes = this.get('scenes');
+    var array = [];
+
+    _.each(scenes, function(scene) {
+      if(scene.name !== 'intro' && scene.name !== 'outro') array.push(scene);
+    });
+
+    this.set('content', array);
+  }.observes('scenes'),
+  arrayColumns: function() {
+    var columns = this.get('columns');
+    var array = [];
+    console.log(columns)
+
+    for (var i=0;i<columns;i=i+1) {
+      array.push(i);
+    }
+    return array;
+  }.property('columns'),
+  arrayRows: function() {
+    var rows = this.get('rows');
+    var array = [];
+
+    for (var i=0;i<rows;i=i+1) {
+      array.push(i);
+    }
+    return array;
+  }.property('rows'),
+  blockSize: Ember.Binding.oneWay('App.gameController.canvas.blockSize'),
+  gameScenes: function() {
+
+  }.property('content')
+});
+*/
+
+App.gameScenesController = Em.ArrayController.create({
+  content: [],
+  scenesBinding: Ember.Binding.oneWay('App.scenesController.content'),
+  scenesObserver: function() {
+    //
+    var scenes = this.get('scenes');
+    var array = [];
+
+    _.each(scenes, function(scene) {
+      if(scene.name !== 'intro' && scene.name !== 'outro') array.push(scene);
+    });
+
+    this.set('content', array);
+  }.observes('scenes')
+
+});
+
+App.gameScenesView = Em.View.extend({
+  //content: Ember.Binding.oneWay('App.gameScenesController.content'),
+  rowsBinding: Ember.Binding.oneWay('App.gameController.content.canvas.rows'),
+  columnsBinding: Ember.Binding.oneWay('App.gameController.content.canvas.columns'),
+  arrayColumns: function() {
+    var columns = this.get('columns');
+    var array = [];
+    for (var i=0;i<columns;i=i+1) { array.push(i); }
+    return array;
+  }.property('columns'),
+  arrayRows: function() {
+    var rows = this.get('rows');
+    var array = [];
+    for (var i=0;i<rows;i=i+1) { array.push(i); }
+    return array;
+  }.property('rows'),
+  blockSize: Ember.Binding.oneWay('App.gameController.canvas.blockSize')
+});
+
+/*
+App.gameScenesView = Em.View.extend({
+  generateGameScenes: function() {
+    var controller = this;
+
+    var gameScenes = App.gameController.getPath('content.revision.scenes').filterProperty('name', 'game');
+    var rows = controller.getPath('content.canvas.rows');
+    var columns = controller.getPath('content.canvas.columns');
+
+    console.log(gameScenes);
+
+    _.each(gameScenes, function(scene) {
+
+    });
+  }
+});
+*/
 
 App.SelectSceneView = Em.View.extend({
   contentBinding: 'App.scenesController.content',
@@ -271,6 +379,7 @@ App.SceneComponentsView = Em.View.extend({
     this.$("> img").draggable({
       helper: "clone",
       //snap: ".canvas-cell:empty",
+      // grid: [32, 32],
       snapMode: "inner",
       start: function() {
         var view = Ember.View.views[ $(this).parent().attr('id') ];
@@ -280,7 +389,7 @@ App.SceneComponentsView = Em.View.extend({
         App.selectedComponentController.set('content', selected);
       },
       stop: function(event, ui) {
-        console.log('saving');
+        // console.log('saving');
       } /*,
       helper: function(event, ui) {
         console.log($(ui).safeClone());
@@ -1385,17 +1494,17 @@ function initCanvasDroppable() {
         $img.css(newStyle);
       }
 
-      console.log($img);
+  //    console.log($img);
 
-      $tgt.append($img);
+  $tgt.append($img);
 
-      $img.draggable({
-        zIndex: 9999,
-        stop: function(event, ui) {
-          $(ui.draggable).draggable('destroy');
+  $img.draggable({
+    zIndex: 9999,
+    stop: function(event, ui) {
+      $(ui.draggable).draggable('destroy');
          // $(ui.draggable).destroy();
-          console.log('hello');
-        },
+      //    console.log('hello');
+    },
    /*     revert: function(valid) {
           if (!valid) $(this).remove();
         },
@@ -1403,7 +1512,7 @@ function initCanvasDroppable() {
         helper: 'original' }); // containment: ".canvas"
 
 
-      var view = Ember.View.views[ $draggable.attr('id') ];
+  var view = Ember.View.views[ $draggable.attr('id') ];
 
       //var selected = view.get('item');
       //console.log(view);

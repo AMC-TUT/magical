@@ -95,8 +95,17 @@
           <div class="canvas-pane canvas-div canvas-intro"></div>
           <!--/ intro -->
 
+
+
           <!-- table -->
+
           <table class="canvas-pane canvas-table canvas-game" style="display:none;">
+
+          {{#view App.gameScenesView contentBinding="App.gameScenesController.content"}}
+{{log content.arrayRows}}
+          {{/view}}
+
+          <!--
           <tr><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td></tr>
           <tr><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td></tr>
           <tr><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td></tr>
@@ -111,6 +120,7 @@
           <tr><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td></tr>
           <tr><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td></tr>
           <tr><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td><td class="canvas-cell"></td></tr>
+          -->
           </table>
           <!--/ table -->
 
