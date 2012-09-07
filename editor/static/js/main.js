@@ -147,7 +147,7 @@ App.scenesController = Em.ArrayController.create({
   firstRun: 1,
   init: function() {
     Em.run.next(function() {
-      initCanvasDroppable();
+      createGameTableCanvases();
     });
   },
   selectedObserver: function() {
@@ -241,24 +241,25 @@ App.gameScenesController = Em.ArrayController.create({
 
 });
 
-App.gameScenesView = Em.View.extend({
-  //content: Ember.Binding.oneWay('App.gameScenesController.content'),
-  rowsBinding: Ember.Binding.oneWay('App.gameController.content.canvas.rows'),
-  columnsBinding: Ember.Binding.oneWay('App.gameController.content.canvas.columns'),
-  arrayColumns: function() {
-    var columns = this.get('columns');
-    var array = [];
-    for (var i=0;i<columns;i=i+1) { array.push(i); }
-    return array;
-  }.property('columns'),
-  arrayRows: function() {
-    var rows = this.get('rows');
-    var array = [];
-    for (var i=0;i<rows;i=i+1) { array.push(i); }
-    return array;
-  }.property('rows'),
-  blockSize: Ember.Binding.oneWay('App.gameController.canvas.blockSize')
-});
+/*
+//content: Ember.Binding.oneWay('App.gameScenesController.content'),
+rowsBinding: Ember.Binding.oneWay('App.gameController.content.canvas.rows'),
+columnsBinding: Ember.Binding.oneWay('App.gameController.content.canvas.columns'),
+arrayColumns: function() {
+  var columns = this.get('columns');
+  var array = [];
+  for (var i=0;i<columns;i=i+1) { array.push(i); }
+  return array;
+}.property('columns'),
+arrayRows: function() {
+  var rows = this.get('rows');
+  var array = [];
+  for (var i=0;i<rows;i=i+1) { array.push(i); }
+  return array;
+}.property('rows'),
+blockSize: Ember.Binding.oneWay('App.gameController.canvas.blockSize')
+*/
+
 
 /*
 App.gameScenesView = Em.View.extend({
@@ -1430,6 +1431,73 @@ $(document).on('click tap', '.btn-back-potion', function(event) {
 });
 
 // canvas
+
+function createGameTableCanvases() {
+
+  var canvas = null;
+  var interval = setInterval(function() {
+    var canvas = App.gameController.getPath('content.canvas');
+    if(canvas !== null) {
+      // stop loop
+      clearInterval(interval);
+      // vars
+      var $table = $('.canvas-game'),
+      $panes = $('.canvas-pane'),
+      rows = canvas.rows,
+      columns = canvas.columns,
+      sizeClass = 'size-'+canvas.blockSize;
+
+      var cells = '';
+
+      for (var i=0;i<rows;i=i+1) {
+        cells += '<tr>';
+        for (var j=0;j<columns;j=j+1) {
+          cells += '<td class="canvas-cell"></td>';
+        }
+        cells += '</tr>';
+      }
+
+      var maxWidth = columns * canvas.blockSize,
+      maxHeight = rows * canvas.blockSize,
+      sizeStyle = { 'max-width': maxWidth+'px', 'height': maxHeight+'px' };
+
+      // size style to each canvas pane
+      $.each($panes, function(index, value) {
+        $(this).css(sizeStyle);
+      });
+
+      // size class to chests
+      $('.scene-chest').addClass(sizeClass)
+      $('.item-chest').addClass(sizeClass);
+
+      // add size class and dom nodes game canvas
+      $table.addClass(sizeClass).append(cells);
+      // jqueryui droppable to canvas
+      initCanvasDroppable();
+      // jquery resize event to canvas to adjust height -> ratio
+      canvasResizable();
+
+    }
+  }, 10);
+};
+
+function canvasResizable() {
+
+  $('.canvas-cell').bind('resize', function(event) {
+    var $tgt = $(event.target);
+    var width = $tgt.width();
+    $tgt.css({'height': width + ' !important'});
+  });
+
+  var $canvas = $('.canvas-pane'),
+  ratio = $canvas.height() / $canvas.width();
+
+  $('.canvas-pane').bind('resize', function(event) {
+    var width = $(event.target).width();
+    $(event.target).height(parseInt(width*ratio));
+  });
+
+};
 
 function initCanvasDroppable() {
 
