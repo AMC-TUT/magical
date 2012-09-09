@@ -4,9 +4,11 @@ var fs = require('fs'),
   params = require('express-params'),
   request = require('request'),
   querystring = require('querystring'),
-  _ = require('underscore')._;
- // connect = require('connect');
-  // redis = require("redis");
+  _ = require('underscore')._,
+  util = require("util");
+
+var redis  = require("redis"),
+  client = redis.createClient(6379, 'localhost');
 
 var app = express(),
   http = require('http'),
@@ -17,6 +19,20 @@ var app = express(),
   io.enable('browser client etag');
   io.enable('browser client gzip');
   // io.set('log level', 0); // reduce logging
+
+// redis
+client.monitor(function (err, res) {
+    console.log("Entering monitoring mode.");
+});
+
+client.on("monitor", function (time, args) {
+    console.log(time + ": " + util.inspect(args));
+});
+
+client.on("error", function (err) {
+    console.log("error event - " + client.host + ":" + client.port + " - " + err);
+});
+// /redis
 
 //var parseCookie = require('connect').utils.parseJSONCookie;
 var MemStore = express.session.MemoryStore;
@@ -180,6 +196,8 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
     slug = _.isString(slug) ? slug : '';
 
     socket.join(slug); // move to other event
+
+    client.get("string key");
 
     var room = _.find(rooms, function(room) { return room.slug === slug; });
 

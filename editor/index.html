@@ -111,7 +111,7 @@
             <ul class="chest scene-chest">
               {{#each App.sceneComponentsController}}
                 {{#view App.SceneComponentsView tagName="li" itemBinding="this" classNameBindings="uiSelected"}}
-                <img {{bindAttr class="item.active item.potionsStr item.scenesStr alwaysTrue:scene-item"}} {{bindAttr src="item.icon"}} {{bindAttr alt="item.title"}} {{bindAttr title="item.title"}} /></li>
+                <img {{bindAttr class="item.active item.potionsStr item.scenesStr alwaysTrue:scene-item"}} {{bindAttr src="item.icon"}} {{bindAttr alt="item.title"}} {{bindAttr title="item.title"}} {{bindAttr data-slug="item.slug"}} /></li>
                 {{/view}}
               {{/each}}
             </ul>
@@ -122,7 +122,7 @@
             <ul class="chest item-chest">
               {{#each App.gameComponentsController}}
                 {{#view App.GameComponentsView tagName="li" itemBinding="this" classNameBindings="uiSelected"}}
-                <img class="game-item" {{bindAttr class="item.active"}} {{bindAttr src="item.icon"}} {{bindAttr alt="item.title"}} {{bindAttr title="item.title"}} /></li>
+                <img class="game-item" {{bindAttr class="item.active"}} {{bindAttr src="item.icon"}} {{bindAttr alt="item.title"}} {{bindAttr title="item.title"}} {{bindAttr data-slug="item.slug"}} /></li>
                 {{/view}}
               {{/each}}
 

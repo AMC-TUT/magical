@@ -409,6 +409,12 @@ App.SceneComponentsView = Em.View.extend({
 * GameComponent
 **************************/
 
+App.SceneGameComponent = Em.Object.extend({
+  // todo parent
+  slug: null,
+  position: null
+});
+
 App.GameComponent = Em.Object.extend({
   title: null,
   slug: null,
@@ -1344,7 +1350,7 @@ App.magosesController.populate();
 $(document).on('click tap', '.btn-grid', function(event) {
   event.preventDefault();
   $tgt = $(event.target).closest('.btn');
-  $('.canvas .canvas-table td').toggleClass('gridless');
+  $('.canvas .canvas-table').toggleClass('gridless');
   $tgt.toggleClass('active');
 });
 
@@ -1491,12 +1497,12 @@ function canvasResizable() {
 
   var $canvas = $('.canvas-pane'),
   ratio = $canvas.height() / $canvas.width();
-
+/*
   $('.canvas-pane').bind('resize', function(event) {
     var width = $(event.target).width();
     $(event.target).height(parseInt(width*ratio));
   });
-
+*/
 };
 
 function initCanvasDroppable() {
@@ -1516,12 +1522,15 @@ function initCanvasDroppable() {
         var $draggable = $(ui.draggable),
         $img = '';
 
+        var slug = $draggable.data('slug');
+
         if($draggable.hasClass('game-item')) {
           $img = $draggable.clone().removeAttr('data-original-title rel alt class style').addClass('canvas-item');
         } else {
           $img = $draggable.removeAttr('data-original-title rel alt class style').addClass('canvas-item');
         }
 
+        /* TODO draggable, require view impl.
         $img.draggable({
             //zIndex: 9999,
             helper: "original",
@@ -1531,36 +1540,67 @@ function initCanvasDroppable() {
               if (!valid) $(this).remove();
             }
           });
+  */
 
-        $tgt.append( $img );
+        // remove when clicked - impl. draggable later
+        $img.on('click tap', function(event) {
+          var $tgt = $(event.target),
+          slug = $tgt.data('slug'),
+          oid = $tgt.data('oid');
+
+          //var array = App.scenesController.getPath('selected.gameComponents'); //.findProperty('oid', oid);
+          //console.log(array)
+          //App.scenesController.getPath('selected.gameComponents').destroy(img);
+          console.log($tgt);
+          $tgt.remove();
+
+
+        });
+
+        var position = $tgt.position();
+        var left = Math.floor(parseInt(position.left, 10));
+        var top = Math.floor(parseInt(position.top, 10));
+        var oid = slug + left + top;
+
+        var obj = App.SceneGameComponent.create({
+          oid: oid,
+          slug: slug,
+          position: { left: left, top: top }
+        });
+
+        App.scenesController.getPath('selected.gameComponents').pushObject(obj);
+
+        $img.data('oid', oid);
+        $tgt.append($img);
+
       }
     });
 
-  $(".canvas-pane").droppable({
-    greedy: true,
-    accept: ".scene-item, .canvas-item",
-    activeClass: "canvas-hover",
-    hoverClass: "canvas-active",
-    drop: function(event, ui) {
+$(".canvas-pane").droppable({
+  greedy: true,
+  accept: ".scene-item, .canvas-item",
+  activeClass: "canvas-hover",
+  hoverClass: "canvas-active",
+  drop: function(event, ui) {
 
-      var elPos = ui.position;
-      var elOffset = ui.offset;
-      var tgtOffset = $(this).offset();
+    var elPos = ui.position;
+    var elOffset = ui.offset;
+    var tgtOffset = $(this).offset();
 
-      var newPosX = parseInt(elOffset.left - tgtOffset.left, 10);
-      var newPosY = parseInt(elOffset.top - tgtOffset.top, 10);
-      var newStyle = { 'top': newPosY, 'left': newPosX, 'position': 'absolute' };
+    var newPosX = parseInt(elOffset.left - tgtOffset.left, 10);
+    var newPosY = parseInt(elOffset.top - tgtOffset.top, 10);
+    var newStyle = { 'top': newPosY, 'left': newPosX, 'position': 'absolute' };
 
-      var $draggable = $(ui.draggable);
-      var $tgt = $(this);
-      var $img = {};
+    var $draggable = $(ui.draggable);
+    var $tgt = $(this);
+    var $img = {};
 
-      if($draggable.hasClass('cloned')) {
-        $img = $draggable;
-      } else {
-        $img = $draggable.clone().removeAttr('data-original-title rel alt class style ui-draggable').addClass('canvas-item cloned');
-        $img.css(newStyle);
-      }
+    if($draggable.hasClass('cloned')) {
+      $img = $draggable;
+    } else {
+      $img = $draggable.clone().removeAttr('data-original-title rel alt class style ui-draggable').addClass('canvas-item cloned');
+      $img.css(newStyle);
+    }
 
   //    console.log($img);
 
