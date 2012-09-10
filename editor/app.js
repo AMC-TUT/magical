@@ -253,7 +253,8 @@ setTimeout(function() {
         else {
           console.log('muuten')
           console.log(data);
-          fn(data);
+          var room = JSON.parse(data);
+          fn(room);
           //console.log('data: ' + JSON.stringify(data));
         }
       });
