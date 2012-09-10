@@ -32,6 +32,7 @@ client.on("monitor", function (time, args) {
 client.on("error", function (err) {
     console.log("error event - " + client.host + ":" + client.port + " - " + err);
 });
+
 // /redis
 
 //var parseCookie = require('connect').utils.parseJSONCookie;
@@ -197,29 +198,65 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
 
     socket.join(slug); // move to other event
 
-    client.get("string key");
+    /*
+    var ar = { 'vittu': 'saatana', 'silma': 'korva' };
+var js = JSON.stringify(ar);
 
-    var room = _.find(rooms, function(room) { return room.slug === slug; });
+client.set("string key", js) //, redis.print);
 
-    //
-    if(_.isUndefined(room)) {
+setTimeout(function() {
+  client.get("string key", function(err, reply) {
+    console.log('reply');
+    console.log(reply);
+    var obj = JSON.parse(reply);
+    console.log(obj);
+    console.log(obj.silma);
+  });
+}, 1000);
+*/
 
-      // make request
-      request.get('http://sportti.dreamschool.fi/genova/fakeGame.json?' + slug, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-          //
-          var room = JSON.parse(body);
-          //
-          rooms.push(room);
-          //
-          fn(room);
+  /*  client.set('vittu', 'saatana', redis.print);
+
+    setTimeout(function() {
+        client.get('vittu', function(err, data) {
+
+        if (data === null) {
+          // callback(null);
+        }
+        else {
+          console.log('data: ' + JSON.stringify(data));
         }
       });
+    }, 1000);
+*/
+  //  var room = _.find(rooms, function(room) { return room.slug === slug; });
 
-    } else {
-      // return found game object
-      fn(room);
-    }
+    client.get('room:'+slug, function(err, data) {
+
+        if (data === null) {
+          // query from django and set to redis
+          // make request
+          request.get('http://sportti.dreamschool.fi/genova/fakeGame.json?' + slug, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+              //
+              var room = JSON.parse(body);
+
+              room = _.isObject(room) ? body : null;
+
+              // set to redis room:slug
+              client.set('room:'+slug, room, redis.print);
+              //
+              fn(room);
+            }
+          });
+        }
+        else {
+          console.log('muuten')
+          console.log(data);
+          fn(data);
+          //console.log('data: ' + JSON.stringify(data));
+        }
+      });
 
   });
 

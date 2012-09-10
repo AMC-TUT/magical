@@ -93,7 +93,6 @@ App.gameController = Em.Object.create({
 **************************/
 
 App.Revision = Em.Object.extend({
-  authors: [],
   scenes: [],
   audios: [],
   sprites: [],
@@ -1219,7 +1218,8 @@ App.DataSource = Ember.Object.extend({
         var obj = App.Author.create({
           'userName': author.userName,
           'firstName': author.firstName,
-          'lastName': author.lastName
+          'lastName': author.lastName,
+          'magos': author.magos
         });
         //
         authors.push(obj);
@@ -1227,7 +1227,7 @@ App.DataSource = Ember.Object.extend({
       game.set('authors', authors);
 
       var revision = data.revision;
-
+/*
       authors = [];
       _.each(revision.authors, function(author) {
         //
@@ -1240,25 +1240,25 @@ App.DataSource = Ember.Object.extend({
         //
         authors.push(obj);
       });
-
-      var gameComponentsA = [];
-      _.each(revision.gameComponents, function(component) {
-       gameComponentsA.push( App.GameComponent.create({ title: component.title, slug: component.slug, properties: component.properties }) );
+*/
+var gameComponentsA = [];
+_.each(revision.gameComponents, function(component) {
+ gameComponentsA.push( App.GameComponent.create({ title: component.title, slug: component.slug, properties: component.properties }) );
          // TODO component properties
        });
 
-      var scenes = [];
-      _.each(revision.scenes, function(scene) {
+var scenes = [];
+_.each(revision.scenes, function(scene) {
 
-        var sceneArray = [];
-        _.each(scene.sceneComponents, function(component) {
-         sceneArray.push( App.SceneComponent.create({ title: component.title, slug: component.slug, properties: component.properties }) );
+  var sceneArray = [];
+  _.each(scene.sceneComponents, function(component) {
+   sceneArray.push( App.SceneComponent.create({ title: component.title, slug: component.slug, properties: component.properties }) );
            // TODO component properties
          });
 
-        var gameArray = [];
-        _.each(scene.gameComponents, function(component) {
-         gameArray.push( App.GameComponent.create({ title: component.title, slug: component.slug, properties: component.properties }) );
+  var gameArray = [];
+  _.each(scene.gameComponents, function(component) {
+   gameArray.push( App.GameComponent.create({ title: component.title, slug: component.slug, properties: component.properties }) );
            // TODO component properties
          });
 
@@ -1272,21 +1272,21 @@ App.DataSource = Ember.Object.extend({
         scenes.push(obj);
       });
 
-      var audios = [];
-      var sprites = [];
+var audios = [];
+var sprites = [];
 
-      var rev = {
-        'authors': authors,
-        'scenes': scenes,
-        'audios': audios,
-        'sprites': sprites,
-        'gameComponents': gameComponentsA
-      };
+var rev = {
+  'authors': authors,
+  'scenes': scenes,
+  'audios': audios,
+  'sprites': sprites,
+  'gameComponents': gameComponentsA
+};
 
-      game.set('revision', rev);
+game.set('revision', rev);
 
-      callback(game);
-    });
+callback(game);
+});
 }
 });
 
@@ -1540,7 +1540,7 @@ function initCanvasDroppable() {
               if (!valid) $(this).remove();
             }
           });
-  */
+*/
 
         // remove when clicked - impl. draggable later
         $img.on('click tap', function(event) {
