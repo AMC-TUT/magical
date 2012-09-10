@@ -85,7 +85,10 @@ App.gameController = Em.Object.create({
       // set content
       controller.set('content', data);
     });
-  }
+  },
+  contentObserver: function() {
+    console.log('gameController.observer content change');
+  }.observes('content')
 });
 
 /**************************
@@ -111,32 +114,7 @@ App.revisionController = Em.Object.create({
 App.Scene = Em.Object.extend({
   name: null,
   elements: [],
-  active: false /*,
-  rowsBinding: Ember.Binding.oneWay('App.gameController.content.canvas.rows'),
-  columnsBinding: Ember.Binding.oneWay('App.gameController.content.canvas.columns'),
-  arrayColumns: function() {
-    var columns = this.get('columns');
-    var array = [];
-
-    for (var i=0;i<columns;i=i+1) {
-      array.push(i);
-    }
-    return array;
-  }.property('columns'),
-  arrayRows: function() {
-    var rows = this.get('rows');
-    var array = [];
-
-    for (var i=0;i<rows;i=i+1) {
-      array.push(i);
-    }
-    return array;
-  }.property('rows'),
-  blockSize: Ember.Binding.oneWay('App.gameController.canvas.blockSize'),
-  gameScenes: function() {
-
-  }.property('content')
-  */
+  active: false
 });
 
 App.scenesController = Em.ArrayController.create({
@@ -180,49 +158,6 @@ App.scenesController = Em.ArrayController.create({
   }.observes('selected')
 });
 
-/*
-App.gameScenesController = Em.ArrayController.create({
-  content: [],
-  scenesBinding: Ember.Binding.oneWay('App.scenesController.content'),
-  rowsBinding: Ember.Binding.oneWay('App.gameController.content.canvas.rows'),
-  columnsBinding: Ember.Binding.oneWay('App.gameController.content.canvas.columns'),
-  scenesObserver: function() {
-    //
-    var scenes = this.get('scenes');
-    var array = [];
-
-    _.each(scenes, function(scene) {
-      if(scene.name !== 'intro' && scene.name !== 'outro') array.push(scene);
-    });
-
-    this.set('content', array);
-  }.observes('scenes'),
-  arrayColumns: function() {
-    var columns = this.get('columns');
-    var array = [];
-    console.log(columns)
-
-    for (var i=0;i<columns;i=i+1) {
-      array.push(i);
-    }
-    return array;
-  }.property('columns'),
-  arrayRows: function() {
-    var rows = this.get('rows');
-    var array = [];
-
-    for (var i=0;i<rows;i=i+1) {
-      array.push(i);
-    }
-    return array;
-  }.property('rows'),
-  blockSize: Ember.Binding.oneWay('App.gameController.canvas.blockSize'),
-  gameScenes: function() {
-
-  }.property('content')
-});
-*/
-
 App.gameScenesController = Em.ArrayController.create({
   content: [],
   scenesBinding: Ember.Binding.oneWay('App.scenesController.content'),
@@ -239,44 +174,6 @@ App.gameScenesController = Em.ArrayController.create({
   }.observes('scenes')
 
 });
-
-/*
-//content: Ember.Binding.oneWay('App.gameScenesController.content'),
-rowsBinding: Ember.Binding.oneWay('App.gameController.content.canvas.rows'),
-columnsBinding: Ember.Binding.oneWay('App.gameController.content.canvas.columns'),
-arrayColumns: function() {
-  var columns = this.get('columns');
-  var array = [];
-  for (var i=0;i<columns;i=i+1) { array.push(i); }
-  return array;
-}.property('columns'),
-arrayRows: function() {
-  var rows = this.get('rows');
-  var array = [];
-  for (var i=0;i<rows;i=i+1) { array.push(i); }
-  return array;
-}.property('rows'),
-blockSize: Ember.Binding.oneWay('App.gameController.canvas.blockSize')
-*/
-
-
-/*
-App.gameScenesView = Em.View.extend({
-  generateGameScenes: function() {
-    var controller = this;
-
-    var gameScenes = App.gameController.getPath('content.revision.scenes').filterProperty('name', 'game');
-    var rows = controller.getPath('content.canvas.rows');
-    var columns = controller.getPath('content.canvas.columns');
-
-    console.log(gameScenes);
-
-    _.each(gameScenes, function(scene) {
-
-    });
-  }
-});
-*/
 
 App.SelectSceneView = Em.View.extend({
   contentBinding: 'App.scenesController.content',
@@ -446,37 +343,6 @@ App.GameComponent = Em.Object.extend({
     }
 
   }.property('properties'),
-  /*,
-  propertiesBinding: function() {
-
-    var collisions = this.getPath('properties.collisions').filterProperty('audio');
-
-    _.each(collisions, function(collision) {
-      var slug = collision.get('audio.slug');
-      var audioSrc = "/static/game/audio/ogg/"+slug+".ogg";
-      console.log(collision);
-      console.log(audioSrc)
-      collision.setPath('audio.audioSrc', audioSrc);
-    });
-
-  }.property('properties'),
-  */
-  /*,
-  audioMp3Src: function() {
-    var collisions = this.getPath('properties.collisions').filterProperty('audio');
-
-    console.log(collisions);
-
-    if(_.isObject(collisions)) {
-      return '/static/game/audios/mp3/'+audio.slug+'.mp3';
-    }
-  }.property('properties'),
-  audioOggSrc: function() {
-    var audio = this.getPath('content.properties.collisions');
-    if(_.isObject(audio)) {
-      return '/static/game/audios/ogg/'+audio.slug+'.ogg';
-    }
-  }.property('content'), */
   filteredScoreEvents: function() {
     var collisions = this.getPath('properties.collisions');
 
