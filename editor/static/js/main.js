@@ -88,7 +88,17 @@ App.gameController = Em.Object.create({
   },
   contentObserver: function() {
     console.log('gameController.observer content change');
-  }.observes('content')
+    var mode = 0;
+    var gameJson = JSON.stringify(this.get('content'));
+    var gameObj = JSON.parse(gameJson);
+    console.log('gameObj')
+    console.log(gameObj);
+
+    App.dataSource.saveGame(0, gameObj, function(data) {
+      console.log('saveGame: ' + data);
+    });
+
+  }.observes('content.title')
 });
 
 /**************************
@@ -1011,6 +1021,15 @@ App.DataSource = Ember.Object.extend({
       callback(data);
     });
   },
+  saveGame: function(mode, game, callback) {
+    console.log('saveGame mode game callback');
+    console.log(JSON.stringify(game));
+
+    socket.emit(mode, game, function(data) {
+      console.log('in emit');
+      callback(data);
+    });
+  },
   getSkillsets: function(callback) {
     socket.emit('getSkillsets', '', function(data) {
       var components = [];
@@ -1383,6 +1402,7 @@ function initCanvasDroppable() {
           $img = $draggable.removeAttr('data-original-title rel alt class style').addClass('canvas-item');
         }
 
+
         /* TODO draggable, require view impl.
         $img.draggable({
             //zIndex: 9999,
@@ -1394,7 +1414,6 @@ function initCanvasDroppable() {
             }
           });
 */
-
         // remove when clicked - impl. draggable later
         $img.on('click tap', function(event) {
           var $tgt = $(event.target),
@@ -1436,17 +1455,17 @@ $(".canvas-pane").droppable({
   hoverClass: "canvas-active",
   drop: function(event, ui) {
 
-    var elPos = ui.position;
-    var elOffset = ui.offset;
-    var tgtOffset = $(this).offset();
+    var elPos = ui.position,
+    elOffset = ui.offset,
+    tgtOffset = $(this).offset();
 
-    var newPosX = parseInt(elOffset.left - tgtOffset.left, 10);
-    var newPosY = parseInt(elOffset.top - tgtOffset.top, 10);
-    var newStyle = { 'top': newPosY, 'left': newPosX, 'position': 'absolute' };
+    var newPosX = parseInt(elOffset.left - tgtOffset.left, 10),
+    newPosY = parseInt(elOffset.top - tgtOffset.top, 10),
+    newStyle = { 'top': newPosY, 'left': newPosX, 'position': 'absolute' };
 
-    var $draggable = $(ui.draggable);
-    var $tgt = $(this);
-    var $img = {};
+    var $draggable = $(ui.draggable),
+    $tgt = $(this),
+    $img = {};
 
     if($draggable.hasClass('cloned')) {
       $img = $draggable;
@@ -1455,14 +1474,12 @@ $(".canvas-pane").droppable({
       $img.css(newStyle);
     }
 
-  //    console.log($img);
+    $tgt.append($img);
 
-  $tgt.append($img);
-
-  $img.draggable({
-    zIndex: 9999,
-    stop: function(event, ui) {
-      $(ui.draggable).draggable('destroy');
+    $img.draggable({
+      zIndex: 9999,
+      stop: function(event, ui) {
+        $(ui.draggable).draggable('destroy');
          // $(ui.draggable).destroy();
       //    console.log('hello');
     },
@@ -1473,7 +1490,7 @@ $(".canvas-pane").droppable({
         helper: 'original' }); // containment: ".canvas"
 
 
-  var view = Ember.View.views[ $draggable.attr('id') ];
+    var view = Ember.View.views[ $draggable.attr('id') ];
 
       //var selected = view.get('item');
       //console.log(view);

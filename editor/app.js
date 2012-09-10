@@ -1,36 +1,36 @@
 
 var fs = require('fs'),
-  express = require('express'),
-  params = require('express-params'),
-  request = require('request'),
-  querystring = require('querystring'),
-  _ = require('underscore')._,
-  util = require("util");
+express = require('express'),
+params = require('express-params'),
+request = require('request'),
+querystring = require('querystring'),
+_ = require('underscore')._,
+util = require("util");
 
 var redis  = require("redis"),
-  client = redis.createClient(6379, 'localhost');
+client = redis.createClient(6379, 'localhost');
 
 var app = express(),
-  http = require('http'),
-  server = http.createServer(app),
-  io = require('socket.io').listen(server);
+http = require('http'),
+server = http.createServer(app),
+io = require('socket.io').listen(server);
 
-  io.enable('browser client minification');
-  io.enable('browser client etag');
-  io.enable('browser client gzip');
+io.enable('browser client minification');
+io.enable('browser client etag');
+io.enable('browser client gzip');
   // io.set('log level', 0); // reduce logging
 
 // redis
 client.monitor(function (err, res) {
-    console.log("Entering monitoring mode.");
+  console.log("Entering monitoring mode.");
 });
 
 client.on("monitor", function (time, args) {
-    console.log(time + ": " + util.inspect(args));
+  console.log(time + ": " + util.inspect(args));
 });
 
 client.on("error", function (err) {
-    console.log("error event - " + client.host + ":" + client.port + " - " + err);
+  console.log("error event - " + client.host + ":" + client.port + " - " + err);
 });
 
 // /redis
@@ -89,11 +89,11 @@ io.configure(function () {
 
  //       console.log('session auth socket.io setistä: ' + handshakeData.sessionID);
 
-    } else {
+} else {
        // if there isn't, turn down the connection with a message
        // and leave the function.
        return accept('No cookie transmitted.', false);
-    }
+     }
     // accept the incoming connection
     //accept(null, true);
 
@@ -146,8 +146,8 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
   handshakeData.foo = 'baz';
   callback(null, true);
 
-  }) */
-  .on('connection', function (socket) {
+}) */
+.on('connection', function (socket) {
 
   console.log('socket.handshake.user: ');
   console.dir(socket.handshake.user);
@@ -184,6 +184,7 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
       var slug = shout.slug;
       delete shout.slug;
 
+      // TODO add shouts to redis list to add easy log load for new user
       socket.broadcast.in(slug).emit('shout', shout);
 
       fn(shout);
@@ -192,48 +193,36 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
 
   });
 
+  socket.on('saveGame', function(mode, game, fn) {
+
+    console.log('SAVEGAME!!!!!!!!!!!!!!!!!!!');
+    console.log(mode);
+    console.log(game);
+
+    // game is
+    if(mode === 0) {
+      // just in redis
+      client.set('room:'+slug, game, redis.print);
+
+    } else {
+      // redis and django
+      client.set('room:'+slug, game, redis.print);
+      //
+      // TODO send game to django
+    }
+
+    fn(true);
+  });
+
   socket.on('joinGame', function(slug, fn) {
 
     slug = _.isString(slug) ? slug : '';
 
     socket.join(slug); // move to other event
 
-    /*
-    var ar = { 'vittu': 'saatana', 'silma': 'korva' };
-var js = JSON.stringify(ar);
-
-client.set("string key", js) //, redis.print);
-
-setTimeout(function() {
-  client.get("string key", function(err, reply) {
-    console.log('reply');
-    console.log(reply);
-    var obj = JSON.parse(reply);
-    console.log(obj);
-    console.log(obj.silma);
-  });
-}, 1000);
-*/
-
-  /*  client.set('vittu', 'saatana', redis.print);
-
-    setTimeout(function() {
-        client.get('vittu', function(err, data) {
-
-        if (data === null) {
-          // callback(null);
-        }
-        else {
-          console.log('data: ' + JSON.stringify(data));
-        }
-      });
-    }, 1000);
-*/
-  //  var room = _.find(rooms, function(room) { return room.slug === slug; });
-
     client.get('room:'+slug, function(err, data) {
 
-        if (data === null) {
+      if (data === null) {
           // query from django and set to redis
           // make request
           request.get('http://sportti.dreamschool.fi/genova/fakeGame.json?' + slug, function (error, response, body) {
@@ -251,11 +240,8 @@ setTimeout(function() {
           });
         }
         else {
-          console.log('muuten')
-          console.log(data);
           var room = JSON.parse(data);
           fn(room);
-          //console.log('data: ' + JSON.stringify(data));
         }
       });
 
@@ -268,7 +254,7 @@ setTimeout(function() {
       var result = JSON.parse(json);
       // return components
       fn(result);
-  });
+    });
 
   socket.on('getSkillsets', function (noop, fn) {
       // read json file
@@ -277,7 +263,7 @@ setTimeout(function() {
       var result = JSON.parse(json);
       // return components
       fn(result);
-  });
+    });
 
   socket.on('getLanguages', function(noob, fn) {
     // make request
