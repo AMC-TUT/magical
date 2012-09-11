@@ -1181,7 +1181,7 @@ var slug = pathname.replace(/^\/editor\//, '').replace(/\/$/, '');
 
 var address = 'http://'+window.location.hostname+'/editor';
 var socket = io.connect(address);
-
+console.log(address);
 socket.on('connecting', function() {
   console.log('Socket.IO - Connecting to magos');
 });
@@ -1192,6 +1192,13 @@ socket.on('connect_failed', function (reason) {
 
 socket.on('connect', function () {
   console.log('Socket.IO - Connected to magos');
+});
+
+
+socket.emit('shout', 'HUUUUUUTO!', function(data) {
+  if(_.isObject(shout)) {
+    App.shoutsController.get('content').pushObject( App.Shout.create(shout) );
+  }
 });
 
 // receive shout

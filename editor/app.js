@@ -36,7 +36,7 @@ client.on("error", function (err) {
 // /redis
 
 //var parseCookie = require('connect').utils.parseJSONCookie;
-var MemStore = express.session.MemoryStore;
+//var MemStore = express.session.MemoryStore;
 
 //var json = JSON.stringify({ vittu: 'paa' });
 //console.log(parseCookie());
@@ -57,10 +57,10 @@ app.configure('production', function() {
 });
 
 app.use(express.cookieParser()); // TODO replace memstore with redisstore
-app.use(express.session({ key: 'express.sid', secret: '4YaA3x2Sbv97Q7A3G4qdxSZwqzHbn9', store: MemStore({ reapInterval: 60000 * 10 }) })); // , store: new RedisStore
+///app.use(express.session({ key: 'express.sid', secret: '4YaA3x2Sbv97Q7A3G4qdxSZwqzHbn9', store: MemStore({ reapInterval: 60000 * 10 }) })); // , store: new RedisStore
 
 app.use(function(err, req, res, next){
-  console.error(err.stack);
+ // console.error(err.stack);
   res.send(500, 'Something broke!');
 });
 
@@ -69,6 +69,7 @@ io.configure(function () {
   // connection types
   io.set('transports', ['websocket', 'xhr-polling']); // 'flashsocket',
   // authentication
+  /*
   io.set('authorization', function (handshakeData, callback) {
 
     // check if there's a cookie header
@@ -99,6 +100,7 @@ io.configure(function () {
 
     callback(null, true); // error first callback style
   });
+*/
 });
 
 // Routes
@@ -114,19 +116,19 @@ app.get('/editor/:slug', function(req, res) {
   var slug = req.params.slug[0];
   console.log(req);
 
-  if(_.isUndefined(req.session.user)) {
+/*  if(_.isUndefined(req.session.user)) {
     req.session.user = "matti.vanhanen";
     req.session.role = "student";
-    console.log("SET REQUEST SESSION:");
-    console.log(" - user: " + req.session.user);
+ //   console.log("SET REQUEST SESSION:");
+ //   console.log(" - user: " + req.session.user);
   } else {
-    console.log("GET REQUEST SESSION:");
-    console.log(" - user: " + req.session.user);
-  }
-  console.log('req.sessionID');
-  console.log(req.session);
-  console.log("__dirname");
-  console.log(__dirname);
+  //  console.log("GET REQUEST SESSION:");
+  //  console.log(" - user: " + req.session.user);
+  }*/
+//  console.log('req.sessionID');
+//  console.log(req.session);
+ // console.log("__dirname");
+ // console.log(__dirname);
   res.sendfile('index.html');
   // res.sendfile(__dirname + '/index.html');
 });
@@ -138,7 +140,7 @@ app.get('/', function(req, res) {
 
 server.listen(9001);
 
-var rooms = [];
+//var rooms = [];
 
 var editor = io.of('/editor') /*.authorization(function (handshakeData, callback) {
 
@@ -149,8 +151,8 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
 }) */
 .on('connection', function (socket) {
 
-  console.log('socket.handshake.user: ');
-  console.dir(socket.handshake.user);
+  //console.log('socket.handshake.user: ');
+  //console.dir(socket.handshake.user);
 
   socket.on('connect', function() {
     console.log('client connected, client id: ' + socket.id);
