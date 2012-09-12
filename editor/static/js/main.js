@@ -121,7 +121,8 @@ App.revisionController = Em.Object.create({
 
 App.Scene = Em.Object.extend({
   name: null,
-  elements: [],
+  gameComponents: [],
+  sceneComponents: [],
   active: false
 });
 
@@ -315,6 +316,7 @@ App.SceneComponentsView = Em.View.extend({
 
 App.SceneGameComponent = Em.Object.extend({
   // todo parent
+  oid: null,
   slug: null,
   position: null
 });
@@ -1355,6 +1357,35 @@ function createGameTableCanvases() {
 
       // add size class and dom nodes game canvas
       $table.addClass(sizeClass).append(cells);
+
+
+      // add items to canvas
+
+      var scenes = App.scenesController.get('content');
+      _.each(scenes, function(scene) {
+        var gameComponents = scene.get('gameComponents'),
+          sceneComponents = scene.get('sceneComponents');
+
+        _.each(gameComponents, function(gameComponent) {
+          console.log(gameComponent);
+
+          var row = gameComponent.position.row,
+            column = gameComponent.position.column,
+            slug = gameComponent.slug,
+            oid = gameComponent.oid;
+
+          var img = '<img src="../static/game/sprites/player.png" data-slug="'+slug+'" data-oid ="'+oid+'" class="canvas-item">';
+          // 1 level game
+          $game = $('.canvas-game');
+
+          $game.find('tr:nth-child('+row+')').find('td:nth-child('+column+')').append(img);
+
+        });
+
+      });
+
+      // ---
+
       // jqueryui droppable to canvas
       initCanvasDroppable();
       // jquery resize event to canvas to adjust height -> ratio
