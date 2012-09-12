@@ -51,17 +51,17 @@ app.configure('development', function() {
     showStack: true
   }));
 });
-
+/*
 app.configure('production', function() {
   app.use(express.errorHandler());
 });
-
+*/
 app.use(express.cookieParser()); // TODO replace memstore with redisstore
 ///app.use(express.session({ key: 'express.sid', secret: '4YaA3x2Sbv97Q7A3G4qdxSZwqzHbn9', store: MemStore({ reapInterval: 60000 * 10 }) })); // , store: new RedisStore
 
 app.use(function(err, req, res, next){
  // console.error(err.stack);
-  res.send(500, 'Something broke!');
+ res.send(500, 'Something broke!');
 });
 
 
@@ -114,7 +114,7 @@ app.get('/game/:slug', function(req, res) {
 app.get('/editor/:slug', function(req, res) {
 
   var slug = req.params.slug[0];
-  console.log(req);
+  //console.log(req);
 
 /*  if(_.isUndefined(req.session.user)) {
     req.session.user = "matti.vanhanen";
@@ -124,12 +124,12 @@ app.get('/editor/:slug', function(req, res) {
   } else {
   //  console.log("GET REQUEST SESSION:");
   //  console.log(" - user: " + req.session.user);
-  }*/
+}*/
 //  console.log('req.sessionID');
 //  console.log(req.session);
  // console.log("__dirname");
  // console.log(__dirname);
-  res.sendfile('index.html');
+ res.sendfile('index.html');
   // res.sendfile(__dirname + '/index.html');
 });
 
@@ -220,33 +220,28 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
 
     slug = _.isString(slug) ? slug : '';
 
+    var game = {};
+
     socket.join(slug); // move to other event
 
-    client.get('room:'+slug, function(err, data) {
+    client.get('game:'+slug, function(err, data) {
 
       if (data === null) {
           // query from django and set to redis
-          // make request
-          request.get('http://sportti.dreamschool.fi/genova/fakeGame.json?' + slug, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-              //
-              var room = JSON.parse(body);
+          var json = fs.readFileSync('static/json/fakeGame.json', 'utf8');
 
-              room = _.isObject(room) ? body : null;
+          game = JSON.parse(json);
 
-              // set to redis room:slug
-              client.set('room:'+slug, room, redis.print);
-              //
-              fn(room);
-            }
-          });
+          client.set('game:'+slug, game, redis.print);
+          //request.get('http://sportti.dreamschool.fi/genova/fakekjkjkljlGame2.json?kksljlkjkjkljklj' + slug, function (error, response, body) {
+          //if (!error && response.statusCode == 200) {} });
         }
         else {
-          var room = JSON.parse(data);
-          fn(room);
+          game = JSON.parse(data);
         }
-      });
 
+        fn(game);
+      });
   });
 
   socket.on('getSceneComponents', function (noop, fn) {
@@ -307,7 +302,7 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
 
     if(!_.isObject(room)) {
 
-      var json = fs.readFileSync('static/game.json', 'utf8');
+      var json = fs.readFileSync('statme.json', 'utf8');
 
       room = JSON.parse(json);
 

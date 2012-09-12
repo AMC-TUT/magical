@@ -1432,8 +1432,6 @@ function initCanvasDroppable() {
           //App.scenesController.getPath('selected.gameComponents').destroy(img);
           console.log($tgt);
           $tgt.remove();
-
-
         });
 
         var position = $tgt.position();
