@@ -52,7 +52,7 @@ App.usersController = Em.ArrayController.create({
 
 App.usersController.get('content').pushObject(
   App.Author.create({ userName: 'matti.vanhanen', firstName: 'Matti', lastName: 'Vanhanen', magos: 'principes', role: 'student' })
-  );
+);
 
 // TODO
 var user = App.usersController.get('content').findProperty('userName', 'matti.vanhanen');
@@ -89,12 +89,10 @@ App.gameController = Em.Object.create({
   contentObserver: function() {
     // console.log('gameController.observer content change');
     var mode = 0;
-    var gameJson = JSON.stringify(this.get('content'));
-    var gameObj = JSON.parse(gameJson);
    // console.log('gameObj')
    // console.log(gameObj);
 
-    App.dataSource.saveGame(0, gameObj, function(data) {
+    App.dataSource.saveGame(mode, function(data) {
       console.log('saveGame: ' + data);
     });
 
@@ -1021,15 +1019,14 @@ App.DataSource = Ember.Object.extend({
       callback(data);
     });
   },
-  saveGame: function(mode, game, callback) {
-    //console.log('saveGame mode game callback');
-    //console.log(JSON.stringify(game));
-
+  saveGame: function(mode, callback) {
+    // get game
+    var game = App.gameController.get('content'); // JSON.stringify(this.get('content'));
+    //var gameObj = JSON.parse(gameJson);
+    // save it
     socket.emit('saveGame', mode, game, function(data) {
-      console.log('in emit');
       callback(data);
     });
-
   },
   getSkillsets: function(callback) {
     socket.emit('getSkillsets', '', function(data) {
@@ -1149,7 +1146,7 @@ App.DataSource = Ember.Object.extend({
       var sprites = [];
 
       var rev = {
-        'authors': authors,
+        //'authors': authors,
         'scenes': scenes,
         'audios': audios,
         'sprites': sprites,
@@ -1410,7 +1407,6 @@ function initCanvasDroppable() {
           $img = $draggable.removeAttr('data-original-title rel alt class style').addClass('canvas-item');
         }
 
-
         /* TODO draggable, require view impl.
         $img.draggable({
             //zIndex: 9999,
@@ -1421,29 +1417,27 @@ function initCanvasDroppable() {
               if (!valid) $(this).remove();
             }
           });
-*/
+        */
         // remove when clicked - impl. draggable later
         $img.on('click tap', function(event) {
           var $tgt = $(event.target),
-          slug = $tgt.data('slug'),
-          oid = $tgt.data('oid');
+            oid = $tgt.data('oid');
 
-          //var array = App.scenesController.getPath('selected.gameComponents'); //.findProperty('oid', oid);
-          //console.log(array)
-          //App.scenesController.getPath('selected.gameComponents').destroy(img);
-          console.log($tgt);
+          var item = App.scenesController.getPath('selected.gameComponents').findProperty('oid', oid);
+          App.scenesController.getPath('selected.gameComponents').removeObject(item);
+
           $tgt.remove();
         });
 
-        var position = $tgt.position();
-        var left = Math.floor(parseInt(position.left, 10));
-        var top = Math.floor(parseInt(position.top, 10));
-        var oid = slug + left + top;
+        var $row = $tgt.closest('tr');
+        var column = $row.find('td').index($tgt);
+        var row = $row.closest('table').find('tr').index($row);
+        var oid = slug + column + row;
 
         var obj = App.SceneGameComponent.create({
           oid: oid,
           slug: slug,
-          position: { left: left, top: top }
+          position: { column: column, row: row }
         });
 
         App.scenesController.getPath('selected.gameComponents').pushObject(obj);

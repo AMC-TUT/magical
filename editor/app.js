@@ -199,10 +199,6 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
     // get this from session
     var slug = 'super-magos';
 
-    console.log('SAVEGAME!!!!!!!!!!!!!!!!!!!');
-    console.log(mode);
-    console.log(game);
-
     var json = JSON.stringify(game);
 
     // saving mode to redis or redis&django
