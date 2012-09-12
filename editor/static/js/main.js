@@ -87,12 +87,12 @@ App.gameController = Em.Object.create({
     });
   },
   contentObserver: function() {
-    console.log('gameController.observer content change');
+    // console.log('gameController.observer content change');
     var mode = 0;
     var gameJson = JSON.stringify(this.get('content'));
     var gameObj = JSON.parse(gameJson);
-    console.log('gameObj')
-    console.log(gameObj);
+   // console.log('gameObj')
+   // console.log(gameObj);
 
     App.dataSource.saveGame(0, gameObj, function(data) {
       console.log('saveGame: ' + data);
@@ -1022,13 +1022,14 @@ App.DataSource = Ember.Object.extend({
     });
   },
   saveGame: function(mode, game, callback) {
-    console.log('saveGame mode game callback');
-    console.log(JSON.stringify(game));
+    //console.log('saveGame mode game callback');
+    //console.log(JSON.stringify(game));
 
-    socket.emit(mode, game, function(data) {
+    socket.emit('saveGame', mode, game, function(data) {
       console.log('in emit');
       callback(data);
     });
+
   },
   getSkillsets: function(callback) {
     socket.emit('getSkillsets', '', function(data) {

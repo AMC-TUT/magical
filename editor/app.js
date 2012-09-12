@@ -140,8 +140,6 @@ app.get('/', function(req, res) {
 
 server.listen(9001);
 
-//var rooms = [];
-
 var editor = io.of('/editor') /*.authorization(function (handshakeData, callback) {
 
   console.dir(handshakeData);
@@ -197,18 +195,24 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
 
   socket.on('saveGame', function(mode, game, fn) {
 
+
+    // get this from session
+    var slug = 'super-magos';
+
     console.log('SAVEGAME!!!!!!!!!!!!!!!!!!!');
     console.log(mode);
     console.log(game);
 
-    // game is
+    var json = JSON.stringify(game);
+
+    // saving mode to redis or redis&django
     if(mode === 0) {
       // just in redis
-      client.set('room:'+slug, game, redis.print);
+      client.set('game:'+slug, json, redis.print);
 
     } else {
       // redis and django
-      client.set('room:'+slug, game, redis.print);
+      client.set('game:'+slug, json, redis.print);
       //
       // TODO send game to django
     }
@@ -232,9 +236,9 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
 
           game = JSON.parse(json);
 
-          client.set('game:'+slug, game, redis.print);
-          //request.get('http://sportti.dreamschool.fi/genova/fakekjkjkljlGame2.json?kksljlkjkjkljklj' + slug, function (error, response, body) {
-          //if (!error && response.statusCode == 200) {} });
+          client.set('game:'+slug, json, redis.print);
+          // request.get('http://sportti.dreamschool.fi/genova/fakekjkjkljlGame2.json?kksljlkjkjkljklj' + slug, function (error, response, body) {
+          // if (!error && response.statusCode == 200) {} });
         }
         else {
           game = JSON.parse(data);
@@ -290,7 +294,7 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
     fn('user´s credentials saved');
 
   });
-
+/*
   socket.on('join-room', function (slug, fn) {
 
     var credentials = {};
@@ -379,6 +383,7 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
     }
 
   });
+*/
 /*
   socket.on('get room members', function(room, fn) {
     console.log('get room members');
