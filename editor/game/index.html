@@ -8,21 +8,17 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width">
   <style>
-  body { background: #FFF; }
+  body { background: #111; color: #eee; }
   </style>
 </head>
 <body>
-  <script>
-  window.onmessage = function(e){
-    loadGame(e.data);
-    // if ( e.origin !== "http://html5demos.com" ) { return; }
+  <div id="test"></div>
 
-  };
-
-  function loadGame(slug) {
-    document.getElementById("test").innerHTML = "Preview (" + slug + ")";
-  };
-  </script>
-  <div id="test">Preview (default)</div>
+  <script src="/static/js/vendor/jquery.min.js"></script>
+  <script src="/static/js/vendor/bootstrap.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/static/js/plugins.js"></script>
+  <script src="/static/js/parser.js"></script>
+  <script src="/static/js/game.js"></script>
 </body>
 </html>
