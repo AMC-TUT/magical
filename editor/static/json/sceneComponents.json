@@ -2,6 +2,7 @@
   {
     "title": "Background Image",
     "slug": "background-image",
+    "sprite": null,
     "scenes": [
       "intro",
       "game",
@@ -15,6 +16,7 @@
   {
     "title": "Time",
     "slug": "time",
+    "sprite": null,
     "scenes": [
       "game"
     ],
@@ -23,8 +25,9 @@
     ]
   },
   {
-    "title": "Dialog",
-    "slug": "dialog",
+    "title": "Title",
+    "slug": "title",
+    "sprite": null,
     "scenes": [
       "game"
     ],
@@ -35,6 +38,7 @@
   {
     "title": "Highscore",
     "slug": "highscore",
+    "sprite": null,
     "scenes": [
       "intro",
       "outro"
@@ -46,6 +50,7 @@
   {
     "title": "Volume",
     "slug": "volume",
+    "sprite": null,
     "scenes": [
       "intro",
       "game",
@@ -56,6 +61,7 @@
   {
     "title": "Play Button",
     "slug": "play",
+    "sprite": null,
     "scenes": [
       "intro",
       "outro"

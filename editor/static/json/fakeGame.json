@@ -5,8 +5,8 @@
     "state": true,
     "cloned": false,
     "canvas": {
-        "blockSize": 32,
-        "rows": 10,
+        "blockSize": 48,
+        "rows": 6,
         "columns": 14
     },
     "description": "The quick brown fox jumps over the lazy dog",
@@ -32,7 +32,7 @@
                     "properties": {
                         "sprite": "player",
                         "controls": {
-                            "method": "Fourway",
+                            "method": "Twoway",
                             "speed": 4,
                             "jumpHeight": 10,
                             "grid": false
@@ -118,13 +118,6 @@
                 "title": "Boom",
                 "slug": "boom"
             }
-            ],
-            "sprites": [
-                {
-                    "title": "Background Image",
-                    "slug": "background-image",
-                    "file": "bg.jpg"
-                }
             ],
             "fonts": [
                 {

@@ -24,4 +24,6 @@
     Parser.getGame(e.data, socket);
   };
 
+  Parser.getGame('super-magos', socket);
+
 })(jQuery);

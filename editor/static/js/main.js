@@ -52,7 +52,7 @@ App.usersController = Em.ArrayController.create({
 
 App.usersController.get('content').pushObject(
   App.Author.create({ userName: 'matti.vanhanen', firstName: 'Matti', lastName: 'Vanhanen', magos: 'principes', role: 'student' })
-);
+  );
 
 // TODO
 var user = App.usersController.get('content').findProperty('userName', 'matti.vanhanen');
@@ -92,11 +92,11 @@ App.gameController = Em.Object.create({
    // console.log('gameObj')
    // console.log(gameObj);
 
-    App.dataSource.saveGame(mode, function(data) {
-      console.log('saveGame: ' + data);
-    });
+   App.dataSource.saveGame(mode, function(data) {
+    console.log('saveGame: ' + data);
+  });
 
-  }.observes('content.title')
+ }.observes('content.title')
 });
 
 /**************************
@@ -215,6 +215,7 @@ App.SelectSceneBtn = Em.View.extend({
 App.SceneComponent = Em.Object.extend({
   title: null,
   slug: null,
+  sprite: null,
   scenes: [],
   potions: null,
   active: false,
@@ -1055,6 +1056,7 @@ App.DataSource = Ember.Object.extend({
           App.SceneComponent.create({
             "slug": obj.slug,
             "title": obj.title,
+            "sprite": obj.sprite,
             "scenes": obj.scenes,
             "potions": obj.potions
           })
@@ -1124,7 +1126,7 @@ App.DataSource = Ember.Object.extend({
 
         var sceneArray = [];
         _.each(scene.sceneComponents, function(component) {
-         sceneArray.push( App.SceneComponent.create({ title: component.title, slug: component.slug, properties: component.properties }) );
+         sceneArray.push( App.SceneComponent.create({ title: component.title, slug: component.slug, sprite: component.sprite, properties: component.properties }) );
            // TODO component properties
          });
 
@@ -1364,15 +1366,15 @@ function createGameTableCanvases() {
       var scenes = App.scenesController.get('content');
       _.each(scenes, function(scene) {
         var gameComponents = scene.get('gameComponents'),
-          sceneComponents = scene.get('sceneComponents');
+        sceneComponents = scene.get('sceneComponents');
 
         _.each(gameComponents, function(gameComponent) {
           console.log(gameComponent);
 
           var row = gameComponent.position.row,
-            column = gameComponent.position.column,
-            slug = gameComponent.slug,
-            oid = gameComponent.oid;
+          column = gameComponent.position.column,
+          slug = gameComponent.slug,
+          oid = gameComponent.oid;
 
           var img = '<img src="../static/game/sprites/player.png" data-slug="'+slug+'" data-oid ="'+oid+'" class="canvas-item">';
           // 1 level game
@@ -1438,21 +1440,10 @@ function initCanvasDroppable() {
           $img = $draggable.removeAttr('data-original-title rel alt class style').addClass('canvas-item');
         }
 
-        /* TODO draggable, require view impl.
-        $img.draggable({
-            //zIndex: 9999,
-            helper: "original",
-            snap: ".canvas-cell:empty",
-            snapMode: "inner",
-            revert: function(valid) {
-              if (!valid) $(this).remove();
-            }
-          });
-        */
         // remove when clicked - impl. draggable later
         $img.on('click tap', function(event) {
           var $tgt = $(event.target),
-            oid = $tgt.data('oid');
+          oid = $tgt.data('oid');
 
           var item = App.scenesController.getPath('selected.gameComponents').findProperty('oid', oid);
           App.scenesController.getPath('selected.gameComponents').removeObject(item);
@@ -1498,6 +1489,8 @@ $(".canvas-pane").droppable({
     $tgt = $(this),
     $img = {};
 
+    var slug = $draggable.data('slug');
+
     if($draggable.hasClass('cloned')) {
       $img = $draggable;
     } else {
@@ -1507,21 +1500,31 @@ $(".canvas-pane").droppable({
 
     $tgt.append($img);
 
-    $img.draggable({
-      zIndex: 9999,
-      stop: function(event, ui) {
-        $(ui.draggable).draggable('destroy');
-         // $(ui.draggable).destroy();
-      //    console.log('hello');
-    },
+    // remove when clicked - impl. draggable later
+    $img.on('click tap', function(event) {
+      var $tgt = $(event.target),
+        slug = $tgt.data('slug');
+
+      var item = App.scenesController.getPath('selected.sceneComponents').findProperty('slug', slug);
+      App.scenesController.getPath('selected.sceneComponents').removeObject(item);
+
+      $tgt.remove();
+    });
+
+    var position = $img.position();
+    var obj = { 'slug': slug, position: { 'left': Math.round(position.left), 'top': Math.round(position.top) } };
+    console.log(obj);
+
+    App.scenesController.getPath('selected.sceneComponents').pushObject(obj);
+
+  } // drop
+});
+
+ // containment: ".canvas"
    /*     revert: function(valid) {
           if (!valid) $(this).remove();
         },
         revertDuration: 250, */
-        helper: 'original' }); // containment: ".canvas"
-
-
-    var view = Ember.View.views[ $draggable.attr('id') ];
 
       //var selected = view.get('item');
       //console.log(view);
@@ -1547,8 +1550,7 @@ $(".canvas-pane").droppable({
         });
       }
       */
-    }
-  });
+
 /*
   $(".canvas").droppable({
     greedy: false,
@@ -1563,7 +1565,7 @@ $(".canvas-pane").droppable({
     }
   });
 */
-};
+} // /function
 
 // /canvas
 

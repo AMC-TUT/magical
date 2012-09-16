@@ -241,15 +241,271 @@ _.each(Game.canvas.elements, function(element) {
 
 */
 
+Crafty.c("Controls", {
+    init: function() {
+        this.requires('Twoway');
+        this.enableControl();
+    },
+
+    Controls: function(speed, jump) {
+        this.twoway(speed, jump);
+        return this;
+    }
+});
+
 var Parser = {
   game: null,
   socket: null,
+  blockSize: null,
 
+  parseGame: function(game) {
+    // set global vars
+    Parser.game = game;
+
+    // init Crafty
+    var init = Parser.initGame(game.canvas);
+    console.log('init: ' + init);
+
+    // load sprite assests
+    var sprites = Parser.loadSprites(game.revision.gameComponents);
+    console.log('sprites:' + sprites);
+
+    // load audio assets
+    var audios = Parser.loadAudios(game.revision.audios);
+    console.log('audios:' + audios);
+
+    // create game components
+    var gameComps = Parser.createGameComponents(game.revision.gameComponents);
+    console.log('gameComps:' + gameComps);
+
+    // create scene components
+    var sceneComps = Parser.createSceneComponents(game.revision.sceneComponents);
+    console.log('gameComps:' + sceneComps);
+
+    // create scenes
+    var scenes = Parser.createScenes(game.revision.scenes);
+    console.log('scenes:' + scenes);
+
+    Crafty.scene("intro");
+
+  },
+  initGame: function(canvas) {
+    // {"blockSize":48,"rows":6,"columns":14};
+    var height = canvas.blockSize * canvas.rows;
+    var width = canvas.blockSize * canvas.columns;
+    // set global var
+    Parser.blockSize = canvas.blockSize;
+
+    Crafty.init(width, height);
+
+    return true;
+  },
+  loadAudios: function(audios) {
+    // images path
+    var path = '/static/game/audios';
+
+    _.each(audios, function(audio) {
+      console.log('audio')
+      console.log(audio);
+
+      var obj = {},
+        array = [
+          path + '/mp3/' + slug + '.mp3',
+          path + '/ogg/' + slug + '.ogg',
+          path + '/wav/' + slug + '.wav'
+        ];
+
+      obj[slug] = array;
+
+      Crafty.audio.add(obj);
+    }); // each
+
+    return true;
+  },
+  loadSprites: function(components) {
+    // images path
+    var path = '/static/game/sprites/',
+      ext = '.png';
+
+    _.each(components, function(component) {
+      // vars
+      var sprite = component.properties.sprite;
+
+      // if exists
+      if(_.isString(sprite)) {
+        var obj = {};
+        obj[sprite + '-sprite'] = [0, 0];
+
+        Crafty.sprite(Parser.blockSize, path + sprite + ext, obj);
+      }
+
+    }); // each
+
+    return true;
+  },
+  createScenes: function(scenes) {
+
+    _.each(scenes, function(scene) {
+      console.log(scene.name);
+      // background
+      var backgroundComp = _.find(scene.sceneComponents, function(comp){ return comp.slug === 'background-image'; });
+      console.log(backgroundComp);
+
+      var backgroundImage = null,
+        path = '/static/game/sprites/',
+        ext = '.png';
+
+      if(_.isObject(backgroundComp) && _.isString(backgroundComp.sprite)) {
+        backgroundImage = path + backgroundComp.sprite + ext;
+      }
+
+      // create Crafty scene
+      Crafty.scene(scene.name, function() {
+        // background
+        if(!_.isNull(backgroundImage)) {
+          Crafty.background("url("+backgroundImage+")");
+        }
+
+        // scene comps
+
+      // game comps
+      console.log(scene)
+      _.each(scene.gameComponents, function(comp) {
+        // position
+        var x_ = comp.position.column * Parser.blockSize;
+        var y_ = comp.position.row * Parser.blockSize;
+
+        Crafty.e(comp.slug).attr({ x: x_, y: y_, w: 48, h: 48 });
+
+      });
+
+        // game on Yeah!
+      });
+
+    });
+  },
+  createGameComponents: function(components) {
+
+    _.each(components, function(component) {
+      var props = component.properties;
+
+      console.log(component)
+
+      var sprite = _.isString(props.sprite) ? props.sprite : false;
+
+      var comp = Crafty.c(component.slug, {
+        init: function() {
+          var this_ = this;
+
+          // for all game comps
+          this_.addComponent("2D", "Canvas");
+
+          // sprite
+          if(sprite) {
+            this_.addComponent(sprite+"-sprite");
+          }
+
+          // gravity
+          if(_.isObject(props.gravity)) {
+            var sign = props.gravity.direction ? 1 : -1;
+
+            this_.gravity("platform");
+            this_.gravityConst(sign * props.gravity.strength);
+          }
+
+          // controls
+          if(_.isObject(props.controls)) {
+            var speed = _.isNumber(props.controls.speed) ? props.controls.speed : 4;
+
+            // twoway === platform
+            if(props.controls.method === 'Fourway') {
+              var jumpHeight = _.isNumber(props.controls.jumpHeight) ? props.controls.jumpHeight : 12;
+
+              this_.addComponent('Controls', 'Keyboard', 'Gravity');
+              this_.Controls(speed, jumpHeight);
+              this_.gravity('platform');
+            }
+
+            // fourway
+            /*
+            if(props.controls.method === 'Fourway') {
+              this_.addComponent('Fourway', 'Keyboard');
+              this_.speed(speed);
+            }
+*/
+          } else {
+            this_.addComponent('platform');
+          }
+
+        } // /init
+      });
+    });
+
+    return true;
+  },
+  createSceneComponents: function(components) {
+
+    _.each(components, function(component) {
+      var props = component.properties;
+
+      console.log(component)
+
+      var sprite = _.isString(props.sprite) ? props.sprite : false;
+
+      var comp = Crafty.c(component.slug, {
+        init: function() {
+          var this_ = this;
+
+          // for all game comps
+          this_.addComponent("2D", "Canvas");
+
+          // sprite
+          if(sprite) {
+            this_.addComponent(sprite+"-sprite");
+          }
+
+          // gravity
+          if(_.isObject(props.gravity)) {
+            var sign = props.gravity.direction ? 1 : -1;
+
+            this_.gravity("platform");
+            this_.gravityConst(sign * props.gravity.strength);
+          }
+
+          // controls
+          if(_.isObject(props.controls)) {
+            var speed = _.isNumber(props.controls.speed) ? props.controls.speed : 4;
+
+            // twoway === platform
+            if(props.controls.method === 'Twoway') {
+              var jumpHeight = _.isNumber(props.controls.jumpHeight) ? props.controls.jumpHeight : 12;
+
+              this_.addComponent('Controls', 'Keyboard');
+              this_.Controls(speed, jumpHeight);
+              this_.gravity('platform');
+            }
+
+            // fourway
+            if(props.controls.method === 'Fourway') {
+              this_.addComponent('Fourway', 'Keyboard');
+              this_.speed(speed);
+            }
+
+          }
+
+        } // /init
+      });
+    });
+
+    return true;
+  },
   getGame: function(slug, webSocket) {
     socket = webSocket;
 
     socket.emit('joinGame', slug, function(data) {
-      $('#test').text( JSON.stringify(data));
+      console.log('websocket getGame (game)');
+      console.log(data);
+      Parser.parseGame(data);
     });
 
   },
