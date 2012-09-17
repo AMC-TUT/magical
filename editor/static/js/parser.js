@@ -242,15 +242,15 @@ _.each(Game.canvas.elements, function(element) {
 */
 
 Crafty.c("Controls", {
-    init: function() {
-        this.requires('Twoway');
-        this.enableControl();
-    },
+  init: function() {
+    this.requires('Twoway');
+    this.enableControl();
+  },
 
-    Controls: function(speed, jump) {
-        this.twoway(speed, jump);
-        return this;
-    }
+  Controls: function(speed, jump) {
+    this.twoway(speed, jump);
+    return this;
+  }
 });
 
 var Parser = {
@@ -276,10 +276,9 @@ var Parser = {
 
     // create game components
     var gameComps = Parser.createGameComponents(game.revision.gameComponents);
-    console.log('gameComps:' + gameComps);
 
     // create scene components
-    var sceneComps = Parser.createSceneComponents(game.revision.sceneComponents);
+    var sceneComps = Parser.createSceneComponents(game.revision.scenes);
     console.log('gameComps:' + sceneComps);
 
     // create scenes
@@ -297,6 +296,9 @@ var Parser = {
     Parser.blockSize = canvas.blockSize;
 
     Crafty.init(width, height);
+    // obj for some magos vars
+    Crafty.magos = {};
+    Crafty.magos.audio = true;
 
     return true;
   },
@@ -310,37 +312,37 @@ var Parser = {
 
       var obj = {},
         array = [
-          path + '/mp3/' + slug + '.mp3',
-          path + '/ogg/' + slug + '.ogg',
-          path + '/wav/' + slug + '.wav'
-        ];
+        path + '/mp3/' + slug + '.mp3', path + '/ogg/' + slug + '.ogg', path + '/wav/' + slug + '.wav'];
 
       obj[slug] = array;
 
       Crafty.audio.add(obj);
     }); // each
-
     return true;
   },
   loadSprites: function(components) {
     // images path
     var path = '/static/game/sprites/',
       ext = '.png';
+      console.log(components)
+
+
 
     _.each(components, function(component) {
-      // vars
-      var sprite = component.properties.sprite;
 
+      // vars
+      var sprite = (!_.isUndefined(component.properties.sprite) && _.isString(component.properties.sprite)) ? component.properties.sprite : '';
+console.log('sprite:' + sprite);
       // if exists
-      if(_.isString(sprite)) {
+      if (sprite.length) {
         var obj = {};
         obj[sprite + '-sprite'] = [0, 0];
+console.log('SAAATANAANANNANN' + path+sprite+ext)
 
         Crafty.sprite(Parser.blockSize, path + sprite + ext, obj);
       }
 
     }); // each
-
     return true;
   },
   createScenes: function(scenes) {
@@ -348,36 +350,148 @@ var Parser = {
     _.each(scenes, function(scene) {
       console.log(scene.name);
       // background
-      var backgroundComp = _.find(scene.sceneComponents, function(comp){ return comp.slug === 'background-image'; });
+      var backgroundComp = _.find(scene.sceneComponents, function(comp) {
+        return comp.slug === 'background-image';
+      });
       console.log(backgroundComp);
 
       var backgroundImage = null,
         path = '/static/game/sprites/',
         ext = '.png';
 
-      if(_.isObject(backgroundComp) && _.isString(backgroundComp.sprite)) {
+      if (_.isObject(backgroundComp) && _.isString(backgroundComp.sprite)) {
         backgroundImage = path + backgroundComp.sprite + ext;
       }
 
       // create Crafty scene
       Crafty.scene(scene.name, function() {
         // background
-        if(!_.isNull(backgroundImage)) {
-          Crafty.background("url("+backgroundImage+")");
+        if (!_.isNull(backgroundImage)) {
+          Crafty.background("url(" + backgroundImage + ")");
         }
 
         // scene comps
+        _.each(scene.sceneComponents, function(comp) {
+          // position
+          var x_ = comp.position.left;
+          var y_ = comp.position.top;
 
-      // game comps
-      console.log(scene)
-      _.each(scene.gameComponents, function(comp) {
-        // position
-        var x_ = comp.position.column * Parser.blockSize;
-        var y_ = comp.position.row * Parser.blockSize;
+          if (comp.slug === 'volume') {
+            Crafty.e(comp.slug).attr({
+              x: x_,
+              y: y_
+            });
+          }
 
-        Crafty.e(comp.slug).attr({ x: x_, y: y_, w: 48, h: 48 });
+          if (comp.slug === 'time') {
+            Crafty.e(comp.slug).attr({
+              x: x_,
+              y: y_
+            });
+          }
 
-      });
+          if (comp.slug === 'play') {
+            var ent = Crafty.e(comp.slug).attr({
+              x: x_,
+              y: y_
+            })
+
+            if (!_.isUndefined(comp.properties) && !_.isUndefined(comp.properties.font)) {
+              var font = comp.properties.font;
+              // font color
+              if (!_.isUndefined(font.color)) {
+                ent.css('color', font.color);
+              }
+              // font family
+              if (!_.isUndefined(font.family)) {
+                ent.css('font-family', font.family);
+              }
+              // font size
+              if (!_.isUndefined(font.size)) {
+                ent.css('font-size', font.size);
+              }
+              // text background
+              if (!_.isUndefined(font.background)) {
+                ent.css('background-color', font.background);
+                ent.css('text-shadow', '1px 1px 1px ' + font.background);
+                ent.css('border', '1px solid ' + font.background);
+              }
+            } // /font
+          } // /play
+          if (comp.slug === 'highscore') {
+
+            var ent = Crafty.e(comp.slug).attr({
+              x: x_,
+              y: y_
+            })
+
+            if (!_.isUndefined(comp.properties) && !_.isUndefined(comp.properties.font)) {
+              var font = comp.properties.font;
+              // font color
+              if (!_.isUndefined(font.color)) {
+                ent.css('color', font.color);
+              }
+              // font family
+              if (!_.isUndefined(font.family)) {
+                ent.css('font-family', font.family);
+              }
+              // font size
+              if (!_.isUndefined(font.size)) {
+                ent.css('font-size', font.size);
+              }
+              // text background
+              if (!_.isUndefined(font.background)) {
+                ent.css('background-color', font.background);
+                ent.css('text-shadow', '1px 1px 1px ' + font.background);
+                ent.css('border', '1px solid ' + font.background);
+              }
+            } // /font
+          } // /highscore
+          if (comp.slug === 'title') {
+
+            var ent = Crafty.e(comp.slug).attr({
+              x: x_,
+              y: y_
+            })
+
+            if (!_.isUndefined(comp.properties) && !_.isUndefined(comp.properties.font)) {
+              var font = comp.properties.font;
+              // font color
+              if (!_.isUndefined(font.color)) {
+                ent.css('color', font.color);
+              }
+              // font family
+              if (!_.isUndefined(font.family)) {
+                ent.css('font-family', font.family);
+              }
+              // font size
+              if (!_.isUndefined(font.size)) {
+                ent.css('font-size', font.size);
+              }
+              // text background
+              if (!_.isUndefined(font.background)) {
+                ent.css('background-color', font.background);
+                ent.css('text-shadow', '1px 1px 1px ' + font.background);
+                ent.css('border', '1px solid ' + font.background);
+              }
+            } // /font
+          } // /title
+        });
+
+        // game comps
+        _.each(scene.gameComponents, function(comp) {
+          // position
+          var x_ = comp.position.column * Parser.blockSize;
+          var y_ = comp.position.row * Parser.blockSize;
+
+          Crafty.e(comp.slug).attr({
+            x: x_,
+            y: y_,
+            w: Parser.blockSize,
+            h: Parser.blockSize
+          });
+
+        });
 
         // game on Yeah!
       });
@@ -389,24 +503,22 @@ var Parser = {
     _.each(components, function(component) {
       var props = component.properties;
 
-      console.log(component)
-
       var sprite = _.isString(props.sprite) ? props.sprite : false;
 
-      var comp = Crafty.c(component.slug, {
+      Crafty.c(component.slug, {
         init: function() {
           var this_ = this;
 
           // for all game comps
-          this_.addComponent("2D", "Canvas");
+          this_.addComponent('2D', 'Canvas');
 
           // sprite
-          if(sprite) {
-            this_.addComponent(sprite+"-sprite");
+          if (sprite) {
+            this_.addComponent(sprite + "-sprite");
           }
 
           // gravity
-          if(_.isObject(props.gravity)) {
+          if (_.isObject(props.gravity)) {
             var sign = props.gravity.direction ? 1 : -1;
 
             this_.gravity("platform");
@@ -414,11 +526,11 @@ var Parser = {
           }
 
           // controls
-          if(_.isObject(props.controls)) {
+          if (_.isObject(props.controls)) {
             var speed = _.isNumber(props.controls.speed) ? props.controls.speed : 4;
 
             // twoway === platform
-            if(props.controls.method === 'Fourway') {
+            if (props.controls.method === 'Fourway') {
               var jumpHeight = _.isNumber(props.controls.jumpHeight) ? props.controls.jumpHeight : 12;
 
               this_.addComponent('Controls', 'Keyboard', 'Gravity');
@@ -432,7 +544,7 @@ var Parser = {
               this_.addComponent('Fourway', 'Keyboard');
               this_.speed(speed);
             }
-*/
+            */
           } else {
             this_.addComponent('platform');
           }
@@ -443,57 +555,79 @@ var Parser = {
 
     return true;
   },
-  createSceneComponents: function(components) {
+  createSceneComponents: function(scenes) {
 
-    _.each(components, function(component) {
-      var props = component.properties;
+    var path = '/static/img/components/',
+      ext = '.png';
 
-      console.log(component)
+    _.each(scenes, function(scene) {
+      _.each(scene.sceneComponents, function(comp) {
 
-      var sprite = _.isString(props.sprite) ? props.sprite : false;
+        // volume button
+        if (comp.slug === 'volume') {
+          Crafty.c(comp.slug, {
+            init: function() {
+              var this_ = this;
+              var off = _.isUndefined(Crafty.magos.volume) || Crafty.magos.volume ? '' : '-off';
 
-      var comp = Crafty.c(component.slug, {
-        init: function() {
-          var this_ = this;
-
-          // for all game comps
-          this_.addComponent("2D", "Canvas");
-
-          // sprite
-          if(sprite) {
-            this_.addComponent(sprite+"-sprite");
-          }
-
-          // gravity
-          if(_.isObject(props.gravity)) {
-            var sign = props.gravity.direction ? 1 : -1;
-
-            this_.gravity("platform");
-            this_.gravityConst(sign * props.gravity.strength);
-          }
-
-          // controls
-          if(_.isObject(props.controls)) {
-            var speed = _.isNumber(props.controls.speed) ? props.controls.speed : 4;
-
-            // twoway === platform
-            if(props.controls.method === 'Twoway') {
-              var jumpHeight = _.isNumber(props.controls.jumpHeight) ? props.controls.jumpHeight : 12;
-
-              this_.addComponent('Controls', 'Keyboard');
-              this_.Controls(speed, jumpHeight);
-              this_.gravity('platform');
+              this_.addComponent('2D', 'DOM', 'Image');
+              this_.image(path + comp.slug + off + ext);
+              this_.addComponent('volume-button'); // class for click event and styling
             }
+          });
+        }
 
-            // fourway
-            if(props.controls.method === 'Fourway') {
-              this_.addComponent('Fourway', 'Keyboard');
-              this_.speed(speed);
+        // time
+        if (comp.slug === 'time') {
+          Crafty.c(comp.slug, {
+            init: function() {
+              var this_ = this;
+
+              this_.addComponent('2D', 'DOM', 'Image');
+              this_.image(path + comp.slug + ext);
             }
+          });
+        }
 
-          }
+        // start new game -button
+        if (comp.slug === 'play') {
+          Crafty.c(comp.slug, {
+            init: function() {
+              var this_ = this;
 
-        } // /init
+              this_.addComponent('2D', 'DOM', 'Text');
+              this_.text('Start New Game')
+              this_.addComponent('start-button'); // class for click event and styling
+            }
+          });
+        }
+
+        // highscore
+        if (comp.slug === 'highscore') {
+          Crafty.c(comp.slug, {
+            init: function() {
+              var this_ = this;
+
+              this_.addComponent('2D', 'DOM');
+              // trigger event to do more and append list in right place
+              $(document).trigger('getHighscores');
+            }
+          });
+        }
+
+        // title
+        if (comp.slug === 'title') {
+          Crafty.c(comp.slug, {
+            init: function() {
+              var this_ = this;
+
+              this_.addComponent('2D', 'DOM', 'Text');
+              this_.text(Parser.game.title);
+            }
+          });
+        }
+
+
       });
     });
 
