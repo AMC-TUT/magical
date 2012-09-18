@@ -2282,8 +2282,14 @@ Crafty.c("Gravity", {
 
 		//Increase by 1 to make sure map.search() finds the floor
 		pos._y++;
+		
+		// magos overwrite (make component)
+		// 4 pixels from bottom is only effective area for gravity
+		pos._y = pos._y + 28;
+		pos._h = 4; // 60+4=64
+		// overwrite ends
 
-		// plattis overwrite (make component)
+		// magos overwrite (make component)
 		// 4 pixels from bottom is only effective area for gravity
 		pos._y = pos._y + 60;
 		pos._h = 4; // 60+4=64

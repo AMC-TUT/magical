@@ -601,7 +601,8 @@ var Parser = {
 
               this_.addComponent('2D', 'DOM');
               // trigger event to do more and append list in right place
-              $(document).trigger('getHighscores');
+              //$(document).trigger('getHighscores');
+              Parser.getHighscores();
             }
           });
         }
@@ -623,6 +624,29 @@ var Parser = {
     });
 
     return true;
+  },
+  getHighscores: function() {
+    var slug = Parser.game.slug;
+
+    socket.emit('getHighscore', slug, function(data) {
+
+      if(_.isObject(data)) {
+
+        var el = '<h2>TOP5</h2>';
+        el += '<ol>';
+
+        _.each(data.results, function(result) {
+          el += '<li>'+result.score+' '+result.firstName+' '+result.lastName+'</li>';
+        });
+
+        el += '</ol>';
+
+        $('#cr-stage').find('.highscore').append(el);
+
+      }
+
+    });
+
   },
   getGame: function(slug, webSocket) {
     socket = webSocket;

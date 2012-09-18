@@ -50,18 +50,4 @@
     Crafty.scene('game');
   });
 
-  $(document).on('getHighscores', function(event) {
-    var el = '<h2>TOP5</h2>';
-    el += '<ol>';
-    el += '<li>Lorem Ipsum</li>';
-    el += '<li>Consectetur Adipisicing</li>';
-    el += '<li>Deserunt Mollit</li>';
-    el += '<li>Excepteur Sint Occaecat</li>';
-    el += '<li>Ullamco Laboris</li>';
-    el += '</ol>';
-
-    $('#cr-stage').find('.highscore').append(el);
-
-  });
-
 })(jQuery);

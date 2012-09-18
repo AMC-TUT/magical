@@ -244,6 +244,19 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
       });
   });
 
+  socket.on('getHighscore', function(slug, fn) {
+console.log('getHighscore')
+    slug = _.isString(slug) ? slug : '';
+    // GET /v1/highscores/:game
+
+    // query from django
+    var json = fs.readFileSync('static/json/fakeHighscore.json', 'utf8'); // ?offset=0&limit=5
+
+    var highscore = JSON.parse(json);
+
+    fn(highscore);
+  });
+
   socket.on('getSceneComponents', function (noop, fn) {
       // read json file
       var json = fs.readFileSync('static/json/sceneComponents.json', 'utf8');
