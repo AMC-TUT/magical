@@ -521,7 +521,7 @@ var Parser = {
             var speed = _.isNumber(props.controls.speed) ? props.controls.speed : 4;
 
             // twoway === platform
-            if (props.controls.method === 'Fourway') {
+            if (props.controls.method === 'Twoway') {
               var jumpHeight = _.isNumber(props.controls.jumpHeight) ? props.controls.jumpHeight : 12;
 
               this_.addComponent('Controls', 'Keyboard', 'Gravity');
@@ -529,12 +529,12 @@ var Parser = {
               this_.gravity('platform');
             }
 
-            /* // fourway
+            // fourway
             if(props.controls.method === 'Fourway') {
               this_.addComponent('Fourway', 'Keyboard');
               this_.speed(speed);
             }
-            */
+
 
           } else {
             this_.addComponent('platform');
