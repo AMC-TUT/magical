@@ -5,9 +5,9 @@
     "state": true,
     "cloned": false,
     "canvas": {
-        "blockSize": 48,
-        "rows": 6,
-        "columns": 14
+        "blockSize": 32,
+        "rows": 12,
+        "columns": 16
     },
     "description": "The quick brown fox jumps over the lazy dog",
     "authors": [

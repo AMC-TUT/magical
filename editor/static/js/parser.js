@@ -307,9 +307,6 @@ var Parser = {
     var path = '/static/game/audios';
 
     _.each(audios, function(audio) {
-      console.log('audio')
-      console.log(audio);
-
       var obj = {},
         array = [
         path + '/mp3/' + slug + '.mp3', path + '/ogg/' + slug + '.ogg', path + '/wav/' + slug + '.wav'];
@@ -324,36 +321,28 @@ var Parser = {
     // images path
     var path = '/static/game/sprites/',
       ext = '.png';
-      console.log(components)
-
-
 
     _.each(components, function(component) {
-
       // vars
       var sprite = (!_.isUndefined(component.properties.sprite) && _.isString(component.properties.sprite)) ? component.properties.sprite : '';
-console.log('sprite:' + sprite);
       // if exists
       if (sprite.length) {
         var obj = {};
         obj[sprite + '-sprite'] = [0, 0];
-console.log('SAAATANAANANNANN' + path+sprite+ext)
 
         Crafty.sprite(Parser.blockSize, path + sprite + ext, obj);
       }
-
     }); // each
     return true;
   },
   createScenes: function(scenes) {
 
     _.each(scenes, function(scene) {
-      console.log(scene.name);
+
       // background
       var backgroundComp = _.find(scene.sceneComponents, function(comp) {
         return comp.slug === 'background-image';
       });
-      console.log(backgroundComp);
 
       var backgroundImage = null,
         path = '/static/game/sprites/',
@@ -497,6 +486,8 @@ console.log('SAAATANAANANNANN' + path+sprite+ext)
       });
 
     });
+
+    return true;
   },
   createGameComponents: function(components) {
 
@@ -510,7 +501,7 @@ console.log('SAAATANAANANNANN' + path+sprite+ext)
           var this_ = this;
 
           // for all game comps
-          this_.addComponent('2D', 'Canvas');
+          this_.addComponent('2D', 'Canvas', 'Sprite');
 
           // sprite
           if (sprite) {
@@ -518,7 +509,7 @@ console.log('SAAATANAANANNANN' + path+sprite+ext)
           }
 
           // gravity
-          if (_.isObject(props.gravity)) {
+          if (!_.isUndefined(props.gravity)) {
             var sign = props.gravity.direction ? 1 : -1;
 
             this_.gravity("platform");
@@ -526,7 +517,7 @@ console.log('SAAATANAANANNANN' + path+sprite+ext)
           }
 
           // controls
-          if (_.isObject(props.controls)) {
+          if (!_.isUndefined(props.controls)) {
             var speed = _.isNumber(props.controls.speed) ? props.controls.speed : 4;
 
             // twoway === platform
@@ -538,13 +529,13 @@ console.log('SAAATANAANANNANN' + path+sprite+ext)
               this_.gravity('platform');
             }
 
-            // fourway
-            /*
+            /* // fourway
             if(props.controls.method === 'Fourway') {
               this_.addComponent('Fourway', 'Keyboard');
               this_.speed(speed);
             }
             */
+
           } else {
             this_.addComponent('platform');
           }
