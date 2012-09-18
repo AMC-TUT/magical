@@ -11,3 +11,4 @@ body{margin:0;padding:0;background:#111;font-size:16px;font-family:"Helvetica Ne
 .highscore ol{margin:0;padding:10px 20px 10px 20px;list-style:none;min-width:250px;min-height:150px;}
 .highscore li{margin:0;padding:0;line-height:1.4;list-style:none;white-space:nowrap;}
 .volume-button{cursor:pointer;}
+.loader{text-align:center;padding:30px;}.loader .loader-procent{color:white;font-weight:bold;font-size:20px;margin:10px 0 0;}

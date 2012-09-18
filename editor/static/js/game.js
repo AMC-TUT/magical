@@ -1,5 +1,7 @@
 (function($) {
 
+  "use strict";
+
   // socket.io
   var pathname = window.location.pathname;
   var address = 'http://' + window.location.hostname + '/editor';

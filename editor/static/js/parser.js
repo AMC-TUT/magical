@@ -1,18 +1,5 @@
 /*
-Crafty.init(Game.canvas.width * Game.canvas.blockSize, Game.canvas.height * Game.canvas.blockSize);
 
-_.each(Game.scenes, function(scene) {
-  Crafty.scene(scene.name, function() {
-
-    var bg = _.find(scene.elements, function(element) {
-      return element.type === "background-image";
-    });
-
-    Crafty.background(bg ? "url(" + bg.src + ")" : "#fff");
-
-  });
-
-}); // each scene
 _.each(Game.audios, function(audio) {
 
   if (audio.type === "file") {
@@ -23,21 +10,7 @@ _.each(Game.audios, function(audio) {
   }
 
 }); // each audio
-// Sprites
-_.each(Game.sprites, function(sprite) {
 
-  if (sprite.type === "file") {
-    var id = sprite.id,
-      content = sprite.content,
-      obj = {};
-
-    obj[id] = [0, 0];
-
-    Crafty.sprite(Game.canvas.blockSize, "/assets/img/" + content + ".png", obj);
-
-  }
-
-}); // each sprite
 Crafty.scene(Game.scenes[1].name);
 
 _.each(Game.elements, function(element) {
@@ -227,19 +200,8 @@ _.each(Game.elements, function(element) {
 
   });
 });
-
-_.each(Game.canvas.elements, function(element) {
-  var blockSize = Game.canvas.blockSize;
-  Crafty.e(element.type).attr({
-    x: element.position.x * blockSize,
-    y: element.position.y * blockSize,
-    w: blockSize,
-    h: blockSize
-  });
-
-});
-
 */
+
 
 Crafty.c("Controls", {
   init: function() {
@@ -285,7 +247,7 @@ var Parser = {
     var scenes = Parser.createScenes(game.revision.scenes);
     console.log('scenes:' + scenes);
 
-    Crafty.scene("intro");
+    Crafty.scene("loading");
 
   },
   initGame: function(canvas) {
@@ -487,6 +449,46 @@ var Parser = {
 
     });
 
+    // static magos loader scene
+    Crafty.scene("loading", function() {
+      // canvas size
+      var width = Parser.game.canvas.columns * Parser.game.canvas.blockSize;
+
+      Crafty.e("HTML").append('<div style="width:' + width + 'px;" class="loader">' + ' <img src="/static/img/logo.png" class="loader-logo" />' + ' <p class="loader-procent">0%</p>' + ' </div>');
+
+      var assets = [],
+        path = '/static/game/sprites/',
+        ext = '.png';
+
+      // game comps
+      _.each(Parser.game.revision.gameComponents, function(comp) {
+        if (!_.isUndefined(comp.properties.sprite) && _.isString(comp.properties.sprite)) {
+          assets.push(path + comp.properties.sprite + ext);
+        }
+      });
+      // scene comps
+      _.each(scenes, function(scene) {
+        _.each(scene.sceneComponents, function(comp) {
+          if (!_.isUndefined(comp.sprite) && _.isString(comp.sprite)) {
+            assets.push(path + comp.sprite + ext);
+          }
+        });
+      });
+
+      // TODO audio assets
+      Crafty.load(
+      assets, function() {
+        setTimeout(function() {
+          Crafty.scene("intro");
+        }, 500);
+      }, function(e) {
+        $('.loader-procent').text(Math.round(e.percent) + "%");
+      }, function(e) {
+        alert('Error loading ' + e.src + ' while loading game assets (loaded ' + e.loaded + ' of ' + e.total + ')');
+      });
+
+    });
+
     return true;
   },
   createGameComponents: function(components) {
@@ -530,7 +532,7 @@ var Parser = {
             }
 
             // fourway
-            if(props.controls.method === 'Fourway') {
+            if (props.controls.method === 'Fourway') {
               this_.addComponent('Fourway', 'Keyboard');
               this_.speed(speed);
             }
@@ -630,13 +632,13 @@ var Parser = {
 
     socket.emit('getHighscore', slug, function(data) {
 
-      if(_.isObject(data)) {
+      if (_.isObject(data)) {
 
         var el = '<h2>TOP5</h2>';
         el += '<ol>';
 
         _.each(data.results, function(result) {
-          el += '<li>'+result.score+' '+result.firstName+' '+result.lastName+'</li>';
+          el += '<li>' + result.score + ' ' + result.firstName + ' ' + result.lastName + '</li>';
         });
 
         el += '</ol>';
@@ -646,7 +648,6 @@ var Parser = {
       }
 
     });
-
   },
   getGame: function(slug, webSocket) {
     socket = webSocket;
