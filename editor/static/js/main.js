@@ -315,8 +315,7 @@ App.SceneComponentsView = Em.View.extend({
 * GameComponent
 **************************/
 
-App.SceneGameComponent = Em.Object.extend({
-  // todo parent
+App.CanvasComponent = Em.Object.extend({
   oid: null,
   slug: null,
   position: null
@@ -1114,7 +1113,7 @@ App.DataSource = Ember.Object.extend({
       game.set('authors', authors);
 
       var revision = data.revision;
-      console.log(data)
+      console.log(data);
       var gameComponentsA = [];
       _.each(revision.gameComponents, function(component) {
        gameComponentsA.push( App.GameComponent.create({ title: component.title, slug: component.slug, properties: component.properties }) );
@@ -1126,15 +1125,17 @@ App.DataSource = Ember.Object.extend({
 
         var sceneArray = [];
         _.each(scene.sceneComponents, function(component) {
-         sceneArray.push( App.SceneComponent.create({ title: component.title, slug: component.slug, sprite: component.sprite, properties: component.properties }) );
-           // TODO component properties
-         });
+          //sceneArray.push( App.SceneComponent.create({ title: component.title, slug: component.slug, sprite: component.sprite, properties: component.properties }) );
+          sceneArray.push( App.CanvasComponent.create({ oid: component.oid, slug: component.slug, position: component.position, sprite: component.sprite }) );
+          // TODO component properties
+        });
 
         var gameArray = [];
         _.each(scene.gameComponents, function(component) {
-         gameArray.push( App.GameComponent.create({ title: component.title, slug: component.slug, properties: component.properties }) );
-           // TODO component properties
-         });
+          // gameArray.push( App.GameComponent.create({ title: component.title, slug: component.slug, properties: component.properties }) );
+          gameArray.push( App.CanvasComponent.create({ oid: component.oid, slug: component.slug, position: component.position }) );
+          // TODO component properties
+        });
 
         //
         var obj = App.Scene.create({
@@ -1195,7 +1196,6 @@ socket.on('connect_failed', function (reason) {
 socket.on('connect', function () {
   console.log('Socket.IO - Connected to magos');
 });
-
 
 socket.emit('shout', 'HUUUUUUTO!', function(data) {
   if(_.isObject(shout)) {
@@ -1456,7 +1456,7 @@ function initCanvasDroppable() {
         var row = $row.closest('table').find('tr').index($row);
         var oid = slug + column + row;
 
-        var obj = App.SceneGameComponent.create({
+        var obj = App.CanvasComponent.create({
           oid: oid,
           slug: slug,
           position: { column: column, row: row }

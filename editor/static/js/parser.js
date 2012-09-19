@@ -130,20 +130,7 @@ _.each(Game.elements, function(element) {
         }
 
       } // if controls
-      if (element.attr.gravitation) {
 
-        // element with gravity
-        if (element.attr.gravitation.on) {
-          var dir = element.attr.gravitation.inverted ? -1 : 1;
-          this.addComponent("Gravity").gravity("Platform").gravityConst(dir * (element.attr.gravitation.strength || 0.2));
-        }
-
-        // act as platform
-        if (element.attr.gravitation.platform) {
-          this.addComponent("Platform");
-        }
-
-      }
 
       if (element.attr.collisions) {
 
@@ -187,19 +174,6 @@ _.each(Game.elements, function(element) {
 
         });
 
-        // element with gravity
-        if (element.attr.gravitation.on) {
-          var dir = element.attr.gravitation.inverted ? -1 : 1;
-          this.addComponent("Gravity").gravity("Platform").gravityConst(dir * (element.attr.gravitation.strength || 0.2));
-        }
-
-
-
-      }
-    }
-
-  });
-});
 */
 
 
@@ -503,18 +477,21 @@ var Parser = {
           var this_ = this;
 
           // for all game comps
-          this_.addComponent('2D', 'Canvas', 'Sprite');
+          this_.addComponent('2D', 'Canvas', 'Image');
 
           // sprite
           if (sprite) {
-            this_.addComponent(sprite + "-sprite");
+            // this_.addComponent(sprite + "-sprite");
+            // sprite impl. exists and works. uncomment previous
+            // line and comment out next line to use sprite impl.
+            this_.image('/static/game/sprites/'+sprite+'.png');
           }
 
           // gravity
           if (!_.isUndefined(props.gravity)) {
             var sign = props.gravity.direction ? 1 : -1;
 
-            this_.gravity("platform");
+            this_.gravity("Platform");
             this_.gravityConst(sign * props.gravity.strength);
           }
 
@@ -528,7 +505,7 @@ var Parser = {
 
               this_.addComponent('Controls', 'Keyboard', 'Gravity');
               this_.Controls(speed, jumpHeight);
-              this_.gravity('platform');
+              this_.gravity('Platform');
             }
 
             // fourway
@@ -537,9 +514,8 @@ var Parser = {
               this_.speed(speed);
             }
 
-
           } else {
-            this_.addComponent('platform');
+            this_.addComponent('Platform');
           }
 
         } // /init
