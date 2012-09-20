@@ -284,7 +284,7 @@ var Parser = {
         path = '/static/game/sprites/',
         ext = '.png';
 
-      if (_.isObject(backgroundComp) && _.isString(backgroundComp.sprite)) {
+      if (_.isObject(backgroundComp) && _.isObject(backgroundComp.properties) && _.isString(backgroundComp.properties.sprite)) {
         backgroundImage = path + backgroundComp.sprite + ext;
       }
 
@@ -321,7 +321,7 @@ var Parser = {
               y: y_
             })
 
-            if (!_.isUndefined(comp.properties) && !_.isUndefined(comp.properties.font)) {
+            if (_.isObject(comp.properties) && _.isObject(comp.properties.font)) {
               var font = comp.properties.font;
               // font color
               if (!_.isUndefined(font.color)) {
