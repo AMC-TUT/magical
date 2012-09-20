@@ -437,7 +437,8 @@
                       {{#each potions}}
                       <tr>
                         <td>
-                          <img class="potion-icon inner-shadow draggable-item" {{bindAttr data-potion="title"}} src="/static/img/icons/potion.png" {{bindAttr alt="title"}} />
+                        {{log title}}
+                          <img class="potion-icon inner-shadow draggable-item" {{bindAttr data-potion="title"}} {{bindAttr src=""}} {{bindAttr alt="title"}} /> <!-- /static/img/icons/icon-collision.png -->
                         </td>
                         <td class="capitalize">
                           {{title}}

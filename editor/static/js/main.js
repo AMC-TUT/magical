@@ -745,6 +745,19 @@
   });
 
   /**************************
+   * Potion
+   **************************/
+
+  App.Potion = Em.Object.extend({
+    title: null,
+    properties: null,
+    icon: function() {
+      var icon = this.get('title');
+      return '/static/img/icons/icon-' + icon + '.png';
+    }.property('title')
+  });
+
+  /**************************
    * Magos Controller
    **************************/
 
@@ -1087,11 +1100,18 @@ Em.ContainerView.create({
         var components = [];
 
         _.each(data, function(obj) {
+
+          var potions = [];
+          _.each(obj.potions, function(potion) {
+            var p = App.Potion.create({ 'title': potion.title, 'properties': potion.properties });
+            potions.push(p);
+          });
+
           components.push(
-          App.Magos.create({
-            "magos": obj.magos,
-            "potions": obj.potions
-          }));
+            App.Magos.create({
+              "magos": obj.magos,
+              "potions": potions
+            }));
         });
 
         callback(components);
