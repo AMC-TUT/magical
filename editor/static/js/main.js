@@ -757,6 +757,11 @@
     }.property('title')
   });
 
+  App.PotionView = Em.View.extend({
+    content: null,
+    template: Ember.Handlebars.compile('<img {{bindAttr src="content.icon"}} {{bindAttr data-potion="content.title"}} {{bindAttr alt="title"}} class="potion-icon inner-shadow draggable-item" />')
+  });
+
   /**************************
    * Magos Controller
    **************************/
