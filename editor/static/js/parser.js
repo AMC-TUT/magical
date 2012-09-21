@@ -348,7 +348,7 @@ var Parser = {
             var ent = Crafty.e(comp.slug).attr({
               x: x_,
               y: y_
-            })
+            });
 
             if (!_.isUndefined(comp.properties) && !_.isUndefined(comp.properties.font)) {
               var font = comp.properties.font;
@@ -377,7 +377,7 @@ var Parser = {
             var ent = Crafty.e(comp.slug).attr({
               x: x_,
               y: y_
-            })
+            });
 
             if (!_.isUndefined(comp.properties) && !_.isUndefined(comp.properties.font)) {
               var font = comp.properties.font;
@@ -405,6 +405,7 @@ var Parser = {
 
         // game comps
         _.each(scene.gameComponents, function(comp) {
+
           // position
           var x_ = comp.position.column * Parser.blockSize;
           var y_ = comp.position.row * Parser.blockSize;
@@ -484,7 +485,7 @@ var Parser = {
             // this_.addComponent(sprite + "-sprite");
             // sprite impl. exists and works. uncomment previous
             // line and comment out next line to use sprite impl.
-            this_.image('/static/game/sprites/'+sprite+'.png');
+            this_.image('/static/game/sprites/' + sprite + '.png');
           }
 
           // gravity
@@ -498,6 +499,9 @@ var Parser = {
           // controls
           if (!_.isUndefined(props.controls)) {
             var speed = _.isNumber(props.controls.speed) ? props.controls.speed : 4;
+
+            // if controllapble then place on top in z-level
+            this_.attr({ z: 100 });
 
             // twoway === platform
             if (props.controls.method === 'Twoway') {
@@ -517,6 +521,16 @@ var Parser = {
           } else {
             this_.addComponent('Platform');
           }
+
+          // bind events
+          this_.bind("EnterFrame", function(frame) {
+            //destroy if it goes out of bounds
+            if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
+              this.destroy();
+              alert('this.has.destroyed');
+              Crafty.scene('outro');
+            }
+          });
 
         } // /init
       });

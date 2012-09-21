@@ -1852,8 +1852,18 @@ Crafty.c("2D", {
 			rect = { x: x, y: y, w: w, h: h };
 		}
 
-		return obj._x < rect.x + rect.w && obj._x + obj._w > rect.x &&
-			   obj._y < rect.y + rect.h && obj._h + obj._y > rect.y;
+		// magos overwrite part 2
+		// target obj -> just top level pixels to intersect comparison
+		if(x.magos !== "undefined") {
+			var newHeight = 15;
+			return obj._x < rect.x + rect.w && obj._x + obj._w > rect.x
+				&& obj._y < rect.y + rect.h && newHeight + obj._y > rect.y;
+		}
+		// overwrite ends
+
+		// original
+		 return obj._x < rect.x + rect.w && obj._x + obj._w > rect.x
+			&& obj._y < rect.y + rect.h && obj._h + obj._y > rect.y;
 	},
 
 	/**@
@@ -2282,17 +2292,17 @@ Crafty.c("Gravity", {
 
 		//Increase by 1 to make sure map.search() finds the floor
 		pos._y++;
-		
-		// magos overwrite (make component)
-		// 4 pixels from bottom is only effective area for gravity
-		pos._y = pos._y + 28;
-		pos._h = 4; // 60+4=64
-		// overwrite ends
 
 		// magos overwrite (make component)
-		// 4 pixels from bottom is only effective area for gravity
-		pos._y = pos._y + 60;
-		pos._h = 4; // 60+4=64
+		// just hit pixels from bottom is only effective area for gravity
+		var hitPixels = 2;
+
+		pos._y = pos._y + pos._h;
+		pos._h = hitPixels;
+		// testi x
+		pos._w = pos._w - 30;
+		pos._x = pos._x + 15;
+		pos._plattis = true;
 		// overwrite ends
 
 		//map.search wants _x and intersect wants x...

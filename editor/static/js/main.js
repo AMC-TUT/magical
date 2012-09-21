@@ -1472,9 +1472,10 @@ Em.ContainerView.create({
             var row = gameComponent.position.row,
               column = gameComponent.position.column,
               slug = gameComponent.slug,
-              oid = gameComponent.oid;
+              oid = gameComponent.oid,
+              sprite = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).getPath('properties.sprite');
 
-            var img = '<img src="../static/game/sprites/player.png" data-slug="' + slug + '" data-oid ="' + oid + '" class="canvas-item">';
+            var img = '<img src="../static/game/sprites/'+sprite+'.png" data-slug="' + slug + '" data-oid ="' + oid + '" class="canvas-item">';
 
             $scene.find('tr:nth-child(' + row + ')').find('td:nth-child(' + column + ')').append(img);
           });

@@ -33,8 +33,8 @@
                         "sprite": "player",
                         "controls": {
                             "method": "Twoway",
-                            "speed": 4,
-                            "jumpHeight": 10,
+                            "speed": 2,
+                            "jumpHeight": 8,
                             "grid": false
                         },
                         "gravitation": {
