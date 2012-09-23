@@ -292,7 +292,7 @@
       });
 
       this.$("> img").draggable({
-        helper: "clone",
+        //helper: "clone",
         //snap: ".canvas-cell:empty",
         // grid: [32, 32],
         snapMode: "inner",
@@ -304,13 +304,24 @@
           App.selectedComponentController.set('content', selected);
         },
         stop: function(event, ui) {
+          //console.log($(this));
           // console.log('saving');
+        },
+        helper: function(event, ui) {
+          var slug = $(this).data('slug'),
+            $clone = null;
+
+          /* TODO show elements as they are on canvas and not just icon
+          if(slug === 'play') {
+            $clone = $(this).clone().attr('src', '/static/img/start-button.png').css({ 'width': '187px', 'height': '59px' });
+          } else {
+            $clone = $(this)
+          }
+
+          return $clone;
+          */
+          return $(this);
         }
-        /*,
-      helper: function(event, ui) {
-        console.log($(ui).safeClone());
-        return $(ui).safeClone();
-      } */
       });
     },
     click: function(event) {

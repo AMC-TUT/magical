@@ -234,7 +234,8 @@ var Parser = {
     Crafty.init(width, height);
     // obj for some magos vars
     Crafty.magos = {};
-    Crafty.magos.audio = true;
+    Crafty.magos.audio = {}; // = true;
+    Crafty.magos.audio.mute = false;
 
     return true;
   },
