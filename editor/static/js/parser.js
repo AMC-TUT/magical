@@ -351,7 +351,7 @@ var Parser = {
               y: y_
             });
 
-            if (!_.isUndefined(comp.properties) && !_.isUndefined(comp.properties.font)) {
+            if (_.isObject(comp.properties) && _.isObject(comp.properties.font)) {
               var font = comp.properties.font;
               // font color
               if (!_.isUndefined(font.color)) {
@@ -380,7 +380,7 @@ var Parser = {
               y: y_
             });
 
-            if (!_.isUndefined(comp.properties) && !_.isUndefined(comp.properties.font)) {
+            if (_.isObject(comp.properties) && _.isObject(comp.properties.font)) {
               var font = comp.properties.font;
               // font color
               if (!_.isUndefined(font.color)) {
@@ -502,13 +502,15 @@ var Parser = {
             var speed = _.isNumber(props.controls.speed) ? props.controls.speed : 4;
 
             // if controllapble then place on top in z-level
-            this_.attr({ z: 100 });
+            this_.attr({
+              z: 100
+            });
 
             // twoway === platform
             if (props.controls.method === 'Twoway') {
               var jumpHeight = _.isNumber(props.controls.jumpHeight) ? props.controls.jumpHeight : 12;
 
-              this_.addComponent('Controls', 'Keyboard', 'Gravity');
+              this_.addComponent('Controls', 'Keyboard', 'Gravity', 'Collision');
               this_.Controls(speed, jumpHeight);
               this_.gravity('Platform');
             }
@@ -528,8 +530,20 @@ var Parser = {
             //destroy if it goes out of bounds
             if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
               this.destroy();
-              alert('this.has.destroyed');
-              Crafty.scene('outro');
+              setTimeout(function() {
+                Crafty.scene('outro');
+              }, 500)
+
+            }
+          });
+
+          this_.bind('Moved', function(from) {
+            // hit solid
+            if (this.has('Collision') && this.hit('Solid')) {
+              this.attr({
+                x: from.x,
+                y: from.y
+              });
             }
           });
 
@@ -634,7 +648,7 @@ var Parser = {
 
         el += '</ol>';
 
-        $('#cr-stage').find('.highscore').append(el);
+        $('#cr-stage').find('.highscore').empty().append(el);
 
       }
 

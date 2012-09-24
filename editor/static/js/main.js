@@ -86,17 +86,30 @@
         // set content
         controller.set('content', data);
       });
-    },
-    contentObserver: function() {
-      // console.log('gameController.observer content change');
-      var mode = 0;
-      // console.log('gameObj')
-      // console.log(gameObj);
-      App.dataSource.saveGame(mode, function(data) {
-        console.log('saveGame: ' + data);
+    }
+    /*
+    ,
+    titleObserver: function() {
+      App.dataSource.saveGame(0, function(data) {
+        console.log('save (gameController)');
       });
-
-    }.observes('content.title')
+    }.observes('content.title'),
+    stateObserver: function() {
+      App.dataSource.saveGame(0, function(data) {
+        console.log('save (gameController)');
+      });
+    }.observes('content.state'),
+    canvasObserver: function() {
+      App.dataSource.saveGame(0, function(data) {
+        console.log('save (gameController)');
+      });
+    }.observes('content.canvas'),
+    descriptionObserver: function() {
+      App.dataSource.saveGame(0, function(data) {
+        console.log('save (gameController)');
+      });
+    }.observes('content.description')
+    */
   });
 
   /**************************
@@ -107,12 +120,34 @@
     scenes: [],
     audios: [],
     sprites: [],
-    gameComponents: [],
-    sceneComponents: []
+    gameComponents: []
   });
 
   App.revisionController = Em.Object.create({
     contentBinding: 'App.gameController.content.revision'
+    /*
+    ,
+    audiosObserver: function() {
+      App.dataSource.saveGame(0, function(data) {
+        console.log('save (revisionController)');
+      });
+    }.observes('content.audios.@each'),
+    spritesObserver: function() {
+      App.dataSource.saveGame(0, function(data) {
+        console.log('save (revisionController)');
+      });
+    }.observes('content.sprites.@each'),
+    scenesObserver: function() {
+      App.dataSource.saveGame(0, function(data) {
+        console.log('save (revisionController)');
+      });
+    }.observes('content.scenes.@each'),
+    gameComponentsObserver: function() {
+      App.dataSource.saveGame(0, function(data) {
+        console.log('save (revisionController)');
+      });
+    }.observes('content.gameComponents.@each')
+    */
   });
 
   /**************************
@@ -245,6 +280,7 @@
       return scenesStr.trim();
 
     }.property('scenes')
+
   });
 
   App.sceneComponentsController = Em.ArrayController.create({
@@ -283,7 +319,9 @@
     uiSelected: false,
     alwaysTrue: true,
     didInsertElement: function() {
-      this.$('> img').tooltip({
+      var $li = this.$();
+
+      $li.find('> img').tooltip({
         delay: {
           show: 500,
           hide: 100
@@ -291,8 +329,23 @@
         placement: 'top'
       });
 
+      var scene = this.get('scene');
+/*
+      $li.find('> img').draggable({
+        helper: "clone",
+        snap: ".canvas-cell:empty",
+        snapMode: "inner",
+        start: function() {
+          var view = Ember.View.views[$(this).parent().attr('id')];
+
+          var selected = view.get('item');
+          // set selected component
+          App.selectedComponentController.set('content', selected);
+        }
+      });
+*/
       this.$("> img").draggable({
-        //helper: "clone",
+        helper: "clone",
         //snap: ".canvas-cell:empty",
         // grid: [32, 32],
         snapMode: "inner",
@@ -302,11 +355,8 @@
           var selected = view.get('item');
           // set selected component
           App.selectedComponentController.set('content', selected);
-        },
-        stop: function(event, ui) {
-          //console.log($(this));
-          // console.log('saving');
-        },
+        }
+        /*
         helper: function(event, ui) {
           var slug = $(this).data('slug'),
             $clone = null;
@@ -319,16 +369,65 @@
           }
 
           return $clone;
-          */
+          * /
           return $(this);
         }
+        */
       });
+
+      $li.droppable({
+        greedy: true,
+        accept: ".potion-icon",
+        activeClass: "ui-state-target",
+        hoverClass: "ui-state-active",
+        drop: function(event, ui) {
+          var $tgt = $(this),
+            view = Em.View.views[$tgt.attr('id')],
+            selected = view.get('item');
+
+          // set selected component
+          App.selectedComponentController.set('content', selected);
+          // set user busy
+          App.usersController.setPath('user.busy', true);
+
+          var $draggable = $(ui.draggable),
+            $container = $draggable.closest('.magos-potions'),
+            potion = $draggable.data('potion');
+
+          $container.hide("slide", {
+            direction: "right"
+          }, 250, function() {
+            $container.siblings('.magos-potions.' + potion).show('slide', {
+              direction: "left"
+            }, 250);
+          });
+        }
+      });
+      // ---
     },
-    click: function(event) {
-      var selected = this.get('item');
-      // set selected component
-      App.selectedComponentController.set('content', selected);
-    }
+    eventManager: Ember.Object.create({
+      click: function(event, view) {
+        var selected = view.get('item');
+        // set selected component
+        App.selectedComponentController.set('content', selected);
+        // if user busy, set not busy
+        if (App.usersController.getPath('user.busy')) {
+          App.usersController.setPath('user.busy', false);
+        }
+
+        // if potion form open
+        var $magos = $('.selected-magos');
+        if ($magos.is(':hidden')) {
+          $magos.siblings('.magos-potions').hide('slide', {
+            direction: 'left'
+          }, 250, function() {
+            $magos.show('slide', {
+              direction: 'right'
+            }, 250);
+          });
+        }
+      }
+    })
   });
 
   /**************************
@@ -413,68 +512,66 @@
 
       var scene = this.get('scene');
 
-      if (scene !== 'intro' && scene !== 'outro') {
+      // if (scene !== 'intro' && scene !== 'outro') {
+      var $chest = $('.game-container .item-chest');
 
-        var $chest = $('.game-container .item-chest');
+      $chest.find('li').each(function(index) {
+        $li = $(this);
 
-        $chest.find('li').each(function(index) {
-          $li = $(this);
+        if (!$li.hasClass('add-item') && !$li.hasClass('remove-item')) {
 
-          if (!$li.hasClass('add-item') && !$li.hasClass('remove-item')) {
+          // ---
+          $li.find('> img').draggable({
+            helper: "clone",
+            snap: ".canvas-cell:empty",
+            snapMode: "inner",
+            start: function() {
+              var view = Ember.View.views[$(this).parent().attr('id')];
 
-            // ---
-            $li.find('> img').draggable({
-              helper: "clone",
-              snap: ".canvas-cell:empty",
-              snapMode: "inner",
-              start: function() {
-                var view = Ember.View.views[$(this).parent().attr('id')];
+              var selected = view.get('item');
+              // set selected component
+              App.selectedComponentController.set('content', selected);
+            }
+          });
 
-                var selected = view.get('item');
-                // set selected component
-                App.selectedComponentController.set('content', selected);
-              }
-            });
+          // ---
+          $li.droppable({
+            greedy: true,
+            accept: ".potion-icon",
+            activeClass: "ui-state-target",
+            hoverClass: "ui-state-active",
+            drop: function(event, ui) {
+              var $tgt = $(this),
+                view = Em.View.views[$tgt.attr('id')],
+                selected = view.get('item');
 
-            // ---
-            $li.droppable({
-              greedy: true,
-              accept: ".potion-icon",
-              activeClass: "ui-state-target",
-              hoverClass: "ui-state-active",
-              drop: function(event, ui) {
-                var $tgt = $(this),
-                  view = Em.View.views[$tgt.attr('id')],
-                  selected = view.get('item');
+              // set selected component
+              App.selectedComponentController.set('content', selected);
+              // set user busy
+              App.usersController.setPath('user.busy', true);
 
-                // set selected component
-                App.selectedComponentController.set('content', selected);
-                // set user busy
-                App.usersController.setPath('user.busy', true);
+              var $draggable = $(ui.draggable),
+                $container = $draggable.closest('.magos-potions'),
+                potion = $draggable.data('potion');
 
-                var $draggable = $(ui.draggable),
-                  $container = $draggable.closest('.magos-potions'),
-                  potion = $draggable.data('potion');
+              // play sound
+              var sound = document.querySelector('#potion-sound');
+              sound.play();
 
-                // play sound
-                var sound = document.querySelector('#potion-sound');
-                sound.play();
+              $container.hide("slide", {
+                direction: "right"
+              }, 250, function() {
+                $container.siblings('.magos-potions.' + potion).show('slide', {
+                  direction: "left"
+                }, 250);
+              });
+            }
+          });
 
-                $container.hide("slide", {
-                  direction: "right"
-                }, 250, function() {
-                  $container.siblings('.magos-potions.' + potion).show('slide', {
-                    direction: "left"
-                  }, 250);
-                });
-              }
-            });
+        } // if
+      });
 
-          } // if
-        });
-
-      }
-
+      //  }
     }.observes('scene'),
     didInsertElement: function() {
       var $li = this.$();
@@ -489,53 +586,48 @@
 
       var scene = this.get('scene');
 
-      if (scene !== 'intro' && scene !== 'outro') {
+      $li.find('> img').draggable({
+        helper: "clone",
+        snap: ".canvas-cell:empty",
+        snapMode: "inner",
+        start: function() {
+          var view = Ember.View.views[$(this).parent().attr('id')];
 
-        // ---
-        $li.find('> img').draggable({
-          helper: "clone",
-          snap: ".canvas-cell:empty",
-          snapMode: "inner",
-          start: function() {
-            var view = Ember.View.views[$(this).parent().attr('id')];
+          var selected = view.get('item');
+          // set selected component
+          App.selectedComponentController.set('content', selected);
+        }
+      });
 
-            var selected = view.get('item');
-            // set selected component
-            App.selectedComponentController.set('content', selected);
-          }
-        });
-        // ---
-        $li.droppable({
-          greedy: true,
-          accept: ".potion-icon",
-          activeClass: "ui-state-target",
-          hoverClass: "ui-state-active",
-          drop: function(event, ui) {
-            var $tgt = $(this),
-              view = Em.View.views[$tgt.attr('id')],
-              selected = view.get('item');
+      $li.droppable({
+        greedy: true,
+        accept: ".potion-icon",
+        activeClass: "ui-state-target",
+        hoverClass: "ui-state-active",
+        drop: function(event, ui) {
+          var $tgt = $(this),
+            view = Em.View.views[$tgt.attr('id')],
+            selected = view.get('item');
 
-            // set selected component
-            App.selectedComponentController.set('content', selected);
-            // set user busy
-            App.usersController.setPath('user.busy', true);
+          // set selected component
+          App.selectedComponentController.set('content', selected);
+          // set user busy
+          App.usersController.setPath('user.busy', true);
 
-            var $draggable = $(ui.draggable),
-              $container = $draggable.closest('.magos-potions'),
-              potion = $draggable.data('potion');
+          var $draggable = $(ui.draggable),
+            $container = $draggable.closest('.magos-potions'),
+            potion = $draggable.data('potion');
 
-            $container.hide("slide", {
-              direction: "right"
-            }, 250, function() {
-              $container.siblings('.magos-potions.' + potion).show('slide', {
-                direction: "left"
-              }, 250);
-            });
-          }
-        });
-        // ---
-      }
-
+          $container.hide("slide", {
+            direction: "right"
+          }, 250, function() {
+            $container.siblings('.magos-potions.' + potion).show('slide', {
+              direction: "left"
+            }, 250);
+          });
+        }
+      });
+      // ---
     },
     eventManager: Ember.Object.create({
       click: function(event, view) {
@@ -1119,15 +1211,18 @@ Em.ContainerView.create({
 
           var potions = [];
           _.each(obj.potions, function(potion) {
-            var p = App.Potion.create({ 'title': potion.title, 'properties': potion.properties });
+            var p = App.Potion.create({
+              'title': potion.title,
+              'properties': potion.properties
+            });
             potions.push(p);
           });
 
           components.push(
-            App.Magos.create({
-              "magos": obj.magos,
-              "potions": potions
-            }));
+          App.Magos.create({
+            "magos": obj.magos,
+            "potions": potions
+          }));
         });
 
         callback(components);
@@ -1283,15 +1378,15 @@ Em.ContainerView.create({
   var socket = io.connect(address);
   console.log(address);
   socket.on('connecting', function() {
-    console.log('Socket.IO - Connecting to magos');
+    console.log('websocket connecting (editor');
   });
 
   socket.on('connect_failed', function(reason) {
-    console.error('unable to connect to namespace', reason);
+    console.error('unable to connect to server (editor)', reason);
   });
 
   socket.on('connect', function() {
-    console.log('Socket.IO - Connected to magos');
+    console.log('websocket connected (editor)');
   });
 
   socket.emit('shout', 'HUUUUUUTO!', function(data) {
@@ -1486,9 +1581,25 @@ Em.ContainerView.create({
               oid = gameComponent.oid,
               sprite = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).getPath('properties.sprite');
 
-            var img = '<img src="../static/game/sprites/'+sprite+'.png" data-slug="' + slug + '" data-oid ="' + oid + '" class="canvas-item">';
+            var img = '<img src="../static/game/sprites/' + sprite + '.png" data-slug="' + slug + '" data-oid ="' + oid + '" class="canvas-item">';
+            var $img = $(img);
 
-            $scene.find('tr:nth-child(' + row + ')').find('td:nth-child(' + column + ')').append(img);
+            // remove when clicked - impl. draggable later
+            $img.on('click tap', function(event) { // this is duplication - refactor
+              var $tgt = $(event.target),
+                oid = $tgt.data('oid');
+
+              var item = App.scenesController.getPath('selected.gameComponents').findProperty('oid', oid);
+              App.scenesController.getPath('selected.gameComponents').removeObject(item);
+
+              $tgt.remove();
+
+              App.dataSource.saveGame(0, function(data) {
+                console.log('save (click)');
+              });
+            });
+
+            $scene.find('tr:nth-child(' + row + ')').find('td:nth-child(' + column + ')').append($img);
           });
 
           _.each(sceneComponents, function(sceneComponent) {
@@ -1498,9 +1609,26 @@ Em.ContainerView.create({
               oid = sceneComponent.oid,
               properties = sceneComponent.properties;
 
-            var img = '<img src="../static/img/components/' + slug + '.png" data-slug="' + slug + '" class="canvas-item" style="position:absolute;left:'+left+'px;top:'+top+'px;">';
+            var img = '<img src="../static/img/components/' + slug + '.png" data-slug="' + slug + '" class="canvas-item" style="position:absolute;left:' + left + 'px;top:' + top + 'px;">';
+            var $img = $(img);
 
-            $scene.append(img);
+            // remove when clicked - impl. draggable later
+            $img.on('click tap', function(event) {
+              var $tgt = $(event.target),
+                slug = $tgt.data('slug');
+
+              var item = App.scenesController.getPath('selected.sceneComponents').findProperty('slug', slug);
+              App.scenesController.getPath('selected.sceneComponents').removeObject(item);
+
+              $tgt.remove();
+
+              App.dataSource.saveGame(0, function(data) {
+                console.log('save (click)');
+              });
+            });
+
+
+            $scene.append($img);
           });
 
         });
@@ -1537,7 +1665,7 @@ Em.ContainerView.create({
 
   function initCanvasDroppable() {
 
-    $(".canvas-cell:empty").droppable({
+    $(".canvas-cell").droppable({
       greedy: true,
       accept: ".game-item",
       activeClass: "canvas-cell-hover",
@@ -1569,6 +1697,10 @@ Em.ContainerView.create({
           App.scenesController.getPath('selected.gameComponents').removeObject(item);
 
           $tgt.remove();
+
+          App.dataSource.saveGame(0, function(data) {
+            console.log('save (click)');
+          });
         });
 
         var $row = $tgt.closest('tr');
@@ -1589,6 +1721,10 @@ Em.ContainerView.create({
 
         $img.data('oid', oid);
         $tgt.append($img);
+
+        App.dataSource.saveGame(0, function(data) {
+          console.log('save (drop)');
+        });
 
       }
     });
@@ -1649,6 +1785,10 @@ Em.ContainerView.create({
         console.log(obj);
 
         App.scenesController.getPath('selected.sceneComponents').pushObject(obj);
+
+        App.dataSource.saveGame(0, function(data) {
+          console.log('save (drop)');
+        });
 
       } // drop
     });

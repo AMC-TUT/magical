@@ -2303,8 +2303,8 @@ Crafty.c("Gravity", {
 		pos._y = pos._y + pos._h;
 		pos._h = hitPixels;
 		// testi x
-		pos._w = pos._w - 30;
-		pos._x = pos._x + 15;
+		// pos._w = pos._w - 30;
+		// pos._x = pos._x + 15;
 		pos._plattis = true;
 		// overwrite ends
 

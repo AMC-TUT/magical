@@ -34,7 +34,7 @@
                         "controls": {
                             "method": "Twoway",
                             "speed": 2,
-                            "jumpHeight": 8,
+                            "jumpHeight": 10,
                             "grid": false
                         },
                         "gravitation": {
