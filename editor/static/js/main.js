@@ -87,29 +87,6 @@
         controller.set('content', data);
       });
     }
-    /*
-    ,
-    titleObserver: function() {
-      App.dataSource.saveGame(0, function(data) {
-        console.log('save (gameController)');
-      });
-    }.observes('content.title'),
-    stateObserver: function() {
-      App.dataSource.saveGame(0, function(data) {
-        console.log('save (gameController)');
-      });
-    }.observes('content.state'),
-    canvasObserver: function() {
-      App.dataSource.saveGame(0, function(data) {
-        console.log('save (gameController)');
-      });
-    }.observes('content.canvas'),
-    descriptionObserver: function() {
-      App.dataSource.saveGame(0, function(data) {
-        console.log('save (gameController)');
-      });
-    }.observes('content.description')
-    */
   });
 
   /**************************
@@ -125,29 +102,6 @@
 
   App.revisionController = Em.Object.create({
     contentBinding: 'App.gameController.content.revision'
-    /*
-    ,
-    audiosObserver: function() {
-      App.dataSource.saveGame(0, function(data) {
-        console.log('save (revisionController)');
-      });
-    }.observes('content.audios.@each'),
-    spritesObserver: function() {
-      App.dataSource.saveGame(0, function(data) {
-        console.log('save (revisionController)');
-      });
-    }.observes('content.sprites.@each'),
-    scenesObserver: function() {
-      App.dataSource.saveGame(0, function(data) {
-        console.log('save (revisionController)');
-      });
-    }.observes('content.scenes.@each'),
-    gameComponentsObserver: function() {
-      App.dataSource.saveGame(0, function(data) {
-        console.log('save (revisionController)');
-      });
-    }.observes('content.gameComponents.@each')
-    */
   });
 
   /**************************
@@ -330,20 +284,7 @@
       });
 
       var scene = this.get('scene');
-/*
-      $li.find('> img').draggable({
-        helper: "clone",
-        snap: ".canvas-cell:empty",
-        snapMode: "inner",
-        start: function() {
-          var view = Ember.View.views[$(this).parent().attr('id')];
 
-          var selected = view.get('item');
-          // set selected component
-          App.selectedComponentController.set('content', selected);
-        }
-      });
-*/
       this.$("> img").draggable({
         helper: "clone",
         //snap: ".canvas-cell:empty",
@@ -356,23 +297,7 @@
           // set selected component
           App.selectedComponentController.set('content', selected);
         }
-        /*
-        helper: function(event, ui) {
-          var slug = $(this).data('slug'),
-            $clone = null;
 
-          /* TODO show elements as they are on canvas and not just icon
-          if(slug === 'play') {
-            $clone = $(this).clone().attr('src', '/static/img/start-button.png').css({ 'width': '187px', 'height': '59px' });
-          } else {
-            $clone = $(this)
-          }
-
-          return $clone;
-          * /
-          return $(this);
-        }
-        */
       });
 
       $li.droppable({
@@ -982,17 +907,7 @@ $(".potion-icon").draggable({
    * InfoBox Views
    **************************/
 
-  /*
-Em.ContainerView.create({
-  childViews: ['btnView'],
-  btnView: Em.View.extend({
-    templateName: '',
-    contentBinding: 'App.scenesController.content'
-  })
-});
-*/
-
-  // TODO make these child views
+  // TODO make these child views with container view
   App.InfoBoxControlsView = Em.View.extend();
   App.InfoBoxCollisionView = Em.View.extend();
   App.InfoBoxGravitationView = Em.View.extend();
@@ -1792,52 +1707,9 @@ Em.ContainerView.create({
 
       } // drop
     });
-
-    // containment: ".canvas"
-    /*     revert: function(valid) {
-          if (!valid) $(this).remove();
-        },
-        revertDuration: 250, */
-
-    //var selected = view.get('item');
-    //console.log(view);
-    /*{
-        snap: ".canvas-pane",
-        revert: function(valid) {
-          if (!valid) $(this).remove();
-        }
-      });
-
- //     $tgt.append( $img );
-      //} else {
-      //  $img = $draggable.removeAttr('data-original-title rel alt class style').addClass('canvas-item');
-      //}
-
-      //var bgimg = $el.data('url');
-      /*
-      if(bgimg.length) {
-        $(tgt).css({
-          "background-image": 'url(' + bgimg + ')'
-        });
-      }
-      */
-
-    /*
-  $(".canvas").droppable({
-    greedy: false,
-    accept: ".canvas-item",
-    activeClass: "canvas-hover-remove",
-    hoverClass: "canvas-active-remove",
-    drop: function(event, ui) {
-      var $tgt = $(this);
-      var $draggable = $(ui.draggable);
-
-      $draggable.remove();
-    }
-  });
-*/
   } // /function
   // /canvas
+
   // main area sortable elements (shoutbox, infobox)
   $('.sortable-mainarea').sortable({
     placeholder: "sortable-highlight",
