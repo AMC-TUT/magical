@@ -127,11 +127,11 @@
               {{/each}}
 
               {{#view App.AddGameComponentView tagName="li" itemBinding="this" class="add-item" title="Add New Item"}}
-                <img class="action-item" src="/static/img/components/add.png" alt="Add New Item" title="Add New Item">
+                <img class="action-item" src="/static/img/icons/icon-add.png" alt="Add New Item" title="Add New Item">
               {{/view}}
 
               {{#view App.RemoveGameComponentView tagName="li" itemBinding="this" class="remove-item" title="Remove Item"}}
-                <img class="action-item" src="/static/img/components/trash.png" alt="Remove Item" title="Remove Item">
+                <img class="action-item" src="/static/img/icons/icon-trash.png" alt="Remove Item" title="Remove Item">
               {{/view}}
 
             </ul>
@@ -420,14 +420,14 @@
                 <h3 class="sortable-handle">{{user.firstName}}</h3>
 
                 {{#if user.busy}}
-                  <img src="/static/img/icons/busy.png" class="busy-icon" title="User is busy right now" />
+                  <img src="/static/img/icons/icon-busy.png" class="busy-icon" title="User is busy right now" />
                 {{else}}
-                  <img src="/static/img/icons/available.png" class="busy-icon" title="You can change the roles with the user" />
+                  <img src="/static/img/icons/icon-available.png" class="busy-icon" title="You can change the roles with the user" />
                 {{/if}}
 
               {{else}}
                 <h3 class="capitalize sortable-handle">{{magos}}</h3>
-                <img src="/static/img/icons/available.png" class="busy-icon" title="You can change the roles with the user" style="opacity: 0.4;" />
+                <img src="/static/img/icons/icon-available.png" class="busy-icon" title="You can change the roles with the user" style="opacity: 0.4;" />
               {{/if}}
 
               <div {{bindAttr class="magos:magos-potions magos activeUser:selected-magos"}}>

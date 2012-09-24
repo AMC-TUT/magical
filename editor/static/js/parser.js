@@ -278,7 +278,7 @@ var Parser = {
 
       // background
       var backgroundComp = _.find(scene.sceneComponents, function(comp) {
-        return comp.slug === 'background-image';
+        return comp.slug === 'background';
       });
 
       var backgroundImage = null,

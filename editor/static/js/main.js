@@ -210,7 +210,7 @@
     potions: null,
     active: false,
     icon: function() {
-      return '../static/img/components/' + this.get('slug') + '.png';
+      return '../static/img/icons/icon-' + this.get('slug') + '.png';
     }.property('slug'),
     potionsStr: function() {
       var potions = this.get('potions');
@@ -1524,7 +1524,7 @@ $(".potion-icon").draggable({
               oid = sceneComponent.oid,
               properties = sceneComponent.properties;
 
-            var img = '<img src="../static/img/components/' + slug + '.png" data-slug="' + slug + '" class="canvas-item" style="position:absolute;left:' + left + 'px;top:' + top + 'px;">';
+            var img = '<img src="../static/img/icons/icon-' + slug + '.png" data-slug="' + slug + '" class="canvas-item" style="position:absolute;left:' + left + 'px;top:' + top + 'px;">';
             var $img = $(img);
 
             // remove when clicked - impl. draggable later
