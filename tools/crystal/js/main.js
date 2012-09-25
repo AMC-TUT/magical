@@ -98,8 +98,11 @@ function motionHandler(evt) {
 	var accelTreshold = 6;
 	var distance;
 
-	distance = Math.sqrt(evt.accelerationIncludingGravity.x * evt.accelerationIncludingGravity.x + evt.accelerationIncludingGravity.y * evt.accelerationIncludingGravity.y);
-	orientation = new Object({x:evt.accelerationIncludingGravity.x, y:evt.accelerationIncludingGravity.y});
+	//distance = Math.sqrt(evt.accelerationIncludingGravity.x * evt.accelerationIncludingGravity.x + evt.accelerationIncludingGravity.y * evt.accelerationIncludingGravity.y);
+	//orientation = new Object({x:evt.accelerationIncludingGravity.x, y:evt.accelerationIncludingGravity.y});
+
+	distance = Math.sqrt(evt.acceleration.x * evt.acceleration.x + evt.acceleration.y * evt.acceleration.y);
+	orientation = new Object({x:evt.acceleration.x, y:evt.acceleration.y});
 
 	/*if(evt.acceleration) {
 		distance = Math.sqrt(evt.acceleration.x * evt.acceleration.x + evt.acceleration.y * evt.acceleration.y);
@@ -285,19 +288,6 @@ $(document).ready(function() {
 	//http://stackoverflow.com/questions/9077325/testing-hardware-support-in-javascript-for-device-orientation-events-of-the-ipho
 	//accelometer = !(window.DeviceMotionEvent == undefined || window.DeviceMotionEvent.interval == undefined);
 	accelometer = window.DeviceMotionEvent;
-	/*if (window.DeviceOrientationEvent) {
-	    window.addEventListener("deviceorientation", handleOrientation, false);
-	}
-
-	function handleOrientation(event) {
-		//console.log("Orientation:" + event.alpha + ", " + event.beta + ", " + event.gamma);
-		accelometer = event; // will be either null or with event data
-	}
-
-	if (window.DeviceMotionEvent && !accelometer) {
-		window.addEventListener('devicemotion', handleMotion, false);
-	}*/
-
 
 	$.getJSON("words.json", function(data) {
 		words = data;
