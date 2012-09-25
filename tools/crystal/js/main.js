@@ -90,7 +90,7 @@ function orientationHandler(evt) {
 	}
 	var accelTreshold = 6;
 	var distance = Math.sqrt(evt.alpha * evt.alpha + evt.beta * evt.beta);
-	
+	$("#debug").html($("#debug").text()+"<br>"+evt.alpha+" + "+evt.beta+" -> "+distance);
 	orientation = new Object({x:evt.alpha, y:evt.beta});
 
 	if(distance >= accelTreshold) {
@@ -280,8 +280,8 @@ function convertToRGBArray(hexString) {
 }
 
 $(document).ready(function() {
-	accelometer = !(window.DeviceMotionEvent == undefined || window.DeviceMotionEvent.interval == undefined);
-	
+	//accelometer = !(window.DeviceMotionEvent == undefined || window.DeviceMotionEvent.interval == undefined);
+	accelometer = window.DeviceMotionEvent;
 	/*if (window.DeviceOrientationEvent) {
 	    window.addEventListener("deviceorientation", handleOrientation, false);
 	}
@@ -303,8 +303,7 @@ $(document).ready(function() {
 	$("#debug").html("accelometer: "+accelometer+"<br> DeviceMotionEvent: "+window.DeviceMotionEvent+"<br> DeviceOrientationEvent: "+window.DeviceOrientationEvent);
 	moveToCenter();
 
-	//if(accelometer) {
-	if(true) {
+	if(accelometer) {
 		setShaking();
 	}
 	else {

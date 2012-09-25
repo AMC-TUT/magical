@@ -843,21 +843,15 @@
     contentBinding: 'App.magosesController.content',
     classNames: ['sidebar', 'sortable-sidearea'],
     didInsertElement: function() {
+
       var $sortableArea = this.$();
-      var view = this;
 
       Em.run.next(function() {
 
-        Magos.refeshSidebar($sortableArea);
-
+        refreshSidebar($sortableArea);
       });
-
-
-
     },
     busyObserver: function() { // TODO
-      console.log("MagosView::Observer");
-
       return Em.run.next(function() {
         return Em.run.next(function() {
           $('.busy-icon').tooltip({
@@ -868,14 +862,23 @@
             placement: 'left'
           });
 
-          $('.potion-icon').draggable('destroy');
-          $('.selected-magos .potion-icon').draggable({
-            helper: 'clone'
-          });
+        //  $('.potion-icon').draggable('destroy');
+        //  $('.selected-magos .potion-icon').draggable({ helper: 'clone' });
+
         });
       });
 
-    }.observes('content.@each.busy')
+    }.observes('content.@each.busy'),
+    selectedObserver: function() {
+
+      var $sortableArea = this.$();
+
+      Em.run.next(function() {
+
+        refreshSidebar($sortableArea);
+      });
+
+    }.observes('content.selected')
   })
 
   App.MagosComponentPropertyView = Em.View.extend({
@@ -1429,53 +1432,53 @@
 
   // canvas
 
-  function refreshSidebar() {
-        // sortable well
-        $sortableArea.sortable({
-          placeholder: "sortable-highlight",
-          items: "> .sortable-item",
-          handle: "h3",
-          axis: "y",
-          opacity: 0.8,
-          forceHelperSize: true
-        });
-        //
-        $sortableArea.disableSelection();
+  function refreshSidebar($sortableArea) {
+    // sortable well
+    $sortableArea.sortable({
+      placeholder: "sortable-highlight",
+      items: "> .sortable-item",
+      handle: "h3",
+      axis: "y",
+      opacity: 0.8,
+      forceHelperSize: true
+    });
+    //
+    $sortableArea.disableSelection();
 
-        // small delay required to make this work
-        setTimeout(function() {
+    // small delay required to make this work
+    setTimeout(function() {
 
-          // draggable skillset-icon
-          var $droppable = $sortableArea.find('.skillset'),
-            $draggable = $sortableArea.find('.magos-potions.selected-magos').find('.skillset').find('.skillset-icon');
+      // draggable skillset-icon
+      var $droppable = $sortableArea.find('.skillset'),
+        $draggable = $sortableArea.find('.magos-potions.selected-magos').find('.skillset').find('.skillset-icon');
 
-console.log($droppable);
-console.log($draggable);
+      console.log($droppable);
+      console.log($draggable);
 
-          // droppable skillset
-          $droppable.droppable({
-            greedy: true,
-            accept: ".skillset-icon",
-            activeClass: "ui-state-hover",
-            hoverClass: "ui-state-active",
-            drop: function(event, ui) {
-              var $tgt = $(event.target),
-                $draggable = $(ui.draggable),
-                magos = $draggable.data('magos'),
-                tgtMagos = $tgt.find('.skillset-icon').data('magos');
+      // droppable skillset
+      $droppable.droppable({
+        greedy: true,
+        accept: ".skillset-icon",
+        activeClass: "ui-state-hover",
+        hoverClass: "ui-state-active",
+        drop: function(event, ui) {
+          var $tgt = $(event.target),
+            $draggable = $(ui.draggable),
+            magos = $draggable.data('magos'),
+            tgtMagos = $tgt.find('.skillset-icon').data('magos');
 
-                App.magosesController.set('selected', tgtMagos);
-                App.usersController.set('user.magos', tgtMagos);
-            }
-          });
+          App.magosesController.set('selected', tgtMagos);
+          App.usersController.set('user.magos', tgtMagos);
+        }
+      });
 
-          $draggable.draggable({
-            helper: 'clone',
-            cursor: 'move',
-            zIndex: 9999
-          });
+      $draggable.draggable({
+        helper: 'clone',
+        cursor: 'move',
+        zIndex: 9999
+      });
 
-        }, 500);
+    }, 500);
   }
 
   function createGameTableCanvases() {
