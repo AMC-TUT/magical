@@ -8,8 +8,8 @@ var orientation;
 var origTintRGB = convertToRGBArray('#FF00FF');
 var tintRGB = origTintRGB.slice(0);
 //http://stackoverflow.com/questions/9077325/testing-hardware-support-in-javascript-for-device-orientation-events-of-the-ipho
-var accelometer = (window.DeviceMotionEvent == undefined || window.DeviceMotionEvent.interval == undefined);
-accelometer = false;
+var accelometer = !(window.DeviceMotionEvent == undefined || window.DeviceMotionEvent.interval == undefined);
+//accelometer = false;
 
 //Activates or deactivates crystall ball dragging
 function setDragging(activate) {
@@ -259,7 +259,7 @@ $(document).ready(function() {
 		words = data;
 		changeColor();
 	});
-	
+	$("#contentHolder").text("acc: "+accelometer);
 	moveToCenter();
 
 	if(accelometer) {
