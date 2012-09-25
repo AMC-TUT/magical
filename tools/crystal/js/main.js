@@ -91,7 +91,7 @@ function enableMotionDetection() {
 
 //Shake motion detection action
 function motionHandler(evt) {
-	//debugText("motionHandler: "+orientation);
+	debugText("motionHandler: "+orientation);
 	if(orientation === null) {
 		reverseEffect();
 	}
@@ -101,7 +101,7 @@ function motionHandler(evt) {
 
 	distance = Math.sqrt(accel.x * accel.x + accel.z * accel.z);
 	orientation = new Object({x:accel.x, y:accel.z});
-
+	debugText("("+orientation.x+","+orientation.y+")");
 	/*if(evt.acceleration) {
 		distance = Math.sqrt(evt.acceleration.x * evt.acceleration.x + evt.acceleration.y * evt.acceleration.y);
 		orientation = new Object({x:evt.acceleration.x, y:evt.acceleration.y});
