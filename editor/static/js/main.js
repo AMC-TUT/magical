@@ -789,7 +789,15 @@
       return Em.isEqual(user, active);
     }.property('user', 'userActive'),
     magosObserver: function() {
+
       console.log('magos changes');
+
+      Em.run.next(function() {
+        //
+        refreshSidebar($('.sortable-sidearea'));
+      });
+
+
     }.observes('user.magos')
   });
 
@@ -871,14 +879,17 @@
     }.observes('content.@each.busy'),
     selectedObserver: function() {
 
+console.log('selectedObserver: function() {');
+/*
       var $sortableArea = this.$();
 
       Em.run.next(function() {
-
+        //
         refreshSidebar($sortableArea);
       });
-
+*/
     }.observes('content.selected')
+
   })
 
   App.MagosComponentPropertyView = Em.View.extend({
@@ -1433,6 +1444,8 @@
   // canvas
 
   function refreshSidebar($sortableArea) {
+    console.log('refreshSidebar($sortableArea)')
+    console.log($sortableArea)
     // sortable well
     $sortableArea.sortable({
       placeholder: "sortable-highlight",

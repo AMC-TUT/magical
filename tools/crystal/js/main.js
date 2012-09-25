@@ -75,12 +75,14 @@ function setShaking(activate) {
 function enableMotionDetection() {
 	orientation = null;
 
-	if (window.DeviceOrientationEvent) {
+	motionListener = window.addEventListener("devicemotion", motionHandler, true);
+
+	/*if (window.DeviceOrientationEvent) {
 		motionListener = window.addEventListener("deviceorientation", orientationHandler, false);
 	}
 	else {
 		motionListener = window.addEventListener("devicemotion", motionHandler, true);
-	}
+	}*/
 }
 
 //Shake action when DeviceOrientationEvent available
@@ -90,7 +92,7 @@ function orientationHandler(evt) {
 	}
 	var accelTreshold = 6;
 	var distance = Math.sqrt(evt.alpha * evt.alpha + evt.beta * evt.beta);
-	$("#debug").html($("#debug").text()+"<br>"+evt.alpha+" + "+evt.beta+" -> "+distance);
+	
 	orientation = new Object({x:evt.alpha, y:evt.beta});
 
 	if(distance >= accelTreshold) {
@@ -106,6 +108,7 @@ function motionHandler(evt) {
 	var accelTreshold = 6;
 	var distance;
 
+	debugText("evt.acceleration: "+evt.acceleration);
 	if(evt.acceleration) {
 		distance = Math.sqrt(evt.acceleration.x * evt.acceleration.x + evt.acceleration.y * evt.acceleration.y);
 		orientation = new Object({x:evt.acceleration.x, y:evt.acceleration.y});
@@ -277,6 +280,10 @@ function convertToRGBArray(hexString) {
 		rgbArray.push(value);
 	}
 	return rgbArray;
+}
+
+function debugText(text) {
+	$("#debug").html($("#debug").text()+"<br>"+text);
 }
 
 $(document).ready(function() {
