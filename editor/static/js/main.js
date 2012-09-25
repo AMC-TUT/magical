@@ -1462,7 +1462,7 @@ console.log('selectedObserver: function() {');
     setTimeout(function() {
 
       // draggable skillset-icon
-      var $droppable = $sortableArea.find('.skillset'),
+      var $droppable = $sortableArea.find('.skillset:not(.ui-droppable)'),
         $draggable = $sortableArea.find('.magos-potions.selected-magos').find('.skillset').find('.skillset-icon');
 
       console.log($droppable);

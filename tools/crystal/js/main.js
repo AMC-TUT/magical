@@ -60,33 +60,25 @@ function setShaking(activate) {
         enableMotionDetection();
 	}
 	else {
-		if (window.DeviceOrientationEvent) {
-			window.removeEventListener("deviceorientation", orientationHandler);
-			}
-		else {
-			window.removeEventListener("devicemotion", motionHandler);
-		}
-		
+		window.removeEventListener("devicemotion", motionHandler);
 		motionListener = null;
 	}
 }
 
 //Activates or deactivates crystall ball shaking
 function enableMotionDetection() {
+	debugText("enableMotionDetection");
 	orientation = null;
 
 	motionListener = window.addEventListener("devicemotion", motionHandler, true);
-
-	/*if (window.DeviceOrientationEvent) {
-		motionListener = window.addEventListener("deviceorientation", orientationHandler, false);
-	}
-	else {
-		motionListener = window.addEventListener("devicemotion", motionHandler, true);
-	}*/
 }
 
 //Shake action when DeviceOrientationEvent available
-function orientationHandler(evt) {
+//Not used since deviceMotion suits this task better
+/*if (window.DeviceOrientationEvent) {
+	motionListener = window.addEventListener("deviceorientation", orientationHandler, false);
+}*/
+/*function orientationHandler(evt) {
 	if(orientation == null) {
 		reverseEffect();
 	}
@@ -98,9 +90,9 @@ function orientationHandler(evt) {
 	if(distance >= accelTreshold) {
 		shakeListener();
 	}
-}
+}*/
 
-//Shake action when DeviceOrientationEvent NOT available
+//Shake motion detection action
 function motionHandler(evt) {
 	if(orientation == null) {
 		reverseEffect();
@@ -163,6 +155,7 @@ function reverseEffect() {
 function shakeListener() {
 	var shakeTreshold = 100;
 	$("#contentHolder").text(shakeCounter);
+
 	if(!shakeReverse) {
 		changeColor("-1,2,0");
 		shakeCounter++;
@@ -187,9 +180,11 @@ function showWord() {
 	shakeReverse = true;
 
 	if(accelometer) {
+		debugText("setTimeout(enableMotionDetection, 2000)");
 		setTimeout(enableMotionDetection, 2000);
 	}
 	else {
+		debugText("stopDragging()");
 		stopDragging();
 		//setDragging(false);//cancel dragging
 		//setDragging();
