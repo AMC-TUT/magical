@@ -304,7 +304,7 @@ $(document).ready(function() {
 		words = data;
 		changeColor();
 	});
-	$("#debug").html("accelometer: "+accelometer+"<br> DeviceMotionEvent: "+window.DeviceMotionEvent+"<br> DeviceOrientationEvent: "+window.DeviceOrientationEvent);
+	$("#debug").html("BEEEEEEEEEEB!!!!!!!!!! accelometer: "+accelometer+"<br> DeviceMotionEvent: "+window.DeviceMotionEvent+"<br> DeviceOrientationEvent: "+window.DeviceOrientationEvent);
 	moveToCenter();
 
 	if(accelometer) {
