@@ -97,9 +97,10 @@ function motionHandler(evt) {
 	}
 	var accelTreshold = 6;
 	var distance;
+	var accel = evt.accelerationIncludingGravity;
 
-	distance = Math.sqrt(evt.accelerationIncludingGravity.x * evt.accelerationIncludingGravity.x + evt.accelerationIncludingGravity.y * evt.accelerationIncludingGravity.y);
-	orientation = new Object({x:evt.accelerationIncludingGravity.x, y:evt.accelerationIncludingGravity.y});
+	distance = Math.sqrt(accel.x * accel.x + accel.z * accel.z);
+	orientation = new Object({x:accel.x, y:accel.z});
 
 	/*if(evt.acceleration) {
 		distance = Math.sqrt(evt.acceleration.x * evt.acceleration.x + evt.acceleration.y * evt.acceleration.y);

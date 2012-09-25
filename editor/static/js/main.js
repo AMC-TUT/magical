@@ -792,26 +792,16 @@
 
       console.log('magos changes');
 
-      var content = App.magosesController.get('content');
-      App.magosesController.set('content', []);
+      App.magosesController.set('content', Ember.copy(App.magosesController.get('content'), true));
 
       setTimeout(function() {
-        App.magosesController.set('content', content);
-
         Em.run.next(function() {
-        //
-        refreshSidebar($('.sortable-sidearea'));
-      });
+          //
+          refreshSidebar($('.sortable-sidearea'));
+        });
       }, 500);
       //
-
-
-    }.observes('user.magos'),
-    vittuObserver: function() {
-
-    console.log('vittu')
-
-    }.observes('magos')
+    }.observes('user.magos')
   });
 
   /**************************
