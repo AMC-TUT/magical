@@ -67,7 +67,7 @@ function enableMotionDetection() {
 	debugText("enableMotionDetection");
 	orientation = null;
 
-	motionListener = window.addEventListener("devicemotion", motionHandler, true);
+	motionListener = window.addEventListener("devicemotion", motionHandler, false);
 }
 
 //Shake action when DeviceOrientationEvent available
@@ -91,18 +91,15 @@ function enableMotionDetection() {
 
 //Shake motion detection action
 function motionHandler(evt) {
-	debugText("motionHandler: "+orientation);
+	//debugText("motionHandler: "+orientation);
 	if(orientation === null) {
 		reverseEffect();
 	}
 	var accelTreshold = 6;
 	var distance;
 
-	//distance = Math.sqrt(evt.accelerationIncludingGravity.x * evt.accelerationIncludingGravity.x + evt.accelerationIncludingGravity.y * evt.accelerationIncludingGravity.y);
-	//orientation = new Object({x:evt.accelerationIncludingGravity.x, y:evt.accelerationIncludingGravity.y});
-
-	distance = Math.sqrt(evt.acceleration.x * evt.acceleration.x + evt.acceleration.y * evt.acceleration.y);
-	orientation = new Object({x:evt.acceleration.x, y:evt.acceleration.y});
+	distance = Math.sqrt(evt.accelerationIncludingGravity.x * evt.accelerationIncludingGravity.x + evt.accelerationIncludingGravity.y * evt.accelerationIncludingGravity.y);
+	orientation = new Object({x:evt.accelerationIncludingGravity.x, y:evt.accelerationIncludingGravity.y});
 
 	/*if(evt.acceleration) {
 		distance = Math.sqrt(evt.acceleration.x * evt.acceleration.x + evt.acceleration.y * evt.acceleration.y);
