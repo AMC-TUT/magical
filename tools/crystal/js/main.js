@@ -108,15 +108,17 @@ function motionHandler(evt) {
 	var accelTreshold = 6;
 	var distance;
 
-	debugText("evt.acceleration: "+evt.acceleration);
-	if(evt.acceleration) {
+	distance = Math.sqrt(evt.accelerationIncludingGravity.x * evt.accelerationIncludingGravity.x + evt.accelerationIncludingGravity.y * evt.accelerationIncludingGravity.y);
+	orientation = new Object({x:evt.accelerationIncludingGravity.x, y:evt.accelerationIncludingGravity.y});
+
+	/*if(evt.acceleration) {
 		distance = Math.sqrt(evt.acceleration.x * evt.acceleration.x + evt.acceleration.y * evt.acceleration.y);
 		orientation = new Object({x:evt.acceleration.x, y:evt.acceleration.y});
 	}
 	else {
 		distance = Math.sqrt(evt.accelerationIncludingGravity.x * evt.accelerationIncludingGravity.x + evt.accelerationIncludingGravity.y * evt.accelerationIncludingGravity.y);
 		orientation = new Object({x:evt.accelerationIncludingGravity.x, y:evt.accelerationIncludingGravity.y});
-	}	
+	}*/
 	if(distance >= accelTreshold) {
 		shakeListener();
 	}
