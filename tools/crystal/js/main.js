@@ -9,7 +9,8 @@ var origTintRGB = convertToRGBArray('#FF00FF');
 var tintRGB = origTintRGB.slice(0);
 //http://stackoverflow.com/questions/9077325/testing-hardware-support-in-javascript-for-device-orientation-events-of-the-ipho
 var accelometer = !(window.DeviceMotionEvent == undefined || window.DeviceMotionEvent.interval == undefined);
-//accelometer = false;
+var gyroscope;
+//accelometer = true;
 
 //Activates or deactivates crystall ball dragging
 function setDragging(activate) {
@@ -59,7 +60,13 @@ function setShaking(activate) {
         enableMotionDetection();
 	}
 	else {
-		window.removeEventListener("devicemotion", motionHandler);
+		if (window.DeviceOrientationEvent) {
+			window.removeEventListener("deviceorientation", orientationHandler);
+			}
+		else {
+			window.removeEventListener("devicemotion", motionHandler);
+		}
+		
 		motionListener = null;
 	}
 }
@@ -67,28 +74,51 @@ function setShaking(activate) {
 //Activates or deactivates crystall ball shaking
 function enableMotionDetection() {
 	orientation = null;
+
 	motionListener = window.addEventListener("devicemotion", motionHandler, true);
-	/*motionListener = window.addEventListener("devicemotion", function(evt) {
-		var accelTreshold = 6;
-		var distance = Math.sqrt(evt.accelerationIncludingGravity.x * evt.accelerationIncludingGravity.x + evt.accelerationIncludingGravity.y * evt.accelerationIncludingGravity.y);
-		//console.log("distance: "+distance);
-		if(distance >= accelTreshold) {
-			shakeListener();
-		}
-	}, true);*/
+
+	/*if (window.DeviceOrientationEvent) {
+		motionListener = window.addEventListener("deviceorientation", orientationHandler, false);
+	}
+	else {
+		motionListener = window.addEventListener("devicemotion", motionHandler, true);
+	}*/
 }
 
-//Shake action
-function motionHandler(evt) {
-	//console.log("motionHandler");
+//Shake action when DeviceOrientationEvent available
+function orientationHandler(evt) {
 	if(orientation == null) {
 		reverseEffect();
 	}
 	var accelTreshold = 6;
-	var distance = Math.sqrt(evt.accelerationIncludingGravity.x * evt.accelerationIncludingGravity.x + evt.accelerationIncludingGravity.y * evt.accelerationIncludingGravity.y);
+	var distance = Math.sqrt(evt.alpha * evt.alpha + evt.beta * evt.beta);
 	
+	orientation = new Object({x:evt.alpha, y:evt.beta});
+
+	if(distance >= accelTreshold) {
+		shakeListener();
+	}
+}
+
+//Shake action when DeviceOrientationEvent NOT available
+function motionHandler(evt) {
+	if(orientation == null) {
+		reverseEffect();
+	}
+	var accelTreshold = 6;
+	var distance;
+
+	distance = Math.sqrt(evt.accelerationIncludingGravity.x * evt.accelerationIncludingGravity.x + evt.accelerationIncludingGravity.y * evt.accelerationIncludingGravity.y);
 	orientation = new Object({x:evt.accelerationIncludingGravity.x, y:evt.accelerationIncludingGravity.y});
-	
+
+	/*if(evt.acceleration) {
+		distance = Math.sqrt(evt.acceleration.x * evt.acceleration.x + evt.acceleration.y * evt.acceleration.y);
+		orientation = new Object({x:evt.acceleration.x, y:evt.acceleration.y});
+	}
+	else {
+		distance = Math.sqrt(evt.accelerationIncludingGravity.x * evt.accelerationIncludingGravity.x + evt.accelerationIncludingGravity.y * evt.accelerationIncludingGravity.y);
+		orientation = new Object({x:evt.accelerationIncludingGravity.x, y:evt.accelerationIncludingGravity.y});
+	}*/
 	if(distance >= accelTreshold) {
 		shakeListener();
 	}
@@ -132,7 +162,7 @@ function reverseEffect() {
 //Action whenever shaking or dragging is on
 function shakeListener() {
 	var shakeTreshold = 100;
-
+	$("#contentHolder").text(shakeCounter);
 	if(!shakeReverse) {
 		changeColor("-1,2,0");
 		shakeCounter++;
@@ -180,7 +210,7 @@ function setColorDecay(freq, decayRGB) {
 	function decay() {
 		shakeCounter = Math.max(shakeCounter-1, 0);
 		changeColor(decayRGB);
-		$("#contentHolder").text(shakeCounter);
+		//$("#contentHolder").text(shakeCounter);
 	}
 }
 
@@ -254,12 +284,32 @@ function convertToRGBArray(hexString) {
 	return rgbArray;
 }
 
+function debugText(text) {
+	$("#debug").html($("#debug").text()+"<br>"+text);
+}
+
 $(document).ready(function() {
+	//accelometer = !(window.DeviceMotionEvent == undefined || window.DeviceMotionEvent.interval == undefined);
+	accelometer = window.DeviceMotionEvent;
+	/*if (window.DeviceOrientationEvent) {
+	    window.addEventListener("deviceorientation", handleOrientation, false);
+	}
+
+	function handleOrientation(event) {
+		//console.log("Orientation:" + event.alpha + ", " + event.beta + ", " + event.gamma);
+		accelometer = event; // will be either null or with event data
+	}
+
+	if (window.DeviceMotionEvent && !accelometer) {
+		window.addEventListener('devicemotion', handleMotion, false);
+	}*/
+
+
 	$.getJSON("words.json", function(data) {
 		words = data;
 		changeColor();
 	});
-	$("#contentHolder").text("acc: "+accelometer);
+	$("#debug").html("accelometer: "+accelometer+"<br> DeviceMotionEvent: "+window.DeviceMotionEvent+"<br> DeviceOrientationEvent: "+window.DeviceOrientationEvent);
 	moveToCenter();
 
 	if(accelometer) {

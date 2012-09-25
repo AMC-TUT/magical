@@ -5,15 +5,22 @@
 	<!--link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet"-->
 
 	<style>
-		body {
+		html {
 			background-image: url('background.jpg');
 			background-repeat: no-repeat;
-			background-position: center;
+			background-position: center center;
+			background-attachment: fixed;
 			-webkit-background-size: cover;
 			-moz-background-size: cover;
 			-o-background-size: cover;
+			-ms-background-size: cover;
 			background-size: cover;
 		}
+		/*.no-background-size #image {
+			background-image: url(lol.png);
+			min-height: 100%;
+			min-width: 100%;
+		}*/
 		#crystalBall {
 			display: block;
 			position: absolute;
@@ -53,6 +60,7 @@
 	
 </head>
 <body>
+	<p id="debug"><p>
 	<div id="crystalBall">
 		<canvas id='crystalBallCanvas' width='407px' height='407px'></canvas>
 		<div id="crystalBallLens">
@@ -60,8 +68,8 @@
 		</div>
 	</div>
 	
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 	<script src="js/main.js"></script>
 	<!--script src="http://remote-tilt.com/js/device-motion-polyfill.js"></script-->
 </body>
