@@ -714,9 +714,8 @@ a.label:hover,a.badge:hover{color:#ffffff;text-decoration:none;cursor:pointer;}
 .chest-container{padding:4px;margin-bottom:8px;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;background-color:#9e6c02;background-image:-webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-ms-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.53));}.chest-container .chest{margin:0;padding:0;position:relative;}.chest-container .chest li{display:block;float:left;width:44px;height:44px;background:rgba(158, 108, 2, 0.04);padding:4px;margin:2px;box-shadow:inset 0 0 10px #111;text-align:center;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;}.chest-container .chest li .game-item,.chest-container .chest li .scene-item{width:36px;height:36px;}
 .chest-container .chest .add-item .action-item{cursor:pointer;}
 .chest-container .chest .principes-magos .scene-item{cursor:move;}
-.chest-container .chest .ui-state-target{background-color:#1FBE00;}
+.chest-container .chest .ui-state-target,.chest-container .chest .ui-state-hover{background-color:#1FBE00;}
 .chest-container .chest .ui-state-active,.chest-container .chest .ui-selected{background:#EEA200;}
-.chest-container .chest .ui-state-hover{background-color:#1FBE00;}
 .scene-chest-container{background-color:#621283;background-image:-webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-ms-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.53));}.scene-chest-container .scene-chest .ui-state-active,.scene-chest-container .scene-chest .ui-selected{background:#C73DFF;}
 .scene-chest-container .scene-chest .game-chest-hover{background-color:rgba(27, 158, 2, 0.42);}
 .scene-chest-container .scene-chest .game-chest-active{background-color:#1b9e02;}
@@ -750,15 +749,16 @@ a.label:hover,a.badge:hover{color:#ffffff;text-decoration:none;cursor:pointer;}
 .sidebar .magos-potions{position:relative;padding:5px;min-height:97px;margin-top:8px;color:#ffffff;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;background-image:-webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-ms-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.53));}.sidebar .magos-potions.selected-magos .draggable-item{cursor:move;opacity:1;}
 .sidebar .magos-potions:not(.selected-magos){padding:8px;}
 .sidebar .magos-potions .inner-shadow{border:0;padding:4px;width:44px;height:44px;-webkit-box-shadow:inset 0 0 10px #333333;-moz-box-shadow:inset 0 0 10px #333333;box-shadow:inset 0 0 10px #333333;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;}
-.sidebar .magos-potions .magos-icon{position:absolute;right:8px;top:8px;width:60px;height:80px;padding:4px 8px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;cursor:move;}
+.sidebar .magos-potions .skillset{position:absolute;right:8px;top:8px;width:60px;height:72px;padding:4px 8px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;}.sidebar .magos-potions .skillset.ui-state-hover{background-color:#1FBE00;}
+.sidebar .magos-potions .skillset .skillset-icon{cursor:move;width:44px;height:64px;}
 .sidebar .magos-potions .potion-icon{opacity:.4;}.sidebar .magos-potions .potion-icon.ui-draggable-dragging{box-shadow:none;border-color:transparent !important;}
 .sidebar .magos-potions .table{margin-bottom:0;}
 .sidebar .magos-potions .table td{border:0;font-weight:700;line-height:44px;padding:4px 8px;text-shadow:0 2px 6px black;}
 .sidebar .magos-potions .table td:first-child{width:44px;}
-.sidebar .magos-potions.principes{background-color:#621283;border:1px solid #400c56;}
-.sidebar .magos-potions.physicus{background-color:#095766;border:1px solid #052f37;}
-.sidebar .magos-potions.artifex{background-color:#40b83d;border:1px solid #256b24;}
-.sidebar .magos-potions.musicus{background-color:#090d66;border:1px solid #080c5d;}
+.sidebar .magos-potions.principes{background-color:#621283;border:1px solid #400c56;}.sidebar .magos-potions.principes .ui-state-active{background-color:#a51edd;}
+.sidebar .magos-potions.physicus{background-color:#095766;border:1px solid #052f37;}.sidebar .magos-potions.physicus .ui-state-active{background-color:#0d7f95;}
+.sidebar .magos-potions.artifex{background-color:#40b83d;border:1px solid #256b24;}.sidebar .magos-potions.artifex .ui-state-active{background-color:#61ca5e;}
+.sidebar .magos-potions.musicus{background-color:#090d66;border:1px solid #080c5d;}.sidebar .magos-potions.musicus .ui-state-active{background-color:#0e149e;}
 .sidebar .form-vertical{margin-bottom:0;}
 .sidebar .action-group{border-bottom:1px solid rgba(255, 255, 255, 0.16);margin-bottom:8px;padding-bottom:3px;}
 .sidebar .fieldset>.action-group:last-child{border:0;padding-bottom:0;}
@@ -787,6 +787,7 @@ a.label:hover,a.badge:hover{color:#ffffff;text-decoration:none;cursor:pointer;}
 .canvas .canvas-table .canvas-cell-hover{background:rgba(11, 255, 59, 0.3);}
 .canvas .canvas-table .canvas-cell-hover:not(:empty){background:rgba(255, 19, 19, 0.3);}
 .canvas .canvas-table .canvas-cell-active{background:rgba(11, 255, 59, 0.4);}
+footer{color:#E9E9E9;}footer p{margin:0 9px 9px;}
 .pull-right{float:right;}
 .pull-left{float:left;}
 .hide{display:none;}

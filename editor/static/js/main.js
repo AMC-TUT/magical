@@ -749,6 +749,24 @@
    **************************/
 
   /**************************
+   * Potion
+   **************************/
+
+  App.Potion = Em.Object.extend({
+    title: null,
+    properties: null,
+    icon: function() {
+      var icon = this.get('title');
+      return '/static/img/icons/icon-' + icon + '.png';
+    }.property('title')
+  });
+
+  App.PotionView = Em.View.extend({
+    content: null,
+    template: Ember.Handlebars.compile('<img {{bindAttr src="content.icon"}} {{bindAttr data-potion="content.title"}} {{bindAttr alt="title"}} class="potion-icon inner-shadow draggable-item" />')
+  });
+
+  /**************************
    * Magos
    **************************/
 
@@ -769,25 +787,10 @@
       var active = this.get('userActive');
 
       return Em.isEqual(user, active);
-    }.property('user', 'userActive')
-  });
-
-  /**************************
-   * Potion
-   **************************/
-
-  App.Potion = Em.Object.extend({
-    title: null,
-    properties: null,
-    icon: function() {
-      var icon = this.get('title');
-      return '/static/img/icons/icon-' + icon + '.png';
-    }.property('title')
-  });
-
-  App.PotionView = Em.View.extend({
-    content: null,
-    template: Ember.Handlebars.compile('<img {{bindAttr src="content.icon"}} {{bindAttr data-potion="content.title"}} {{bindAttr alt="title"}} class="potion-icon inner-shadow draggable-item" />')
+    }.property('user', 'userActive'),
+    magosObserver: function() {
+      console.log('magos changes');
+    }.observes('user.magos')
   });
 
   /**************************
@@ -835,33 +838,60 @@
       }
     }.observes('selected')
   });
-  /*
-$(".potion-icon").draggable({
-  helper: "clone"
-});
-*/
+
   App.MagosView = Em.View.extend({
     contentBinding: 'App.magosesController.content',
     classNames: ['sidebar', 'sortable-sidearea'],
     didInsertElement: function() {
       var $sortableArea = this.$();
+      var view = this;
+      //console.log($sortableArea);
+      // small delay required to make this work
+      setTimeout(function() {
 
-      console.log('MagosView::didInsertElement');
+        Em.run.next(function() {
 
-      Em.run.next(function() {
-        //
-        $sortableArea.sortable({
-          placeholder: "sortable-highlight",
-          items: "> .sortable-item",
-          handle: "h3",
-          axis: "y",
-          opacity: 0.8,
-          forceHelperSize: true
+          // sortable well
+          $sortableArea.sortable({
+            placeholder: "sortable-highlight",
+            items: "> .sortable-item",
+            handle: "h3",
+            axis: "y",
+            opacity: 0.8,
+            forceHelperSize: true
+          });
+          //
+          $sortableArea.disableSelection();
+
+          // draggable skillset-icon
+          var $droppable = $sortableArea.find('.skillset'),
+            $draggable = $droppable.find('.selected-magos').find('.skillset-icon');
+
+          // droppable skillset
+          $droppable.droppable({
+            greedy: true,
+            accept: ".skillset-icon",
+            activeClass: "ui-state-hover",
+            hoverClass: "ui-state-active",
+            drop: function(event, ui) {
+              var $tgt = $(event.target),
+                $draggable = $(ui.draggable),
+                magos = $draggable.data('magos'),
+                tgtMagos = $tgt.find('.skillset-icon').data('magos');
+
+                // AAA
+            }
+          });
+
+          $draggable.draggable({
+            helper: 'clone',
+            zIndex: 9999
+          });
+
         });
-        //
-        $sortableArea.disableSelection();
 
-      });
+      }, 400);
+
     },
     busyObserver: function() { // TODO
       console.log("MagosView::Observer");
@@ -1317,11 +1347,11 @@ $(".potion-icon").draggable({
     }
   });
 
-  App.languagesController.populate();
-
   App.sceneComponentsController.populate();
 
   App.gameController.populate();
+
+  App.languagesController.populate();
 
   App.magosesController.populate();
 
@@ -1709,7 +1739,6 @@ $(".potion-icon").draggable({
     });
   } // /function
   // /canvas
-
   // main area sortable elements (shoutbox, infobox)
   $('.sortable-mainarea').sortable({
     placeholder: "sortable-highlight",

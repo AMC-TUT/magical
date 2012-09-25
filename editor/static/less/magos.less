@@ -42,7 +42,7 @@
       cursor: move;
     }
 
-    .ui-state-target {
+    .ui-state-target, .ui-state-hover {
       background-color: #1FBE00;
     }
 
@@ -50,9 +50,6 @@
       background: #EEA200;
     }
 
-    .ui-state-hover {
-      background-color:#1FBE00;
-    }
 /*
 
 */
@@ -282,15 +279,24 @@
       .box-sizing(border-box);
     }
 
-    .magos-icon {
+    .skillset {
       position: absolute;
       right: @baseMargin;
       top: @baseMargin;
       width: 60px;
-      height: 80px;
+      height: 72px;
       padding: 4px 8px;
       .box-sizing(border-box);
-      cursor: move;
+
+      &.ui-state-hover {
+        background-color: #1FBE00;
+      }
+
+      .skillset-icon {
+        cursor: move;
+        width: 44px;
+        height: 64px;
+      }
     }
 
     .potion-icon {
@@ -323,21 +329,37 @@
   .magos-potions.principes {
     background-color: @principes;
     border: 1px solid darken(@principes, 10%);
+
+    & .ui-state-active {
+      background-color: lighten(@principes, 20%);
+    }
   }
 
   .magos-potions.physicus {
     background-color: @physicus;
     border: 1px solid darken(@physicus, 10%);
+
+    & .ui-state-active {
+      background-color: lighten(@physicus, 10%);
+    }
   }
 
   .magos-potions.artifex {
     background-color: @artifex;
     border: 1px solid darken(@artifex, 20%);
+
+    & .ui-state-active {
+      background-color: lighten(@artifex, 10%);
+    }
   }
 
   .magos-potions.musicus {
     background-color: @musicus;
     border: 1px solid darken(@musicus, 2%);
+
+    & .ui-state-active {
+      background-color: lighten(@musicus, 12%);
+    }
   }
 
   .form-vertical {
@@ -473,5 +495,13 @@
         background:rgba(11, 255, 59, 0.4);
       }
 
+    }
+  }
+
+  footer {
+    color: #E9E9E9;
+
+    p {
+      margin: 0 9px 9px;
     }
   }

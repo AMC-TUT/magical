@@ -37,10 +37,10 @@
     // toggle image
     if (_.isUndefined(Crafty.magos.volume) || Crafty.magos.volume) {
       Crafty.magos.volume = false;
-      $tgt.css('background-image', 'url(/static/img/components/icon-volume-off.png)');
+      $tgt.css('background-image', 'url(/static/img/icons/icon-volume-off.png)');
     } else {
       Crafty.magos.volume = true;
-      $tgt.css('background-image', 'url(/static/img/components/icon-volume.png)');
+      $tgt.css('background-image', 'url(/static/img/icons/icon-volume.png)');
     }
 
     // do something with sound
