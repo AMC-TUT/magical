@@ -431,7 +431,10 @@
               {{/if}}
 
               <div {{bindAttr class="magos:magos-potions magos activeUser:selected-magos"}}>
-                  <img class="magos-icon inner-shadow draggable-item" {{bindAttr src="icon"}} alt="" />
+                  <div class="inner-shadow skillset">
+                    <!-- todo convert skillset icon to view -->
+                    <img class="skillset-icon" {{bindAttr data-magos="magos"}} {{bindAttr src="icon"}} />
+                  </div>
                   <table class="table">
                     <tbody>
                       {{#each potions}}

@@ -555,7 +555,7 @@ var Parser = {
   },
   createSceneComponents: function(scenes) {
 
-    var path = '/static/img/components/',
+    var path = '/static/img/icons/',
       ext = '.png';
 
     _.each(scenes, function(scene) {
@@ -569,7 +569,7 @@ var Parser = {
               var off = _.isUndefined(Crafty.magos.volume) || Crafty.magos.volume ? '' : '-off';
 
               this_.addComponent('2D', 'DOM', 'Image');
-              this_.image(path + comp.slug + off + ext);
+              this_.image(path + 'icon-' + comp.slug + off + ext);
               this_.addComponent('volume-button'); // class for click event and styling
             }
           });
