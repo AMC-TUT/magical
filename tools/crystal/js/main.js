@@ -7,10 +7,7 @@ var motionListener;
 var orientation;
 var origTintRGB = convertToRGBArray('#FF00FF');
 var tintRGB = origTintRGB.slice(0);
-//http://stackoverflow.com/questions/9077325/testing-hardware-support-in-javascript-for-device-orientation-events-of-the-ipho
-var accelometer = !(window.DeviceMotionEvent == undefined || window.DeviceMotionEvent.interval == undefined);
-var gyroscope;
-//accelometer = true;
+var accelometer;
 
 //Activates or deactivates crystall ball dragging
 function setDragging(activate) {
@@ -75,8 +72,8 @@ function enableMotionDetection() {
 
 //Shake action when DeviceOrientationEvent available
 //Not used since deviceMotion suits this task better
-/*if (window.DeviceOrientationEvent) {
-	motionListener = window.addEventListener("deviceorientation", orientationHandler, false);
+/*if (window.DevicedebugEvent) {
+	motionListener = window.addEventListener("deviceorientation", debugTextHandler, false);
 }*/
 /*function orientationHandler(evt) {
 	if(orientation == null) {
@@ -153,8 +150,8 @@ function reverseEffect() {
 
 //Action whenever shaking or dragging is on
 function shakeListener() {
-	var shakeTreshold = 100;
-	$("#contentHolder").text(shakeCounter);
+	var shakeTreshold = 30;
+	//$("#contentHolder").text(shakeCounter);
 
 	if(!shakeReverse) {
 		changeColor("-1,2,0");
@@ -180,11 +177,9 @@ function showWord() {
 	shakeReverse = true;
 
 	if(accelometer) {
-		debugText("setTimeout(enableMotionDetection, 2000)");
 		setTimeout(enableMotionDetection, 2000);
 	}
 	else {
-		debugText("stopDragging()");
 		stopDragging();
 		//setDragging(false);//cancel dragging
 		//setDragging();
@@ -280,10 +275,11 @@ function convertToRGBArray(hexString) {
 }
 
 function debugText(text) {
-	$("#debug").html($("#debug").text()+"<br>"+text);
+	$("#debug").html($("#debug").text()+" <br>"+text);
 }
 
 $(document).ready(function() {
+	//http://stackoverflow.com/questions/9077325/testing-hardware-support-in-javascript-for-device-orientation-events-of-the-ipho
 	//accelometer = !(window.DeviceMotionEvent == undefined || window.DeviceMotionEvent.interval == undefined);
 	accelometer = window.DeviceMotionEvent;
 	/*if (window.DeviceOrientationEvent) {
@@ -304,7 +300,7 @@ $(document).ready(function() {
 		words = data;
 		changeColor();
 	});
-	$("#debug").html("BEEEEEEEEEEB!!!!!!!!!! accelometer: "+accelometer+"<br> DeviceMotionEvent: "+window.DeviceMotionEvent+"<br> DeviceOrientationEvent: "+window.DeviceOrientationEvent);
+	$("#debug").html("accelometer: "+accelometer+"<br> DeviceMotionEvent: "+window.DeviceMotionEvent+"<br> DeviceOrientationEvent: "+window.DeviceOrientationEvent);
 	moveToCenter();
 
 	if(accelometer) {

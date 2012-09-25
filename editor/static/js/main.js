@@ -792,6 +792,13 @@
 
       console.log('magos changes');
 
+      var content = App.magosesController.get('content');
+      App.magosesController.set('content', []);
+      setTimeout(function() {
+        App.magosesController.set('content', content);
+      }, 200);
+    //
+
       Em.run.next(function() {
         //
         refreshSidebar($('.sortable-sidearea'));
@@ -844,7 +851,11 @@
       } else {
         $('.chest-container').addClass('principes-magos');
       }
-    }.observes('selected')
+    }.observes('selected'),
+    contentObserver: function() {
+      console.log(' contentObserver: function() {');
+    }.observes('content')
+
   });
 
   App.MagosView = Em.View.extend({
@@ -869,23 +880,19 @@
             },
             placement: 'left'
           });
-
-        //  $('.potion-icon').draggable('destroy');
-        //  $('.selected-magos .potion-icon').draggable({ helper: 'clone' });
-
         });
       });
 
     }.observes('content.@each.busy'),
     selectedObserver: function() {
-
-console.log('selectedObserver: function() {');
 /*
-      var $sortableArea = this.$();
+      console.log('selectedObserver: function() {');
+
+      App.magosesController.set('content', App.magosesController.get('content'));
 
       Em.run.next(function() {
         //
-        refreshSidebar($sortableArea);
+        refreshSidebar( $('.sortable-sidearea') );
       });
 */
     }.observes('content.selected')
@@ -1441,11 +1448,9 @@ console.log('selectedObserver: function() {');
     }
   });
 
-  // canvas
-
   function refreshSidebar($sortableArea) {
     console.log('refreshSidebar($sortableArea)')
-    console.log($sortableArea)
+
     // sortable well
     $sortableArea.sortable({
       placeholder: "sortable-highlight",
@@ -1461,14 +1466,13 @@ console.log('selectedObserver: function() {');
     // small delay required to make this work
     setTimeout(function() {
 
-      // draggable skillset-icon
-      var $droppable = $sortableArea.find('.skillset:not(.ui-droppable)'),
-        $draggable = $sortableArea.find('.magos-potions.selected-magos').find('.skillset').find('.skillset-icon');
-
-      console.log($droppable);
-      console.log($draggable);
+      // potions
+      $('.potion-icon').draggable('destroy');
+      $('.selected-magos .potion-icon').draggable({ helper: 'clone' });
 
       // droppable skillset
+      var $droppable = $sortableArea.find('.magos-potions:not(.selected-magos)').find('.skillset');
+
       $droppable.droppable({
         greedy: true,
         accept: ".skillset-icon",
@@ -1485,13 +1489,15 @@ console.log('selectedObserver: function() {');
         }
       });
 
+      // draggable skillset-icon
+      var $draggable = $sortableArea.find('.magos-potions.selected-magos').find('.skillset').find('.skillset-icon');
       $draggable.draggable({
         helper: 'clone',
         cursor: 'move',
         zIndex: 9999
       });
 
-    }, 500);
+    }, 400);
   }
 
   function createGameTableCanvases() {
