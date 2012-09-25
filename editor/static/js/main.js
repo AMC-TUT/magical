@@ -845,28 +845,29 @@
     didInsertElement: function() {
       var $sortableArea = this.$();
       var view = this;
-      //console.log($sortableArea);
-      // small delay required to make this work
-      setTimeout(function() {
 
-        Em.run.next(function() {
+      Em.run.next(function() {
 
-          // sortable well
-          $sortableArea.sortable({
-            placeholder: "sortable-highlight",
-            items: "> .sortable-item",
-            handle: "h3",
-            axis: "y",
-            opacity: 0.8,
-            forceHelperSize: true
-          });
-          //
-          $sortableArea.disableSelection();
+        // sortable well
+        $sortableArea.sortable({
+          placeholder: "sortable-highlight",
+          items: "> .sortable-item",
+          handle: "h3",
+          axis: "y",
+          opacity: 0.8,
+          forceHelperSize: true
+        });
+        //
+        $sortableArea.disableSelection();
+
+        // small delay required to make this work
+        setTimeout(function() {
 
           // draggable skillset-icon
           var $droppable = $sortableArea.find('.skillset'),
-            $draggable = $droppable.find('.selected-magos').find('.skillset-icon');
-
+            $draggable = $sortableArea.find('.magos-potions.selected-magos').find('.skillset').find('.skillset-icon');
+console.log($droppable);
+console.log($draggable)
           // droppable skillset
           $droppable.droppable({
             greedy: true,
@@ -879,18 +880,21 @@
                 magos = $draggable.data('magos'),
                 tgtMagos = $tgt.find('.skillset-icon').data('magos');
 
-                // AAA
+              // AAA
             }
           });
 
           $draggable.draggable({
             helper: 'clone',
+            cursor: 'move',
             zIndex: 9999
           });
 
-        });
+        }, 500);
 
-      }, 400);
+      });
+
+
 
     },
     busyObserver: function() { // TODO
