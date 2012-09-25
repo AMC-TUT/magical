@@ -95,7 +95,7 @@ function enableMotionDetection() {
 function motionHandler(evt) {
 	//debugText("motionHandler: "+orientation);
 	//if(orientation === null) {
-	if(motionOn) {
+	if(!motionOn) {
 		reverseEffect();
 	}
 	var accelTreshold = 6;
