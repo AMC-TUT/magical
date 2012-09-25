@@ -8,6 +8,7 @@ var orientation;
 var origTintRGB = convertToRGBArray('#FF00FF');
 var tintRGB = origTintRGB.slice(0);
 var accelometer;
+var motionOn;
 
 //Activates or deactivates crystall ball dragging
 function setDragging(activate) {
@@ -66,6 +67,7 @@ function setShaking(activate) {
 function enableMotionDetection() {
 	debugText("enableMotionDetection");
 	orientation = null;
+	motionOn = false;
 
 	motionListener = window.addEventListener("devicemotion", motionHandler, false);
 }
@@ -91,17 +93,19 @@ function enableMotionDetection() {
 
 //Shake motion detection action
 function motionHandler(evt) {
-	debugText("motionHandler: "+orientation);
-	if(orientation === null) {
+	//debugText("motionHandler: "+orientation);
+	//if(orientation === null) {
+	if(motionOn) {
 		reverseEffect();
 	}
 	var accelTreshold = 6;
 	var distance;
 	var accel = evt.accelerationIncludingGravity;
 
-	distance = Math.sqrt(accel.x * accel.x + accel.z * accel.z);
-	orientation = new Object({x:accel.x, y:accel.z});
-	debugText("("+orientation.x+","+orientation.y+")");
+	distance = Math.sqrt(accel.x * accel.x + accel.y * accel.y);
+	orientation = new Object({x:accel.x, y:accel.y});
+	motionOn = true;
+	//debugText("("+orientation.x+","+orientation.y+")");
 	/*if(evt.acceleration) {
 		distance = Math.sqrt(evt.acceleration.x * evt.acceleration.x + evt.acceleration.y * evt.acceleration.y);
 		orientation = new Object({x:evt.acceleration.x, y:evt.acceleration.y});
