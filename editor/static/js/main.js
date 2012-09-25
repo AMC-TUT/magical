@@ -794,18 +794,24 @@
 
       var content = App.magosesController.get('content');
       App.magosesController.set('content', []);
+
       setTimeout(function() {
         App.magosesController.set('content', content);
-      }, 200);
-    //
 
-      Em.run.next(function() {
+        Em.run.next(function() {
         //
         refreshSidebar($('.sortable-sidearea'));
       });
+      }, 500);
+      //
 
 
-    }.observes('user.magos')
+    }.observes('user.magos'),
+    vittuObserver: function() {
+
+    console.log('vittu')
+
+    }.observes('magos')
   });
 
   /**************************

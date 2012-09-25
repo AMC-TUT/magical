@@ -114,12 +114,14 @@ function motionHandler(evt) {
 }
 
 function reverseEffect() {
+	debugText("reverseEffect: "+shakeDecayInterval)
 	if(shakeDecayInterval == null) {
 		$("#contentHolder").text("");
 
-		setColorDecay(100, "1,-2,0");
+		setColorDecay(100, "1,-4,0");
 		
 		//Start word clearing effect (i.e. return color to original)
+		debugText("shakeReverse: "+shakeReverse);
 		if(shakeReverse) {
 			var reverseSteps = 5;
 			var reverseStepCounter = 0;
@@ -154,7 +156,7 @@ function shakeListener() {
 	//$("#contentHolder").text(shakeCounter);
 
 	if(!shakeReverse) {
-		changeColor("-1,2,0");
+		changeColor("-1,4,0");
 		shakeCounter++;
 	}
 	//Show a word
@@ -300,7 +302,7 @@ $(document).ready(function() {
 		words = data;
 		changeColor();
 	});
-	$("#debug").html("accelometer: "+accelometer+"<br> DeviceMotionEvent: "+window.DeviceMotionEvent+"<br> DeviceOrientationEvent: "+window.DeviceOrientationEvent);
+	//$("#debug").html("accelometer: "+accelometer+"<br> DeviceMotionEvent: "+window.DeviceMotionEvent+"<br> DeviceOrientationEvent: "+window.DeviceOrientationEvent);
 	moveToCenter();
 
 	if(accelometer) {
