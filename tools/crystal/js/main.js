@@ -16,7 +16,7 @@ function setDragging(activate) {
 			startDragging();
 			
 			$("#contentHolder").text("");
-			console.log("mousemove")
+			
 			$("#crystalBall").mousemove(function() {
 				shakeListener();
 			});
@@ -91,7 +91,8 @@ function enableMotionDetection() {
 
 //Shake motion detection action
 function motionHandler(evt) {
-	if(orientation == null) {
+	debugText("motionHandler: "+orientation);
+	if(orientation === null) {
 		reverseEffect();
 	}
 	var accelTreshold = 6;
