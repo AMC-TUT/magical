@@ -848,49 +848,7 @@
 
       Em.run.next(function() {
 
-        // sortable well
-        $sortableArea.sortable({
-          placeholder: "sortable-highlight",
-          items: "> .sortable-item",
-          handle: "h3",
-          axis: "y",
-          opacity: 0.8,
-          forceHelperSize: true
-        });
-        //
-        $sortableArea.disableSelection();
-
-        // small delay required to make this work
-        setTimeout(function() {
-
-          // draggable skillset-icon
-          var $droppable = $sortableArea.find('.skillset'),
-            $draggable = $sortableArea.find('.magos-potions.selected-magos').find('.skillset').find('.skillset-icon');
-console.log($droppable);
-console.log($draggable)
-          // droppable skillset
-          $droppable.droppable({
-            greedy: true,
-            accept: ".skillset-icon",
-            activeClass: "ui-state-hover",
-            hoverClass: "ui-state-active",
-            drop: function(event, ui) {
-              var $tgt = $(event.target),
-                $draggable = $(ui.draggable),
-                magos = $draggable.data('magos'),
-                tgtMagos = $tgt.find('.skillset-icon').data('magos');
-
-              // AAA
-            }
-          });
-
-          $draggable.draggable({
-            helper: 'clone',
-            cursor: 'move',
-            zIndex: 9999
-          });
-
-        }, 500);
+        Magos.refeshSidebar($sortableArea);
 
       });
 
@@ -1470,6 +1428,55 @@ console.log($draggable)
   });
 
   // canvas
+
+  function refreshSidebar() {
+        // sortable well
+        $sortableArea.sortable({
+          placeholder: "sortable-highlight",
+          items: "> .sortable-item",
+          handle: "h3",
+          axis: "y",
+          opacity: 0.8,
+          forceHelperSize: true
+        });
+        //
+        $sortableArea.disableSelection();
+
+        // small delay required to make this work
+        setTimeout(function() {
+
+          // draggable skillset-icon
+          var $droppable = $sortableArea.find('.skillset'),
+            $draggable = $sortableArea.find('.magos-potions.selected-magos').find('.skillset').find('.skillset-icon');
+
+console.log($droppable);
+console.log($draggable);
+
+          // droppable skillset
+          $droppable.droppable({
+            greedy: true,
+            accept: ".skillset-icon",
+            activeClass: "ui-state-hover",
+            hoverClass: "ui-state-active",
+            drop: function(event, ui) {
+              var $tgt = $(event.target),
+                $draggable = $(ui.draggable),
+                magos = $draggable.data('magos'),
+                tgtMagos = $tgt.find('.skillset-icon').data('magos');
+
+                App.magosesController.set('selected', tgtMagos);
+                App.usersController.set('user.magos', tgtMagos);
+            }
+          });
+
+          $draggable.draggable({
+            helper: 'clone',
+            cursor: 'move',
+            zIndex: 9999
+          });
+
+        }, 500);
+  }
 
   function createGameTableCanvases() {
 

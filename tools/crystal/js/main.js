@@ -60,7 +60,13 @@ function setShaking(activate) {
         enableMotionDetection();
 	}
 	else {
-		window.removeEventListener("devicemotion", motionHandler);
+		if (window.DeviceOrientationEvent) {
+			window.removeEventListener("deviceorientation", orientationHandler);
+			}
+		else {
+			window.removeEventListener("devicemotion", motionHandler);
+		}
+		
 		motionListener = null;
 	}
 }
@@ -75,17 +81,9 @@ function enableMotionDetection() {
 	else {
 		motionListener = window.addEventListener("devicemotion", motionHandler, true);
 	}
-	/*motionListener = window.addEventListener("devicemotion", function(evt) {
-		var accelTreshold = 6;
-		var distance = Math.sqrt(evt.accelerationIncludingGravity.x * evt.accelerationIncludingGravity.x + evt.accelerationIncludingGravity.y * evt.accelerationIncludingGravity.y);
-		//console.log("distance: "+distance);
-		if(distance >= accelTreshold) {
-			shakeListener();
-		}
-	}, true);*/
 }
 
-//Shake action
+//Shake action when DeviceOrientationEvent available
 function orientationHandler(evt) {
 	if(orientation == null) {
 		reverseEffect();
@@ -100,7 +98,7 @@ function orientationHandler(evt) {
 	}
 }
 
-//Shake action
+//Shake action when DeviceOrientationEvent NOT available
 function motionHandler(evt) {
 	if(orientation == null) {
 		reverseEffect();
@@ -159,7 +157,7 @@ function reverseEffect() {
 //Action whenever shaking or dragging is on
 function shakeListener() {
 	var shakeTreshold = 100;
-
+	$("#contentHolder").text(shakeCounter);
 	if(!shakeReverse) {
 		changeColor("-1,2,0");
 		shakeCounter++;
@@ -207,7 +205,7 @@ function setColorDecay(freq, decayRGB) {
 	function decay() {
 		shakeCounter = Math.max(shakeCounter-1, 0);
 		changeColor(decayRGB);
-		$("#contentHolder").text(shakeCounter);
+		//$("#contentHolder").text(shakeCounter);
 	}
 }
 
