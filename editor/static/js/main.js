@@ -6,7 +6,11 @@
 // @codekit-prepend "vendor/bootstrap.min.js"
 // @codekit-prepend "vendor/ember.js"
 // @codekit-prepend "plugins.js"
+  $(function() {
+
 (function(App, $, undefined) {
+
+
 
   // "use strict";
   // Em.LOG_BINDINGS = true;
@@ -415,6 +419,11 @@
 
       return _.isObject(collisions) ? collisions.filterProperty('text') : false;
 
+    }.property('properties'),
+    filteredDialogEvents: function() {
+      //var collisions = this.getPath('properties.collisions');
+      //return _.isObject(collisions) ? collisions.filterProperty('text') : false;
+      return false;
     }.property('properties')
   });
 
@@ -1106,6 +1115,13 @@
     privateState: false,
     publicState: true // TODO
   });
+
+  App.EmptySettingsView = Em.View.extend({
+    content: true,
+    templateName: 'emptySettings'
+   // template: Ember.Handlebars.compile('<h4 style="margin: 8px 0;">NoR Settings</h4>')
+  });
+
 
   /**************************
    * Data Source
@@ -1826,4 +1842,7 @@
     }
 
 
+
 }(window.App = window.App || Em.Application.create(), jQuery));
+
+}); // $(function() {

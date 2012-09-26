@@ -141,6 +141,10 @@
         </div>
       </script>
 
+      <script id="emptySettings" type="text/x-handlebars-template">
+        <h4 style="margin: 8px 0;">No Settings</h4>
+      </script>
+
       <script type="text/x-handlebars">
       {{! InfoBox }}
       <div class="magos-infobox well">
@@ -164,44 +168,50 @@
 
                     <div class="infobox-skillset infobox-physicus">
 
-                      <h4>Controls</h4>
+                      {{#unless App.selectedComponentController.content.properties.controls}}
+                        {{#unless App.selectedComponentController.content.properties.collisions}}
+                          {{#unless App.selectedComponentController.content.properties.gravitation}}
+                            {{view App.EmptySettingsView templateName="emptySettings"}}
+                          {{/unless}}
+                        {{/unless}}
+                      {{/unless}}
 
-                      {{#view App.InfoBoxControlsView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-controls"}}
-                        <tr>
-                          <td>
-                            Method
-                          </td>
-                          <td>
-                          {{#if content.properties.controls.method}} {{content.properties.controls.method}} {{else}} ---{{/if}}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Speed</td>
-                          <td>
-                          {{#if content.properties.controls.speed}} {{content.properties.controls.speed}} {{else}} ---{{/if}}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Jump Height</td>
-                          <td>
-                          {{#if content.properties.controls.jumpHeight}} {{content.properties.controls.jumpHeight}} {{else}} ---{{/if}}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Snap to Grid</td>
-                          <td>
-                          {{#if content.snapToGrid}} {{content.snapToGrid}} {{else}} ---{{/if}}
-                          </td>
-                        </tr>
-                      {{/view}}
+                      {{#if App.selectedComponentController.content.properties.controls}}
+                        <h4>Controls</h4>
+                        {{#view App.InfoBoxControlsView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-controls"}}
+                          <tr>
+                            <td>Method</td>
+                            <td>
+                              {{content.properties.controls.method}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Speed</td>
+                            <td>
+                              {{content.properties.controls.speed}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Jump Height</td>
+                            <td>
+                              {{content.properties.controls.jumpHeight}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Snap to Grid</td>
+                            <td>
+                              {{content.snapToGrid}}
+                            </td>
+                          </tr>
+                        {{/view}}
+                      {{/if}}
 
-                      <h4>Collision</h4>
-                      {{#view App.InfoBoxCollisionView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-collision"}}
-                      <tr>
-                        <th>Target</th><th>Action</th>
-                      </tr>
-
-                      {{#if content.properties.collisions}}
+                      {{#if App.selectedComponentController.content.properties.collisions}}
+                        <h4>Collision</h4>
+                        {{#view App.InfoBoxCollisionView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-collision"}}
+                        <tr>
+                          <th>Target</th><th>Action</th>
+                        </tr>
                         {{#each content.properties.collisions}}
                         <tr>
                           <td>
@@ -212,26 +222,26 @@
                           </td>
                         </tr>
                         {{/each}}
-                      {{else}}
-                        <tr><td> ---</td><td> ---</td></tr>
+                        {{/view}}
                       {{/if}}
-                      {{/view}}
 
+                      {{#if App.selectedComponentController.content.properties.gravitation}}
                       <h4>Gravitation</h4>
-                      {{#view App.InfoBoxGravitationView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-gravitation"}}
-                        <tr>
-                          <td>Strength</td>
-                          <td>
-                            {{#if content.properties.gravitation.strength}} {{content.properties.gravitation.strength}} {{else}} ---{{/if}}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Direction</td>
-                          <td>
-                          {{#if content.directionStr}} {{content.directionStr}} {{else}} ---{{/if}}
-                          </td>
-                        </tr>
-                      {{/view}}
+                        {{#view App.InfoBoxGravitationView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-gravitation"}}
+                          <tr>
+                            <td>Strength</td>
+                            <td>
+                              {{content.properties.gravitation.strength}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Direction</td>
+                            <td>
+                              {{content.directionStr}}
+                            </td>
+                          </tr>
+                        {{/view}}
+                      {{/if}}
 
                     </div>
                   </div><!--/span-->
@@ -240,62 +250,68 @@
 
                     <div class="infobox-skillset infobox-principes">
 
-                      <h4>Score</h4>
-                      {{#view App.InfoBoxScoreView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-score"}}
-                        <tr>
-                          <th>Action</th><th>Score</th>
-                        </tr>
-                        {{#if content.filteredScoreEvents}}
-                        {{#each content.filteredScoreEvents}}
-                          <tr>
-                            <td>Collision {{target}}</td><td>{{score}}</td>
-                          </tr>
-                        {{/each}}
-                        {{else}}
-                          <tr><td> ---</td><td> ---</td></tr>
-                        {{/if}}
-                      {{/view}}
+                      {{#unless App.selectedComponentController.content.filteredScoreEvents}}
+                        {{#unless App.selectedComponentController.content.properties.font}}
+                          {{#unless App.selectedComponentController.content.filteredDialogEvents}}
+                            {{#unless App.selectedComponentController.content.filteredTextEvents}}
+                              {{view App.EmptySettingsView templateName="emptySettings"}}
+                            {{/unless}}
+                          {{/unless}}
+                        {{/unless}}
+                      {{/unless}}
 
-                      <h4>Font</h4>
+                      {{#if App.selectedComponentController.content.filteredScoreEvents}}
+                        <h4>Score</h4>
+                        {{#view App.InfoBoxScoreView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-score"}}
+                          <tr>
+                            <th>Action</th><th>Score</th>
+                          </tr>
+                          {{#each content.filteredScoreEvents}}
+                            <tr>
+                              <td>Collision {{target}}</td><td>{{score}}</td>
+                            </tr>
+                          {{/each}}
+                        {{/view}}
+                      {{/if}}
+
                       {{#if App.selectedComponentController.content.properties.font}}
-                      {{#view App.InfoBoxFontView}}
-                        <div {{bindAttr style="cssBgColor"}}>
-                          <div {{bindAttr style="cssColor"}}>
-                            <div {{bindAttr style="cssSize"}}>
-                              <div {{bindAttr style="cssFamily"}}>
-                                {{family}}
+                        <h4>Font</h4>
+                        {{#view App.InfoBoxFontView}}
+                          <div {{bindAttr style="cssBgColor"}}>
+                            <div {{bindAttr style="cssColor"}}>
+                              <div {{bindAttr style="cssSize"}}>
+                                <div {{bindAttr style="cssFamily"}}>
+                                  {{family}}
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      {{/view}}
-                      {{else}}
-                        <div class="font-preview empty"> ---</div>
+                        {{/view}}
                       {{/if}}
 
-                      <h4>Dialog</h4>
-                      {{#view App.InfoBoxDialogView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-dialog"}}
-                        <tr>
-                          <th>Action</th><th>Participants</th>
-                        </tr>
-                        <tr><td> ---</td><td> ---</td></tr>
-                      {{/view}}
-
-                      <h4>Text</h4>
-                      {{#view App.InfoBoxTextView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-text"}}
-                        <tr>
-                          <th>Action</th><th>Text</th>
-                        </tr>
-                        {{#if content.filteredTextEvents}}
-                        {{#each content.filteredTextEvents}}
+                      {{#if App.selectedComponentController.content.filterDialogEvents}}
+                        <h4>Dialog</h4>
+                        {{#view App.InfoBoxDialogView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-dialog"}}
                           <tr>
-                            <td>Collision {{target}}</td><td class="ellipsis">{{text.text}}</td>
+                            <th>Action</th><th>Participants</th>
                           </tr>
-                        {{/each}}
-                        {{else}}
                           <tr><td> ---</td><td> ---</td></tr>
-                        {{/if}}
-                      {{/view}}
+                        {{/view}}
+                      {{/if}}
+
+                      {{#if App.selectedComponentController.content.filterTextEvents}}
+                        <h4>Text</h4>
+                        {{#view App.InfoBoxTextView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-text"}}
+                          <tr>
+                            <th>Action</th><th>Text</th>
+                          </tr>
+                          {{#each content.filteredTextEvents}}
+                            <tr>
+                              <td>Collision {{target}}</td><td class="ellipsis">{{text.text}}</td>
+                            </tr>
+                          {{/each}}
+                        {{/view}}
+                      {{/if}}
 
                     </div>
                   </div><!--/span-->
@@ -304,57 +320,64 @@
 
                     <div class="infobox-skillset infobox-artifex">
 
-                      <h4>Image</h4>
-                      {{#view App.InfoBoxSpriteView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-sprite"}}
-                        <tr>
-                          <td colspan"2">
-                           {{#if content.icon}} <img {{bindAttr src="content.icon"}} class="sprite"> {{else}} ---{{/if}}
-                          </td>
-                        </tr>
-                      {{/view}}
+                      {{#unless App.selectedComponentController.content.icon}}
+                        {{#unless App.selectedComponentController.content.animation}}
+                          {{view App.EmptySettingsView templateName="emptySettings"}}
+                        {{/unless}}
+                      {{/unless}}
 
-                      <h4>Animation</h4>
-                      {{#view App.InfoBoxAnimationView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-animation"}}
-                        <tr>
-                          <th>Action</th><th>Animation</th>
-                        </tr>
-                        <tr>
-                          <td> ---</td><td> ---</td>
-                        </tr>
-                      {{/view}}
+                      {{#if App.selectedComponentController.content.icon}}
+                        <h4>Image</h4>
+                        {{#view App.InfoBoxSpriteView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-sprite"}}
+                          <tr>
+                            <td colspan"2">
+                             {{#if content.icon}} <img {{bindAttr src="content.icon"}} class="sprite"> {{else}} ---{{/if}}
+                            </td>
+                          </tr>
+                        {{/view}}
+                      {{/if}}
+
+                      {{#if App.selectedComponentController.content.filteredAnimationEvents}}
+                        <h4>Animation</h4>
+                        {{#view App.InfoBoxAnimationView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-animation"}}
+                          <tr>
+                            <th>Action</th><th>Animation</th>
+                          </tr>
+                          <tr>
+                            <td> ---</td><td> ---</td>
+                          </tr>
+                        {{/view}}
+                      {{/if}}
 
                     </div>
 
                     <div class="infobox-skillset infobox-musicus">
 
-                      <h4>Audio</h4>
+                      {{#unless App.selectedComponentController.content.filteredAudioEvents}}
+                        {{view App.EmptySettingsView templateName="emptySettings"}}
+                      {{/unless}}
 
-                      {{#view App.InfoBoxAudioView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-audio"}}
-                        <tr>
-                          <th>Action</th><th>Audio</th><th>Plays</th>
-                        </tr>
-
-                        {{#if content.filteredAudioEvents}}
-                        {{#each content.filteredAudioEvents}}
-                          <tr>
-                            <td>
-                              {{event}}
-                            </td>
-                            <td>
-                              <audio>
-                                <source src="/static/game/audios/ogg/boom.ogg" type="audio/ogg" />
-                              </audio>
-                              <button class="btn btn-success btn-mini btn-play"><i class="icon-play icon-white"></i></button>
-                            </td>
-                            <td>
-                              {{audio.playCount}}
-                            </td>
-                          </tr>
-                        {{/each}}
-                        {{else}}
-                          <tr><td> ---</td><td> ---</td><td> ---</td></tr>
-                        {{/if}}
-                      {{/view}}
+                      {{#if App.selectedComponentController.content.filteredAudioEvents}}
+                        <h4>Audio</h4>
+                        {{#view App.InfoBoxAudioView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-audio"}}
+                          {{#each content.filteredAudioEvents}}
+                            <tr>
+                              <td>
+                                {{event}}
+                              </td>
+                              <td>
+                                <audio>
+                                  <source src="/static/game/audios/ogg/boom.ogg" type="audio/ogg" />
+                                </audio>
+                                <button class="btn btn-success btn-mini btn-play"><i class="icon-play icon-white"></i></button>
+                              </td>
+                              <td>
+                                {{audio.playCount}}
+                              </td>
+                            </tr>
+                          {{/each}}
+                        {{/view}}
+                      {{/if}}
 
                     </div>
                   </div><!--/span-->

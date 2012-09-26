@@ -482,7 +482,7 @@ var Parser = {
           this_.addComponent('2D', 'Canvas', 'Image');
 
           // sprite
-          if (sprite) {
+          if (sprite && !sprite.match(/^empty/)) {
             // this_.addComponent(sprite + "-sprite");
             // sprite impl. exists and works. uncomment previous
             // line and comment out next line to use sprite impl.
