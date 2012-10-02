@@ -1,0 +1,48 @@
+html {
+    background-image: url('../img/background.jpg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    background-size: cover;
+}
+/*.no-background-size #image {
+    background-image: url(lol.png);
+    min-height: 100%;
+    min-width: 100%;
+}*/
+#crystalBall {
+    display: block;
+    position: absolute;
+}
+#crystalBallLens {
+    width: 407px;
+    height: 407px;
+    background-image: url('../img/CrystalBall.png');
+    opacity: 0.5;
+    position: absolute;
+}
+#crystalBallCanvas {
+    position: absolute;
+}
+#contentHolder {
+    width: 407px;
+    height: 200px;
+    font-family: 'Loved by the King', cursive;
+    font-size: 64px;
+    text-align: center;
+    margin-top: 140px;
+    position: absolute;
+}
+.active {
+    border: 1px solid red;
+}
+.unselectable { 
+    -moz-user-select: none; 
+    -khtml-user-select: none; 
+    -webkit-user-select: none; 
+    -o-user-select: none; 
+}

@@ -1,0 +1,36 @@
+{"verbs":[
+    {
+        "word": "combine",
+        "some": "thing"
+    },
+    {
+        "word": "organize"
+    },
+    {
+        "word": "build"
+    }
+],
+"nouns": [
+    {
+        "word": "chemical"
+    },
+    {
+        "word": "trash"
+    },
+    {
+        "word": "trust"
+    }
+],
+"adjectives": [
+    {
+        "word": "liquid"
+    },
+    {
+        "word": "fast"
+    },
+    {
+        "word": "helpful"
+    }
+]
+}
+

@@ -1,0 +1,22 @@
+<html>
+<head>
+	<title>Crystall Ball</title>
+	<link href='http://fonts.googleapis.com/css?family=Loved+by+the+King' rel='stylesheet' type='text/css'>
+	<!--link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet"-->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/crystal.css" />
+</head>
+<body>
+	<p id="debug"><p>
+	<div id="crystalBall">
+		<canvas id='crystalBallCanvas' width='407px' height='407px'></canvas>
+		<div id="crystalBallLens">
+			<div id="contentHolder" class="unselectable"></div>
+		</div>
+	</div>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+	<script src="{{ STATIC_URL }}js/crystal/main.js"></script>
+	<!--script src="http://remote-tilt.com/js/device-motion-polyfill.js"></script-->
+</body>
+</html>

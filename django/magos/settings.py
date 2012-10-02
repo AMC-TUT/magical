@@ -26,6 +26,14 @@ DATABASES = {
     }
 }
 
+"""
+SESSION_ENGINE = 'redis_sessions.session'
+SESSION_REDIS_HOST = 'localhost'
+SESSION_REDIS_PORT = 6379
+SESSION_REDIS_DB = 0
+#SESSION_REDIS_PASSWORD = 'password'
+SESSION_REDIS_PREFIX = 'django_session'
+"""
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -51,7 +59,8 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = 'c:/work/www/django_media/'
+MEDIA_ROOT = '/Users/mkoskela/work/tut/projects/magos/code/magical/django/'
+#MEDIA_ROOT = 'c:/work/www/django_media/'
 #MEDIA_ROOT = '/home/mkoskela/magos_media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
@@ -74,7 +83,8 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    'c:/work/projektit/mag/magical/django/static/',
+    #'c:/work/projektit/mag/magical/django/static/',
+    '/Users/mkoskela/work/tut/projects/magos/code/magical/django/static/',
     #'/home/mkoskela/dev/magical/django/static/',
 )
 
@@ -115,7 +125,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    'c:/work/projektit/mag/magical/django/templates',
+    #'c:/work/projektit/mag/magical/django/templates',
+    '/Users/mkoskela/work/tut/projects/magos/code/magical/django/templates',
     #'/home/mkoskela/dev/magical/django/templates',
 )
 
@@ -150,6 +161,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'apps.game',
+    'apps.crystal',
     'django_extensions',
     #'tastypie',
     'djangorestframework',

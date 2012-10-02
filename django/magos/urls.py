@@ -21,6 +21,8 @@ urlpatterns = patterns('',
     # url(r'^magos/', include('magos.foo.urls')),
     url(r'^game/', include('apps.game.urls')),
 
+    url(r'^crystal/', include('apps.crystal.urls')),
+
     #url(r'^accounts/logout/$', 'django.contrib.auth.views.logout'),
     
     # Uncomment the admin/doc line below to enable admin documentation:
@@ -37,6 +39,8 @@ urlpatterns = patterns('',
     
     #url(r'^api/users(/)?$', 'apps.game.views.api_users'),
     url(r'^api/v1/', include('apps.api.urls')),
+    
+    (r'^crystal/', 'django.views.generic.simple.direct_to_template', {'template': 'crystal/index.html'}),
     
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
