@@ -15,9 +15,9 @@ function setDragging(activate) {
 	if(arguments.length == 0 || activate) {
 		$("#crystalBallLens").mousedown(function() {
 			startDragging();
-			
+
 			$("#contentHolder").text("");
-			
+
 			$("#crystalBall").mousemove(function() {
 				shakeListener();
 			});
@@ -25,7 +25,7 @@ function setDragging(activate) {
 			$("body").mouseup(function() {
 				stopDragging();
 			});
-			
+
 			/*$("#crystalBall").mouseleave(function() {
 				stopDragging();
 			});*/
@@ -83,7 +83,7 @@ function enableMotionDetection() {
 	}
 	var accelTreshold = 6;
 	var distance = Math.sqrt(evt.alpha * evt.alpha + evt.beta * evt.beta);
-	
+
 	orientation = new Object({x:evt.alpha, y:evt.beta});
 
 	if(distance >= accelTreshold) {
@@ -125,7 +125,7 @@ function reverseEffect() {
 		$("#contentHolder").text("");
 
 		setColorDecay(100, "1,-4,0");
-		
+
 		//Start word clearing effect (i.e. return color to original)
 		debugText("shakeReverse: "+shakeReverse);
 		if(shakeReverse) {
@@ -133,14 +133,14 @@ function reverseEffect() {
 			var reverseStepCounter = 0;
 			var reverseInterval;
 			var colorChange = "";
-			
+
 			for(var i=0; i<origTintRGB.length; i++) {
 				var totalChange = origTintRGB[i] - tintRGB[i];
 				var stepChange = (totalChange >= 0) ? Math.ceil(totalChange / reverseSteps) : Math.floor(totalChange / reverseSteps);
-				
+
 				colorChange += stepChange + ((i < origTintRGB.length) ? "," : "");
 			}
-			
+
 			function reverseStep() {
 				if(reverseStepCounter < reverseSteps) {
 					changeColor(colorChange);
@@ -154,7 +154,7 @@ function reverseEffect() {
 			reverseInterval = setInterval(reverseStep, 100);
 		}
 	}
-}	
+}
 
 //Action whenever shaking or dragging is on
 function shakeListener() {
@@ -177,9 +177,9 @@ function showWord() {
 	var wordTypes = ["verbs", "nouns", "adjectives"];
 	var wordList = words[wordTypes[wordType]];
 	var word = wordList[Math.floor(Math.random() * wordList.length)].word;
-	
+
 	$("#contentHolder").text(word);
-	
+
 	wordType = (wordType == wordTypes.length-1) ? 0 : wordType+1;
 	setColorDecay(-1);
 	shakeReverse = true;
@@ -204,7 +204,7 @@ function setColorDecay(freq, decayRGB) {
 	if(arguments.length == 2 || freq > 0) {
 		shakeDecayInterval = setInterval(decay, freq);
 	}
-	
+
 	function decay() {
 		shakeCounter = Math.max(shakeCounter-1, 0);
 		changeColor(decayRGB);
@@ -216,20 +216,20 @@ function setColorDecay(freq, decayRGB) {
 function changeColor(rgbChange) {
 	var rgbChangeArray = (arguments[0] == null) ? [0,0,0] : rgbChange.split(",");
 	var newColor = "rgb(";
-	
+
 	for(var i=0; i<rgbChangeArray.length; i++) {
 		tintRGB[i] += parseInt(rgbChangeArray[i]);
 		tintRGB[i] = Math.min(Math.max(0, tintRGB[i]), 255);
 		newColor += tintRGB[i] + ((i < rgbChangeArray.length-1) ? "," : "");
 	}
 	newColor += ")";
-	
+
 	//var canvas = $("#crystalBallCanvas");
 	var canvas = document.getElementById("crystalBallCanvas");
 	var ctx = canvas.getContext("2d");
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.beginPath();
-	ctx.arc(canvas.width/2, canvas.height/2, canvas.width/2, 0, Math.PI*2, true); 
+	ctx.arc(canvas.width/2, canvas.height/2, canvas.width/2, 0, Math.PI*2, true);
 	ctx.closePath();
 	ctx.fillStyle = newColor;
 	ctx.fill();
@@ -258,23 +258,23 @@ function moveToCenter(animate) {
 //Return a string in format "rgb(R,G,B)"
 function convertToRGB(hexString) {
 	hexString = (hexString.charAt(0)=="#") ? hexString.substring(1,7) : hexString;
-	
+
 	var r = parseInt(hexString.substring(0,2), 16);
 	var g = parseInt(hexString.substring(2,4), 16);
 	var b = parseInt(hexString.substring(4,6), 16);
-	
+
 	return 'rgb('+r+','+g+','+b+')';
 }
 
 //Return an array of [R, G, B]
 function convertToRGBArray(hexString) {
 	var rgbArray = new Array();
-	
+
 	hexString = (hexString.charAt(0)=="#") ? hexString.substring(1,7) : hexString;
 	rgbPart(hexString.substring(0,2));
 	rgbPart(hexString.substring(2,4));
 	rgbPart(hexString.substring(4,6));
-	
+
 	function rgbPart(part) {
 		var value = parseInt(part, 16);
 		rgbArray.push(value);
@@ -283,7 +283,7 @@ function convertToRGBArray(hexString) {
 }
 
 function debugText(text) {
-	$("#debug").html($("#debug").text()+" <br>"+text);
+	// $("#debug").html($("#debug").text()+" <br>"+text);
 }
 
 $(document).ready(function() {
