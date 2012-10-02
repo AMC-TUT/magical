@@ -1,130 +1,138 @@
 {
-    "title": "Super Magos",
-    "slug": "super-magos",
-    "type": "platform",
-    "state": true,
-    "cloned": false,
-    "canvas": {
-        "blockSize": 32,
-        "rows": 12,
-        "columns": 16
+  "title": "Super Magos",
+  "slug": "super-magos",
+  "type": "platform",
+  "state": true,
+  "cloned": false,
+  "canvas": {
+    "blockSize": 64,
+    "rows": 12,
+    "columns": 16
     },
     "description": "The quick brown fox jumps over the lazy dog",
     "authors": [
-        {
-            "firstName": "Matti",
-            "lastName": "Vanhanen",
-            "userName": "matti.vanhanen",
-            "magos": "principes"
-        },
-        {
-            "firstName": "Maija",
-            "lastName": "Meikalainen",
-            "userName": "maija.meikalainen",
-            "magos": "physicus"
-        }
-    ],
-    "revision": {
+    {
+      "firstName": "Matti",
+      "lastName": "Vanhanen",
+      "userName": "matti.vanhanen",
+      "magos": "principes"
+      },
+      {
+        "firstName": "Maija",
+        "lastName": "Meikalainen",
+        "userName": "maija.meikalainen",
+        "magos": "physicus"
+      }
+      ],
+      "revision": {
         "gameComponents": [
+        {
+          "title": "Player",
+          "slug": "player",
+          "properties": {
+            "sprite": "player64",
+            "controls": {
+              "method": "Twoway",
+              "speed": 2,
+              "jumpHeight": 10,
+              "grid": false
+              },
+              "gravitation": {
+                "strength": 4,
+                "direction": true
+                },
+                "collisions": [
                 {
-                    "title": "Player",
-                    "slug": "player",
+                  "target": "key",
+                  "event": "destroyTarget",
+                  "score": 40,
+                  "audio": {
+                    "slug": "boom",
+                    "playCount": 1
+                    },
+                    "text": {
+                      "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                    }
+                    },
+                    {
+                      "target": "lock",
+                      "event": "destroySelf",
+                      "score": 10,
+                      "audio": {
+                        "slug": "boom",
+                        "playCount": 4
+                      }
+                    }
+                    ]
+                  }
+                  },
+                  {
+                    "title": "Block Left",
+                    "slug": "block-left",
                     "properties": {
-                        "sprite": "player",
-                        "controls": {
-                            "method": "Twoway",
-                            "speed": 2,
-                            "jumpHeight": 10,
-                            "grid": false
+                      "sprite": "block_left",
+                    }
+                    },
+                    {
+                      "title": "Block Right",
+                      "slug": "block-right",
+                      "properties": {
+                        "sprite": "block_right",
+                      }
+                      },
+                      {
+                        "title": "Block 1",
+                        "slug": "block-1",
+                        "properties": {
+                          "sprite": "block1",
+                        }
                         },
-                        "gravitation": {
-                            "strength": 4,
-                            "direction": true
-                        },
-                        "collisions": [
-                            {
-                                "target": "brick",
-                                "event": "destroyTarget",
-                                "score": 40,
-                                "audio": {
-                                    "slug": "boom",
-                                    "playCount": 1
-                                },
-                                "text": {
-                                    "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-                                }
+                        {
+                          "title": "Block 2",
+                          "slug": "block-2",
+                          "properties": {
+                            "sprite": "block2",
+                          }
+                          },
+                          {
+                            "title": "Block 3",
+                            "slug": "block-3",
+                            "properties": {
+                              "sprite": "block3",
+                            }
+                          }
+                          ],
+                          "scenes": [
+                          {
+                            "name": "intro",
+                            "sceneComponents": [],
+                            "gameComponents": []
                             },
                             {
-                                "target": "painting",
-                                "event": "destroySelf",
-                                "score": 10,
-                                "audio": {
-                                    "slug": "boom",
-                                    "playCount": 4
+                              "name": "game",
+                              "sceneComponents": [],
+                              "gameComponents": []
+                              },
+                              {
+                                "name": "outro",
+                                "sceneComponents": [],
+                                "gameComponents": []
+                              }
+                              ]
+                              },
+                              "assets": {
+                                "audios": [
+                                {
+                                  "title": "Boom",
+                                  "slug": "boom"
                                 }
+                                ],
+                                "fonts": [
+                                {
+                                  "title": "",
+                                  "slug": "",
+                                  "url": ""
+                                }
+                                ]
+                              }
                             }
-                        ]
-                    }
-                },
-                {
-                    "title": "Brick",
-                    "slug": "brick",
-                    "properties": {
-                        "sprite": "brick",
-                        "font": {
-                            "family": "Arial",
-                            "color": "#CF0000",
-                            "background": "#FFFFFF",
-                            "size": "14"
-                        }
-                    }
-                },
-                {
-                    "title": "Water",
-                    "slug": "water",
-                    "properties": {
-                        "sprite": "water"
-                    }
-                },
-                {
-                    "title": "Painting",
-                    "slug": "painting",
-                    "properties": {
-                        "sprite": "painting"
-                    }
-                }
-          ],
-          "scenes": [
-            {
-                "name": "intro",
-                "sceneComponents": [],
-                "gameComponents": []
-            },
-            {
-                "name": "game",
-                "sceneComponents": [],
-                "gameComponents": []
-            },
-            {
-                "name": "outro",
-                "sceneComponents": [],
-                "gameComponents": []
-            }
-          ]
-        },
-        "assets": {
-            "audios": [
-            {
-                "title": "Boom",
-                "slug": "boom"
-            }
-            ],
-            "fonts": [
-                {
-                    "title": "",
-                    "slug": "",
-                    "url": ""
-                }
-            ]
-        }
-}
