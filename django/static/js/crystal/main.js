@@ -160,7 +160,7 @@ function reverseEffect() {
 //Action whenever shaking or dragging is on
 function shakeListener() {
 	var shakeTreshold = 100;
-	$("#contentHolder").text(shakeCounter);
+	//$("#contentHolder").text(shakeCounter);
 	if(!shakeReverse) {
 		changeColor("-1,2,0");
 		shakeCounter++;
