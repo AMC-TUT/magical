@@ -698,18 +698,42 @@ $(function() {
 
     Em.View.create({
       templateName: 'dialog-image-assets',
-      submit: function(event) {
+      click: function(event) {
         event.preventDefault();
 
-        App.gameComponentsController.get('content').pushObject(item);
+        var $tgt = $(event.target),
+          $modal = $('#image-assets');
 
-        // App.selectedComponentController.set('content', item);
-        $('#dialog-new-item').modal('hide');
+        if($tgt.hasClass('btn-select')) {
 
-        App.dataSource.saveGame(0, function(data) {
-          console.log('save (create new)');
+          var $item = $modal.find('.assets-list').find('.ui-selected');
+
+          if(!$item.length && !_.isNull( App.selectedComponentController.get('content') )) {
+            return false;
+          }
+
+          var sprite = $item.data('sprite');
+
+          App.selectedComponentController.setPath('content.properties.sprite', sprite);
+
+          // App.gameComponentsController.get('content').pushObject(item);
+              // App.selectedComponentController.set('content', item);
+          // $('#image-assets').modal('hide');
+
+          App.dataSource.saveGame(0, function(data) {
+            console.log('save (add sprite)');
+          });
+
+        } else if($tgt.hasClass('btn-close')) {
+           $modal.modal('hide');
+           $modal.find('.ui-selected').removeClass('.ui-selected');
+        }
+      },
+      didInsertElement: function() {
+        // HAA
+        Em.run.next( function() {
+          $('.assets-list').selectable({ filter: "li" });
         });
-
       }
     }).appendTo('body');
 
@@ -757,7 +781,21 @@ $(function() {
 
         //console.log('new selected component:');
         //console.log(this.getPath('content.properties.sprite'))
-      }.observes('content')
+      }.observes('content'),
+      spriteObserver: function() {
+        var sprite = this.get('content.properties.sprite'),
+          comp = this;
+
+        var item = App.gameComponentsController.get('content').filterProperty(comp);
+        console.log(item);
+
+
+        console.log('spriteObserver event');
+
+// HAA
+
+      }.observes('content.properties.sprite')
+
     });
 
     /**************************

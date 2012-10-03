@@ -101,7 +101,7 @@
 
 // Give the tabs something to sit on
 .nav-tabs {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #2C2929;
 }
 // Make the list-items overlay the bottom border
 .nav-tabs > li {
@@ -109,6 +109,7 @@
 }
 // Actual tabs (as links)
 .nav-tabs > li > a {
+  color: @yellow;
   padding-top: 8px;
   padding-bottom: 8px;
   line-height: @baseLineHeight;
@@ -121,9 +122,10 @@
 // Active state, and it's :hover to override normal :hover
 .nav-tabs > .active > a,
 .nav-tabs > .active > a:hover {
-  color: @gray;
+  color: #eee;
   background-color: @white;
-  border: 1px solid #ddd;
+  #gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
+  border: 1px solid #2C2929;
   border-bottom-color: transparent;
   cursor: default;
 }

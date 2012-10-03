@@ -326,27 +326,49 @@
 
         <!-- image assets -->
         <script type="text/x-handlebars" data-template-name="dialog-image-assets">
-        <div class="modal fade hide" id="image-assets-info">
+        <div class="modal fade hide" id="image-assets">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>Image</h3>
+            <h3>Images</h3>
           </div>
           <div class="modal-body">
-
+            <ul class="nav nav-tabs">
+              <li class="active">
+                <a href="#images-tab">Images</a>
+              </li>
+              <li class="disabled"><a href="#">Animations</a></li>
+              <li class="disabled"><a href="#">Backgrounds</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="images-tab">
+                <ul class="assets-list">
+                  <li data-sprite="rock"><img src="/static/game/sprites/rock.png" /><span>Rock</span></li>
+                  <li data-sprite="plant"><img src="/static/game/sprites/plant.png" /><span>Plant</span></li>
+                  <li data-sprite="collectible1"><img src="/static/game/sprites/collectible1.png" /><span>Collectible</span></li>
+                  <li data-sprite="collectible2"><img src="/static/game/sprites/collectible2.png" /><span>Collectible</span></li>
+                  <li data-sprite="player64"><img src="/static/game/sprites/player64.png" /><span>Player</span></li>
+                  <li data-sprite="key"><img src="/static/game/sprites/key.png" /><span>Key</span></li>
+                  <li data-sprite="lock"><img src="/static/game/sprites/lock.png" /><span>Lock</span></li>
+                  <li data-sprite="block1"><img src="/static/game/sprites/block1.png" /><span>Block</span></li>
+                  <li data-sprite="block2"><img src="/static/game/sprites/block2.png" /><span>Block</span></li>
+                  <li data-sprite="block1"><img src="/static/game/sprites/block3.png" /><span>Block</span></li>
+                  <li data-sprite="block-left"><img src="/static/game/sprites/block_left.png" /><span>Block Left</span></li>
+                  <li data-sprite="block-right"><img src="/static/game/sprites/block_right.png" /><span>Block Right</span></li>
+                </ul>
+              </div>
+            </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-info btn-select" type="submit">Select</button>
-            <button class="btn btn-warning btn-close" type="submit">Cancel</button>
+            <button class="btn btn-success btn-select" type="submit">Select</button>
+            <button class="btn btn-info btn-close" type="submit">Cancel</button>
           </div>
         </div>
         </script>
 
-        <script data-template-name="empty-settings" type="text/x-handlebars-template">
+        <script type="text/x-handlebars-template" data-template-name="empty-settings">
           <h4 style="margin: 8px 0;">No Settings</h4>
         </script>
-
-      <!-- /* Handlebars templates end */ -->
-
+        <!-- /* Handlebars templates end */ -->
 
   <script type="text/x-handlebars">
   <div class="navbar navbar-fixed-top">

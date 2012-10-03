@@ -501,6 +501,28 @@
     }
   }
 
+  .assets-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      display: inline-block;
+      margin: @atomicSize @baseMargin;
+      padding: @baseMargin;
+      .border-radius(@atomicSize);
+
+      &.ui-selecting, &:hover, &:focus { background: @wellBackground; }
+      &.ui-selected { background: #eee; color: @grayDark; }
+
+      span {
+        display: block;
+        text-align: center;
+        margin-top: @atomicSize;
+      }
+    }
+  }
+
   footer {
     color: #E9E9E9;
 
