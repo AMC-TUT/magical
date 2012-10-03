@@ -6,8 +6,8 @@
   "cloned": false,
   "canvas": {
     "blockSize": 64,
-    "rows": 12,
-    "columns": 16
+    "rows": 6,
+    "columns": 12
     },
     "description": "The quick brown fox jumps over the lazy dog",
     "authors": [
@@ -70,35 +70,35 @@
                     "title": "Block Left",
                     "slug": "block-left",
                     "properties": {
-                      "sprite": "block_left",
+                      "sprite": "block_left"
                     }
                     },
                     {
                       "title": "Block Right",
                       "slug": "block-right",
                       "properties": {
-                        "sprite": "block_right",
+                        "sprite": "block_right"
                       }
                       },
                       {
                         "title": "Block 1",
                         "slug": "block-1",
                         "properties": {
-                          "sprite": "block1",
+                          "sprite": "block1"
                         }
                         },
                         {
                           "title": "Block 2",
                           "slug": "block-2",
                           "properties": {
-                            "sprite": "block2",
+                            "sprite": "block2"
                           }
                           },
                           {
                             "title": "Block 3",
                             "slug": "block-3",
                             "properties": {
-                              "sprite": "block3",
+                              "sprite": "block3"
                             }
                           }
                           ],

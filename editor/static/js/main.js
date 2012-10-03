@@ -1,6 +1,5 @@
 /* Magos Editor */
 
-// @codekit-prepend "require.js"
 // @codekit-prepend "vendor/jquery.min.js"
 // @codekit-prepend "vendor/jquery-ui.min.js"
 // @codekit-prepend "vendor/bootstrap.min.js"
@@ -673,7 +672,7 @@ $(function() {
           title: itemTitle,
           slug: safeSlug,
           properties: {
-            sprite: 'empty'
+            sprite: 'empty1' // TODO order
           }
         };
 
@@ -684,11 +683,35 @@ $(function() {
         // App.selectedComponentController.set('content', item);
         $('#dialog-new-item').modal('hide');
 
-        // TODO send to node
+        App.dataSource.saveGame(0, function(data) {
+          console.log('save (create new)');
+        });
+
         this.set('itemTitle', null);
 
       }
     });
+
+    /**************************
+     * Dialog Image Assets
+     **************************/
+
+    Em.View.create({
+      templateName: 'dialog-image-assets',
+      submit: function(event) {
+        event.preventDefault();
+
+        App.gameComponentsController.get('content').pushObject(item);
+
+        // App.selectedComponentController.set('content', item);
+        $('#dialog-new-item').modal('hide');
+
+        App.dataSource.saveGame(0, function(data) {
+          console.log('save (create new)');
+        });
+
+      }
+    }).appendTo('body');
 
     /**************************
      * Selected Component
@@ -1373,7 +1396,7 @@ $(function() {
     // show/hide grid button TODO replace with ember object
     $(document).on('click tap', '.btn-grid', function(event) {
       event.preventDefault();
-      $tgt = $(event.target).closest('.btn');
+      var $tgt = $(event.target).closest('.btn');
       $('.canvas .canvas-table').toggleClass('gridless');
       $tgt.toggleClass('active');
     });
@@ -1381,7 +1404,7 @@ $(function() {
     // theme switcher TODO replace with ember object
     $(document).on('click tap', '.btn-group-theme .btn', function(event) {
       event.preventDefault();
-      $tgt = $(event.target).closest('.btn');
+      var $tgt = $(event.target).closest('.btn');
 
       $tgt.siblings().removeClass("active");
       $tgt.addClass("active");
@@ -1404,7 +1427,7 @@ $(function() {
     $(document).on('click tap', '.btn-preview', function(event) {
       event.preventDefault();
 
-      $modal = $('#dialog-preview');
+      var $modal = $('#dialog-preview');
 
       if (!$modal.hasClass('styled')) {
         // count & set dialog size
@@ -1443,7 +1466,7 @@ $(function() {
     $(document).on('click tap', '.btn-gameinfo', function(event) {
       event.preventDefault();
 
-      $modal = $('#dialog-info');
+      var $modal = $('#dialog-info');
 
       $modal.find('button').on('click tap', function(event) {
         $modal.modal('hide');
@@ -1586,7 +1609,7 @@ $(function() {
                 oid = gameComponent.oid,
                 sprite = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).getPath('properties.sprite');
 
-              var img = '<img src="../static/game/sprites/' + sprite + '.png" data-slug="' + slug + '" data-oid ="' + oid + '" class="canvas-item">';
+              var img = '<img src="../static/game/sprites/' + sprite + '.png" data-slug="' + slug + '" data-oid="' + oid + '" class="canvas-item">';
               var $img = $(img);
 
               // remove when clicked - impl. draggable later
@@ -1604,7 +1627,12 @@ $(function() {
                 });
               });
 
-              $scene.find('tr:nth-child(' + row + ')').find('td:nth-child(' + column + ')').append($img);
+              var cssRow = row + 1,
+                cssColumn = column + 1;
+
+              console.log(cssRow + ' ' + cssColumn);
+
+              $scene.find('tr:nth-child(' + cssRow + ')').find('td:nth-child(' + cssColumn + ')').append($img);
             });
 
             _.each(sceneComponents, function(sceneComponent) {
@@ -1631,7 +1659,6 @@ $(function() {
                   console.log('save (click)');
                 });
               });
-
 
               $scene.append($img);
             });

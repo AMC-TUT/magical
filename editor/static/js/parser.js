@@ -1,5 +1,4 @@
 /*
-
 _.each(Game.audios, function(audio) {
 
   if (audio.type === "file") {
@@ -173,9 +172,7 @@ _.each(Game.elements, function(element) {
           }
 
         });
-
 */
-
 
 Crafty.c("Controls", {
   init: function() {
@@ -458,8 +455,11 @@ var Parser = {
           Crafty.scene("intro");
         }, 500);
       }, function(e) {
+        //console.log(e)
         $('.loader-procent').text(Math.round(e.percent) + "%");
       }, function(e) {
+        //console.log(e)
+        //console.log('Error loading ' + e.src + ' while loading game assets (loaded ' + e.loaded + ' of ' + e.total + ')');
         alert('Error loading ' + e.src + ' while loading game assets (loaded ' + e.loaded + ' of ' + e.total + ')');
       });
 

@@ -1,33 +1,35 @@
+// @codekit-prepend "/vendor/crafty-0.4.8.js"
+
 (function($) {
 
-  "use strict";
+ // "use strict";
 
-  // socket.io
-  var pathname = window.location.pathname;
-  var address = 'http://' + window.location.hostname + '/editor';
-  var socket = io.connect(address);
-
-  socket.on('connecting', function() {
-    console.log('websocket connecting (game)');
-  });
-
-  socket.on('connect_failed', function(reason) {
-    console.error('unable to connect to websocket (game)', reason);
-  });
-
-  socket.on('connect', function() {
-    console.log('websocket connected (game)');
-  });
+ // Parser.getGame('super-magos', socket);
 
   window.onmessage = function(e) {
+
+    // socket.io
+    var address = 'http://' + window.location.hostname + '/editor';
+    var socket = io.connect(address);
+
+    socket.on('connecting', function() {
+      console.log('websocket connecting (game)');
+    });
+
+    socket.on('connect_failed', function(reason) {
+      console.error('unable to connect to websocket (game)', reason);
+    });
+
+    socket.on('connect', function() {
+      console.log('websocket connected (game)');
+    });
+
     if (e.origin !== window.location.origin) {
       return;
     }
 
     Parser.getGame(e.data, socket);
   };
-
-  Parser.getGame('super-magos', socket);
 
   // TODO Refactor Crafty.Mouse.Click
   $(document).on('click tap', '.volume-button', function(event) {
@@ -36,10 +38,10 @@
 
     // toggle image
     if (_.isUndefined(Crafty.magos.volume) || Crafty.magos.volume) {
-      Crafty.magos.volume = false;
+      Crafty.magos.volume.mute = true;
       $tgt.css('background-image', 'url(/static/img/icons/icon-volume-off.png)');
     } else {
-      Crafty.magos.volume = true;
+      Crafty.magos.audio.mute = false;
       $tgt.css('background-image', 'url(/static/img/icons/icon-volume.png)');
     }
 

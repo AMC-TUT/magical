@@ -245,7 +245,7 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
   });
 
   socket.on('getHighscore', function(slug, fn) {
-console.log('getHighscore')
+    // console.log('getHighscore')
     slug = _.isString(slug) ? slug : '';
     // GET /v1/highscores/:game
 
