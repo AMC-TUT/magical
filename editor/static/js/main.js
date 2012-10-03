@@ -724,6 +724,9 @@ $(function() {
             console.log('save (add sprite)');
           });
 
+          $modal.modal('hide');
+          $modal.find('.ui-selected').removeClass('.ui-selected');
+
         } else if($tgt.hasClass('btn-close')) {
            $modal.modal('hide');
            $modal.find('.ui-selected').removeClass('.ui-selected');
@@ -1668,8 +1671,6 @@ $(function() {
               var cssRow = row + 1,
                 cssColumn = column + 1;
 
-              console.log(cssRow + ' ' + cssColumn);
-
               $scene.find('tr:nth-child(' + cssRow + ')').find('td:nth-child(' + cssColumn + ')').append($img);
             });
 
@@ -1878,7 +1879,7 @@ $(function() {
     // help TODO replace with ember object
     $(document).on('click tap', '.btn-group-help .btn', function(event) {
       event.preventDefault();
-      $tgt = $(event.target).closest('.btn');
+      var $tgt = $(event.target).closest('.btn');
       $tgt.toggleClass('active');
 
       $('body').toggleClass('help');

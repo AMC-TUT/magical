@@ -522,7 +522,7 @@ var Parser = {
             }
 
           } else {
-            this_.addComponent('Platform');
+            this_.addComponent('Platform', 'Solid');
           }
 
           // bind events
