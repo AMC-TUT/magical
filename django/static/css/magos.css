@@ -1,6 +1,356 @@
 body {
-    padding-top:60px;
+    background: #444 url('../img/noise-pattern.png') 0 0 repeat;
+    color: #eee;
+    font: 13px/1.5 "Lucida Grande", Helvetica, Arial, sans-serif;
+    margin:0;
 }
+
+header {
+    position: relative;
+    width: 960px;
+    margin: 0 auto;
+    background: transparent url('../img/wiz-hand-top.png') 325px 0 no-repeat;
+}
+
+#login-info {
+    position: absolute;
+    z-index: 10;
+    width: 200px;
+    padding: 20px;
+    right: 0px;
+    top: 24px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    box-shadow:inset 0px 0px 40px rgba(0,0,0,.5), 4px 4px 10px rgba(255,255,255,0.1);
+    -webkit-box-shadow:inset 0px 0px 40px rgba(0,0,0,0.3), 4px 4px 10px rgba(255,255,255,0.1);
+    -moz-box-shadow:inset 0px 0px 40px rgba(0,0,0,0.3), 4px 4px 10px rgba(255,255,255,0.1);
+}
+
+#loginForm {
+    margin:0;
+}
+
+#loginForm label, #loginForm input {
+    display:block;
+}
+
+#loginForm label {
+    color: #bbb;
+    font-size: 14px;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.2), -1px -1px 2px rgba(0,0,0,0.1);
+}
+
+#loginForm input[type="submit"] {
+    padding: 7px 12px;
+    font-size: 14px;
+    background: #f5992a;
+    border: 0;
+    box-shadow:inset 0px 0px 10px rgba(0, 0, 0, .7), 4px 4px 10px rgba(255,255,255,0.1);
+}
+
+#loginForm input[type="text"],
+#loginForm input[type="password"] {
+    margin-bottom: 20px;
+    width: 176px;
+    padding: 7px 12px;
+    font-size: 14px;
+    background: #222;
+    color: #f5992a;
+    border: 0;
+    box-shadow:inset 0px 0px 10px rgba(0, 0, 0, .7), 4px 4px 10px rgba(255,255,255,0.1);
+}
+
+.navbar-link {
+    color: #f5992a;
+}
+
+section#content {
+    width: 960px;
+    margin: 0 auto;
+    background: #fff;
+    color: #333;
+    border-radius: 0 15px 15px 15px;
+    -moz-border-radius: 0 15px 15px 15px;
+    -webkit-border-radius: 0 15px 15px 15px;
+    -o-border-radius: 0 15px 15px 15px;
+    box-shadow: 0px 0px 8px #222;
+    -moz-box-shadow: 0px 0px 8px #222;
+    -webkit-box-shadow: 0px 0px 8px #222;
+}
+
+#main-content-wrap {
+    position: relative;
+    z-index: 100;
+}
+
+#main-content {
+    float:left;
+    width: 540px;
+    padding: 30px;
+    
+}
+
+#sidebar {
+    float:left;
+    width: 300px;
+    padding: 30px;
+}
+
+.bottom-shadow {
+    background: transparent url('../img/bottom-shadow.png') top left no-repeat;
+    width: 960px;
+    height: 40px;
+    margin: 0 auto;
+}
+
+footer {
+    width: 960px;
+    position: relative;
+    height: 300px;
+    margin: 0 auto;
+}
+
+#footer-left {
+    margin: 0 30px;
+    float: left;
+    width: 200px;
+}
+
+.footer-wide {
+    clear:left;
+    margin: 20px 30px;
+}
+
+#bottom-wiz {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 300;
+}
+
+#logo {
+    margin: 35px 0 20px 0;
+}
+
+#main-nav {
+    width: 940px;
+    position: relative;
+    z-index: 200;
+}
+
+#main-nav ul {
+    list-style: none;
+    padding:0;   
+    margin:0;
+}
+
+#main-nav ul li {
+	float:left;
+    line-height: 0;
+}
+
+#main-nav ul li a {
+    display: block;
+    font-size: 15pt;
+    line-height: 1.6em;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #222;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.2);
+    padding: 25px 25px 10px 25px;
+    border-radius: 15px 15px 0 0;
+    -moz-border-radius: 15px 15px 0 0;
+    -webkit-border-radius: 15px 15px 0 0;
+    background: #eee;
+    background-image: -webkit-linear-gradient(top, transparent 70%, rgba(0, 0, 0, 0.1));
+    background-image: -moz-linear-gradient(top, transparent 70%, rgba(0, 0, 0, 0.1));
+    background-image: -ms-linear-gradient(top, transparent 70%, rgba(0, 0, 0, 0.1));
+    background-image: -o-linear-gradient(top, transparent 70%, rgba(0, 0, 0, 0.1));
+    background-image: linear-gradient(to top, transparent 70%, rgba(0, 0, 0, 0.1));
+    border-left: 1px solid #fff;
+    border-right: 1px solid #ccc;
+    margin-top: 5px;
+    transition: margin, padding, background 300ms, 300ms, 600ms;
+    -moz-transition: margin, padding, background 300ms, 300ms, 600ms; /* Firefox 4 */
+    -webkit-transition: margin, padding, background 300ms, 300ms, 600ms; /* Safari and Chrome */
+    -o-transition: margin, padding, background 300ms, 300ms, 600ms; /* Opera */
+}
+
+#main-nav ul li a:hover {
+	text-decoration: none;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.6);
+	background: #f5992a;
+	padding: 25px 25px 15px 25px;
+    margin-top: 0;
+    background-image: -webkit-linear-gradient(bottom, transparent 70%, rgba(0, 0, 0, 0.1));
+    background-image: -moz-linear-gradient(bottom, transparent 70%, rgba(0, 0, 0, 0.53));
+    background-image: -ms-linear-gradient(bottom, transparent 70%, rgba(0, 0, 0, 0.53));
+    background-image: -o-linear-gradient(bottom, transparent 70%, rgba(0, 0, 0, 0.53));
+    background-image: linear-gradient(to bottom, transparent 70%, rgba(0, 0, 0, 0.53));    
+}
+
+#main-nav ul li a.selected {
+	color: #17779d;
+    background: #fff;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    padding: 25px 25px 15px 25px;
+    margin-top: 0;
+    background-image: -webkit-linear-gradient(bottom, transparent 70%, rgba(0, 0, 0, 0.1));
+    background-image: -moz-linear-gradient(bottom, transparent 70%, rgba(0, 0, 0, 0.53));
+    background-image: -ms-linear-gradient(bottom, transparent 70%, rgba(0, 0, 0, 0.53));
+    background-image: -o-linear-gradient(bottom, transparent 70%, rgba(0, 0, 0, 0.53));
+    background-image: linear-gradient(to bottom, transparent 70%, rgba(0, 0, 0, 0.53));
+}
+
+#main-nav ul li a span.home-icon {
+    text-indent:-999em;
+    background: transparent url('../img/home-icon.png') 0 3px no-repeat;
+    width: 24px;
+    height: 31px;
+    display: block;
+}
+
+#main-nav ul li a.selected span.home-icon {
+    background-position: -22px 0;
+}
+
+#wide-content {
+    padding: 30px;
+}
+
+.intro-game {
+    padding:30px;
+    height:400px;
+    background: #17779d url('../img/magos-front-splash.png') 0 0 no-repeat;
+    box-shadow:inset 0px 0px 40px rgba(0,0,0,.5), 0px 0px 5px rgba(0,0,0,0.3);
+    -webkit-box-shadow:inset 0px 0px 30px rgba(0,0,0,0.3), 0px 0px 10px rgba(0,0,0,0.4);
+    -moz-box-shadow:inset 0px 0px 40px rgba(0,0,0,0.3), 4px 4px 10px rgba(255,255,255,0.1); 
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+
+.slogan {
+    font-size: 1.8em;
+    line-height: 1.4em;
+    background: rgba(255,255,255,0.2);
+    width: 570px;;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.3), -1px -1px 2px rgba(0,0,0,0.1);
+    text-align: center;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+
+ul.nav {
+    margin-bottom: 0px;
+}
+
+.featured-game {
+    background: url('../img/thumbs/featured-game.png') left top no-repeat;
+    width: 538px;
+    height: 280px;
+    margin-bottom: 20px;
+     box-shadow:inset 0px 0px 40px rgba(0,0,0,.5), 0px 0px 5px rgba(0,0,0,0.3);
+    -webkit-box-shadow:inset 0px 0px 30px rgba(0,0,0,0.3), 0px 0px 10px rgba(0,0,0,0.4);
+    -moz-box-shadow:inset 0px 0px 40px rgba(0,0,0,0.3), 4px 4px 10px rgba(255,255,255,0.1); 
+    position: relative;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+
+#featured-slogan {
+    position:absolute;
+    bottom: 0;
+    left: 0;
+    width: 508px;
+    background: rgba(255,255,255,0.4);
+    padding: 5px 15px;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.3), -1px -1px 2px rgba(0,0,0,0.1);
+}
+
+
+#featured-slogan button.btn {
+    position: absolute;
+    right: 20px;
+    bottom: 30px;
+}
+
+.front-games {
+    margin: 0;
+    float:left;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    border-radius: 0 0 5px 5px;
+    -moz-border-radius: 0 0 5px 5px;
+    -webkit-border-radius: 0 0 5px 5px;
+}
+
+.nav-tabs > li > a {
+    font-size: 1.2em;
+}
+
+.games-list {
+    list-style:none;
+    float:left;
+    padding: 20px 0 0 20px;
+    margin:0;
+}
+
+.games-list li {
+    display:block;
+    float:left;
+    width: 152px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.games-list h1 {
+    font-size: 1.2em;
+    margin:5px 0;
+    width: 152px;
+    text-align: center;
+    line-height: 1.4em;
+}
+
+.games-list p {
+
+}
+
+.front-games .pagination {
+    float:left;
+    margin:0 20px 20px 20px;
+}
+
+#footer-nav {
+    float:left;
+    padding-top: 30px;
+}
+
+#footer-nav-items {
+    list-style: none;
+}
+
+#magos-logo-footer {
+    margin-bottom: 10px;
+}
+
+/* self-clearing float */
+.group:after {
+      content: ".";
+      display: block;
+      height: 0;
+      clear: both;
+      visibility: hidden;
+}
+
+
 
 #ajax_loading {
     display: none;
@@ -15,6 +365,4 @@ h1.ajax-loading {
     padding: 0;
 }
 
-#loginForm {
-    float:right;
-}
+

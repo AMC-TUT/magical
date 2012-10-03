@@ -3,72 +3,92 @@
 {% load login_form %}
 <!DOCTYPE html>
 <html lang="fi">
-  <head>
+<head>
     <meta charset=utf-8>
-    <title>Magos</title>
+    <title>Magos - Collaborative Game Creation</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/magos.css" />
     <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.min.css" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.min.css" />
-    
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/magos.css" />
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     
     {% block extrastyle %}{% endblock %}
-  </head>
+</head>
   {% load i18n %}
-  <body>
-  
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="#">Magos</a>
-          <div class="nav-collapse collapse">
-            <p class="navbar-text pull-right">
-              {% if not user.is_authenticated %}
-                  {% login_form %}
-              {% else %}
-                <a href="#" class="navbar-link">{{ user.username }}</a> | <a id="logout" href="/game/logout/">{% trans "Logout" %}</a>
-              {% endif %}
-            </p>
-            <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
+<body>
+
+<div id="header_wrap">
+
+    <header>
+        <img src="{{ STATIC_URL }}img/magos-logo.png" id="logo">
+
+        <nav id="main-nav" class="group">
+            <ul id="main-nav-items">
+                <li><a href="#" class="selected">Play</a></li>
+                <li><a href="#">Create</a></li>
+                <li><a href="#">Invent</a></li>
+                <li><a href="#">Learn</a></li>
+                <li><a href="#">Explore</a></li>
+            </ul> 
+        </nav>
         
-        </div>
-      </div>
-    </div>
-        
+        <section id="login-info">
+                  {% if not user.is_authenticated %}
+                      {% login_form %}
+                  {% else %}
+                    <p>Welcome to Magos {{ user.username }}</p>
+                    <p><a id="logout" class="navbar-link" href="/game/logout/">{% trans "Logout" %}</a></p>
+                  {% endif %}
+        </section>
+
     </header>
-    
-    <div class="container">
+
+</div>
+
+<div id="main-content-wrap">
+    <section id="content" class="group">
         {% block content %}{% endblock %}
-    </div>
+    </section>
+</div>
 
-    <div id="footer" class="container">
-        <div class="row">
-            <div class="span4">
-                <p>Magos</p>          
-            </div>
-            <div class="span8">
-                <p>TTY</p>          
-            </div>
+
+<div class="bottom-shadow"></div>
+
+<div id="footer_wrapper">
+    <footer>
+        <img src="{{ STATIC_URL }}img/magos-wiz-bottom.png" id="bottom-wiz">
+
+        <section id="footer-left">
+            <img id="magos-logo-footer" src="{{ STATIC_URL }}img/magos-logo-footer.png">
+
+            <p>Lorem ipsum
+            <br />Semper pulvinar libero
+            <br />Et magnis dis</p>
+        </section>
+        
+        <nav id="footer-nav">
+            <ul id="footer-nav-items">
+                <li><a href="#" id="home-link" class="selected">Home</a></li>
+                <li><a href="#">Play</a></li>
+                <li><a href="#">Create</a></li>
+                <li><a href="#">Invent</a></li>
+                <li><a href="#">Learn</a></li>
+            </ul>
+        </nav>
+
+        <div class="footer-wide">
+            <p>&copy; Copyright 2012 Magos.</p>
         </div>
-    </div>
 
-    <script src="{{ STATIC_URL }}js/lib/namespace.js"></script>
-    <script src="{{ STATIC_URL }}js/lib/modernizr.custom.js"></script>
+    </footer>
+</div>
+
+
+
+
+
     <script src="{{ STATIC_URL }}js/lib/jquery-1.7.1.min.js"></script>
     <script src="{{ STATIC_URL }}js/lib/underscore-min.js"></script>
     <script src="{{ STATIC_URL }}js/lib/jquery.blockUI.js"></script>
