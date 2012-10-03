@@ -16,7 +16,7 @@ from django.contrib.auth.models import User
 def home(request):
     tpl = 'apps/game/index.html'
     user = request.user
-    
+    """
     sess_id = request.COOKIES['sessionid']
     from django.contrib.sessions.models import Session
     print sess_id
@@ -28,6 +28,7 @@ def home(request):
     except Session.DoesNotExist:
         pass
     print Session.objects.all()
+    """
     return render(request, tpl, {'user': user})
 
 def logout_view(request):
