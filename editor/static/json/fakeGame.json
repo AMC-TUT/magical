@@ -5,7 +5,7 @@
   "state": true,
   "cloned": false,
   "canvas": {
-    "blockSize": 64,
+    "blockSize": 48,
     "rows": 8,
     "columns": 12
     },
@@ -45,8 +45,8 @@
             "sprite": "player64",
             "controls": {
               "method": "Twoway",
-              "speed": 3,
-              "jumpHeight": 15,
+              "speed": 2,
+              "jumpHeight": 14,
               "grid": false
               },
               "gravitation": {
@@ -122,7 +122,14 @@
                             },
                             {
                               "name": "game",
-                              "sceneComponents": [],
+                              "sceneComponents": [
+                                {
+                                  "slug": "background",
+                                  "properties": {
+                                    "sprite": "background-slughash"
+                                  }
+                                }
+                              ],
                               "gameComponents": []
                               },
                               {
