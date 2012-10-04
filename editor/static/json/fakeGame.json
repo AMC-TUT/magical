@@ -134,7 +134,23 @@
           "top": 30,
           "left": 30
         }
-      }],
+      },
+      {
+        "slug": "title",
+        "properties": {
+          "font": {
+            "family": "Arial",
+            "size": 40,
+            "color": "#222",
+            "background-color": "transparent"
+          }
+        },
+        "position": {
+          "top": 30,
+          "left": 80
+        }
+      }
+      ],
       "gameComponents": []
     }, {
       "name": "game",
