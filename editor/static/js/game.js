@@ -31,14 +31,13 @@
     Parser.getGame(e.data, socket);
   };
 
-  // TODO Refactor Crafty.Mouse.Click
   $(document).on('click tap', '.volume-button', function(event) {
     var $body = $('body'),
       $tgt = $(event.target);
 
     // toggle image
     if (_.isUndefined(Crafty.magos.volume) || Crafty.magos.volume) {
-      Crafty.magos.volume.mute = true;
+      Crafty.magos.audio.mute = true;
       $tgt.css('background-image', 'url(/static/img/icons/icon-volume-off.png)');
     } else {
       Crafty.magos.audio.mute = false;
@@ -48,7 +47,6 @@
     // do something with sound
   });
 
-  // TODO Refactor Crafty.Mouse.Click
   $(document).on('click tap', '.start-button', function(event) {
     // open game scene
     Crafty.scene('game');

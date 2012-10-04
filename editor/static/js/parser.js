@@ -283,7 +283,7 @@ var Parser = {
         ext = '.png';
 
       if (_.isObject(backgroundComp) && _.isObject(backgroundComp.properties) && _.isString(backgroundComp.properties.sprite)) {
-        backgroundImage = path + backgroundComp.sprite + ext;
+        backgroundImage = path + backgroundComp.properties.sprite + ext;
       }
 
       // create Crafty scene
@@ -424,6 +424,9 @@ var Parser = {
 
     // static magos loader scene
     Crafty.scene("loading", function() {
+
+      $('#cr-stage').css('background', '#111');
+
       // canvas size
       var width = Parser.game.canvas.columns * Parser.game.canvas.blockSize;
 
@@ -453,9 +456,8 @@ var Parser = {
       assets, function() {
         setTimeout(function() {
           Crafty.scene("intro");
-        }, 500);
+        }, 700);
       }, function(e) {
-        //console.log(e)
         $('.loader-procent').text(Math.round(e.percent) + "%");
       }, function(e) {
         //console.log(e)
@@ -481,20 +483,14 @@ var Parser = {
           // for all game comps
           this_.addComponent('2D', 'Canvas', 'Image');
 
+          this_.addComponent(component.title);
+
           // sprite
           if (sprite && !sprite.match(/^empty/)) {
             // this_.addComponent(sprite + "-sprite");
             // sprite impl. exists and works. uncomment previous
             // line and comment out next line to use sprite impl.
             this_.image('/static/game/sprites/' + sprite + '.png');
-          }
-
-          // gravity
-          if (!_.isUndefined(props.gravity)) {
-            var sign = props.gravity.direction ? 1 : -1;
-
-            this_.gravity("Platform");
-            this_.gravityConst(sign * props.gravity.strength);
           }
 
           // controls
@@ -521,8 +517,35 @@ var Parser = {
               this_.speed(speed);
             }
 
-          } else {
-            this_.addComponent('Platform', 'Solid');
+          }
+
+          // component type
+          if (_.isString(props.type)) {
+            this_.addComponent(props.type);
+
+            if(props.type === "Platform") {
+              this_.addComponent('Platform');
+            }
+
+            if(props.type === 'Block') {
+              this_.addComponent('Platform');
+              this_.addComponent('Solid');
+            }
+
+            if(props.type === "Pushable") {
+              this_.addComponent('Platform');
+              this_.addComponent('Solid');
+              this_.addComponent("Collision");
+            }
+          }
+
+          // gravity
+          if (!_.isUndefined(props.gravitation) && _.isUndefined(props.controls)) {
+            //var sign = props.gravitation.direction ? 1 : -1;
+
+            this_.addComponent("Gravity");
+            this_.gravity("Platform");
+            this_.gravityConst(3); ///sign * props.gravitation.strength);
           }
 
           // bind events
@@ -530,21 +553,64 @@ var Parser = {
             //destroy if it goes out of bounds
             if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
               this.destroy();
-              setTimeout(function() {
-                Crafty.scene('outro');
-              }, 500)
+
+              if(this.has('Player')) {
+                setTimeout(function() {
+                  Crafty.scene('outro');
+                }, 500);
+              }
 
             }
           });
 
+          // TODO this has done for presentation
+          if(_.isArray(props.collisions) && _.isObject(props.collisions[0])) {
+            this_.addComponent('Collision');
+
+            this_.onHit("Player", function(ent) {
+              if(props.collisions[0].event === "destroySelf") {
+                this.destroy();
+
+              } else if(props.collisions[0].event === "destroyTarget") {
+                var obj = ent[0].obj;
+                obj.destroy();
+                //
+                Crafty.scene('outro');
+              }
+
+            });
+          }
+
           this_.bind('Moved', function(from) {
-            // hit solid
-            if (this.has('Collision') && this.hit('Solid')) {
-              this.attr({
-                x: from.x,
-                y: from.y
-              });
-            }
+
+            if (this.has('Collision')) {
+
+              var hitPushable = this.hit('Pushable');
+              if(hitPushable) {
+                // platformer
+                var dir = this._x > from._x ? 'left' : 'right';
+                var posThis = this._x;
+                var widthThis = this._w;
+                var rightThis = posThis + widthThis;
+
+                _.each(hitPushable, function(pushable) {
+                  var obj = pushable.obj;
+                  var posObj = rightThis - obj._x;
+
+                  obj.attr({ x: obj._x + posObj });
+
+                });
+
+              // hit solid
+              } else if(this.hit('Solid')) {
+
+                this.attr({
+                  x: from.x,
+                  y: from.y
+                });
+
+              }
+            } // if collision
           });
 
         } // /init
@@ -582,7 +648,7 @@ var Parser = {
               var this_ = this;
 
               this_.addComponent('2D', 'DOM', 'Image');
-              this_.image(path + comp.slug + ext);
+              this_.image(path + 'icon-' + comp.slug + ext);
             }
           });
         }

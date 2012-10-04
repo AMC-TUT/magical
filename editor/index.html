@@ -38,7 +38,9 @@
                       {{#unless App.selectedComponentController.content.properties.controls}}
                         {{#unless App.selectedComponentController.content.properties.collisions}}
                           {{#unless App.selectedComponentController.content.properties.gravitation}}
-                            {{view App.EmptySettingsView templateName="emptySettings"}}
+                            {{#unless App.selectedComponentController.content.properties.type}}
+                              {{view App.EmptySettingsView templateName="emptySettings"}}
+                            {{/unless}}
                           {{/unless}}
                         {{/unless}}
                       {{/unless}}
@@ -64,12 +66,25 @@
                               {{content.properties.controls.jumpHeight}}
                             </td>
                           </tr>
+                          <!--
                           <tr>
                             <td>Snap to Grid</td>
                             <td>
                               {{content.snapToGrid}}
                             </td>
                           </tr>
+                          -->
+                        {{/view}}
+                      {{/if}}
+
+                      {{#if App.selectedComponentController.content.properties.type}}
+                        <h4>Element Type</h4>
+                        {{#view App.InfoBoxTypeView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-type"}}
+                        <tr>
+                          <td>
+                          {{content.properties.type}}
+                          </td>
+                        </tr>
                         {{/view}}
                       {{/if}}
 
@@ -187,18 +202,18 @@
 
                     <div class="infobox-skillset infobox-artifex">
 
-                      {{#unless App.selectedComponentController.content.icon}}
+                      {{#unless App.selectedComponentController.content.icon.foobar}}
                         {{#unless App.selectedComponentController.content.animation}}
                           {{view App.EmptySettingsView templateName="emptySettings"}}
                         {{/unless}}
                       {{/unless}}
 
-                      {{#if App.selectedComponentController.content.icon}}
+                      {{#if App.selectedComponentController.content.icon.foobar}}
                         <h4>Image</h4>
                         {{#view App.InfoBoxSpriteView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-sprite"}}
                           <tr>
                             <td colspan"2">
-                             {{#if content.icon}} <img {{bindAttr src="content.icon"}} class="sprite"> {{else}} ---{{/if}}
+                             <img {{bindAttr src="content.icon"}} class="sprite">
                             </td>
                           </tr>
                         {{/view}}
@@ -359,8 +374,8 @@
             </div>
           </div>
           <div class="modal-footer">
+            <button class="btn btn-close" type="submit">Cancel</button>
             <button class="btn btn-success btn-select" type="submit">Select</button>
-            <button class="btn btn-info btn-close" type="submit">Cancel</button>
           </div>
         </div>
         </script>
@@ -368,14 +383,14 @@
         <script type="text/x-handlebars-template" data-template-name="empty-settings">
           <h4 style="margin: 8px 0;">No Settings</h4>
         </script>
-        <!-- /* Handlebars templates end */ -->
+        <!-- /* Handlebars templates end {{#view App.TitleView}} {{title}} {{/view}} */ -->
 
   <script type="text/x-handlebars">
   <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
   <div class="container-fluid">
 
-  {{#view App.TitleView}} {{title}} {{/view}}
+  <img src="/static/img/wiz-head-white.png" class="wiz" title="" alt="" />
 
   <div class="btn-toolbar general-toolbar pull-right">
 
@@ -543,6 +558,63 @@
                 </div>
 
                 {{#if activeUser}}
+
+                {{! Image}}
+
+                <div {{bindAttr class="magos:magos-potions magos magos:image magos:hide"}} style="display:none;">
+                <form class="form-vertical">
+                  <fieldset>
+                    <legend>Image</legend>
+                    {{#view App.MagosComponentPropertyView contentBinding="this"}}
+                    <div class="image-action action-group">
+                      <div class="control-group" style="text-align:center;">
+                        <button class="btn btn-success draw-image-button" style="width: 47%;padding-bottom: 3px;padding-top: 3px;"><i class="icon-pencil"></i> Draw</button>
+                        <button {{action "openImageAssetsDialog"}} class="btn btn-success borrow-image-button icon-white" style="width: 47%;padding-bottom: 3px;padding-top: 3px;"><i class="icon-folder-open icon-white"></i> Borrow</button>
+                      </div>
+                    </div>
+
+                    <div class="form-actions">
+                      <button class="btn btn-info btn-back-potion"><i class="icon-arrow-left"></i></button>
+                    </div>
+                    {{/view}}
+
+                    </fieldset>
+                  </form>
+                </div>
+
+                {{! Type}}
+
+                <div {{bindAttr class="magos:magos-potions magos magos:type magos:hide"}} style="display:none;">
+                <form class="form-vertical">
+                  <fieldset>
+                    <legend>Type</legend>
+                      {{#view App.MagosComponentPropertyView contentBinding="this"}}
+                      <div class="action-group">
+                        <div class="control-group">
+                        <!--  <button {{action "removeComponentProperty"}} class="btn btn-danger btn-del-action pull-right"><i class="icon-minus icon-white"></i></button> -->
+                          <!--<label class="control-label">Action</label>-->
+                          <div class="controls">
+                            <select class="span12">
+                              <option>---</option>
+                              <option>Block</option>
+                              <option>Collectilbe</option>
+                              <option>Enemy</option>
+                              <option>Ladder</option>
+                              <option>Player</option>
+                              <option>Pushable</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    {{/view}}
+
+                    <div class="form-actions">
+                      <button class="btn btn-info btn-back-potion"><i class="icon-arrow-left icon-white"></i></button>
+                <!--      <button class="btn btn-success btn-add-action pull-right"><i class="icon-plus icon-white"></i></button> -->
+                    </div>
+                    </fieldset>
+                  </form>
+                </div>
 
                 {{! Score}}
 

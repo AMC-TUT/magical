@@ -48,7 +48,7 @@ $(function() {
 
     App.usersController.get('content').pushObject(
     App.Author.create({
-      userName: 'matti.vanhanen',
+      userName: 'matti',
       firstName: 'Matti',
       lastName: 'Vanhanen',
       magos: 'principes',
@@ -56,7 +56,7 @@ $(function() {
     }));
 
     // TODO
-    var user = App.usersController.get('content').findProperty('userName', 'matti.vanhanen');
+    var user = App.usersController.get('content').findProperty('userName', 'matti');
     App.usersController.set('user', user);
 
     /**************************
@@ -716,10 +716,13 @@ $(function() {
 
           App.selectedComponentController.setPath('content.properties.sprite', sprite);
 
-          // App.gameComponentsController.get('content').pushObject(item);
-              // App.selectedComponentController.set('content', item);
-          // $('#image-assets').modal('hide');
+          // TODO proper view update to chest and canvas
+          var slugName = App.selectedComponentController.getPath('content.slug');
+          var src = '/static/game/sprites/' + sprite + '.png';
+          $('.item-chest').find("[data-slug='" + slugName + "']").attr('src', src);
 
+          console.log(src);
+          console.log($('.item-chest').find("[data-slug='" + slugName + "']"))
           App.dataSource.saveGame(0, function(data) {
             console.log('save (add sprite)');
           });
@@ -784,21 +787,7 @@ $(function() {
 
         //console.log('new selected component:');
         //console.log(this.getPath('content.properties.sprite'))
-      }.observes('content'),
-      spriteObserver: function() {
-        var sprite = this.get('content.properties.sprite'),
-          comp = this;
-
-        var item = App.gameComponentsController.get('content').filterProperty(comp);
-        console.log(item);
-
-
-        console.log('spriteObserver event');
-
-// HAA
-
-      }.observes('content.properties.sprite')
-
+      }.observes('content')
     });
 
     /**************************
@@ -955,7 +944,7 @@ $(function() {
 
       }.observes('content.@each.busy'),
       selectedObserver: function() {
-        /*
+      /*
       console.log('selectedObserver: function() {');
 
       App.magosesController.set('content', App.magosesController.get('content'));
@@ -964,7 +953,7 @@ $(function() {
         //
         refreshSidebar( $('.sortable-sidearea') );
       });
-*/
+      */
       }.observes('content.selected')
 
     })
@@ -983,6 +972,11 @@ $(function() {
 
         console.log(score);
         console.log('App.MagosComponentPropertyView')
+      },
+      openImageAssetsDialog: function() {
+        event.preventDefault();
+
+        $('#image-assets').modal().on('show');
       }
     });
 
@@ -1004,6 +998,7 @@ $(function() {
     App.InfoBoxSpriteView = Em.View.extend();
     App.InfoBoxAnimationView = Em.View.extend();
     App.InfoBoxAudioView = Em.View.extend();
+    App.InfoBoxTypeView = Em.View.extend();
 
     App.InfoBoxFontView = Em.View.extend({
       tagName: 'div',
@@ -1684,6 +1679,11 @@ $(function() {
               var img = '<img src="../static/img/icons/icon-' + slug + '.png" data-slug="' + slug + '" class="canvas-item" style="position:absolute;left:' + left + 'px;top:' + top + 'px;">';
               var $img = $(img);
 
+              if(slug === 'background' && _.isObject(sceneComponent.properties) && _.isString(properties.sprite) ) {
+                var backgroundImage = '/static/game/sprites/' + properties.sprite + '.png';
+                $scene.css('background-image', 'url('+backgroundImage+')');
+              }
+
               // remove when clicked - impl. draggable later
               $img.on('click tap', function(event) {
                 var $tgt = $(event.target),
@@ -1693,6 +1693,10 @@ $(function() {
                 App.scenesController.getPath('selected.sceneComponents').removeObject(item);
 
                 $tgt.remove();
+
+                if(slug === 'background') {
+                  $scene.css('background-image', 'none');
+                }
 
                 App.dataSource.saveGame(0, function(data) {
                   console.log('save (click)');
