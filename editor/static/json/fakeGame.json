@@ -141,13 +141,13 @@
           "font": {
             "family": "Arial",
             "size": 40,
-            "color": "#222",
+            "color": "#001CE6",
             "background-color": "transparent"
           }
         },
         "position": {
           "top": 30,
-          "left": 80
+          "left": 140
         }
       }
       ],
