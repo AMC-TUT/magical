@@ -1,8 +1,11 @@
 {% if games %}
-    <h1>Pelit</h1>	
-	<ul class="games">
+	<ul class="games-list">
 	{% for game in games %}
-        <li class="included"><a id="gameId_{{ game.id }}" class="medicine">{{ game.title }}</a></li>
+        <li>
+            <img src="{{ STATIC_URL }}img/thumbs/super-magos.png">
+            <h1><a href="/game/details/{{ game.slug }}">{{ game.title }}</a></h1>
+            <p>{{ game.description }}</p>
+        </li>
     {% endfor %}
     </ul>
 {% else %}

@@ -3,6 +3,7 @@ from apps.game.api import UserResource
 #from tastypie.api import Api
 from djangorestframework.views import ListOrCreateModelView, InstanceModelView
 from django.conf import settings
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from django.contrib import admin
 admin.autodiscover()
@@ -40,15 +41,17 @@ urlpatterns = patterns('',
     #url(r'^api/users(/)?$', 'apps.game.views.api_users'),
     url(r'^api/v1/', include('apps.api.urls')),
     
-    (r'^crystal/', 'django.views.generic.simple.direct_to_template', {'template': 'crystal/index.html'}),
+    #(r'^crystal/', 'django.views.generic.simple.direct_to_template', {'template': 'crystal/index.html'}),
     
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 )
 
-if settings.DEBUG:
+#if settings.DEBUG:
     # static files (images, css, javascript, etc.)
-    urlpatterns += patterns('',
-        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-        'document_root': settings.MEDIA_ROOT}))
+#    urlpatterns += patterns('',
+#        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+#        'document_root': settings.MEDIA_ROOT}))
 
+# for development with some other server than runserver
+urlpatterns += staticfiles_urlpatterns()

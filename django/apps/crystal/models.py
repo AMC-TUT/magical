@@ -1,5 +1,6 @@
 from django.db import models
 from apps.game.models import Organization
+from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
 class WordType(models.Model):
@@ -41,3 +42,15 @@ class Word(models.Model):
     def __unicode__(self):
         return self.word
 
+
+class Description(models.Model):
+    """Description model"""
+    description = models.TextField(null=True, blank=True)
+    words = models.TextField(null=True, blank=True)
+    author = models.ForeignKey(User)
+    class Meta:
+        verbose_name = _('description')
+        verbose_name_plural = _('descriptions')
+
+    def __unicode__(self):
+        return self.description

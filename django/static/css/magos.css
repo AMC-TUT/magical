@@ -12,6 +12,10 @@ header {
     background: transparent url('../img/wiz-hand-top.png') 325px 0 no-repeat;
 }
 
+.standalone header {
+    background: transparent url('../img/wiz-hand-top.png') 590px 0 no-repeat;
+}
+
 #login-info {
     position: absolute;
     z-index: 10;
@@ -27,6 +31,21 @@ header {
     box-shadow:inset 0px 0px 40px rgba(0,0,0,.5), 4px 4px 10px rgba(255,255,255,0.1);
     -webkit-box-shadow:inset 0px 0px 40px rgba(0,0,0,0.3), 4px 4px 10px rgba(255,255,255,0.1);
     -moz-box-shadow:inset 0px 0px 40px rgba(0,0,0,0.3), 4px 4px 10px rgba(255,255,255,0.1);
+}
+
+.standalone #login-info {
+    position: static;
+    width:330px;
+    padding: 20px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    box-shadow:inset 0px 0px 40px rgba(0,0,0,.5), 4px 4px 10px rgba(255,255,255,0.1);
+    -webkit-box-shadow:inset 0px 0px 40px rgba(0,0,0,0.3), 4px 4px 10px rgba(255,255,255,0.1);
+    -moz-box-shadow:inset 0px 0px 40px rgba(0,0,0,0.3), 4px 4px 10px rgba(255,255,255,0.1);
+    margin: 40px auto;
 }
 
 #loginForm {
@@ -63,8 +82,18 @@ header {
     box-shadow:inset 0px 0px 10px rgba(0, 0, 0, .7), 4px 4px 10px rgba(255,255,255,0.1);
 }
 
+.standalone #loginForm input[type="text"],
+.standalone #loginForm input[type="password"] {
+    width: 300px;
+}
+
 .navbar-link {
     color: #f5992a;
+}
+
+.navbar-link:hover {
+    color: #fff;
+
 }
 
 section#content {
@@ -113,6 +142,10 @@ footer {
     margin: 0 auto;
 }
 
+.standalone footer {
+    width: 440px;
+}
+
 #footer-left {
     margin: 0 30px;
     float: left;
@@ -135,8 +168,14 @@ footer {
     margin: 35px 0 20px 0;
 }
 
+.standalone #logo {
+    margin: 0 auto 20px auto;
+    padding-top: 35px;
+    display: block;
+}
+
 #main-nav {
-    width: 940px;
+    width: 700px;
     position: relative;
     z-index: 200;
 }
@@ -193,7 +232,11 @@ footer {
     background-image: linear-gradient(to bottom, transparent 70%, rgba(0, 0, 0, 0.53));    
 }
 
-#main-nav ul li a.selected {
+body.home #main-nav ul li a.home,
+body.create #main-nav ul li a.create,
+body.invent #main-nav ul li a.invent,
+body.learn #main-nav ul li a.learn,
+body.explore #main-nav ul li a.explore {
 	color: #17779d;
     background: #fff;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
@@ -283,6 +326,7 @@ ul.nav {
 
 .front-games {
     margin: 0;
+    width: 538px;
     float:left;
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
@@ -307,6 +351,8 @@ ul.nav {
     display:block;
     float:left;
     width: 152px;
+    height: 180px;
+    overflow: hidden;
     margin-right: 20px;
     margin-bottom: 20px;
 }
@@ -319,8 +365,17 @@ ul.nav {
     line-height: 1.4em;
 }
 
+#login-info h2 {
+    font-size: 1.2em;
+    margin:0;   
+}
+
 .games-list p {
 
+}
+
+.errors, .errorlist {
+    color: #f00;
 }
 
 .front-games .pagination {

@@ -1,5 +1,6 @@
 var words;
 var wordType = 0;
+var wordTypes = ["verbs", "nouns", "adjectives"];
 var shakeCounter = 0;
 var shakeReverse = false;
 var shakeDecayInterval;
@@ -10,6 +11,9 @@ var tintRGB = origTintRGB.slice(0);
 //http://stackoverflow.com/questions/9077325/testing-hardware-support-in-javascript-for-device-orientation-events-of-the-ipho
 var accelometer = !(window.DeviceMotionEvent == undefined || window.DeviceMotionEvent.interval == undefined);
 var gyroscope;
+var x1 = 0, y1 = 0, z1 = 0, x2 = 0, y2 = 0, z2 = 0;
+var shakeInterval = null;
+var crystalWords = '';
 //accelometer = true;
 
 //Activates or deactivates crystall ball dragging
@@ -38,6 +42,9 @@ function setDragging(activate) {
 
 //Shaking starts. Reverse effect is played first if effect is at the end
 function startDragging() {
+	var infoStageKey = wordTypes[wordType];
+	$(crystalInfo).trigger('stage-change', infoStageKey + '-process');
+
 	var diameter = $("#crystalBallLens").width();
 	var boundaries = [0, 0, window.innerWidth-diameter, window.innerHeight-diameter];
 
@@ -52,45 +59,17 @@ function stopDragging() {
 	$("#crystalBall").draggable("destroy");
 }
 
-//Activates or deactivates shaking
-function setShaking(activate) {
-	if(arguments.length == 0 || activate) {
-        enableMotionDetection();
-	}
-	else {
-		if (window.DeviceOrientationEvent) {
-			window.removeEventListener("deviceorientation", orientationHandler);
-			}
-		else {
-			window.removeEventListener("devicemotion", motionHandler);
-		}
-		
-		motionListener = null;
-	}
-}
-
-//Activates or deactivates crystall ball shaking
-function enableMotionDetection() {
-	orientation = null;
-
-	motionListener = window.addEventListener("devicemotion", motionHandler, true);
-
-	/*if (window.DeviceOrientationEvent) {
-		motionListener = window.addEventListener("deviceorientation", orientationHandler, false);
-	}
-	else {
-		motionListener = window.addEventListener("devicemotion", motionHandler, true);
-	}*/
-}
 
 //Shake action when DeviceOrientationEvent available
 function orientationHandler(evt) {
 	if(orientation == null) {
 		reverseEffect();
 	}
-	var accelTreshold = 6;
+	console.log('evt.alpha: ' + evt.alpha);
+
+	var accelTreshold = 100;
 	var distance = Math.sqrt(evt.alpha * evt.alpha + evt.beta * evt.beta);
-	
+
 	orientation = new Object({x:evt.alpha, y:evt.beta});
 
 	if(distance >= accelTreshold) {
@@ -98,8 +77,16 @@ function orientationHandler(evt) {
 	}
 }
 
+function motionHandler(e) {
+	// set current x,y,z
+	x1 = e.accelerationIncludingGravity.x;
+	y1 = e.accelerationIncludingGravity.y;
+	z1 = e.accelerationIncludingGravity.z;
+}
+
+
 //Shake action when DeviceOrientationEvent NOT available
-function motionHandler(evt) {
+function motionHandlerOLD(evt) {
 	if(orientation == null) {
 		reverseEffect();
 	}
@@ -122,10 +109,98 @@ function motionHandler(evt) {
 	}
 }
 
+//Action whenever shaking or dragging is on
+function shakeListener() {
+	var shakeTreshold = 100;
+	//$("#contentHolder").text(shakeCounter);
+	if(!shakeReverse) {
+		changeColor("-1,2,0");
+		shakeCounter++;
+		if(accelometer) {
+			// let's accelerate shaking a bit
+			shakeCounter += 6;
+			// animate shake
+			var deviateX = (x2 < 0) ? -30: 30;
+			var diameter = $("#crystalBallLens").width();
+			var centerX = (window.innerWidth-diameter) / 2;
+			var centerY = (window.innerHeight-diameter) / 2;
+			$('#crystalBall').animate({left:centerX + deviateX, top:centerY}, 200, "easeOutElastic");
+		}
+	}
+	//Show a word
+	if(shakeCounter > shakeTreshold) {
+		shakeCounter = 0;
+		if (shakeInterval) {
+			clearInterval(shakeInterval);
+        	shakeInterval = null;
+        }
+		showWord();
+	}
+}
+
+//Activates or deactivates crystall ball shaking
+function enableMotionDetection() {
+	orientation = null;	
+	//motionListener = window.addEventListener("devicemotion", motionHandler, true);
+	/*
+	if (window.DeviceOrientationEvent) {
+		motionListener = window.addEventListener("deviceorientation", orientationHandler, false);
+	} else {
+		motionListener = window.addEventListener("devicemotion", motionHandler, true);
+	}
+	*/
+
+	if (typeof window.DeviceMotionEvent != 'undefined') {
+		// reset position
+		x1 = 0, y1 = 0, z1 = 0, x2 = 0, y2 = 0, z2 = 0;
+		shakeReverse = false;
+		// Shake sensitivity
+		var sensitivity = 4;
+		// Listen to motion events and update the position 
+		motionListener = window.addEventListener('devicemotion', motionHandler, false);
+
+		// Periodically check the position and fire
+		// if the change is greater than the sensitivity 
+		shakeInterval = setInterval(function () {
+			var change = Math.abs(x1 - x2 + y1 - y2 + z1 - z2);
+
+			if (change > sensitivity) {
+				//alert('Shake!');
+				//shakeBall(toX, toY);
+				shakeListener();
+			}
+
+			// Update new position
+			x2 = x1;
+			y2 = y1;
+			z2 = z1;
+		}, 150);
+	}
+
+
+
+}
+
+
+//Activates or deactivates shaking
+function setShaking(activate) {
+	if(arguments.length == 0 || activate) {
+        enableMotionDetection();
+	} else {
+		if (window.DeviceOrientationEvent) {
+			window.removeEventListener("deviceorientation", orientationHandler);
+			}
+		else {
+			window.removeEventListener("devicemotion", motionHandler);
+		}
+		
+		motionListener = null;
+	}
+}
+
 function reverseEffect() {
 	if(shakeDecayInterval == null) {
 		$("#contentHolder").text("");
-
 		setColorDecay(100, "1,-2,0");
 		
 		//Start word clearing effect (i.e. return color to original)
@@ -157,40 +232,34 @@ function reverseEffect() {
 	}
 }	
 
-//Action whenever shaking or dragging is on
-function shakeListener() {
-	var shakeTreshold = 100;
-	//$("#contentHolder").text(shakeCounter);
-	if(!shakeReverse) {
-		changeColor("-1,2,0");
-		shakeCounter++;
-	}
-	//Show a word
-	if(shakeCounter > shakeTreshold) {
-		showWord();
-		shakeCounter = 0;
-	}
-}
+
 
 //Display a word in the crystall ball
 function showWord() {
-	var wordTypes = ["verbs", "nouns", "adjectives"];
 	var wordList = words[wordTypes[wordType]];
 	var word = wordList[Math.floor(Math.random() * wordList.length)].word;
-	
+	// save word for later use
+	crystalWords += wordTypes[wordType] + '=' + word + ', ';
+
 	$("#contentHolder").text(word);
-	
+
 	wordType = (wordType == wordTypes.length-1) ? 0 : wordType+1;
 	setColorDecay(-1);
 	shakeReverse = true;
 
-	if(accelometer) {
-		setTimeout(enableMotionDetection, 2000);
-	}
-	else {
-		stopDragging();
-		//setDragging(false);//cancel dragging
-		//setDragging();
+	var infoStageKey = wordTypes[wordType];
+	if (wordType !== 0) {
+		$(crystalInfo).trigger('stage-change', infoStageKey);
+
+		if(accelometer) {
+			setTimeout(enableMotionDetection, 4000);
+		} else {
+			stopDragging();
+		}
+	} else {
+		// last stage
+		$(crystalInfo).trigger('stage-change', 'finale');
+		crystalInfo.showFinalForm(crystalWords);
 	}
 	moveToCenter(true);
 }
@@ -242,15 +311,14 @@ function moveToCenter(animate) {
 	var centerX = (window.innerWidth-diameter) / 2;
 	var centerY = (window.innerHeight-diameter) / 2;
 
-	if(arguments.length == 0 || !animate) {
+	if (arguments.length == 0 || !animate) {
 		$object.css("left", centerX+"px");
 		$object.css("top", centerY+"px");
-	}
-	else {
+	} else {
 		var duration = Math.sqrt(Math.pow($object.position().left-centerX, 2) + Math.pow($object.position().top-centerY, 2)) * 2;
 		duration = Math.max(duration, 1000);
 
-		$object.animate({left:centerX, top:centerY}, duration, "easeOutElastic")
+		$object.animate({left:centerX, top:centerY}, duration, "easeOutElastic");
 	}
 	stopDragging();
 }
@@ -286,9 +354,11 @@ function debugText(text) {
 	$("#debug").html($("#debug").text()+"<br>"+text);
 }
 
-$(document).ready(function() {
-	//accelometer = !(window.DeviceMotionEvent == undefined || window.DeviceMotionEvent.interval == undefined);
+function initCrystalBall() {
+	accelometer = !(window.DeviceMotionEvent == undefined || window.DeviceMotionEvent.interval == undefined);
 	accelometer = window.DeviceMotionEvent;
+	crystalWords = '';
+	$("#contentHolder").text('');
 	/*if (window.DeviceOrientationEvent) {
 	    window.addEventListener("deviceorientation", handleOrientation, false);
 	}
@@ -302,13 +372,15 @@ $(document).ready(function() {
 		window.addEventListener('devicemotion', handleMotion, false);
 	}*/
 
-
 	$.getJSON("/crystal/ajax_list_words/foobar", function(data) {
 		words = data;
 		changeColor();
 	});
 	//$("#debug").html("accelometer: "+accelometer+"<br> DeviceMotionEvent: "+window.DeviceMotionEvent+"<br> DeviceOrientationEvent: "+window.DeviceOrientationEvent);
 	moveToCenter();
+	
+	crystalInfo.init();
+	$(crystalInfo).trigger('stage-change', 'begin');
 
 	if(accelometer) {
 		setShaking();
@@ -316,4 +388,8 @@ $(document).ready(function() {
 	else {
 		setDragging();
 	}
+}
+
+$(document).ready(function() {
+	initCrystalBall();
 });

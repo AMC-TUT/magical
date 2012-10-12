@@ -2,6 +2,7 @@
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
+
 import datetime, mimetypes
 
 class Role(models.Model):
@@ -327,3 +328,12 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 # Automagically create a profile when user is created
 post_save.connect(create_user_profile, sender=User)
+
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+from django.template.defaultfilters import slugify
+
+@receiver(pre_save)
+def slugify_title_callback(sender, instance, *args, **kwargs):
+    if hasattr(instance, 'title') and hasattr(instance, 'slug'):
+        instance.slug = slugify(instance.title)

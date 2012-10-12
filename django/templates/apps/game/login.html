@@ -17,30 +17,18 @@
     {% block extrastyle %}{% endblock %}
 </head>
   {% load i18n %}
-<body class="{% block bodyclass %}home{% endblock %}">
+<body class="standalone">
 
 <div id="header_wrap">
 
     <header>
         <img src="{{ STATIC_URL }}img/magos-logo.png" id="logo">
 
-        <nav id="main-nav" class="group">
-            <ul id="main-nav-items">
-                <li><a href="/game" class="home">Play</a></li>
-                <li><a href="/game/create/" class="create">Create</a></li>
-                <li><a href="/crystal" class="invent">Invent</a></li>
-                <li><a href="/game/learn/" class="learn">Learn</a></li>
-                <li><a href="#" class="explore">Explore</a></li>
-            </ul> 
-        </nav>
-        
         <section id="login-info">
                   {% if not user.is_authenticated %}
                       {% login_form %}
                   {% else %}
-                    <h2>Welcome to Magos</h2>
-                    <p>{{ user.first_name }} {{ user.last_name }}<br>[{{ user.username }}]</p>
-                    <p>Organisation: {{ user.userprofile.organization }}</p>
+                    <p>Welcome to Magos {{ user.username }}</p>
                     <p><a id="logout" class="navbar-link" href="/game/logout/">{% trans "Logout" %}</a></p>
                   {% endif %}
         </section>
@@ -49,18 +37,9 @@
 
 </div>
 
-<div id="main-content-wrap">
-    <section id="content" class="group">
-        {% block content %}{% endblock %}
-    </section>
-</div>
-
-
-<div class="bottom-shadow"></div>
 
 <div id="footer_wrapper">
     <footer>
-        <img src="{{ STATIC_URL }}img/magos-wiz-bottom.png" id="bottom-wiz">
 
         <section id="footer-left">
             <img id="magos-logo-footer" src="{{ STATIC_URL }}img/magos-logo-footer.png">
@@ -69,16 +48,7 @@
             <br />Semper pulvinar libero
             <br />Et magnis dis</p>
         </section>
-        
-        <nav id="footer-nav">
-            <ul id="footer-nav-items">
-                <li><a href="/game" id="home-link" class="selected">Home</a></li>
-                <li><a href="#">Play</a></li>
-                <li><a href="/game/create/">Create</a></li>
-                <li><a href="/crystal">Invent</a></li>
-                <li><a href="#">Learn</a></li>
-            </ul>
-        </nav>
+
 
         <div class="footer-wide">
             <p>&copy; Copyright 2012 Magos.</p>
@@ -86,6 +56,10 @@
 
     </footer>
 </div>
+
+
+
+
 
     <script src="{{ STATIC_URL }}js/lib/jquery-1.7.1.min.js"></script>
     <script src="{{ STATIC_URL }}js/lib/underscore-min.js"></script>
@@ -95,7 +69,7 @@
         $(document)
 	    .ajaxStart(function() {
 	    	$.blockUI({ 
-	    		message: '<img id="ajax_loader" style="width:120px;height:15px;vertical-align:middle;margin:30px 8px 10px 8px;" src="{{ STATIC_URL }}img/ajax-loader.gif" /><h1 class="ajax-loading">Loading...</h1>',
+	    		message: '<img id="ajax_loader" style="width:120px;height:15px;vertical-align:middle;margin:30px 8px 10px 8px;" src="{{ STATIC_URL }}img/ajax-loader.gif" /><h1 class="ajax-loading">Tietoja ladataan</h1>',
 	    		css : { border : 'none' }
 	    	}); 
 	        //$(this).show();

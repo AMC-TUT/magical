@@ -1,9 +1,12 @@
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render_to_response, render, redirect
 from django.template import RequestContext
 from django.http import HttpResponse, Http404, HttpResponseNotAllowed
-from apps.crystal.models import Word, WordType, List
 from django.utils import simplejson
+from django.contrib.auth.decorators import login_required
+from apps.crystal.models import Word, WordType, List
+from apps.crystal.forms import DescriptionForm
 
+@login_required
 def home(request):
     tpl = 'apps/crystal/index.html'
     user = request.user
@@ -36,3 +39,21 @@ def ajax_list_words(request, slug):
         
     data = simplejson.dumps(grouped_words)
     return HttpResponse(data, mimetype='application/json')
+
+def description_form(request):
+    user = request.user
+    if request.POST:
+        form = DescriptionForm(request.POST)
+        if form.is_valid():
+            description = form.cleaned_data['description']            
+            # TODO: save to database
+            form.cleaned_data['author'] = request.user
+            form.save()
+            if request.is_ajax():
+                return render(request, 'apps/crystal/success.html')
+            else:
+                return redirect('description_success')
+    else:
+        form = DescriptionForm(initial={'author':user})
+
+    return render(request, 'apps/crystal/form.html', {'form':form})

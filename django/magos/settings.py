@@ -26,14 +26,14 @@ DATABASES = {
     }
 }
 
-"""
 SESSION_ENGINE = 'redis_sessions.session'
 SESSION_REDIS_HOST = 'localhost'
 SESSION_REDIS_PORT = 6379
 SESSION_REDIS_DB = 0
 #SESSION_REDIS_PASSWORD = 'password'
 SESSION_REDIS_PREFIX = 'django_session'
-"""
+SESSION_COOKIE_HTTPONLY = False
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -59,7 +59,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = '/Users/mkoskela/work/tut/projects/magos/code/magical/django/'
+MEDIA_ROOT = '/Users/mkoskela/dev/django_media/magos/'
 #MEDIA_ROOT = 'c:/work/www/django_media/'
 #MEDIA_ROOT = '/home/mkoskela/magos_media/'
 
@@ -72,11 +72,13 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ''
+#STATIC_ROOT = ''
+STATIC_ROOT = '/Users/mkoskela/dev/django_static/magos/'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
+#STATIC_URL = 'http://130.230.177.131:8082/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
