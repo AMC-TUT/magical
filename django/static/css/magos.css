@@ -157,6 +157,14 @@ footer {
     margin: 20px 30px;
 }
 
+body.home footer a.home,
+body.create footer a.create,
+body.invent footer a.invent,
+body.learn footer a.learn,
+body.explore footer a.explore {
+    color: #fff;
+}
+
 #bottom-wiz {
     position: absolute;
     bottom: 0;
