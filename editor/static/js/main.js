@@ -1386,9 +1386,9 @@ $(function() {
     var pathname = window.location.pathname;
     var slug = pathname.replace(/^\/editor\//, '').replace(/\/$/, '');
 
-    var address = 'http://' + window.location.hostname + '/editor';
+    var address = 'http://' + window.location.hostname; // + '/editor';
     var socket = io.connect(address);
-    console.log(address);
+
     socket.on('connecting', function() {
       console.log('websocket connecting (editor');
     });
@@ -1401,7 +1401,7 @@ $(function() {
       console.log('websocket connected (editor)');
     });
 
-    socket.emit('shout', 'HUUUUUUTO!', function(data) {
+    socket.emit('shout', 'HUUUUUUTO!', function(shout) {
       if (_.isObject(shout)) {
         App.shoutsController.get('content').pushObject(App.Shout.create(shout));
       }

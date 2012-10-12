@@ -1,49 +1,48 @@
-
 var fs = require('fs'),
-express = require('express'),
-params = require('express-params'),
-request = require('request'),
-querystring = require('querystring'),
-_ = require('underscore')._,
-util = require("util");
+  express = require('express'),
+  params = require('express-params'),
+  request = require('request'),
+  querystring = require('querystring'),
+  _ = require('underscore')._,
+  util = require("util");
 
-var redis  = require("redis"),
-client = redis.createClient(6379, 'localhost');
+var redis = require("redis"),
+  client = redis.createClient(6379, 'localhost');
+
+var RedisStore = require('connect-redis')(express);
 
 var app = express(),
-http = require('http'),
-server = http.createServer(app),
-io = require('socket.io').listen(server);
+  http = require('http'),
+  server = http.createServer(app),
+  io = require('socket.io').listen(server);
 
 io.enable('browser client minification');
 io.enable('browser client etag');
 io.enable('browser client gzip');
-  // io.set('log level', 0); // reduce logging
+// io.set('log level', 0); // reduce logging
 
 // redis
-client.monitor(function (err, res) {
+client.monitor(function(err, res) {
   console.log("Entering monitoring mode.");
 });
 
-client.on("monitor", function (time, args) {
+client.on("monitor", function(time, args) {
   console.log(time + ": " + util.inspect(args));
 });
 
-client.on("error", function (err) {
+client.on("error", function(err) {
   console.log("error event - " + client.host + ":" + client.port + " - " + err);
 });
 
-// /redis
-
 //var parseCookie = require('connect').utils.parseJSONCookie;
-//var MemStore = express.session.MemoryStore;
-
-//var json = JSON.stringify({ vittu: 'paa' });
-//console.log(parseCookie());
-
 params.extend(app);
 
 app.use('/static', express.static(__dirname + '/static'));
+
+app.configure(function() {
+  app.use(express.cookieParser());
+  // app.use(express.session({ store: new RedisStore({host: '127.0.0.1', port: 6379, prefix: 'django_session:' }), secret: '#7tzga@)0q=e@fga4qi4b!s!^v)ioaa*@w_9_-n_%=5ki3f%u#' }));
+});
 
 app.configure('development', function() {
   app.use(express.errorHandler({
@@ -51,60 +50,22 @@ app.configure('development', function() {
     showStack: true
   }));
 });
-/*
+
 app.configure('production', function() {
   app.use(express.errorHandler());
 });
-*/
-app.use(express.cookieParser()); // TODO replace memstore with redisstore
-///app.use(express.session({ key: 'express.sid', secret: '4YaA3x2Sbv97Q7A3G4qdxSZwqzHbn9', store: MemStore({ reapInterval: 60000 * 10 }) })); // , store: new RedisStore
 
-app.use(function(err, req, res, next){
- // console.error(err.stack);
- res.send(500, 'Something broke!');
+app.use(function(err, req, res, next) {
+  // console.error(err.stack);
+  res.send(500, 'Something broke!');
 });
 
-
-io.configure(function () {
+io.configure(function() {
   // connection types
-  io.set('transports', ['websocket', 'xhr-polling']); // 'flashsocket',
-  // authentication
-  /*
-  io.set('authorization', function (handshakeData, callback) {
-
-    // check if there's a cookie header
-    if (handshakeData.headers.cookie) {
-        // if there is, parse the cookie
-
-
- //     handshakeData.cookie = connect.utils.parseJSONCookie(handshakeData.headers.cookie);
-
-   //     handshakeData.cookie = express.parseCookie(handshakeData.headers.cookie);
-//console.log("VITTU SAATANA!")
-//console.log(handshakeData.headers.cookie);
-//console.log(express.cookieParser(handshakeData.headers.cookie));
-//console.log(handshakeData.headers.cookie['express.sid']);
-        // note that you will need to use the same key to grad the
-        // session id, as you specified in the Express setup.
- //       handshakeData.sessionID = handshakeData.headers.cookie['express.sid'];
-
- //       console.log('session auth socket.io setistä: ' + handshakeData.sessionID);
-
-} else {
-       // if there isn't, turn down the connection with a message
-       // and leave the function.
-       return accept('No cookie transmitted.', false);
-     }
-    // accept the incoming connection
-    //accept(null, true);
-
-    callback(null, true); // error first callback style
-  });
-*/
+  io.set('transports', ['websocket', 'flashsocket', 'xhr-polling']);
 });
 
 // Routes
-
 app.param('slug', /[a-zA-Z0-9-]+$/);
 
 app.get('/game/:slug', function(req, res) {
@@ -114,87 +75,68 @@ app.get('/game/:slug', function(req, res) {
 app.get('/editor/:slug', function(req, res) {
 
   var slug = req.params.slug[0];
-  //console.log(req);
+  var cookies = myMagos.parseCookies(req.headers.cookie);
 
-/*  if(_.isUndefined(req.session.user)) {
-    req.session.user = "matti.vanhanen";
-    req.session.role = "student";
- //   console.log("SET REQUEST SESSION:");
- //   console.log(" - user: " + req.session.user);
-  } else {
-  //  console.log("GET REQUEST SESSION:");
-  //  console.log(" - user: " + req.session.user);
-}*/
-//  console.log('req.sessionID');
-//  console.log(req.session);
- // console.log("__dirname");
- // console.log(__dirname);
- res.sendfile('index.html');
-  // res.sendfile(__dirname + '/index.html');
+  // 4 dev
+  cookies = {
+    sessionid: '0725f476fcb35990aad27b4d0a22476b',
+    csrftoken: 'rQQ52dL1BIP4Mk4Kg2EzA2JQjT4bi1t3'
+  };
+
+  // if sessionid or csrftoken equals "" redirect to login page
+  if(cookies.sessionid === "" || cookies.csrftoken === "") {
+    res.redirect('http://magos.pori.tut.fi/?redir=/editor/' + slug);
+    return false;
+  }
+
+  res.sendfile(__dirname + '/index.html');
 });
 
 // fallback response
 app.get('/', function(req, res) {
-  res.send('Hello from Magos');
+  res.redirect('http://magos.pori.tut.fi/');
+  // res.send('Hello from Magos');
 });
 
 server.listen(9001);
 
-var editor = io.of('/editor') /*.authorization(function (handshakeData, callback) {
+// var editor = io.of('/editor')
+var editor = io.sockets.on('connection', function(socket) {
 
-  console.dir(handshakeData);
-  handshakeData.foo = 'baz';
-  callback(null, true);
-
-}) */
-.on('connection', function (socket) {
-
-  //console.log('socket.handshake.user: ');
-  //console.dir(socket.handshake.user);
+  /*
+  var client = socket;
+  var cookie_string = client.handshake.headers.cookie;
+  var parsed_cookies = express.utils.parseCookie(cookie_string);
+  var sessionid = parsed_cookies['sessionid'];
+  console.log('SESSION ID');
+  console.log(sessionid);
+  */
 
   socket.on('connect', function() {
     console.log('client connected, client id: ' + socket.id);
   });
 
-  socket.on('connect_failed', function (reason) {
+  socket.on('connect_failed', function(reason) {
     console.error('unable to connect to namespace', reason);
   });
 
-  socket.on('error', function (reason){
+  socket.on('error', function(reason) {
     console.error('Unable to connect Socket.IO', reason);
   });
 
-  socket.on('connect', function () {
+  socket.on('connect', function() {
     console.info('sucessfully established a connection with the namespace');
   });
 
-  socket.on('shout', function (shout, fn) {
-    console.log("Shout: " + JSON.stringify(shout) + "\n");
-
+  socket.on('shout', function(shout, fn) {
+    // console.log("Shout: " + JSON.stringify(shout) + "\n");
     if(_.isObject(shout)) {
-      /*
-      var credentials = {};
-      socket.get('credentials', function (err, _credentials) {
-        credentials = _credentials;
-      });
-      //console.log(credentials.slug);
-      //message = { 'name': credentials.firstName, 'magos': credentials.magos, 'message': message };
-      */
-
-      var slug = shout.slug;
-      delete shout.slug;
-
-      // TODO add shouts to redis list to add easy log load for new user
       socket.broadcast.in(slug).emit('shout', shout);
-
       fn(shout);
-
     }
-
   });
 
   socket.on('saveGame', function(mode, game, fn) {
-
 
     // get this from session
     var slug = 'super-magos';
@@ -204,11 +146,11 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
     // saving mode to redis or redis&django
     if(mode === 0) {
       // just in redis
-      client.set('game:'+slug, json, redis.print);
+      client.set('game:' + slug, json, redis.print);
 
     } else {
       // redis and django
-      client.set('game:'+slug, json, redis.print);
+      client.set('game:' + slug, json, redis.print);
       //
       // TODO send game to django
     }
@@ -223,62 +165,68 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
     var game = {};
 
     socket.join(slug); // move to other event
+    client.get('game:' + slug, function(err, data) {
 
-    client.get('game:'+slug, function(err, data) {
+      if(data === null) {
+        // query from django and set to redis
+        var json = fs.readFileSync('static/json/fakeGame.json', 'utf8');
 
-      if (data === null) {
-          // query from django and set to redis
-          var json = fs.readFileSync('static/json/fakeGame.json', 'utf8');
+        game = JSON.parse(json);
 
-          game = JSON.parse(json);
-
-          client.set('game:'+slug, json, redis.print);
-          // request.get('http://sportti.dreamschool.fi/genova/fakekjkjkljlGame2.json?kksljlkjkjkljklj' + slug, function (error, response, body) {
-          // if (!error && response.statusCode == 200) {} });
-        }
-        else {
-          game = JSON.parse(data);
-        }
-
-        fn(game);
-      });
+        client.set('game:' + slug, json, redis.print);
+        // request.get('http://sportti.dreamschool.fi/genova/fakekjkjkljlGame2.json?kksljlkjkjkljklj' + slug, function (error, response, body) {
+        // if (!error && response.statusCode == 200) {} });
+      } else {
+        game = JSON.parse(data);
+      }
+      // callback
+      fn(game);
+    });
   });
 
   socket.on('getHighscore', function(slug, fn) {
     // console.log('getHighscore')
     slug = _.isString(slug) ? slug : '';
     // GET /v1/highscores/:game
-
     // query from django
     var json = fs.readFileSync('static/json/fakeHighscore.json', 'utf8'); // ?offset=0&limit=5
-
+    //
     var highscore = JSON.parse(json);
-
+    // callback
     fn(highscore);
   });
 
-  socket.on('getSceneComponents', function (noop, fn) {
-      // read json file
-      var json = fs.readFileSync('static/json/sceneComponents.json', 'utf8');
-      // parse obj's
-      var result = JSON.parse(json);
-      // return components
-      fn(result);
-    });
+  socket.on('getSceneComponents', function(noop, fn) {
+    // read json file
+    var json = fs.readFileSync('static/json/sceneComponents.json', 'utf8');
+    // parse obj's
+    var result = JSON.parse(json);
+    // return components
+    fn(result);
+  });
 
-  socket.on('getSkillsets', function (noop, fn) {
-      // read json file
-      var json = fs.readFileSync('static/json/skillsets.json', 'utf8');
-      // parse obj's
-      var result = JSON.parse(json);
-      // return components
-      fn(result);
-    });
+  socket.on('getSkillsets', function(noop, fn) {
+    // read json file
+    var json = fs.readFileSync('static/json/skillsets.json', 'utf8');
+    // parse obj's
+    var result = JSON.parse(json);
+    // return components
+    fn(result);
+  });
 
   socket.on('getLanguages', function(noob, fn) {
+    // read json file
+    var json = fs.readFileSync('static/json/languages.json', 'utf8');
+    // parse obj's
+    var result = JSON.parse(json);
+    // return components
+    fn(result);
+  });
+
+   /*
     // make request
-    request.get('http://sportti.dreamschool.fi/genova/fakeLanguages.json', function (error, response, body) {
-      if (!error && response.statusCode == 200) {
+    request.get('http://sportti.dreamschool.fi/genova/fakeLanguages.json', function(error, response, body) {
+      if(!error && response.statusCode == 200) {
         //
         fn(JSON.parse(body));
       } else if(error) {
@@ -287,14 +235,15 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
         fn([]);
       }
     });
-  });
+    */
 
-  socket.on('set-user-credentials', function (credentials, fn) {
+  /*
+  socket.on('set-user-credentials', function(credentials, fn) {
 
-    socket.set('credentials', credentials, function () {});
+    socket.set('credentials', credentials, function() {});
 
     var userName = "";
-    socket.get('credentials', function (err, credentials) {
+    socket.get('credentials', function(err, credentials) {
       userName = credentials.userName;
     });
 
@@ -303,7 +252,7 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
     fn('user´s credentials saved');
 
   });
-/*
+  /*
   socket.on('join-room', function (slug, fn) {
 
     var credentials = {};
@@ -393,7 +342,7 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
 
   });
 */
-/*
+  /*
   socket.on('get room members', function(room, fn) {
     console.log('get room members');
     var members = io.sockets.clients(room.slug);
@@ -401,9 +350,8 @@ var editor = io.of('/editor') /*.authorization(function (handshakeData, callback
     fn(members);
   });
 */
-socket.on('disconnect', function() {
+  socket.on('disconnect', function() {
     // user = _.find(rooms.)
-
     console.info('user ' + socket.id + ' disconnected from magos!');
     // io.sockets.clients('room')
     // socket.broadcast.emit('user disconnected');
@@ -471,7 +419,8 @@ myMagos.logEvent = function(log, type, value, game) {
   options = {
     host: 'sportti.dreamschool.fi',
     port: 80,
-    path: '/genova/fake200.json' + query, // :log
+    path: '/genova/fake200.json' + query,
+    // :log
     method: 'GET' // POST
   };
 
@@ -484,8 +433,33 @@ myMagos.logEvent = function(log, type, value, game) {
 
 };
 
-// myMagos.logEvent("user", "event", "some value", "super-magos");
+myMagos.parseCookies = function(cookies) {
+  var cookies = cookies.split(';'),
+    sessionToken = '',
+    csrfToken = '';
 
+  cookies.forEach(function(cookie, i) {
+    cookie = cookie.trim();
+
+    var a = cookie.split('='),
+      key = a[0] || '',
+      value = a[1] || '';
+
+    if(key.match(/sessionid/)) {
+      sessionToken = value;
+    } else if(key.match(/csrftoken/)) {
+      csrfToken = value;
+    }
+  });
+
+  return {
+    sessionid: sessionToken,
+    csrftoken: csrfToken
+  };
+
+};
+
+// myMagos.logEvent("user", "event", "some value", "super-magos");
 /*
 
         "sceneElements": [

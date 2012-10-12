@@ -1,0 +1,22 @@
+[
+    {
+        "title": "English",
+        "slug": "english",
+        "code": "uk"
+    },
+    {
+        "title": "Ελληνικά",
+        "slug": "greek",
+        "code": "gr"
+    },
+    {
+        "title": "italiano",
+        "slug": "italian",
+        "code": "it"
+    },
+    {
+        "title": "suomi",
+        "slug": "finnish",
+        "code": "fi"
+    }
+]
