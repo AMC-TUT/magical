@@ -1,0 +1,233 @@
+<!doctype html>
+<html>
+<head>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="blasten-turn.js/turn.js"></script>
+
+	<style type="text/css">
+		body {
+			background:#ccc;
+		}
+		#flipbook {
+			width:900px;
+			height:600px;
+			margin:0 auto;
+			position:relative;
+			left:0;
+		}
+		#flipbook .turn-page {
+			width:450px;
+			height:600px;
+			background-color:#f0f0f0;
+			border: 1px solid #ccc;
+		}
+		#flipbook .page {
+			/*margin: 20px;*/
+		}
+		.page div {
+			position: relative;
+		}
+		#flipbook .even {
+			/*background-image: -webkit-linear-gradient(left, white 95%, #DDD 100%) !important;
+			background-image: -moz-linear-gradient(left, white 95%, #DDD 100%) !important;
+			background-image: -o-linear-gradient(left, white 95%, #DDD 100%) !important;
+			background-image: -ms-linear-gradient(left, white 95%, #DDD 100%) !important;*/
+			/*background-image: -webkit-linear, right top, left top, from(rgba(255, 255, 255, 1.0)), to(rgba(255, 255, 255, 0));*/
+
+			background-image: url('page3.png');			
+		}
+		#flipbook .odd {
+			/*background-image: -webkit-linear-gradient(right, white 95%, #DDD 100%) !important;
+			background-image: -moz-linear-gradient(right, white 95%, #DDD 100%) !important;
+			background-image: -o-linear-gradient(right, white 95%, #DDD 100%) !important;
+			background-image: -ms-linear-gradient(right, white 95%, #DDD 100%) !important;*/
+
+			background-image: url('page3reverse.png');
+		}
+		/*#flipbook.shadow {
+			-webkit-box-shadow: 0 4px 10px #666;
+			-moz-box-shadow: 0 4px 10px #666;
+			-ms-box-shadow: 0 4px 10px #666;
+			-o-box-shadow: 0 4px 10px #666;
+			box-shadow: 0 4px 10px #666;
+		}*/
+
+		#flipbook .centerOdd {
+			left: -225px;
+		}
+		#flipbook .centerEven {
+			left: 225px;
+		}
+		#flipbook .content {
+			padding: 20px;
+		}
+		#flipbook h1 {
+			width: 450px;
+			font-size: 32;
+			text-align: "center";
+			position: absolute;
+			top: 200px;
+			/*background: #ff0000;*/
+		}
+		#flipbook h2 {
+			font-size: 24;
+		}
+		#flipbook .tool {
+			position: relative;
+		}
+		.tool img {
+			width: 44px;
+			height: auto;
+			float: left;
+		}
+		.tool > p:first-of-type {
+			font-weight: bold;
+			margin-left: 50px;
+		}
+		.tool p {
+			margin-left: 50px;
+		}
+		.selfClear:after {
+		      content: ".";
+		      display: block;
+		      height: 0;
+		      clear: both;
+		      visibility: hidden;
+		}
+	</style>
+
+	<div id="flipbook" class="centerEven">
+		<div>
+			<h1>The book of Magos</h1>
+		</div>
+		<div>
+			<h2>Superiorix</h2>
+			<img src="content\wizard1.png"/>
+			<p>Acting as our tutor in making games is Superiorix the head wizard. He will occasionally give instructions or tips on how to create games.</p>
+		</div>
+		<div>
+			
+		</div>
+		<div>
+			<h2>Principes</h2>
+			<img src="content\wizard2.png"/>
+			<p>Principes is the designer wizard of Magos. His job is to design the game by dragging components others have made into correct positions in the game grid. He also takes care of texts in the game, score handling, game time and such.</p>
+		</div>
+		<div>
+			<div class="tool selfClear">
+				<img src="content\potion.png"/>
+				<p>Font</p>
+				<p>Define the font family, size, color and background color for texts. Usable for example with components containing text or dialog and with scene components like clock, scoreboard and highscore.</p>
+			</div>
+			<div class="tool selfClear">
+				<img src="content\potion.png"/>
+				<p>Score</p>
+				<p>Attach a score change event into a component with a rule, like "Get 100 points when this collision event occurs"</p>
+			</div>
+			<div class="tool selfClear">
+				<img src="content\potion.png"/>
+				<p>Dialog</p>
+				<p>Attach a dialog into a component with a rule. With dialog you can create chained texts (see Text tool) i.e. once the first text is red the second appears until all the texts have been seen through. You can also define who says the text and have player character get into conversations with non-player characters.</p>
+			</div>
+			<div class="tool selfClear">
+				<img src="content\potion.png"/>
+				<p>Text</p>
+				<p>Attach a text to a component with a rule. Text is displayed as a popup once the rule triggers. The text is visible until the player closes it.</p>
+			</div>
+		</div>
+		<div>
+			<h2>Physicus</h2>
+			<img src="content\wizard3.png"/>
+			<p>Physicus is a physician who makes components act the way they do. This includes setting component types, creating rules and adjusting gravity.</p>
+		</div>
+		<div>
+			<div class="tool selfClear">
+				<img src="content\potion.png"/>
+				<p>Controls</p>
+				<p>Choose how the player character moves. There are predefined control types of which you can pick the one that suits your game. Currently there are two types available "twoway" and "fourway".</p>
+			</div><div class="tool selfClear">
+				<img src="content\potion.png"/>
+				<p>Collision</p>
+				<p>Attach a collision rule to a component with another component. Collision event triggers an action when the component containing the collision rule hits with another component set as target in the rule. "Player collides with a Trap which causes player to lose 10 health".</p>
+			</div><div class="tool selfClear">
+				<img src="content\potion.png"/>
+				<p>Gravitation</p>
+				<p>Component can be set to have gravity affecting it. This means that the component will fall downwards unless there is some impassable component blocking the fall. The bigger the gravity value, the faster the fall. Gravity can be set as inverted which makes the fall happen upwards.</p>
+			</div><div class="tool selfClear">
+				<img src="content\potion.png"/>
+				<p>Type</p>
+				<p>Select a general type for a component. This sets some features of that component. For example type "block" makes the component solid and unpassaple, "collectible" means that the component disappears once player character collides with it (possibly giving points to the player in the process).</p>
+			</div>
+		</div>
+		<div>
+			<h2>Artifex</h2>
+			<img src="content\wizard4.png"/>
+			<p>Game graphics are created by Artifex the artist. Graphics can be either normal pictures or animations.</p>
+		</div>
+		<div>
+			<div class="tool selfClear">
+				<img src="content\potion.png"/>
+				<p>Image</p>
+				<p>Attach an image to a component. If this is not done, the component will be invisible to the player. The image is either done by oneself with the drawing tool or selected from the shared image pool. Image can be attached also as a background image to the game, intro screen or outro screen.</p>
+			</div>
+			<div class="tool selfClear">
+				<img src="content\potion.png"/>
+				<p>Animation</p>
+				<p>Component textures can have frames for animation included. It is possible to play an animation when a rule is triggered. For example "Player moves left, play animation (which shows the character walking)" A component can have only one animation available at any time as there can only be one image included in a component and the animation frames are included in the image. However it is possible to change the component's image with a rule so an image with suitable animation can be activated if needed. Animation can be run once or looped for several or infinite times.</p>
+			</div>
+		</div>
+		<div>
+			<h2>Musicus</h2>
+			<img src="content\wizard5.png"/>
+			<p>Magos has a composer called Musicus. He creates all the music and sound effects used in the game.</p>
+		</div>
+		<div>
+			<div class="tool selfClear">
+				<img src="content\potion.png"/>
+				<p>Audio</p>
+				<p>Attach a sound to a component with a rule. Alternatively a sound can be attached to a background scene component as a background music. Sounds are recorder using the recording tool or selected from the shared sounds pool.</p>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		$(window).ready(function() {
+			//Specify each page class as odd or even
+			$("#flipbook").children().addClass(function(index) {
+				return (index % 2 == 0) ? "page odd" : "page even";
+			});
+
+			//Add an extra level of divs into pages to contain all the page content
+			$("#flipbook").children().append(function(index, html) {
+				var $newDiv = $("<div class='content'></div>");
+				$newDiv.append(html);
+				$(this).empty();
+
+				return $newDiv;
+			});
+
+			$("#flipbook").turn({
+				width: 900,
+				height: 600,
+				autoCenter: false,
+				acceleration: true
+			});
+		});
+
+		//Center book to the middle of the page when book is open or shut (=half width)
+		//Not working properly
+		$("#flipbook").bind("turned", function(evt, page, pageObj) {
+			if(page == 1 && $(this).data("done")) {
+				$("#flipbook").removeClass("centerOdd").addClass("centerEven");
+			}
+			else if(page == 4 && $(this).data("done")) {
+				$("#flipbook").removeClass("centerEven").addClass("centerOdd");
+			}
+			else {
+				$("#flipbook").removeClass("centerOdd centerEven");
+			}
+		});
+	</script>
+
+</head>
+<body>
