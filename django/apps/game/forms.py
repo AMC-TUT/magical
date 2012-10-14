@@ -6,4 +6,4 @@ class GameForm(forms.ModelForm):
 
 	class Meta:
 		model = Game
-		exclude = ('image','cloned','slug',)
+		exclude = ('cloned','slug',)

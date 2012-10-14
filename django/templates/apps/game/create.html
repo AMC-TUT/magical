@@ -13,7 +13,7 @@
             <p>Here you can define a new Magos game.</p>
             
             <hr />
-            <form action="/game/create/" method="post">
+            <form action="/game/create/" enctype="multipart/form-data" method="post">
                 {{ form.non_field_errors }}
                 {% csrf_token %}
                 {{ form.as_p }}
@@ -26,8 +26,9 @@
         <div id="sidebar">
             <h2>Get Help</h2>
             <p>Watch Magos tutorial videos to master the magical skills.</p>
-            <img src="{{ STATIC_URL }}img/video-tutorial.png">
-		    <h3>Latest Discussion</h3>
+            <iframe width="300" height="169" src="http://www.youtube.com/embed/I8qkQhTfSJ4" frameborder="0" allowfullscreen></iframe>
+
+            <h3>Latest Discussion</h3>
             <ul>
                 <li>Cum sociis natoque penatibus et magnis dis</li>
                 <li>Parturient montes, nascetur ridiculus mus</li>

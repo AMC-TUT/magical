@@ -135,6 +135,26 @@ section#content {
     margin: 0 auto;
 }
 
+
+.game-image {
+    max-width: 540px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.embedded {
+    box-shadow:inset 0px 0px 40px rgba(0,0,0,.5), 0px 0px 5px rgba(0,0,0,0.3);
+    -webkit-box-shadow:inset 0px 0px 30px rgba(0,0,0,0.3), 0px 0px 10px rgba(0,0,0,0.4);
+    -moz-box-shadow:inset 0px 0px 40px rgba(0,0,0,0.3), 4px 4px 10px rgba(255,255,255,0.1); 
+}
+
+.highscore_name {
+    width: 230px;
+    display: inline-block;
+}
+
 footer {
     width: 960px;
     position: relative;
@@ -306,7 +326,7 @@ ul.nav {
     width: 538px;
     height: 280px;
     margin-bottom: 20px;
-     box-shadow:inset 0px 0px 40px rgba(0,0,0,.5), 0px 0px 5px rgba(0,0,0,0.3);
+    box-shadow:inset 0px 0px 40px rgba(0,0,0,.5), 0px 0px 5px rgba(0,0,0,0.3);
     -webkit-box-shadow:inset 0px 0px 30px rgba(0,0,0,0.3), 0px 0px 10px rgba(0,0,0,0.4);
     -moz-box-shadow:inset 0px 0px 40px rgba(0,0,0,0.3), 4px 4px 10px rgba(255,255,255,0.1); 
     position: relative;

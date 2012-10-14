@@ -11,8 +11,10 @@ from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 
-from apps.game.models import Game, Author
+from apps.game.models import Game, Author, Highscore, Review
 from apps.game.forms import GameForm
+from apps.game.decorators import ajax_login_required
+
 from django.contrib.auth.models import User
 
 def home(request):
@@ -39,11 +41,30 @@ def game_details(request, gameslug):
     user = request.user
     organization = user.get_profile().organization        
     game = None
+    authors = []
+    can_edit = False
+    highscores = []
+    has_reviewed = False
     try:
-        game = Game.objects.get(slug=gameslug, author__user__userprofile__organization=organization)
+        game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)
+        authors = game.author_set.all()
+        users = []
+        for author in authors:
+            users.append(author.user)
+        if user in users:
+            can_edit = True
+        # top 10 highscore
+        highscores = Highscore.objects.filter(game=game).order_by('-score')[:10]
+        try:
+            review = Review.objects.get(game=game, user=user)
+            has_reviewed = True
+        except Review.DoesNotExist:
+            pass
+
     except Game.DoesNotExist:
         pass
-    return render(request, tpl, {'user': user, 'game':game})
+    return render(request, tpl, {'user': user, 'game':game, 'users': users, 'can_edit': can_edit, \
+                'highscores' : highscores, 'has_reviewed':has_reviewed})
 
 @login_required
 def create_game(request):
@@ -51,7 +72,7 @@ def create_game(request):
     user = request.user
     organization = user.get_profile().organization
     if request.method == 'POST':
-        form = GameForm(request.POST)
+        form = GameForm(request.POST, request.FILES)
         if form.is_valid():
             game = form.save()
             # add user as author
@@ -71,6 +92,41 @@ def logout_view(request):
     # redirect to home
     return redirect(home)
     
+@ajax_login_required    
+def rate_game(request, game_pk, stars):
+    """
+    Rate game 1-5
+    :param request: Http request object.
+    :param game_pk: Primary key for Game to be rated.
+    :param stars: Number of stars (1-5).
+    """
+    try:
+        game = Game.objects.get(id=game_pk)
+    except Game.DoesNotExist:
+        raise Http404
+
+    user = request.user
+    stars = int(stars)
+    print stars
+    if stars in [0,1,2,3,4,5]:
+        review = None
+        try:
+            review = Review.objects.get(game=game, user=user)
+        except Review.DoesNotExist:
+            pass
+        if stars == 0:
+            print "DEL"
+            if review:
+                review.delete()
+        else:
+            print "TRY ADD"
+            review = Review(game=game, user=user, stars=stars)
+            review.save()
+
+    json = simplejson.dumps({ 'success': True })
+    return HttpResponse(json, mimetype='application/json')
+
+
 
 def ajax_list_games(request):
     """

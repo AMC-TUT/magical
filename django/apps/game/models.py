@@ -223,7 +223,7 @@ class Game(models.Model):
     slug = models.SlugField(max_length=45, null=False, blank=False, unique=True)
     type = models.ForeignKey(GameType)
     state = models.IntegerField(null=False, blank=False, default=0)
-    image = models.CharField(max_length=100, null=True, blank=True)
+    image = models.ImageField(blank = True, null = True, upload_to='game_images')
     description = models.CharField(max_length=255, null=True, blank=True)
     cloned = models.IntegerField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True, default=datetime.date.today)
