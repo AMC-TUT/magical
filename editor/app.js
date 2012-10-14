@@ -68,11 +68,7 @@ io.configure(function() {
 // Routes
 app.param('slug', /[a-zA-Z0-9-]+$/);
 
-app.get('/game/:slug', function(req, res) {
-  res.sendfile(__dirname + '/game/index.html');
-});
-
-app.get('/editor/:slug', function(req, res) {
+app.get('/:slug', function(req, res) {
 
   var slug = req.params.slug[0];
   var cookies = myMagos.parseCookies(req.headers.cookie);
@@ -85,7 +81,7 @@ app.get('/editor/:slug', function(req, res) {
 
   // if sessionid or csrftoken equals "" redirect to login page
   if(cookies.sessionid === "" || cookies.csrftoken === "") {
-    res.redirect('http://magos.pori.tut.fi/?redir=/editor/' + slug);
+    res.redirect('http://magos.pori.tut.fi/game/login?next=/editor/' + slug);
     return false;
   }
 
@@ -95,12 +91,10 @@ app.get('/editor/:slug', function(req, res) {
 // fallback response
 app.get('/', function(req, res) {
   res.redirect('http://magos.pori.tut.fi/');
-  // res.send('Hello from Magos');
 });
 
 server.listen(9001);
 
-// var editor = io.of('/editor')
 var editor = io.sockets.on('connection', function(socket) {
 
   /*
@@ -117,15 +111,15 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   socket.on('connect_failed', function(reason) {
-    console.error('unable to connect to namespace', reason);
+    console.error('unable to connect to socket.io', reason);
   });
 
   socket.on('error', function(reason) {
-    console.error('Unable to connect Socket.IO', reason);
+    console.error('Unable to connect socket.io', reason);
   });
 
   socket.on('connect', function() {
-    console.info('sucessfully established a connection with the namespace');
+    console.info('sucessfully established a connection with socket.io');
   });
 
   socket.on('shout', function(shout, fn) {

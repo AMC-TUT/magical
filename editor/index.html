@@ -5,8 +5,8 @@
   <title>Magos Editor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Magical">
-  <link href="/static/css/main.css" rel="stylesheet">
-  <link id="theme" href="/static/css/dark.css" rel="stylesheet">
+  <link href="/editor/static/css/main.css" rel="stylesheet">
+  <link id="theme" href="/editor/static/css/dark.css" rel="stylesheet">
 </head>
 
 <body>
@@ -249,7 +249,7 @@
                               </td>
                               <td>
                                 <audio>
-                                  <source src="/static/game/audios/ogg/boom.ogg" type="audio/ogg" />
+                                  <source src="/editor/static/game/audios/ogg/boom.ogg" type="audio/ogg" />
                                 </audio>
                                 <button class="btn btn-success btn-mini btn-play"><i class="icon-play icon-white"></i></button>
                               </td>
@@ -357,18 +357,18 @@
             <div class="tab-content">
               <div class="tab-pane active" id="images-tab">
                 <ul class="assets-list">
-                  <li data-sprite="rock"><img src="/static/game/sprites/rock.png" /><span>Rock</span></li>
-                  <li data-sprite="plant"><img src="/static/game/sprites/plant.png" /><span>Plant</span></li>
-                  <li data-sprite="collectible1"><img src="/static/game/sprites/collectible1.png" /><span>Collectible</span></li>
-                  <li data-sprite="collectible2"><img src="/static/game/sprites/collectible2.png" /><span>Collectible</span></li>
-                  <li data-sprite="player64"><img src="/static/game/sprites/player64.png" /><span>Player</span></li>
-                  <li data-sprite="key"><img src="/static/game/sprites/key.png" /><span>Key</span></li>
-                  <li data-sprite="lock"><img src="/static/game/sprites/lock.png" /><span>Lock</span></li>
-                  <li data-sprite="block1"><img src="/static/game/sprites/block1.png" /><span>Block</span></li>
-                  <li data-sprite="block2"><img src="/static/game/sprites/block2.png" /><span>Block</span></li>
-                  <li data-sprite="block1"><img src="/static/game/sprites/block3.png" /><span>Block</span></li>
-                  <li data-sprite="block-left"><img src="/static/game/sprites/block_left.png" /><span>Block Left</span></li>
-                  <li data-sprite="block-right"><img src="/static/game/sprites/block_right.png" /><span>Block Right</span></li>
+                  <li data-sprite="rock"><img src="/editor/static/game/sprites/rock.png" /><span>Rock</span></li>
+                  <li data-sprite="plant"><img src="/editor/static/game/sprites/plant.png" /><span>Plant</span></li>
+                  <li data-sprite="collectible1"><img src="/editor/static/game/sprites/collectible1.png" /><span>Collectible</span></li>
+                  <li data-sprite="collectible2"><img src="/editor/static/game/sprites/collectible2.png" /><span>Collectible</span></li>
+                  <li data-sprite="player64"><img src="/editor/static/game/sprites/player64.png" /><span>Player</span></li>
+                  <li data-sprite="key"><img src="/editor/static/game/sprites/key.png" /><span>Key</span></li>
+                  <li data-sprite="lock"><img src="/editor/static/game/sprites/lock.png" /><span>Lock</span></li>
+                  <li data-sprite="block1"><img src="/editor/static/game/sprites/block1.png" /><span>Block</span></li>
+                  <li data-sprite="block2"><img src="/editor/static/game/sprites/block2.png" /><span>Block</span></li>
+                  <li data-sprite="block1"><img src="/editor/static/game/sprites/block3.png" /><span>Block</span></li>
+                  <li data-sprite="block-left"><img src="/editor/static/game/sprites/block_left.png" /><span>Block Left</span></li>
+                  <li data-sprite="block-right"><img src="/editor/static/game/sprites/block_right.png" /><span>Block Right</span></li>
                 </ul>
               </div>
             </div>
@@ -390,7 +390,7 @@
   <div class="navbar-inner">
   <div class="container-fluid">
 
-  <img src="/static/img/wiz-head-white.png" class="wiz" title="" alt="" />
+  <img src="/editor/static/img/wiz-head-white.png" class="wiz" title="" alt="" />
 
   <div class="btn-toolbar general-toolbar pull-right">
 
@@ -501,11 +501,11 @@
               {{/each}}
 
               {{#view App.AddGameComponentView tagName="li" itemBinding="this" class="add-item" title="Add New Item"}}
-                <img class="action-item" src="/static/img/icons/icon-add.png" alt="Add New Item" title="Add New Item">
+                <img class="action-item" src="/editor/static/img/icons/icon-add.png" alt="Add New Item" title="Add New Item">
               {{/view}}
 
               {{#view App.RemoveGameComponentView tagName="li" itemBinding="this" class="remove-item" title="Remove Item"}}
-                <img class="action-item" src="/static/img/icons/icon-trash.png" alt="Remove Item" title="Remove Item">
+                <img class="action-item" src="/editor/static/img/icons/icon-trash.png" alt="Remove Item" title="Remove Item">
               {{/view}}
 
             </ul>
@@ -526,14 +526,14 @@
                 <h3 class="sortable-handle">{{user.firstName}}</h3>
 
                 {{#if user.busy}}
-                  <img src="/static/img/icons/icon-busy.png" class="busy-icon" title="User is busy right now" />
+                  <img src="/editor/static/img/icons/icon-busy.png" class="busy-icon" title="User is busy right now" />
                 {{else}}
-                  <img src="/static/img/icons/icon-available.png" class="busy-icon" title="You can change the roles with the user" />
+                  <img src="/editor/static/img/icons/icon-available.png" class="busy-icon" title="You can change the roles with the user" />
                 {{/if}}
 
               {{else}}
                 <h3 class="capitalize sortable-handle">{{magos}}</h3>
-                <img src="/static/img/icons/icon-available.png" class="busy-icon" title="You can change the roles with the user" style="opacity: 0.4;" />
+                <img src="/editor/static/img/icons/icon-available.png" class="busy-icon" title="You can change the roles with the user" style="opacity: 0.4;" />
               {{/if}}
 
               <div {{bindAttr class="magos:magos-potions magos activeUser:selected-magos"}}>
@@ -736,7 +736,7 @@
 
 
 
-  <audio id="potion-sound" preload src="/static/audio/magic-chime-06.wav"></audio>
+  <audio id="potion-sound" preload src="/editor/static/audio/magic-chime-06.wav"></audio>
 
   <script type="text/javascript">
   ENV = {
@@ -745,13 +745,13 @@
     RAISE_ON_DEPRECATION: true
   };
   </script>
-  <script src="/static/js/vendor/jquery.min.js"></script>
-  <script src="/static/js/vendor/jquery-ui.min.js"></script>
-  <script src="/static/js/vendor/bootstrap.min.js"></script>
-  <script src="/static/js/vendor/ember.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/static/js/plugins.js"></script>
-  <script src="/static/js/main.js"></script>
+  <script src="/editor/static/js/vendor/jquery.min.js"></script>
+  <script src="/editor/static/js/vendor/jquery-ui.min.js"></script>
+  <script src="/editor/static/js/vendor/bootstrap.min.js"></script>
+  <script src="/editor/static/js/vendor/ember.js"></script>
+  <script src="/editor/socket.io/socket.io.js"></script>
+  <script src="/editor/static/js/plugins.js"></script>
+  <script src="/editor/static/js/main.js"></script>
 
 </body>
 </html>
