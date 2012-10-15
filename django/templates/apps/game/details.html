@@ -15,15 +15,12 @@
             {% else %}
             <img src="{{ STATIC_URL }}img/default-game-image.png" class="game-image embedded">
             {% endif %}
-            
-            {% if has_reviewed %}
-                <div class="rateit" data-rateit-value="2.5" data-rateit-ispreset="true" data-rateit-readonly="true"></div>
-            {% else %}
-                <input type="range" value="1" step="1" id="ratingSettings">
-                <div class="rateit" data-gameid="{{ game.id }}" data-rateit-backingfld="#ratingSettings" data-rateit-min="0" data-rateit-max="5">
-                </div>
-                <div id="response"></div>
-            {% endif %}
+        
+            <input type="range" value="{{ avg_stars }}" step="1" id="ratingSettings">
+            <div class="rateit" data-gameid="{{ game.id }}" data-rateit-backingfld="#ratingSettings" data-rateit-min="0" data-rateit-max="5">
+            </div>
+            <div class="reviewInfo">({{ avg_stars }} average, {{ num_reviews }} votes)</div>
+            <div id="response"></div>
 
             <p><a class="btn btn-primary" href="http://magos.pori.tut.fi/play/{{ game.slug }}" target="_blank">Play</a></p>
 
@@ -49,7 +46,7 @@
             <hr />
 
             <h2>Comments</h2>
-            <p><a href="http://magos.pori.tut.fi/play/{{ game.slug }}" target="_blank">Start game</a> (in a new window)</p>
+            <p><i>No comments yet.</i></p>
         
             {% if can_edit %}
             <hr />
@@ -137,7 +134,7 @@ $(document).ready(function() {
         var value = ri.rateit('value');
         var gameId = ri.data('gameid'); // if the product id was in some hidden field: ri.closest('li').find('input[name="productid"]').val()
          // disable voting
-        ri.rateit('readonly', true);
+        //ri.rateit('readonly', true);
  
         $.ajax({
             dataType : 'json',

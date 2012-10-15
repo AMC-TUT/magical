@@ -137,6 +137,7 @@ section#content {
 
 
 .game-image {
+    display: block;
     max-width: 540px;
     border-radius: 5px;
     -moz-border-radius: 5px;

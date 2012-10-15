@@ -45,6 +45,8 @@ def game_details(request, gameslug):
     can_edit = False
     highscores = []
     has_reviewed = False
+    num_reviews = 0
+    avg_stars = 0
     try:
         game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)
         authors = game.author_set.all()
@@ -61,10 +63,19 @@ def game_details(request, gameslug):
         except Review.DoesNotExist:
             pass
 
+        stars = Review.objects.filter(game=game).values('stars')
+        num_reviews = len(stars)
+        stars_total = 0
+        if stars:
+            for star in stars:
+                print star['stars']
+                stars_total += star['stars']
+            avg_stars = float(stars_total) / num_reviews
+
     except Game.DoesNotExist:
         pass
     return render(request, tpl, {'user': user, 'game':game, 'users': users, 'can_edit': can_edit, \
-                'highscores' : highscores, 'has_reviewed':has_reviewed})
+                'highscores' : highscores, 'has_reviewed':has_reviewed, 'num_reviews':num_reviews, 'avg_stars':avg_stars})
 
 @login_required
 def create_game(request):
@@ -115,12 +126,16 @@ def rate_game(request, game_pk, stars):
         except Review.DoesNotExist:
             pass
         if stars == 0:
-            print "DEL"
+            # set stars to 0, don't delete review
             if review:
-                review.delete()
+                review.stars = 0
+                review.save()
         else:
-            print "TRY ADD"
-            review = Review(game=game, user=user, stars=stars)
+            # add review stars
+            if review:
+                review.stars = stars
+            else:
+                review = Review(game=game, user=user, stars=stars)
             review.save()
 
     json = simplejson.dumps({ 'success': True })
