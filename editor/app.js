@@ -9,7 +9,7 @@ var fs = require('fs'),
 var redis = require("redis"),
   client = redis.createClient(6379, 'localhost');
 
-var RedisStore = require('connect-redis')(express);
+// var RedisStore = require('connect-redis')(express);
 
 var app = express(),
   http = require('http'),
@@ -69,6 +69,8 @@ io.configure(function() {
 app.param('slug', /[a-zA-Z0-9-]+$/);
 
 app.get('/:slug', function(req, res) {
+
+  console.log(req.url);
 
   var slug = req.params.slug[0];
   var cookies = myMagos.parseCookies(req.headers.cookie);
@@ -428,12 +430,13 @@ myMagos.logEvent = function(log, type, value, game) {
 };
 
 myMagos.parseCookies = function(cookies) {
-  var cookies = cookies.split(';'),
-    sessionToken = '',
+  var sessionToken = '',
     csrfToken = '';
 
+  cookies = cookies ? cookies.split(';') : [];
+
   cookies.forEach(function(cookie, i) {
-    cookie = cookie.trim();
+    cookie = !_.isUndefined(cookie) ? cookie.trim() : '';
 
     var a = cookie.split('='),
       key = a[0] || '',

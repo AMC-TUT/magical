@@ -210,7 +210,7 @@ $(function() {
       potions: null,
       active: false,
       icon: function() {
-        return '../static/img/icons/icon-' + this.get('slug') + '.png';
+        return '/editor/static/img/icons/icon-' + this.get('slug') + '.png';
       }.property('slug'),
       potionsStr: function() {
         var potions = this.get('potions');
@@ -372,7 +372,7 @@ $(function() {
       properties: null,
       active: false,
       icon: function() {
-        return '../static/game/sprites/' + this.getPath('properties.sprite') + '.png';
+        return '/editor/static/game/sprites/' + this.getPath('properties.sprite') + '.png';
       }.property('properties'),
       snapToGrid: function() {
         var snap = this.getPath('properties.controls.grid');
@@ -718,7 +718,7 @@ $(function() {
 
           // TODO proper view update to chest and canvas
           var slugName = App.selectedComponentController.getPath('content.slug');
-          var src = '/static/game/sprites/' + sprite + '.png';
+          var src = '/editor/static/game/sprites/' + sprite + '.png';
           $('.item-chest').find("[data-slug='" + slugName + "']").attr('src', src);
 
           console.log(src);
@@ -820,7 +820,7 @@ $(function() {
       properties: null,
       icon: function() {
         var icon = this.get('title');
-        return '/static/img/icons/icon-' + icon + '.png';
+        return '/editor/static/img/icons/icon-' + icon + '.png';
       }.property('title')
     });
 
@@ -843,7 +843,7 @@ $(function() {
       }.property('user'),
       icon: function() {
         var magos = this.get('magos');
-        return '/static/img/icons/' + magos + '.png';
+        return '/editor/static/img/icons/' + magos + '.png';
       }.property('magos'),
       activeUser: function() {
         var user = this.get('user');
@@ -1046,7 +1046,7 @@ $(function() {
       slug: null,
       code: null,
       flag: function() {
-        return '../static/img/flags/' + this.get('code') + '.png';
+        return '/editor/static/img/flags/' + this.get('code') + '.png';
       }.property('code')
     });
 
@@ -1386,8 +1386,8 @@ $(function() {
     var pathname = window.location.pathname;
     var slug = pathname.replace(/^\/editor\//, '').replace(/\/$/, '');
 
-    var address = 'http://' + window.location.hostname; // + '/editor';
-    var socket = io.connect(address);
+    var address = 'http://' + window.location.hostname;
+    var socket = io.connect(address, { resource: 'editor/socket.io' });
 
     socket.on('connecting', function() {
       console.log('websocket connecting (editor');
@@ -1447,7 +1447,7 @@ $(function() {
 
       // TODO Update theme
       var theme = $tgt.data('theme');
-      var href = "/static/css/" + theme + ".css";
+      var href = "/editor/static/css/" + theme + ".css";
       $(document).find('#theme').attr('href', href);
     });
 
@@ -1645,7 +1645,7 @@ $(function() {
                 oid = gameComponent.oid,
                 sprite = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).getPath('properties.sprite');
 
-              var img = '<img src="../static/game/sprites/' + sprite + '.png" data-slug="' + slug + '" data-oid="' + oid + '" class="canvas-item">';
+              var img = '<img src="/editor/static/game/sprites/' + sprite + '.png" data-slug="' + slug + '" data-oid="' + oid + '" class="canvas-item">';
               var $img = $(img);
 
               // remove when clicked - impl. draggable later
@@ -1676,11 +1676,11 @@ $(function() {
                 oid = sceneComponent.oid,
                 properties = sceneComponent.properties;
 
-              var img = '<img src="../static/img/icons/icon-' + slug + '.png" data-slug="' + slug + '" class="canvas-item" style="position:absolute;left:' + left + 'px;top:' + top + 'px;">';
+              var img = '<img src="/editor/static/img/icons/icon-' + slug + '.png" data-slug="' + slug + '" class="canvas-item" style="position:absolute;left:' + left + 'px;top:' + top + 'px;">';
               var $img = $(img);
 
               if(slug === 'background' && _.isObject(sceneComponent.properties) && _.isString(properties.sprite) ) {
-                var backgroundImage = '/static/game/sprites/' + properties.sprite + '.png';
+                var backgroundImage = '/editor/static/game/sprites/' + properties.sprite + '.png';
                 $scene.css('background-image', 'url('+backgroundImage+')');
               }
 
