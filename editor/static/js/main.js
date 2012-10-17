@@ -1125,7 +1125,20 @@ $(function() {
 
     App.ShoutsView = Em.View.extend({
       tagName: 'table',
-      contentBinding: 'App.shoutsController.content'
+      contentBinding: 'App.shoutsController.content',
+      didInsertElement: function() {
+        this.scroll();
+      },
+      contentObserver: function() {
+        var that = this;
+        Em.run.next(function() {
+          that.scroll();
+        });
+      }.observes('content.@each'),
+      scroll: function() {
+        var el = this.$().parent();
+        el.scrollTop(el.prop('scrollHeight'));
+      }
     });
 
     App.ShoutForm = Em.View.extend({

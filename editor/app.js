@@ -177,7 +177,6 @@ var editor = io.sockets.on('connection', function(socket) {
           }
         });
         */
-
         game = JSON.parse(json);
 
         client.set('game:' + slug, json, redis.print);
