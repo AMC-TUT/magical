@@ -1,3 +1,6 @@
+// request https://github.com/mikeal/request
+// express http://expressjs.com/
+
 var fs = require('fs'),
   express = require('express'),
   params = require('express-params'),
@@ -8,8 +11,6 @@ var fs = require('fs'),
 
 var redis = require("redis"),
   client = redis.createClient(6379, 'localhost');
-
-// var RedisStore = require('connect-redis')(express);
 
 var app = express(),
   http = require('http'),
@@ -34,15 +35,9 @@ client.on("error", function(err) {
   console.log("error event - " + client.host + ":" + client.port + " - " + err);
 });
 
-//var parseCookie = require('connect').utils.parseJSONCookie;
 params.extend(app);
 
 app.use('/static', express.static(__dirname + '/static'));
-
-app.configure(function() {
-  app.use(express.cookieParser());
-  // app.use(express.session({ store: new RedisStore({host: '127.0.0.1', port: 6379, prefix: 'django_session:' }), secret: '#7tzga@)0q=e@fga4qi4b!s!^v)ioaa*@w_9_-n_%=5ki3f%u#' }));
-});
 
 app.configure('development', function() {
   app.use(express.errorHandler({
@@ -56,7 +51,6 @@ app.configure('production', function() {
 });
 
 app.use(function(err, req, res, next) {
-  // console.error(err.stack);
   res.send(500, 'Something broke!');
 });
 
@@ -93,7 +87,6 @@ app.get('/:slug', function(req, res) {
     var enc = myMagos.base64Decode(data);
     console.log(data);
     console.log(enc);
-
   });
 
   res.sendfile(__dirname + '/index.html');
@@ -107,15 +100,6 @@ app.get('/', function(req, res) {
 server.listen(9001);
 
 var editor = io.sockets.on('connection', function(socket) {
-
-  /*
-  var client = socket;
-  var cookie_string = client.handshake.headers.cookie;
-  var parsed_cookies = express.utils.parseCookie(cookie_string);
-  var sessionid = parsed_cookies['sessionid'];
-  console.log('SESSION ID');
-  console.log(sessionid);
-  */
 
   socket.on('connect', function() {
     console.log('client connected, client id: ' + socket.id);
@@ -143,25 +127,18 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   socket.on('saveGame', function(mode, game, fn) {
+    socket.get('slug', function (err, slug) {
+      var json = JSON.stringify(game);
 
-    // get this from session
-    var slug = 'super-magos';
-
-    var json = JSON.stringify(game);
-
-    // saving mode to redis or redis&django
-    if(mode === 0) {
-      // just in redis
-      client.set('game:' + slug, json, redis.print);
-
-    } else {
-      // redis and django
-      client.set('game:' + slug, json, redis.print);
-      //
-      // TODO send game to django
-    }
-
-    fn(true);
+      if(mode === 0) { // saving mode to redis or redis&django
+        client.set('game:' + slug, json, redis.print); // just in redis
+      } else {
+        client.set('game:' + slug, json, redis.print); // redis and django
+        // TODO send game to django
+      }
+      fn(true);
+    });
+    fn(false);
   });
 
   socket.on('setUserCredentials', function(credentials, fn) {
@@ -193,12 +170,18 @@ var editor = io.sockets.on('connection', function(socket) {
       if(data === null) {
         // query from django and set to redis
         var json = fs.readFileSync('static/json/fakeGame.json', 'utf8');
+        /*
+        request.get('/api/v1/games/' + slug, function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+
+          }
+        });
+        */
 
         game = JSON.parse(json);
 
         client.set('game:' + slug, json, redis.print);
-        // request.get('http://sportti.dreamschool.fi/genova/fakekjkjkljlGame2.json?kksljlkjkjkljklj' + slug, function (error, response, body) {
-        // if (!error && response.statusCode == 200) {} });
+
       } else {
         game = JSON.parse(data);
       }
