@@ -82,10 +82,15 @@ $(function() {
       populate: function() {
         var controller = this;
 
-        App.dataSource.joinGame(function(data) {
-          // set content
-          controller.set('content', data);
+        // set user credentials
+        App.dataSource.setUserCredentials(function(data) {
+          // join game after credential
+          App.dataSource.joinGame(function(data) {
+            // set content to game controller
+            controller.set('content', data);
+          });
         });
+
       }
     });
 
@@ -1201,6 +1206,27 @@ $(function() {
 
     App.DataSource = Em.Object.extend({
 
+      setUserCredentials: function(callback) {
+
+        var sessionid = $.cookie('sessionid');
+        var csrftoken = $.cookie('csrftoken');
+        var username = 'matti.vanhanen';
+        var paths = window.location.pathname.split('/');
+        var slug = _.last(paths);
+
+        var credentials = {
+          sessionid: sessionid,
+          csrftoken: csrftoken,
+          username: username,
+          slug: slug
+        };
+
+        console.log(credentials);
+
+        socket.emit('setUserCredentials', credentials, function(data) {
+          callback(data);
+        });
+      },
       shout: function(shout, callback) {
         socket.emit('shout', shout, function(data) {
           callback(data);
@@ -1278,7 +1304,7 @@ $(function() {
       },
       joinGame: function(callback) {
 
-        socket.emit('joinGame', slug, function(data) {
+        socket.emit('joinGame', function(data) {
           var game = App.Game.create();
 
           game.set('title', data.title);

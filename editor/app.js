@@ -70,22 +70,31 @@ app.param('slug', /[a-zA-Z0-9-]+$/);
 
 app.get('/:slug', function(req, res) {
 
-  console.log(req.url);
-
-  var slug = req.params.slug[0];
-  var cookies = myMagos.parseCookies(req.headers.cookie);
+  var slug = req.url.replace(/^\//, ''); // "/super-magos"
 
   // 4 dev
-  cookies = {
-    sessionid: '0725f476fcb35990aad27b4d0a22476b',
-    csrftoken: 'rQQ52dL1BIP4Mk4Kg2EzA2JQjT4bi1t3'
-  };
+  //req.cookies.sessionid = '0725f476fcb35990aad27b4d0a22476b',
+  //req.cookies.csrftoken = 'rQQ52dL1BIP4Mk4Kg2EzA2JQjT4bi1t3';
 
-  // if sessionid or csrftoken equals "" redirect to login page
-  if(cookies.sessionid === "" || cookies.csrftoken === "") {
+  // if sessionid or csrftoken equals undefined redirect to login page
+  if(_.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
     res.redirect('http://magos.pori.tut.fi/game/login?next=/editor/' + slug);
     return false;
   }
+
+  client.get('django_session:' + req.cookies.sessionid, function(err, data) {
+
+    if(_.isNull(data)) {
+      res.redirect('http://magos.pori.tut.fi/game/login?next=/editor/' + slug);
+      return false;
+    }
+
+    var text = 'From Redis:\n';
+    var enc = myMagos.base64Decode(data);
+    console.log(data);
+    console.log(enc);
+
+  });
 
   res.sendfile(__dirname + '/index.html');
 });
@@ -125,11 +134,12 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   socket.on('shout', function(shout, fn) {
-    // console.log("Shout: " + JSON.stringify(shout) + "\n");
-    if(_.isObject(shout)) {
-      socket.broadcast.in(slug).emit('shout', shout);
-      fn(shout);
-    }
+    socket.get('slug', function (err, slug) {
+      if(_.isObject(shout)) {
+        socket.broadcast.in(slug).emit('shout', shout);
+        fn(shout);
+      }
+    });
   });
 
   socket.on('saveGame', function(mode, game, fn) {
@@ -154,13 +164,30 @@ var editor = io.sockets.on('connection', function(socket) {
     fn(true);
   });
 
-  socket.on('joinGame', function(slug, fn) {
+  socket.on('setUserCredentials', function(credentials, fn) {
+    //
+    socket.set('slug', credentials.slug, function() {});
+    socket.set('username', credentials.username, function() {});
+    socket.set('sessionid', credentials.sessionid, function() {});
+    socket.set('csrftoken', credentials.csrftoken, function() {});
 
-    slug = _.isString(slug) ? slug : '';
+    fn(credentials);
+  });
 
-    var game = {};
+  socket.on('joinGame', function(fn) {
 
-    socket.join(slug); // move to other event
+    var game = {},
+      slug = '',
+      sessionid = '',
+      csrftoken = '';
+
+    socket.get('slug', function (err, name) { slug = name; });
+    socket.get('sessionid', function (err, name) { sessionid = name; });
+    socket.get('csrftoken', function (err, name) { csrftoken = name; });
+
+    // join or make a room with slug name
+    socket.join(slug);
+
     client.get('game:' + slug, function(err, data) {
 
       if(data === null) {
@@ -233,21 +260,6 @@ var editor = io.sockets.on('connection', function(socket) {
     });
     */
 
-  /*
-  socket.on('set-user-credentials', function(credentials, fn) {
-
-    socket.set('credentials', credentials, function() {});
-
-    var userName = "";
-    socket.get('credentials', function(err, credentials) {
-      userName = credentials.userName;
-    });
-
-    console.log(credentials);
-
-    fn('user´s credentials saved');
-
-  });
   /*
   socket.on('join-room', function (slug, fn) {
 
@@ -338,7 +350,8 @@ var editor = io.sockets.on('connection', function(socket) {
 
   });
 */
-  /*
+
+/*
   socket.on('get room members', function(room, fn) {
     console.log('get room members');
     var members = io.sockets.clients(room.slug);
@@ -398,6 +411,7 @@ var editor = io.sockets.on('connection', function(socket) {
 
 var myMagos = myMagos || {};
 
+// myMagos.logEvent("user", "event", "some value", "super-magos");
 myMagos.logEvent = function(log, type, value, game) {
 
   var log = log || "";
@@ -429,166 +443,12 @@ myMagos.logEvent = function(log, type, value, game) {
 
 };
 
-myMagos.parseCookies = function(cookies) {
-  var sessionToken = '',
-    csrfToken = '';
-
-  cookies = cookies ? cookies.split(';') : [];
-
-  cookies.forEach(function(cookie, i) {
-    cookie = !_.isUndefined(cookie) ? cookie.trim() : '';
-
-    var a = cookie.split('='),
-      key = a[0] || '',
-      value = a[1] || '';
-
-    if(key.match(/sessionid/)) {
-      sessionToken = value;
-    } else if(key.match(/csrftoken/)) {
-      csrfToken = value;
-    }
-  });
-
-  return {
-    sessionid: sessionToken,
-    csrftoken: csrfToken
-  };
-
+myMagos.base64Encode = function(unencoded) {
+  //
+  return new Buffer(unencoded || '').toString('base64');
 };
 
-// myMagos.logEvent("user", "event", "some value", "super-magos");
-/*
-
-        "sceneElements": [
-            {
-                "name": "Background Image",
-                "type": "background-image",
-                "icon": "/assets/img/icons/background-image.png",
-                "available": [
-                    "intro",
-                    "game",
-                    "outro"
-                ],
-                "potions": []
-            },
-            {
-                "name": "Timer",
-                "type": "timer",
-                "icon": "/assets/img/icons/timer.png",
-                "available": [
-                    "game"
-                ],
-                "potions": [
-                    "font"
-                ]
-            },
-            {
-                "name": "Dialog",
-                "type": "dialog",
-                "icon": "/assets/img/icons/dialog.png",
-                "available": [
-                    "game"
-                ],
-                "potions": [
-                    "font",
-                    "dialog"
-                ]
-            },
-            {
-                "name": "Highscore",
-                "type": "highscore",
-                "icon": "/assets/img/icons/highscore.png",
-                "available": [
-                    "intro",
-                    "outro"
-                ],
-                "potions": [
-                    "font"
-                ]
-            },
-            {
-                "name": "Volume",
-                "type": "volume",
-                "icon": "/assets/img/icons/volume.png",
-                "available": [
-                    "intro",
-                    "game",
-                    "outro"
-                ],
-                "potions": []
-            },
-            {
-                "name": "Start Game",
-                "type": "start-button",
-                "icon": "/assets/img/icons/start-button.png",
-                "available": [
-                    "intro",
-                    "outro"
-                ],
-                "potions": [
-                    "font"
-                ]
-            }
-        ]
-
-        */
-
-/*
-var editor = io.of('/editor').on('connection', function(client) {
-
-  editor.on('connect', function() {
-      console.log('CLIENT ID: ' + client.id);
-      editor.emit('user connected');
-  });
-
-  editor.on('disconnect', function() {
-      // socket.broadcast.emit('user disconnected');
-  });
-
-});
-*/
-
-/*
-var chat = io.of('/chat').on('connection', function (client) {
-  client.emit('a message', client.id );
-  chat.emit('a message', everyone: 'in', '/chat': 'will get' });
-});
-*/
-
-/*
-  { slug: "super-magos",
-    members: [
-      {
-        userName: "teemu",
-        magos: "principes"
-      }
-    ],
-    users: [
-        {
-          // id: 23320239309932,
-          // userName: "teemu",
-          magos: "principes"
-        },
-        {
-          magos: "physicus"
-        },
-        {
-          magos: "artifex"
-        },
-        {
-          magos: "musicus"
-        },
-    game: {
-        info: {
-            "title": "Super Mario",
-            "slug": "super-mario",
-            "public": false,
-            "clonable": false
-        }
-      }
-    },
-    components: [
-      { slug: 'player'}
-    ]
-];
-*/
+myMagos.base64Decode = function (encoded) {
+  //
+  return new Buffer(encoded || '', 'base64').toString('utf8');
+};
