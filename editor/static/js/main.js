@@ -688,7 +688,7 @@ $(function() {
         // App.selectedComponentController.set('content', item);
         $('#dialog-new-item').modal('hide');
 
-        App.dataSource.saveGame(0, function(data) {
+        App.dataSource.saveGame(1, function(data) {
           console.log('save (create new)');
         });
 
@@ -1325,7 +1325,7 @@ $(function() {
           game.set('type', data.type);
           game.set('state', data.state);
           game.set('cloned', data.cloned);
-          game.set('canvas', data.canvas);
+          game.set('canvas', data.revision.canvas);
 
           game.set('href', window.location.href);
 

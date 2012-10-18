@@ -1,5 +1,14 @@
 [
   {
+    "magos": "arcitectus",
+    "potions": [
+      {
+        "title": "",
+        "properties": {}
+      }
+    ] 
+  },
+  {
     "magos": "principes",
     "potions": [
       {
@@ -97,23 +106,18 @@
         }
       },
       {
-        "title": "animation",
-        "properties": {
-          "events": null,
-          "sprite": null
-        }
-      }
-    ]
-  },
-  {
-    "magos": "musicus",
-    "potions": [
-      {
         "title": "audio",
         "properties": {
             "events": [],
             "audio": null,
             "plays": 0
+        }
+      },
+      {
+        "title": "animation",
+        "properties": {
+          "events": null,
+          "sprite": null
         }
       }
     ]

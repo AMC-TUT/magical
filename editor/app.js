@@ -64,14 +64,15 @@ app.param('slug', /[a-zA-Z0-9-]+$/);
 
 app.get('/:slug', function(req, res) {
 
-  var slug = req.url.replace(/^\//, ''); // "/super-magos"
+  var slug = req.url.replace(/^\//, ''); // remove slash, orig: "/super-magos"
 
   // 4 dev
-  //req.cookies.sessionid = '0725f476fcb35990aad27b4d0a22476b',
-  //req.cookies.csrftoken = 'rQQ52dL1BIP4Mk4Kg2EzA2JQjT4bi1t3';
+  req.cookies = {};
+  req.cookies.sessionid = '1c7165a476ddd39af7687d7cfcfd1d1c',
+  req.cookies.csrftoken = 'dRcjTzKilxmjLYMK0VvTnzxQZVNiPTH7';
 
   // if sessionid or csrftoken equals undefined redirect to login page
-  if(_.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
+  if(_.isUndefined(req.cookies) || _.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
     res.redirect('http://magos.pori.tut.fi/game/login?next=/editor/' + slug);
     return false;
   }
@@ -128,17 +129,39 @@ var editor = io.sockets.on('connection', function(socket) {
 
   socket.on('saveGame', function(mode, game, fn) {
     socket.get('slug', function (err, slug) {
+      var result = false;
+      // game in json format
       var json = JSON.stringify(game);
 
       if(mode === 0) { // saving mode to redis or redis&django
-        client.set('game:' + slug, json, redis.print); // just in redis
+        // redis
+        client.set('game:' + slug, json, redis.print);
+        result = true;
       } else {
-        client.set('game:' + slug, json, redis.print); // redis and django
-        // TODO send game to django
+        // redis
+        client.set('game:' + slug, json, redis.print);
+
+        // django
+        var sessionid = '',
+          csrftoken = '';
+        var state = 1; //game.state,
+          revision = JSON.stringify(game.revision);
+
+        // set session cookies for request
+        socket.get('sessionid', function (err, name) { sessionid = name; });
+        socket.get('csrftoken', function (err, name) { csrftoken = name; });
+        var j = myMagos.createCookieJar(sessionid, csrftoken);
+
+        // game update request
+        request.put({url: 'http://magos.pori.tut.fi/api/v1/games/' + slug, jar: j, form: {'state': state, 'revision': revision}}, function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+            result = true;
+          }
+        });
       }
-      fn(true);
     });
-    fn(false);
+
+    fn(result);
   });
 
   socket.on('setUserCredentials', function(credentials, fn) {
@@ -168,18 +191,28 @@ var editor = io.sockets.on('connection', function(socket) {
     client.get('game:' + slug, function(err, data) {
 
       if(data === null) {
-        // query from django and set to redis
-        var json = fs.readFileSync('static/json/fakeGame.json', 'utf8');
-        /*
-        request.get('/api/v1/games/' + slug, function (error, response, body) {
-          if (!error && response.statusCode == 200) {
+        // 3 rows 4 dev
+        //var body = fs.readFileSync('static/json/fakeGame.json', 'utf8');
+        //game = JSON.parse(body);
+        //client.set('game:' + slug, body, redis.print);
 
+        // query from django and set to redis
+
+        // set session cookies for request
+        var j = myMagos.createCookieJar(sessionid, csrftoken);
+        // get game request
+        request.get({url: 'http://magos.pori.tut.fi/api/v1/games/' + slug, jar: j}, function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+            console.log(body);
+            game = JSON.parse(body);
+
+            if(_.isObject(game)) {
+              game = checkGameRevision(game.revision);
+
+              client.set('game:' + slug, body, redis.print);
+            }
           }
         });
-        */
-        game = JSON.parse(json);
-
-        client.set('game:' + slug, json, redis.print);
 
       } else {
         game = JSON.parse(data);
@@ -187,6 +220,28 @@ var editor = io.sockets.on('connection', function(socket) {
       // callback
       fn(game);
     });
+  });
+
+  socket.on('logEvent', function(log, fn) {
+    if(_.isObject(log)) {
+      //
+      var slug = '',
+      sessionid = '',
+      csrftoken = '';
+
+      socket.get('slug', function (err, name) { slug = name; });
+      socket.get('sessionid', function (err, name) { sessionid = name; });
+      socket.get('csrftoken', function (err, name) { csrftoken = name; });
+
+      log.game = slug; // make sure that log binds to right game
+
+      var result = myMagos.logEvent(log, sessionid, csrftoken);
+
+      fn(result);
+    } else {
+      //
+      fn(false);
+    }
   });
 
   socket.on('getHighscore', function(slug, fn) {
@@ -350,79 +405,44 @@ var editor = io.sockets.on('connection', function(socket) {
 
 });
 
-/*
-  // http://nodejs.org/docs/v0.4.5/api/http.html#http.request
-  // get room from server (REST, Django)
-  var options = {
-    host: 'sportti.dreamschool.fi',
-    port: 80,
-    path: '/genova/fake200.json'
-  };
-  //console.log(JSON.stringify(options))
-
-  http.get(options, function(res) {
-    console.log("\nGot response statusCode: " + res.statusCode);
-
-    res.on('data', function (json) {
-      var data = JSON.parse(json);
-      console.log(data);
-    });
-
-  }).on('error', function(e) {
-    console.log("Got error: " + e.message);
-  });
-
-  options = {
-    host: 'sportti.dreamschool.fi',
-    port: 80,
-    path: '/genova/fakeUser.json'
-  };
-
-  http.get(options, function(res) {
-    console.log("\nGot response statusCode: " + res.statusCode);
-
-    res.on('data', function (json) {
-      var data = JSON.parse(json);
-      console.log(data);
-    });
-
-  }).on('error', function(e) {
-    console.log("Got error: " + e.message);
-  });
-*/
-
+/**
+ *
+ *  MAGOS Helper functions
+ *
+ */
 var myMagos = myMagos || {};
 
-// myMagos.logEvent("user", "event", "some value", "super-magos");
-myMagos.logEvent = function(log, type, value, game) {
+myMagos.logEvent = function(log, sessionid, csrftoken) {
 
-  var log = log || "";
+   // log object
+   // - name: editor|user|game
+   // - type: event type
+   // - value: event value
+   // - game: games slug
 
-  // query string
-  var query = {};
   query.type = type || "";
   query.value = value || "";
   query.game = game || "";
-  //
-  query = querystring.stringify(query);
 
-  console.log(query);
-  // settings for server connection
-  options = {
-    host: 'sportti.dreamschool.fi',
-    port: 80,
-    path: '/genova/fake200.json' + query,
-    // :log
-    method: 'GET' // POST
+  var data = {
+    'type': log.type,
+    'value': log.value,
+    'game': log.game
   };
 
-  // send log
-  http.request(options, function(res) {
-    console.log("Logging statusCode: " + res.statusCode);
-  }).on('error', function(e) {
-    console.log("Logging error: " + e.message);
-  });
+  var slug = log.name || '';
 
+  // set session cookies for request
+  var j = myMagos.createCookieJar(sessionid, csrftoken);
+
+  // game update request
+  request.put({url: 'http://magos.pori.tut.fi/api/v1/logs/' + slug, jar: j, form: data}, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  });
 };
 
 myMagos.base64Encode = function(unencoded) {
@@ -433,4 +453,60 @@ myMagos.base64Encode = function(unencoded) {
 myMagos.base64Decode = function (encoded) {
   //
   return new Buffer(encoded || '', 'base64').toString('utf8');
+};
+
+myMagos.createCookieJar = function(sessionid, csrftoken) {
+  var j = request.jar();
+
+  var sessionidCookie = request.cookie('sessionid='+sessionid);
+  var csrftokenCookie = request.cookie('csrftoken='+csrftoken);
+
+  j.add(sessionidCookie);
+  j.add(csrftokenCookie);
+
+  return j;
+};
+
+myMagos.checkGameRevision = function(revision) {
+  if(!_.isObject(revision)) {
+    revision = {};
+  }
+
+  if(!_.isObject(revision.canvas)) {
+    // fallback 4 dev
+    revision.canvas = {
+      'blockSize': 48,
+      'rows': 8,
+      'columns': 12
+    };
+  }
+
+  if(!_.isArray(revision.gameComponents)) {
+    revision.gameComponents = [];
+  }
+
+  if(!_.isArray(revision.scenes)) {
+    revision.scenes = [{
+      'name': 'intro',
+      'sceneComponents': [],
+      'gameComponents': []
+    }, {
+      'name': 'game',
+      'sceneComponents': [],
+      'gameComponents': []
+    }, {
+      'name': 'outro',
+      'sceneComponents': [],
+      'gameComponents': []
+    }];
+  }
+
+  if(!_.isObject(revision.assets)) {
+    revision.assets = {
+      'audios': [],
+      'fonts': []
+    };
+  }
+
+  return revision;
 };

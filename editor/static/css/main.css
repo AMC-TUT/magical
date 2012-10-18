@@ -723,7 +723,7 @@ a.label:hover,a.badge:hover{color:#ffffff;text-decoration:none;cursor:pointer;}
 .magos-shoutbox input[type=text]{height:20px;line-height:20px;box-shadow:inset 0 0 6px black;border-color:#2C2929;color:#444;width:-webkit-calc(100% - 81px);width:-moz-calc(100% - 81px);width:calc(100% - 81px);}
 .magos-shoutbox-log{color:#555;line-height:1.4;font-size:1.1em;overflow:hidden;margin:8px 0 0;padding:5px;-webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075);-moz-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075);box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075);-webkit-transition:border linear 0.2s, box-shadow linear 0.2s;-moz-transition:border linear 0.2s, box-shadow linear 0.2s;-ms-transition:border linear 0.2s, box-shadow linear 0.2s;-o-transition:border linear 0.2s, box-shadow linear 0.2s;transition:border linear 0.2s, box-shadow linear 0.2s;background-color:#f5f5f5;border:1px solid #CCC;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;box-shadow:inset 0 0 6px #000000;border-color:#2C2929;margin-bottom:5px;overflow-y:auto;height:120px;}.magos-shoutbox-log .principes{color:#621283;}
 .magos-shoutbox-log .physicus{color:#095766;}
-.magos-shoutbox-log .musicus{color:#090d66;}
+.magos-shoutbox-log .arcitectus{color:#090d66;}
 .magos-shoutbox-log .artifex{color:#40b83d;}
 .magos-shoutbox-log table td{vertical-align:top;}
 .help,.help .btn{cursor:help !important;}
@@ -731,12 +731,12 @@ a.label:hover,a.badge:hover{color:#ffffff;text-decoration:none;cursor:pointer;}
 .magos-infobox h4:not(:first-child){margin-top:8px;}
 .magos-infobox .infobox-skillset{padding:8px;color:#fff;border-radius:3px;}
 .magos-infobox .infobox-collapse .row-fluid{margin-top:8px;}
-.magos-infobox .infobox-skillset.infobox-musicus{margin-top:8px;}
+.magos-infobox .infobox-skillset.infobox-arcitectus{margin-top:8px;}
 .magos-infobox .infobox-physicus{background-color:#095766;}
 .magos-infobox .infobox-principes{background-color:#621283;}
-.magos-infobox .infobox-musicus{background-color:#090d66;}
+.magos-infobox .infobox-arcitectus{background-color:#090d66;}
 .magos-infobox .infobox-artifex{background-color:#40b83d;}
-.magos-infobox .infobox-physicus,.magos-infobox .infobox-principes,.magos-infobox .infobox-musicus,.magos-infobox .infobox-artifex{background-image:-webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-ms-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.53));}
+.magos-infobox .infobox-physicus,.magos-infobox .infobox-principes,.magos-infobox .infobox-arcitectus,.magos-infobox .infobox-artifex{background-image:-webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-ms-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:-o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.53));background-image:linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.53));}
 .magos-infobox .font-preview{padding:5px;margin-top:8px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}.magos-infobox .font-preview>div>div>div>div{padding:3px;}
 .magos-infobox .font-preview.empty{margin-top:0;}
 .magos-infobox .table{margin-bottom:0;}.magos-infobox .table tr:first-child th,.magos-infobox .table tr:first-child td{border-top:0;}
@@ -760,7 +760,7 @@ a.label:hover,a.badge:hover{color:#ffffff;text-decoration:none;cursor:pointer;}
 .sidebar .magos-potions.principes{background-color:#621283;border:1px solid #400c56;}.sidebar .magos-potions.principes .ui-state-active{background-color:#a51edd;}
 .sidebar .magos-potions.physicus{background-color:#095766;border:1px solid #052f37;}.sidebar .magos-potions.physicus .ui-state-active{background-color:#0d7f95;}
 .sidebar .magos-potions.artifex{background-color:#40b83d;border:1px solid #256b24;}.sidebar .magos-potions.artifex .ui-state-active{background-color:#61ca5e;}
-.sidebar .magos-potions.musicus{background-color:#090d66;border:1px solid #080c5d;}.sidebar .magos-potions.musicus .ui-state-active{background-color:#0e149e;}
+.sidebar .magos-potions.arcitectus{background-color:#090d66;border:1px solid #080c5d;}.sidebar .magos-potions.arcitectus .ui-state-active{background-color:#0e149e;}
 .sidebar .form-vertical{margin-bottom:0;}
 .sidebar .action-group{border-bottom:1px solid rgba(255, 255, 255, 0.16);margin-bottom:8px;padding-bottom:3px;}
 .sidebar .fieldset>.action-group:last-child{border:0;padding-bottom:0;}
