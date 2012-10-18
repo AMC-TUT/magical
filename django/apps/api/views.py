@@ -161,7 +161,7 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
         if not session_user.is_authenticated():
             response = Response(403, {'statusCode': 403, 'message' : 'Not authorized'})
             return self.render(response)
-        organization = session_user.get_profile().organization        
+        organization = session_user.get_profile().organization
         try:
             game = Game.objects.get(slug=gameslug)
         except Game.DoesNotExist:
@@ -186,7 +186,16 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
             authors_list.append(author_dict)
 
         result_dict['authors'] = authors_list
-        result_dict['revision'] = game.get_latest_revision().id
+
+        revision = game.get_latest_revision()
+        revision_dict = {}
+        if revision:
+            revision_dict['data'] = revision.data
+
+        jsonSerializer = JSONSerializer()
+        revision_json = jsonSerializer.serialize(revision)
+
+        result_dict['revision'] = revision_json
         
         response = Response(200, result_dict)
         return self.render(response)
@@ -202,55 +211,62 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
         except Game.DoesNotExist:
             response = Response(404, {'statusCode': 404, 'message' : 'Game not found'})
             return self.render(response)
-        valid_data = True
-        name_list = put_data.getlist('name', None) # Title of the game
-        type_list = put_data.getlist('type', None) #  Game's type (game_type:slug)
-        description_list = put_data.getlist('description', None) #  some info
-        authors_list = put_data.getlist('authors', None) #   usernames of the game creators (array)
+        
+        valid_data = False
+
+        state_list = put_data.getlist('state', None) # Game state (1=private, 2=public)
+        revision_list = put_data.getlist('revision', None) #  Game revision as JSON (game_type:slug)
+
+        # state
+        state = None
+        if state_list and len(state_list):
+            state = state_list[0]
+
+        # state
+        revision_data = None
+        if revision_list and len(revision_list):
+            revision_data = revision_list[0]
+
+        #name_list = put_data.getlist('name', None) # Title of the game
+        #type_list = put_data.getlist('type', None) #  Game's type (game_type:slug)
+        #description_list = put_data.getlist('description', None) #  some info
+        #authors_list = put_data.getlist('authors', None) #   usernames of the game creators (array)
         # game title
-        title = None
-        if name_list and len(name_list):
-            title = name_list[0]
+        #title = None
+        #if name_list and len(name_list):
+        #    title = name_list[0]
         # description
-        description = None
-        if description_list and len(description_list):
-            description = description_list[0]
+        #description = None
+        #if description_list and len(description_list):
+        #    description = description_list[0]
         # game type
-        type_slug = None
-        if type_list and len(type_list):
-            type_slug = type_list[0]
-            try:                
-                type_slug = GameType.objects.get(slug=type_slug)
-            except GameType.DoesNotExist:
-                valid_data = False
+        #type_slug = None
+        #if type_list and len(type_list):
+        #    type_slug = type_list[0]
+        #    try:                
+        #        type_slug = GameType.objects.get(slug=type_slug)
+        #    except GameType.DoesNotExist:
+        #        valid_data = False
+        if state and revision_data:
+            valid_data = True
+        
         if valid_data:
             try:
-                if title:
-                    slug = slugify(title)
-                    game.title = title
-                    game.slug = slug
-                if type_slug:
-                    game.type = type_slug
-                if description:
-                    game.description = description
+                # set state
+                game.state = state
                 game.save()
-                # delete old authors
-                Author.objects.filter(game=game).delete()
-                # handle new list of authors
-                if authors_list and len(authors_list):
-                    for author in authors_list:
-                        try:
-                            author_user = User.objects.get(username=author)
-                            author_instance = Author(user=author_user, game=game)
-                            author_instance.save()
-                        except User.DoesNotExist:
-                            pass
+
+                # create a new revision
+                revision = Revision(game=game, data=revision_data)
+                revision.save()
+
                 response=Response(200,{'statusCode' : 200 })
                 return self.render(response)
             except (ValueError, IntegrityError) as e:
                 pass
+
         response=Response(400,{'message':'Invalid data'})
-        return self.render(response)        
+        return self.render(response)    
     
     @method_decorator(csrf_exempt)
     def dispatch(self,*args,**kwargs):

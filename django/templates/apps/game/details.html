@@ -16,12 +16,13 @@
             <img src="{{ STATIC_URL }}img/default-game-image.png" class="game-image embedded">
             {% endif %}
         
-            <input type="range" value="{{ avg_stars }}" step="1" id="ratingSettings">
-            <div class="rateit" data-gameid="{{ game.id }}" data-rateit-backingfld="#ratingSettings" data-rateit-min="0" data-rateit-max="5">
-            </div>
-            <div class="reviewInfo">({{ avg_stars }} average, {{ num_reviews }} votes)</div>
-            <div id="response"></div>
-
+            {% if can_review %}
+                <input type="range" value="{{ avg_stars }}" step="1" id="ratingSettings">
+                <div class="rateit" data-gameid="{{ game.id }}" data-rateit-backingfld="#ratingSettings" data-rateit-min="0" data-rateit-max="5">
+                </div>
+                <div class="reviewInfo">({{ avg_stars }} average, {{ num_reviews }} votes)</div>
+                <div id="response"></div>
+            {% endif %}
             <p><a class="btn btn-primary" href="http://magos.pori.tut.fi/play/{{ game.slug }}" target="_blank">Play</a></p>
 
             <hr />

@@ -7,6 +7,7 @@ from django.utils import simplejson
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.core import serializers
+from django.db.models import Q
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
@@ -39,7 +40,9 @@ def game_details(request, gameslug):
     """Game details"""
     tpl = 'apps/game/details.html'
     user = request.user
-    organization = user.get_profile().organization        
+    organization = None
+    if user.is_authenticated():
+        organization = user.get_profile().organization        
     game = None
     authors = []
     can_edit = False
@@ -47,35 +50,41 @@ def game_details(request, gameslug):
     has_reviewed = False
     num_reviews = 0
     avg_stars = 0
+    users = []
+    can_review = False
     try:
-        game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)
+        if not user.is_authenticated():
+            game = Game.objects.get(slug=gameslug, state=2)
+        else:
+            game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)            
         authors = game.author_set.all()
-        users = []
         for author in authors:
             users.append(author.user)
         if user in users:
             can_edit = True
         # top 10 highscore
         highscores = Highscore.objects.filter(game=game).order_by('-score')[:10]
-        try:
-            review = Review.objects.get(game=game, user=user)
-            has_reviewed = True
-        except Review.DoesNotExist:
-            pass
+        if user.is_authenticated():
+            can_review = True
+            try:
+                review = Review.objects.get(game=game, user=user)
+                has_reviewed = True
+            except Review.DoesNotExist:
+                pass
 
         stars = Review.objects.filter(game=game).values('stars')
         num_reviews = len(stars)
         stars_total = 0
         if stars:
             for star in stars:
-                print star['stars']
                 stars_total += star['stars']
             avg_stars = float(stars_total) / num_reviews
 
     except Game.DoesNotExist:
         pass
     return render(request, tpl, {'user': user, 'game':game, 'users': users, 'can_edit': can_edit, \
-                'highscores' : highscores, 'has_reviewed':has_reviewed, 'num_reviews':num_reviews, 'avg_stars':avg_stars})
+                'highscores' : highscores, 'has_reviewed':has_reviewed, 'num_reviews':num_reviews, 'avg_stars':avg_stars, \
+                'can_review': can_review})
 
 @login_required
 def create_game(request):
@@ -153,6 +162,7 @@ def ajax_list_games(request):
     if user.is_authenticated():
         # authenticated users get list of their own games
         games = Game.objects.filter(author__user__userprofile__organization=user.userprofile.organization).distinct()
+        # should we add public (state=2) games?
     else:
         # anonymous users get list of public games, state=2
         games = Game.objects.filter(state=2)

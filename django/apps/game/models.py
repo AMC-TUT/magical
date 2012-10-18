@@ -117,7 +117,25 @@ class AchievementMembership(models.Model):
     def __unicode__(self):
         return u"%s, %s" % (self.user, self.achievement)
 
-        
+
+class Gender(models.Model):
+    """Gender model"""
+    name = models.CharField(max_length=45, null=False, blank=False)
+    abbr = models.CharField(max_length=1, null=False, blank=False, default='M')
+
+    class Meta:
+        verbose_name = _('gender')
+        verbose_name_plural = _('genders')
+    
+    @classmethod
+    def get_default_gender(cls):
+        default_gender, created = Gender.objects.get_or_create(name='male', abbr='M')
+        return default_gender
+
+    def __unicode__(self):
+        return u"%s" % (self.name)
+
+
 class UserProfile(models.Model):
     """User profile model. This expands User model of Django."""
     user = models.OneToOneField(User, primary_key=True)
@@ -131,6 +149,8 @@ class UserProfile(models.Model):
     disability = models.ForeignKey(Disability, null=True, blank=True)
     country = models.ForeignKey(Country, null=True, blank=True)
     updated = models.DateTimeField(auto_now=True)
+    gender = models.ForeignKey(Gender, default=Gender.get_default_gender)
+    #gender = models.ForeignKey(Gender, null=True, blank=True)
 
     class Meta:
         verbose_name = _('user profile')
@@ -312,18 +332,19 @@ def create_user_profile(sender, instance, created, **kwargs):
     default_lang, lang_created = Language.objects.get_or_create(code='fi', title='suomi', slug='finnish')
     default_role, role_created = Role.objects.get_or_create(name='student', permission_level=1)
     default_organization, organization_created = Organization.objects.get_or_create(name='TTY', slug='tty', language=default_lang, country=default_country)
-    
+    default_gender, gender_created = Gender.objects.get_or_create(name='male', abbr='M')
+
     if created:
         try:
             profile, created = UserProfile.objects.get(user=instance)
         except UserProfile.DoesNotExist:
-            profile = UserProfile.objects.create(user = instance, language=default_lang, role=default_role, organization=default_organization)
+            profile = UserProfile.objects.create(user = instance, language=default_lang, role=default_role, organization=default_organization, gender=default_gender)
             profile.save()
     else:
         try:
             profile = instance.get_profile()
         except UserProfile.DoesNotExist:
-            profile = UserProfile.objects.create(user = instance, language=default_lang, role=default_role, organization=default_organization)
+            profile = UserProfile.objects.create(user = instance, language=default_lang, role=default_role, organization=default_organization, gender=default_gender)
             profile.save()
 
 # Automagically create a profile when user is created
@@ -335,5 +356,7 @@ from django.template.defaultfilters import slugify
 
 @receiver(pre_save)
 def slugify_title_callback(sender, instance, *args, **kwargs):
+    # TODO: We can't do it this way, game slug should not be edited!
     if hasattr(instance, 'title') and hasattr(instance, 'slug'):
         instance.slug = slugify(instance.title)
+
