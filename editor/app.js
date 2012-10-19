@@ -128,8 +128,9 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   socket.on('saveGame', function(mode, game, fn) {
+    var result = false;
+
     socket.get('slug', function (err, slug) {
-      var result = false;
       // game in json format
       var json = JSON.stringify(game);
 
@@ -203,13 +204,17 @@ var editor = io.sockets.on('connection', function(socket) {
         // get game request
         request.get({url: 'http://magos.pori.tut.fi/api/v1/games/' + slug, jar: j}, function (error, response, body) {
           if (!error && response.statusCode == 200) {
-            console.log(body);
+
             game = JSON.parse(body);
 
             if(_.isObject(game)) {
-              game = myMagos.checkGameRevision(game.revision);
+              game.revision = myMagos.checkGameRevision(game.revision.data);
 
-              client.set('game:' + slug, body, redis.print);
+console.log('Game:');
+console.log(game);
+
+              var json = JSON.stringify(game);
+              client.set('game:' + slug, json, redis.print);
             }
           }
         });
@@ -226,8 +231,8 @@ var editor = io.sockets.on('connection', function(socket) {
     if(_.isObject(log)) {
       //
       var slug = '',
-      sessionid = '',
-      csrftoken = '';
+        sessionid = '',
+        csrftoken = '';
 
       socket.get('slug', function (err, name) { slug = name; });
       socket.get('sessionid', function (err, name) { sessionid = name; });
@@ -245,10 +250,14 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   socket.on('getHighscore', function(slug, fn) {
-    // console.log('getHighscore')
-    slug = _.isString(slug) ? slug : '';
-    // GET /v1/highscores/:game
-    // query from django
+
+    var sessionid = '',
+        csrftoken = '';
+
+    socket.get('sessionid', function (err, name) { sessionid = name; });
+    socket.get('csrftoken', function (err, name) { csrftoken = name; });
+
+    //
     var json = fs.readFileSync('static/json/fakeHighscore.json', 'utf8'); // ?offset=0&limit=5
     //
     var highscore = JSON.parse(json);
@@ -283,43 +292,8 @@ var editor = io.sockets.on('connection', function(socket) {
     fn(result);
   });
 
-   /*
-    // make request
-    request.get('http://sportti.dreamschool.fi/genova/fakeLanguages.json', function(error, response, body) {
-      if(!error && response.statusCode == 200) {
-        //
-        fn(JSON.parse(body));
-      } else if(error) {
-        console.log("ERROR while getting languages");
-        //
-        fn([]);
-      }
-    });
-    */
-
   /*
   socket.on('join-room', function (slug, fn) {
-
-    var credentials = {};
-    socket.get('credentials', function (err, _credentials) {
-      credentials = _credentials;
-    });
-
-    var room = _.find(rooms, function(obj) { return obj.slug === slug; });
-
-    if(!_.isObject(room)) {
-
-      var json = fs.readFileSync('statme.json', 'utf8');
-
-      room = JSON.parse(json);
-
-      console.log(room.title);
-
-      rooms.push(room);
-      // create room if it not exists
-
-      // and fetch game information from db
-    }
 
     if(credentials.role === "student") {
       //
@@ -339,13 +313,6 @@ var editor = io.sockets.on('connection', function(socket) {
           user.userName = credentials.userName;
           user.role = credentials.role; //'student';
           user.id = socket.id;
-
-          credentials['magos'] = user.magos;
-          credentials['room'] = slug;
-          credentials['slug'] = slug;
-          socket.set('credentials', credentials, function () { });
-
-          socket.join(slug);
 
           // emit message to other users
           io.sockets.in(slug).emit('new user logged in', user);
@@ -468,8 +435,14 @@ myMagos.createCookieJar = function(sessionid, csrftoken) {
 };
 
 myMagos.checkGameRevision = function(revision) {
-  if(!_.isObject(revision)) {
+  if(_.isUndefined(revision) || _.isNull(revision)) {
     revision = {};
+  }
+  console.log('revision');
+console.log(revision);
+
+  if(_.isString(revision)) {
+    revision = JSON.parse(revision);
   }
 
   if(!_.isObject(revision.canvas)) {

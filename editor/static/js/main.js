@@ -741,7 +741,6 @@ $(function() {
         }
       },
       didInsertElement: function() {
-        // HAA
         Em.run.next( function() {
           $('.assets-list').selectable({ filter: "li" });
         });
@@ -1344,6 +1343,11 @@ $(function() {
           game.set('authors', authors);
 
           var revision = data.revision;
+
+          if(_.isString(revision)) {
+            revision = JSON.parse(revision);
+          }
+
           console.log(data);
           var gameComponentsA = [];
           _.each(revision.gameComponents, function(component) {
