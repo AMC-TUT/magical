@@ -145,7 +145,7 @@ var editor = io.sockets.on('connection', function(socket) {
         // django
         var sessionid = '',
           csrftoken = '';
-        var state = 1; //game.state,
+        var state = game.state,
           revision = JSON.stringify(game.revision);
 
         // set session cookies for request
@@ -438,8 +438,9 @@ myMagos.checkGameRevision = function(revision) {
   if(_.isUndefined(revision) || _.isNull(revision)) {
     revision = {};
   }
+
   console.log('revision');
-console.log(revision);
+  console.log(revision);
 
   if(_.isString(revision)) {
     revision = JSON.parse(revision);

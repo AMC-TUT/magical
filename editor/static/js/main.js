@@ -99,9 +99,9 @@ $(function() {
      **************************/
 
     App.Revision = Em.Object.extend({
+      canvas: [],
       scenes: [],
-      audios: [],
-      sprites: [],
+      assets: {},
       gameComponents: []
     });
 
@@ -1324,7 +1324,7 @@ $(function() {
           game.set('type', data.type);
           game.set('state', data.state);
           game.set('cloned', data.cloned);
-          game.set('canvas', data.revision.canvas);
+          // game.set('canvas', data.revision.canvas);
 
           game.set('href', window.location.href);
 
@@ -1348,7 +1348,6 @@ $(function() {
             revision = JSON.parse(revision);
           }
 
-          console.log(data);
           var gameComponentsA = [];
           _.each(revision.gameComponents, function(component) {
             gameComponentsA.push(App.GameComponent.create({
@@ -1399,6 +1398,7 @@ $(function() {
 
           var rev = {
             //'authors': authors,
+            'canvas': revision.canvas,
             'scenes': scenes,
             'audios': audios,
             'sprites': sprites,
@@ -1442,12 +1442,6 @@ $(function() {
 
     socket.on('connect', function() {
       console.log('websocket connected (editor)');
-    });
-
-    socket.emit('shout', 'HUUUUUUTO!', function(shout) {
-      if (_.isObject(shout)) {
-        App.shoutsController.get('content').pushObject(App.Shout.create(shout));
-      }
     });
 
     // receive shout
@@ -1576,8 +1570,6 @@ $(function() {
     });
 
     function refreshSidebar($sortableArea) {
-      console.log('refreshSidebar($sortableArea)')
-
       // sortable well
       $sortableArea.sortable({
         placeholder: "sortable-highlight",
@@ -1633,7 +1625,7 @@ $(function() {
 
       var canvas = null;
       var interval = setInterval(function() {
-        var canvas = App.gameController.getPath('content.canvas');
+        var canvas = App.gameController.getPath('content.revision.canvas');
         if (canvas !== null) {
           // stop loop
           clearInterval(interval);
