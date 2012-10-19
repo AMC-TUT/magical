@@ -377,7 +377,7 @@ $(function() {
       properties: null,
       active: false,
       icon: function() {
-        return '/editor/static/game/sprites/' + this.getPath('properties.sprite') + '.png';
+        return '/user-media/image/' + this.getPath('properties.sprite') + '.png';
       }.property('properties'),
       snapToGrid: function() {
         var snap = this.getPath('properties.controls.grid');
@@ -723,7 +723,7 @@ $(function() {
 
           // TODO proper view update to chest and canvas
           var slugName = App.selectedComponentController.getPath('content.slug');
-          var src = '/editor/static/game/sprites/' + sprite + '.png';
+          var src = '/user-media/image/' + sprite + '.png';
           $('.item-chest').find("[data-slug='" + slugName + "']").attr('src', src);
 
           console.log(src);
@@ -1680,7 +1680,7 @@ $(function() {
                 oid = gameComponent.oid,
                 sprite = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).getPath('properties.sprite');
 
-              var img = '<img src="/editor/static/game/sprites/' + sprite + '.png" data-slug="' + slug + '" data-oid="' + oid + '" class="canvas-item">';
+              var img = '<img src="/user-media/image/' + sprite + '.png" data-slug="' + slug + '" data-oid="' + oid + '" class="canvas-item">';
               var $img = $(img);
 
               // remove when clicked - impl. draggable later
@@ -1715,7 +1715,7 @@ $(function() {
               var $img = $(img);
 
               if(slug === 'background' && _.isObject(sceneComponent.properties) && _.isString(properties.sprite) ) {
-                var backgroundImage = '/editor/static/game/sprites/' + properties.sprite + '.png';
+                var backgroundImage = '/user-media/image/' + properties.sprite + '.png';
                 $scene.css('background-image', 'url('+backgroundImage+')');
               }
 
