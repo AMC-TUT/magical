@@ -3,10 +3,10 @@
     "magos": "arcitectus",
     "potions": [
       {
-        "title": "Finish",
+        "title": "finish",
         "properties": {}
       }
-    ] 
+    ]
   },
   {
     "magos": "principes",

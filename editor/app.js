@@ -207,7 +207,7 @@ var editor = io.sockets.on('connection', function(socket) {
             game = JSON.parse(body);
 
             if(_.isObject(game)) {
-              game = checkGameRevision(game.revision);
+              game = myMagos.checkGameRevision(game.revision);
 
               client.set('game:' + slug, body, redis.print);
             }

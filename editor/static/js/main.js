@@ -51,7 +51,7 @@ $(function() {
       userName: 'matti',
       firstName: 'Matti',
       lastName: 'Vanhanen',
-      magos: 'principes',
+      magos: 'arcitectus',
       role: 'student'
     }));
 
@@ -890,8 +890,8 @@ $(function() {
           // get role which is marked as user's role
           var magos = controller.get('content').findProperty('magos', user.get('magos'));
 
-          if (user.get('magos') === 'principes') {
-            $('.chest-container').addClass('principes-magos');
+          if (user.get('magos') === 'arcitectus') {
+            $('.chest-container').addClass('arcitectus-magos');
           }
 
           if (_.isNull(magos.get('user'))) {
@@ -910,10 +910,10 @@ $(function() {
       },
       selectedObserver: function() {
         var magos = this.get('selected');
-        if (magos !== 'principes') {
-          $('.chest-container').removeClass('principes-magos');
+        if (magos !== 'arcitectus') {
+          $('.chest-container').removeClass('arcitectus-magos');
         } else {
-          $('.chest-container').addClass('principes-magos');
+          $('.chest-container').addClass('arcitectus-magos');
         }
       }.observes('selected'),
       contentObserver: function() {
