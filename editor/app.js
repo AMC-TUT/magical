@@ -37,10 +37,8 @@ client.on("error", function(err) {
 
 params.extend(app);
 
-
 app.use('/static', express.static(__dirname + '/static'));
-
-app.use('/user-media', express.static('/home/amc/http-magos/user-media'));
+app.use('/user-media', express.static(__dirname + '/editor/user-media'));
 
 app.configure('development', function() {
   app.use(express.errorHandler({
