@@ -51,7 +51,6 @@ $(function() {
       userName: 'matti',
       firstName: 'Matti',
       lastName: 'Vanhanen',
-      magos: 'arcitectus',
       role: 'student'
     }));
 
@@ -69,7 +68,6 @@ $(function() {
       type: null,
       state: 0,
       cloned: 0,
-      canvas: null,
       description: null,
       authors: [],
       revision: null,
@@ -664,20 +662,25 @@ $(function() {
       tagName: 'form',
       classNames: ['vertical-form'],
       itemTitle: null,
+      compType: null,
       submit: function(event) {
         // TODO enter ei toimi
         event.preventDefault();
         //
         var itemTitle = this.get('itemTitle');
+        var compType = this.getPath('compType.name');
+
+        console.log(itemTitle + ':::' + compType);
         //
-        if (!itemTitle.length) return;
+        if (!itemTitle.length || !compType.length) return;
 
         var safeSlug = createSlug(itemTitle);
         var obj = {
           title: itemTitle,
           slug: safeSlug,
           properties: {
-            sprite: 'empty1' // TODO order
+            sprite: 'empty1',
+            type: compType // TODO check order empty1,2,3,4 and choose unique
           }
         };
 
@@ -886,39 +889,29 @@ $(function() {
           controller.set('content', data);
           // set selected
           var user = App.usersController.get('user');
-          // get role which is marked as user's role
-          var magos = controller.get('content').findProperty('magos', user.get('magos'));
-
-          if (user.get('magos') === 'arcitectus') {
-            $('.chest-container').addClass('arcitectus-magos');
+          // take the first free magos and set it as users role magos
+          var freeMagos = controller.get('content').findProperty('user', null);
+          if (_.isObject(freeMagos)) {
+            freeMagos.set('user', user);
+          } else {
+            alert('there is no free roles. this should have never happened!');
           }
 
-          if (_.isNull(magos.get('user'))) {
-            // set user in its old role
-            magos.set('user', user);
-          } else {
-            // if user's old role is taken take the first free one
-            var freeMagos = controller.get('content').findProperty('user', null);
-            if (_.isObject(freeMagos)) {
-              freeMagos.set('user', user);
-            } else {
-              alert('there is no free roles. this should have never happened!');
-            }
+          // set special class for dragging action
+          if (freeMagos.get('magos') === 'arcitectus') {
+            $('.chest-container').addClass('arcitectus-magos');
           }
         });
       },
       selectedObserver: function() {
         var magos = this.get('selected');
+
         if (magos !== 'arcitectus') {
           $('.chest-container').removeClass('arcitectus-magos');
         } else {
           $('.chest-container').addClass('arcitectus-magos');
         }
-      }.observes('selected'),
-      contentObserver: function() {
-        console.log(' contentObserver: function() {');
-      }.observes('content')
-
+      }.observes('selected')
     });
 
     App.MagosView = Em.View.extend({
@@ -1084,6 +1077,24 @@ $(function() {
     });
 
     /**************************
+     * Game Component Types
+     **************************/
+
+    App.ComponentType = Em.Object.extend({
+      name: null
+    });
+
+    App.componentTypesController = Em.ArrayController.create({
+      selected: null,
+      content: [
+        App.ComponentType.create({ 'name': 'Block'}),
+        App.ComponentType.create({ 'name': 'Collectible'}),
+        App.ComponentType.create({ 'name': 'Player'}),
+        App.ComponentType.create({ 'name': 'Pushable'})
+      ]
+    });
+
+    /**************************
      * ShoutBox
      **************************/
 
@@ -1179,7 +1190,6 @@ $(function() {
         this.setPath('textField.value', null);
       }
     });
-
 
     /* Append */
 

@@ -329,6 +329,13 @@
                     <p class="help-block">Notice! Every item must have an unique name!</p>
                   </div>
                 </div>
+
+                <div class="control-group" style="margin-bottom: 0;">
+                  <label class="control-label" style="font-weight:bold;" for="input01">What kind of Item this is?</label>
+                  <div class="controls">
+                    {{view Ember.Select contentBinding="App.componentTypesController.content" optionLabelPath="content.name" optionValuePath="content.name" selectionBinding="compType" class="input-xlarge" }}
+                  </div>
+                </div>
               </fieldset>
           </div>
           <div class="modal-footer">
