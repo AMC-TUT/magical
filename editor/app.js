@@ -228,6 +228,46 @@ console.log(game);
     });
   });
 
+socket.on('getImageAssets', function(filter, width, height, limit, offset, fn) {
+
+    var slug = '',
+      sessionid = '',
+      csrftoken = '';
+
+    socket.get('slug', function (err, name) { slug = name; });
+    socket.get('sessionid', function (err, name) { sessionid = name; });
+    socket.get('csrftoken', function (err, name) { csrftoken = name; });
+
+    // set session cookies for request
+    var j = myMagos.createCookieJar(sessionid, csrftoken);
+
+    var data = {
+      'filter': filter || null,
+      'width': width || null,
+      'height': height || null,
+      'limit': limit || 50,
+      'offset': offset || 0
+    };
+
+    // get game request
+    var result = [];
+
+    request.get({url: 'http://magos.pori.tut.fi/api/v1/images', jar: j, form: data}, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+
+        var assets = JSON.parse(body);
+
+        if(_.isObject(assets)) {
+          result = assets.results;
+        }
+      }
+
+      fn(result);
+    });
+
+  });
+
+
   socket.on('logEvent', function(log, fn) {
     if(_.isObject(log)) {
       //

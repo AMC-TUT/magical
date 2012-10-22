@@ -363,6 +363,8 @@
             </ul>
             <div class="tab-content">
               <div class="tab-pane active" id="images-tab">
+                {{#view App.ImageAssetsView contentBinding="App.imageAssetsController.content"}}
+                {{/view}}
                 <ul class="assets-list">
                   <li data-sprite="rock"><img src="/editor/user-media/image/rock.png" /><span>Rock</span></li>
                   <li data-sprite="plant"><img src="/editor/user-media/image/plant.png" /><span>Plant</span></li>

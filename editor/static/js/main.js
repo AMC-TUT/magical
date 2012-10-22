@@ -1087,10 +1087,10 @@ $(function() {
     App.componentTypesController = Em.ArrayController.create({
       selected: null,
       content: [
-        App.ComponentType.create({ 'name': 'Block'}),
-        App.ComponentType.create({ 'name': 'Collectible'}),
-        App.ComponentType.create({ 'name': 'Player'}),
-        App.ComponentType.create({ 'name': 'Pushable'})
+        App.ComponentType.create({'name': 'Block'}),
+        App.ComponentType.create({'name': 'Collectible'}),
+        App.ComponentType.create({'name': 'Player'}),
+        App.ComponentType.create({'name': 'Pushable'})
       ]
     });
 
@@ -1222,6 +1222,20 @@ $(function() {
       template: Em.Handlebars.compile('<h4 style="margin: 8px 0;">No Settings</h4>')
     });
 
+    App.imageAssetsController = Em.ArrayController.create({
+      content: null,
+      load: function() {
+         App.dataSource.getImageAssets(function(data) {
+          this.set('content', data);
+        });
+      }
+    });
+
+    App.ImageAssetsView = Em.View.extend({
+      tagName: 'ul',
+      classNames: ['assets-list']
+    })
+
     /**************************
      * Data Source
      **************************/
@@ -1321,6 +1335,28 @@ $(function() {
           });
 
           callback(languages);
+        });
+
+      },
+      getImageAssets: function(filter_, type, callback) {
+
+        var filter = filter_ || null;
+
+        var limit = null, offset = null,
+          width = null, height = null;
+
+        var canvas = App.gameController.getPath('content.revision.canvas');
+
+        if(type === 'background') {
+          width = canvas.blockSize * canvas.columns;
+          height = canvas.blockSize * canvas.rows;
+        } else {
+          width = canvas.blockSize;
+          height = canvas.blockSize;
+        }
+
+        socket.emit('getImageAssets', filter, width, height, limit, offset, function(data) {
+          callback(data);
         });
 
       },
