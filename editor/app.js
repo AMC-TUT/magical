@@ -37,7 +37,7 @@ client.on("error", function(err) {
 params.extend(app);
 
 app.use('/static', express.static(__dirname + '/static'));
-app.use('/user-media', express.static(__dirname + '/editor/user-media'));
+app.use('/user-media', express.static(__dirname + '/user-media'));
 
 app.use(express.cookieParser());
 
