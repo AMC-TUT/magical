@@ -1,6 +1,5 @@
 // request https://github.com/mikeal/request
 // express http://expressjs.com/
-
 var fs = require('fs'),
   express = require('express'),
   params = require('express-params'),
@@ -40,7 +39,10 @@ params.extend(app);
 app.use('/static', express.static(__dirname + '/static'));
 app.use('/user-media', express.static(__dirname + '/editor/user-media'));
 
+app.use(express.cookieParser());
+
 app.configure('development', function() {
+
   app.use(express.errorHandler({
     dumpExceptions: true,
     showStack: true
@@ -66,11 +68,11 @@ app.param('slug', /[a-zA-Z0-9-]+$/);
 app.get('/:slug', function(req, res) {
 
   var slug = req.url.replace(/^\//, ''); // remove slash, orig: "/super-magos"
-
-  // 4 dev
+  /* // 4 dev
   req.cookies = {};
-  req.cookies.sessionid = '1c7165a476ddd39af7687d7cfcfd1d1c',
-  req.cookies.csrftoken = 'dRcjTzKilxmjLYMK0VvTnzxQZVNiPTH7';
+  req.cookies.sessionid = 'badaa213e2c71e5be7ecf9a37675c12b',
+  req.cookies.csrftoken = 'uc71V2tmsVlCtgXEbQqCMboHiCTrBhCR';
+  */
 
   // if sessionid or csrftoken equals undefined redirect to login page
   if(_.isUndefined(req.cookies) || _.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
@@ -79,7 +81,6 @@ app.get('/:slug', function(req, res) {
   }
 
   client.get('django_session:' + req.cookies.sessionid, function(err, data) {
-
     if(_.isNull(data)) {
       res.redirect('http://magos.pori.tut.fi/game/login?next=/editor/' + slug);
       return false;
@@ -120,9 +121,9 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   socket.on('shout', function(shout, fn) {
-    socket.get('slug', function (err, slug) {
+    socket.get('slug', function(err, slug) {
       if(_.isObject(shout)) {
-        socket.broadcast.in(slug).emit('shout', shout);
+        socket.broadcast. in (slug).emit('shout', shout);
         fn(shout);
       }
     });
@@ -131,7 +132,7 @@ var editor = io.sockets.on('connection', function(socket) {
   socket.on('saveGame', function(mode, game, fn) {
     var result = false;
 
-    socket.get('slug', function (err, slug) {
+    socket.get('slug', function(err, slug) {
       // game in json format
       var json = JSON.stringify(game);
 
@@ -150,13 +151,24 @@ var editor = io.sockets.on('connection', function(socket) {
           revision = JSON.stringify(game.revision);
 
         // set session cookies for request
-        socket.get('sessionid', function (err, name) { sessionid = name; });
-        socket.get('csrftoken', function (err, name) { csrftoken = name; });
+        socket.get('sessionid', function(err, name) {
+          sessionid = name;
+        });
+        socket.get('csrftoken', function(err, name) {
+          csrftoken = name;
+        });
         var j = myMagos.createCookieJar(sessionid, csrftoken);
 
         // game update request
-        request.put({url: 'http://magos.pori.tut.fi/api/v1/games/' + slug, jar: j, form: {'state': state, 'revision': revision}}, function (error, response, body) {
-          if (!error && response.statusCode == 200) {
+        request.put({
+          url: 'http://magos.pori.tut.fi/api/v1/games/' + slug,
+          jar: j,
+          form: {
+            'state': state,
+            'revision': revision
+          }
+        }, function(error, response, body) {
+          if(!error && response.statusCode == 200) {
             result = true;
           }
         });
@@ -183,9 +195,15 @@ var editor = io.sockets.on('connection', function(socket) {
       sessionid = '',
       csrftoken = '';
 
-    socket.get('slug', function (err, name) { slug = name; });
-    socket.get('sessionid', function (err, name) { sessionid = name; });
-    socket.get('csrftoken', function (err, name) { csrftoken = name; });
+    socket.get('slug', function(err, name) {
+      slug = name;
+    });
+    socket.get('sessionid', function(err, name) {
+      sessionid = name;
+    });
+    socket.get('csrftoken', function(err, name) {
+      csrftoken = name;
+    });
 
     // join or make a room with slug name
     socket.join(slug);
@@ -197,22 +215,23 @@ var editor = io.sockets.on('connection', function(socket) {
         //var body = fs.readFileSync('static/json/fakeGame.json', 'utf8');
         //game = JSON.parse(body);
         //client.set('game:' + slug, body, redis.print);
-
         // query from django and set to redis
-
         // set session cookies for request
         var j = myMagos.createCookieJar(sessionid, csrftoken);
         // get game request
-        request.get({url: 'http://magos.pori.tut.fi/api/v1/games/' + slug, jar: j}, function (error, response, body) {
-          if (!error && response.statusCode == 200) {
+        request.get({
+          url: 'http://magos.pori.tut.fi/api/v1/games/' + slug,
+          jar: j
+        }, function(error, response, body) {
+          if(!error && response.statusCode == 200) {
 
             game = JSON.parse(body);
 
             if(_.isObject(game)) {
               game.revision = myMagos.checkGameRevision(game.revision.data);
 
-console.log('Game:');
-console.log(game);
+              console.log('Game:');
+              console.log(game);
 
               var json = JSON.stringify(game);
               client.set('game:' + slug, json, redis.print);
@@ -228,15 +247,21 @@ console.log(game);
     });
   });
 
-socket.on('getImageAssets', function(filter, width, height, limit, offset, fn) {
+  socket.on('getImageAssets', function(filter, width, height, limit, offset, fn) {
 
     var slug = '',
       sessionid = '',
       csrftoken = '';
 
-    socket.get('slug', function (err, name) { slug = name; });
-    socket.get('sessionid', function (err, name) { sessionid = name; });
-    socket.get('csrftoken', function (err, name) { csrftoken = name; });
+    socket.get('slug', function(err, name) {
+      slug = name;
+    });
+    socket.get('sessionid', function(err, name) {
+      sessionid = name;
+    });
+    socket.get('csrftoken', function(err, name) {
+      csrftoken = name;
+    });
 
     // set session cookies for request
     var j = myMagos.createCookieJar(sessionid, csrftoken);
@@ -252,8 +277,12 @@ socket.on('getImageAssets', function(filter, width, height, limit, offset, fn) {
     // get game request
     var result = [];
 
-    request.get({url: 'http://magos.pori.tut.fi/api/v1/images', jar: j, form: data}, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
+    request.get({
+      url: 'http://magos.pori.tut.fi/api/v1/images',
+      jar: j,
+      form: data
+    }, function(error, response, body) {
+      if(!error && response.statusCode == 200) {
 
         var assets = JSON.parse(body);
 
@@ -275,12 +304,17 @@ socket.on('getImageAssets', function(filter, width, height, limit, offset, fn) {
         sessionid = '',
         csrftoken = '';
 
-      socket.get('slug', function (err, name) { slug = name; });
-      socket.get('sessionid', function (err, name) { sessionid = name; });
-      socket.get('csrftoken', function (err, name) { csrftoken = name; });
+      socket.get('slug', function(err, name) {
+        slug = name;
+      });
+      socket.get('sessionid', function(err, name) {
+        sessionid = name;
+      });
+      socket.get('csrftoken', function(err, name) {
+        csrftoken = name;
+      });
 
       log.game = slug; // make sure that log binds to right game
-
       var result = myMagos.logEvent(log, sessionid, csrftoken);
 
       fn(result);
@@ -293,10 +327,14 @@ socket.on('getImageAssets', function(filter, width, height, limit, offset, fn) {
   socket.on('getHighscore', function(slug, fn) {
 
     var sessionid = '',
-        csrftoken = '';
+      csrftoken = '';
 
-    socket.get('sessionid', function (err, name) { sessionid = name; });
-    socket.get('csrftoken', function (err, name) { csrftoken = name; });
+    socket.get('sessionid', function(err, name) {
+      sessionid = name;
+    });
+    socket.get('csrftoken', function(err, name) {
+      csrftoken = name;
+    });
 
     //
     var json = fs.readFileSync('static/json/fakeHighscore.json', 'utf8'); // ?offset=0&limit=5
@@ -396,7 +434,7 @@ socket.on('getImageAssets', function(filter, width, height, limit, offset, fn) {
   });
 */
 
-/*
+  /*
   socket.on('get room members', function(room, fn) {
     console.log('get room members');
     var members = io.sockets.clients(room.slug);
@@ -422,12 +460,11 @@ var myMagos = myMagos || {};
 
 myMagos.logEvent = function(log, sessionid, csrftoken) {
 
-   // log object
-   // - name: editor|user|game
-   // - type: event type
-   // - value: event value
-   // - game: games slug
-
+  // log object
+  // - name: editor|user|game
+  // - type: event type
+  // - value: event value
+  // - game: games slug
   query.type = type || "";
   query.value = value || "";
   query.game = game || "";
@@ -444,8 +481,12 @@ myMagos.logEvent = function(log, sessionid, csrftoken) {
   var j = myMagos.createCookieJar(sessionid, csrftoken);
 
   // game update request
-  request.put({url: 'http://magos.pori.tut.fi/api/v1/logs/' + slug, jar: j, form: data}, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
+  request.put({
+    url: 'http://magos.pori.tut.fi/api/v1/logs/' + slug,
+    jar: j,
+    form: data
+  }, function(error, response, body) {
+    if(!error && response.statusCode == 200) {
       return true;
     } else {
       return false;
@@ -458,7 +499,7 @@ myMagos.base64Encode = function(unencoded) {
   return new Buffer(unencoded || '').toString('base64');
 };
 
-myMagos.base64Decode = function (encoded) {
+myMagos.base64Decode = function(encoded) {
   //
   return new Buffer(encoded || '', 'base64').toString('utf8');
 };
@@ -466,8 +507,8 @@ myMagos.base64Decode = function (encoded) {
 myMagos.createCookieJar = function(sessionid, csrftoken) {
   var j = request.jar();
 
-  var sessionidCookie = request.cookie('sessionid='+sessionid);
-  var csrftokenCookie = request.cookie('csrftoken='+csrftoken);
+  var sessionidCookie = request.cookie('sessionid=' + sessionid);
+  var csrftokenCookie = request.cookie('csrftoken=' + csrftoken);
 
   j.add(sessionidCookie);
   j.add(csrftokenCookie);
