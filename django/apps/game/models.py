@@ -1,9 +1,22 @@
-﻿from django.db import models
+from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
-
+from audiofield.fields import AudioField
 import datetime, mimetypes
+
+# add introspection rules for South
+rules = [
+        (
+        (AudioField, ),
+        [],
+        {
+            "ext_whitelist": ["ext_whitelist", {"default": None}],
+        },
+    ),
+]
+from south.modelsinspector import add_introspection_rules
+add_introspection_rules(rules, ["^audiofield.fields.AudioField",])
 
 class Role(models.Model):
     """User role model"""
@@ -203,7 +216,8 @@ class Image(models.Model):
 class Audio(models.Model):
     name = models.CharField(max_length=45, null=False, blank=False)
     slug = models.SlugField(max_length=45, null=False, blank=False, unique=True)
-    file = models.FileField(upload_to='audio')
+    #file = models.FileField(upload_to='audio')
+    file = AudioField(upload_to='audio', blank=True, ext_whitelist=(".mp3", ".wav", ".ogg"), help_text=("Allowed type - .mp3, .wav, .ogg")) #Django-audiofield
     state = models.IntegerField(null=False, blank=False, default=0)
     author = models.ForeignKey(User)
     
@@ -229,6 +243,17 @@ class Audio(models.Model):
         except IOError:
             return self.file.url
     
+    def audio_file_player(self):
+        """audio player tag for admin"""
+        if self.audio_file:
+            file_url = settings.MEDIA_URL + str(self.audio_file)
+            player_string = '<ul class="playlist"><li style="width:250px;">\
+            <a href="%s">%s</a></li></ul>' % (file_url, os.path.basename(self.audio_file.name))
+            return player_string
+    
+    audio_file_player.allow_tags = True
+    audio_file_player.short_description = _('Audio file player')
+
     class Meta:
         verbose_name = _('audio')
         verbose_name_plural = _('audios')
@@ -259,7 +284,7 @@ class Game(models.Model):
     def __unicode__(self):
         return u"%s" % self.title
 
-        
+        x
 class Revision(models.Model):
     """Game revision model"""
     game = models.ForeignKey(Game)

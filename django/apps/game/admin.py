@@ -33,6 +33,30 @@ admin.site.register(GameType)
 admin.site.register(Author)
 admin.site.register(Revision)
 admin.site.register(Image)
-admin.site.register(Audio)
 admin.site.register(Review)
 admin.site.register(Highscore)
+
+class AudioFileAdmin(admin.ModelAdmin):
+
+	# add 'audio_file_player' tag to your admin view
+	list_display = ('name', 'audio_file_player')
+	actions = ['custom_delete_selected']
+
+	def custom_delete_selected(self, request, queryset):
+	    #custom delete code
+	    n = queryset.count()
+	    for i in queryset:
+	        if i.audio_file:
+	            if os.path.exists(i.audio_file.path):
+	                os.remove(i.audio_file.path)
+	        i.delete()
+	    self.message_user(request, _("Successfully deleted %d audio files.") % n)
+	custom_delete_selected.short_description = "Delete selected items"
+
+	def get_actions(self, request):
+	    actions = super(AudioFileAdmin, self).get_actions(request)
+	    del actions['delete_selected']
+	    return actions
+
+admin.site.register(Audio, AudioFileAdmin)
+

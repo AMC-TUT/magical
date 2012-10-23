@@ -243,7 +243,7 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
         #type_slug = None
         #if type_list and len(type_list):
         #    type_slug = type_list[0]
-        #    try:                
+        #    try:
         #        type_slug = GameType.objects.get(slug=type_slug)
         #    except GameType.DoesNotExist:
         #        valid_data = False

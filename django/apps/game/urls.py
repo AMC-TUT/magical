@@ -10,7 +10,7 @@ urlpatterns = patterns('',
 
 	url(r'^rate/(?P<game_pk>\d*)/(?P<stars>0|1|2|3|4|5)$', 'apps.game.views.rate_game', name="rate_game"),
 
-    url(r'^learn/$', direct_to_template, {'template': 'apps/game/learn.html'}, name="learn"),
+    url(r'^watch/$', direct_to_template, {'template': 'apps/game/watch.html'}, name="watch"),
     url(r'^invent/$', direct_to_template, {'template': 'apps/game/invent.html'}, name="invent"),
 
     url(r'^login$', 'django.contrib.auth.views.login', {'template_name': 'apps/game/login.html'}),
