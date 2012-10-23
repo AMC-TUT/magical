@@ -367,17 +367,6 @@
                 {{/view}}
                 <ul class="assets-list">
                   <li data-sprite="rock"><img src="/editor/user-media/image/rock.png" /><span>Rock</span></li>
-                  <li data-sprite="plant"><img src="/editor/user-media/image/plant.png" /><span>Plant</span></li>
-                  <li data-sprite="collectible1"><img src="/editor/user-media/image/collectible1.png" /><span>Collectible</span></li>
-                  <li data-sprite="collectible2"><img src="/editor/user-media/image/collectible2.png" /><span>Collectible</span></li>
-                  <li data-sprite="player64"><img src="/editor/user-media/image/player64.png" /><span>Player</span></li>
-                  <li data-sprite="key"><img src="/editor/user-media/image/key.png" /><span>Key</span></li>
-                  <li data-sprite="lock"><img src="/editor/user-media/image/lock.png" /><span>Lock</span></li>
-                  <li data-sprite="block1"><img src="/editor/user-media/image/block1.png" /><span>Block</span></li>
-                  <li data-sprite="block2"><img src="/editor/user-media/image/block2.png" /><span>Block</span></li>
-                  <li data-sprite="block1"><img src="/editor/user-media/image/block3.png" /><span>Block</span></li>
-                  <li data-sprite="block-left"><img src="/editor/user-media/image/block_left.png" /><span>Block Left</span></li>
-                  <li data-sprite="block-right"><img src="/editor/user-media/image/block_right.png" /><span>Block Right</span></li>
                 </ul>
               </div>
             </div>
@@ -568,7 +557,55 @@
 
                 {{#if activeUser}}
 
-                {{! Image}}
+                {{#if isArcitectus}}
+
+                <div {{bindAttr class="magos:magos-potions magos magos:finish magos:hide"}} style="display:none;">
+                <form class="form-vertical">
+                  <fieldset>
+                    <legend>Finish</legend>
+                    {{#view App.MagosComponentPropertyView contentBinding="this"}}
+                    <div class="finish-action action-group">
+                      <div class="control-group">
+
+                        <div class="control-group">
+                          <label class="control-label">Checkpoints</label>
+                          <div class="controls">
+                            {{view App.NumberField class="input" min="0" max="1000"}}
+                          </div>
+                        </div>
+
+                        <div class="control-group">
+                          <label class="control-label">Scores</label>
+                          <div class="controls">
+                            {{view App.NumberField class="input" min="0" max="1000"}}
+                          </div>
+                        </div>
+
+                        <div class="control-group">
+                          <label class="control-label">Collision</label>
+                          <div class="controls">
+                            {{#view Ember.Select contentBinding="App.selectedComponentController.content.collisions" optionLabelPath="content.name" optionValuePath="content.name" selectionBinding="collision" class="input-xlarge"}}
+                              {{log content}}
+                            {{/view}}
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div class="form-actions">
+                      <button class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
+                      <button class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
+                    </div>
+                    {{/view}}
+
+                    </fieldset>
+                  </form>
+                </div>
+
+                {{/if}}
+
+                {{#if isArtifex}}
 
                 <div {{bindAttr class="magos:magos-potions magos magos:image magos:hide"}} style="display:none;">
                 <form class="form-vertical">
@@ -583,7 +620,8 @@
                     </div>
 
                     <div class="form-actions">
-                      <button class="btn btn-info btn-back-potion"><i class="icon-arrow-left icon-white"></i></button>
+                      <button class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
+                      <button class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
                     </div>
                     {{/view}}
 
@@ -591,7 +629,9 @@
                   </form>
                 </div>
 
-                {{! Type}}
+                {{/if}}
+
+                {{#if isPhysicus}}
 
                 <div {{bindAttr class="magos:magos-potions magos magos:type magos:hide"}} style="display:none;">
                 <form class="form-vertical">
@@ -618,14 +658,12 @@
                     {{/view}}
 
                     <div class="form-actions">
-                      <button class="btn btn-info btn-back-potion"><i class="icon-arrow-left icon-white"></i></button>
-                <!--      <button class="btn btn-success btn-add-action pull-right"><i class="icon-plus icon-white"></i></button> -->
+                      <button class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
+                      <button class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
                     </div>
                     </fieldset>
                   </form>
                 </div>
-
-                {{! Score}}
 
                 <div {{bindAttr class="magos:magos-potions magos magos:score magos:hide"}} style="display:none;">
                 <form class="form-vertical">
@@ -675,13 +713,15 @@
                     {{/if}}
 
                     <div class="form-actions">
-                      <button class="btn btn-info btn-back-potion"><i class="icon-arrow-left icon-white"></i></button>
+                      <button class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
                       <button class="btn btn-success btn-add-action pull-right"><i class="icon-plus icon-white"></i></button>
                     </div>
 
                     </fieldset>
                   </form>
                 </div>
+
+                    {{/if}}
 
                   {{/if}}
 

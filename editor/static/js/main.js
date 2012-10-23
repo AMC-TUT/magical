@@ -28,7 +28,7 @@ $(function() {
      * User
      **************************/
 
-    App.Author = Em.Object.extend({
+    App.User = Em.Object.extend({
       userName: null,
       firstName: null,
       lastName: null,
@@ -47,7 +47,7 @@ $(function() {
     });
 
     App.usersController.get('content').pushObject(
-    App.Author.create({
+    App.User.create({
       userName: 'matti',
       firstName: 'Matti',
       lastName: 'Vanhanen',
@@ -399,6 +399,12 @@ $(function() {
         } else {
           return dir;
         }
+
+      }.property('properties'),
+      collisions: function() {
+        var collisions = this.getPath('properties.collisions');
+
+        return collisions;
 
       }.property('properties'),
       filteredScoreEvents: function() {
@@ -858,6 +864,18 @@ $(function() {
 
         return Em.isEqual(user, active);
       }.property('user', 'userActive'),
+      isArcitectus: function() {
+        return this.get('magos') === 'arcitectus' ? true : false;
+      }.property('magos'),
+      isArtifex: function() {
+        return this.get('magos') === 'artifex' ? true : false;
+      }.property('magos'),
+      isPhysicus: function() {
+        return this.get('magos') === 'physicus' ? true : false;
+      }.property('magos'),
+      isPrincipes: function() {
+        return this.get('magos') === 'principes' ? true : false;
+      }.property('magos'),
       magosObserver: function() {
 
         console.log('magos changes');
@@ -1364,7 +1382,7 @@ $(function() {
 
         socket.emit('joinGame', function(data) {
           var game = App.Game.create();
-
+console.log(data);
           game.set('title', data.title);
           game.set('slug', data.slug);
           game.set('type', data.type);
@@ -1377,7 +1395,7 @@ $(function() {
           var authors = [];
           _.each(data.authors, function(author) {
             //
-            var obj = App.Author.create({
+            var obj = App.User.create({
               'userName': author.userName,
               'firstName': author.firstName,
               'lastName': author.lastName,
@@ -1396,12 +1414,12 @@ $(function() {
 
           var gameComponentsA = [];
           _.each(revision.gameComponents, function(component) {
+            console.log(component);
             gameComponentsA.push(App.GameComponent.create({
               title: component.title,
               slug: component.slug,
               properties: component.properties
             }));
-            // TODO component properties
           });
 
           var scenes = [];

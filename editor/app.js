@@ -190,8 +190,7 @@ var editor = io.sockets.on('connection', function(socket) {
 
   socket.on('joinGame', function(fn) {
 
-    var game = {},
-      slug = '',
+    var slug = '',
       sessionid = '',
       csrftoken = '';
 
@@ -209,12 +208,7 @@ var editor = io.sockets.on('connection', function(socket) {
     socket.join(slug);
 
     client.get('game:' + slug, function(err, data) {
-
-      if(data === null) {
-        // 3 rows 4 dev
-        //var body = fs.readFileSync('static/json/fakeGame.json', 'utf8');
-        //game = JSON.parse(body);
-        //client.set('game:' + slug, body, redis.print);
+      if(_.isNull(data)) {
         // query from django and set to redis
         // set session cookies for request
         var j = myMagos.createCookieJar(sessionid, csrftoken);
@@ -225,13 +219,10 @@ var editor = io.sockets.on('connection', function(socket) {
         }, function(error, response, body) {
           if(!error && response.statusCode == 200) {
 
-            game = JSON.parse(body);
+            var game = JSON.parse(body);
 
             if(_.isObject(game)) {
               game.revision = myMagos.checkGameRevision(game.revision.data);
-
-              console.log('Game:');
-              console.log(game);
 
               var json = JSON.stringify(game);
               client.set('game:' + slug, json, redis.print);
@@ -239,11 +230,12 @@ var editor = io.sockets.on('connection', function(socket) {
           }
         });
 
+        fn(game);
+
       } else {
-        game = JSON.parse(data);
+        var game = JSON.parse(data);
+        fn(game);
       }
-      // callback
-      fn(game);
     });
   });
 
@@ -295,7 +287,6 @@ var editor = io.sockets.on('connection', function(socket) {
     });
 
   });
-
 
   socket.on('logEvent', function(log, fn) {
     if(_.isObject(log)) {
@@ -521,9 +512,6 @@ myMagos.checkGameRevision = function(revision) {
     revision = {};
   }
 
-  console.log('revision');
-  console.log(revision);
-
   if(_.isString(revision)) {
     revision = JSON.parse(revision);
   }
@@ -563,6 +551,8 @@ myMagos.checkGameRevision = function(revision) {
       'fonts': []
     };
   }
+  console.log("REVISION:");
+  console.log(revision);
 
   return revision;
 };
