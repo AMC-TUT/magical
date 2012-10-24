@@ -208,6 +208,9 @@ var editor = io.sockets.on('connection', function(socket) {
     socket.join(slug);
 
     client.get('game:' + slug, function(err, data) {
+      //
+      var game;
+
       if(_.isNull(data)) {
         // query from django and set to redis
         // set session cookies for request
@@ -219,21 +222,27 @@ var editor = io.sockets.on('connection', function(socket) {
         }, function(error, response, body) {
           if(!error && response.statusCode == 200) {
 
-            var game = JSON.parse(body);
+            game = JSON.parse(body);
 
             if(_.isObject(game)) {
               game.revision = myMagos.checkGameRevision(game.revision.data);
 
               var json = JSON.stringify(game);
               client.set('game:' + slug, json, redis.print);
+
+              console.log('client null game:');
+              console.log(game);
+              fn(game);
+            } else {
+              fn(false);
             }
+          } else {
+            fn(false);
           }
         });
 
-        fn(game);
-
       } else {
-        var game = JSON.parse(data);
+        game = JSON.parse(data);
         fn(game);
       }
     });
