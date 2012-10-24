@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^invent/$', direct_to_template, {'template': 'apps/game/invent.html'}, name="invent"),
 
     url(r'^login$', 'django.contrib.auth.views.login', {'template_name': 'apps/game/login.html'}),
+    #url(r'^login$', 'apps.game.views.login'),
     url(r'^logout/$', 'apps.game.views.logout_view'),
     
 )

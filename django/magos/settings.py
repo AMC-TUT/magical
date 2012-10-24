@@ -36,6 +36,10 @@ SESSION_REDIS_DB = 0
 SESSION_REDIS_PREFIX = 'django_session'
 SESSION_COOKIE_HTTPONLY = False
 
+# using Celery with Redis as a broker
+BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.

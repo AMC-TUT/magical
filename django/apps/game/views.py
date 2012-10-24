@@ -25,12 +25,16 @@ def home(request):
     sess_id = request.COOKIES['sessionid']
     from django.contrib.sessions.models import Session
     print sess_id
+    ses = request.session
+    print ses.load()
+    redis_ses_key = ses.get_real_stored_key(sess_id)
+    print ses
     try:
-        sess_obj = Session.objects.get(session_key=sess_id)
+        sess_obj = Session.objects.get(session_key=redis_ses_key)
         print(sess_obj.session_data)
-        print(sess_obj.get_decoded())
-        
+        print("SESSION GET_DECODED: %s" % sess_obj.get_decoded())
     except Session.DoesNotExist:
+        print "NO SESSION FOUND"
         pass
     print Session.objects.all()
     """
