@@ -180,9 +180,12 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
         result_dict['state'] = game.state
         result_dict['description'] = game.description
         result_dict['cloned'] = game.cloned
-        # get game authors
+        # get game authors and organization
         authors = game.author_set.all()
         authors_list = []
+        organization = None
+        if authors:
+            organization = authors[0].user.userprofile.organization.name # organization (=author's organization)
         for author in authors:
             author_dict = {}
             author_dict['firstName'] = author.user.first_name
@@ -191,6 +194,7 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
             authors_list.append(author_dict)
 
         result_dict['authors'] = authors_list
+        result_dict['organization'] = organization
 
         revision = game.get_latest_revision()
         revision_dict = {}
