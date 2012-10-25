@@ -89,6 +89,7 @@ app.get('/:slug', function(req, res) {
     var sessionObj = myMagos.parseSessionObject(data);
 
 
+    }
 
   });
 
