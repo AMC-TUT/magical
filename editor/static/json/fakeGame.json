@@ -4,34 +4,30 @@
   "type": "platform",
   "state": true,
   "cloned": false,
-  "canvas": {
-    "blockSize": 48,
-    "rows": 8,
-    "columns": 12
-  },
   "description": "The quick brown fox jumps over the lazy dog",
   "authors": [{
     "firstName": "Matti",
     "lastName": "Principes",
-    "userName": "matti",
-    "magos": "principes"
+    "userName": "matti"
   }, {
     "firstName": "Pekka",
     "lastName": "Physicus",
-    "userName": "pekka",
-    "magos": "physicus"
+    "userName": "pekka"
   }, {
     "firstName": "Anna",
     "lastName": "Artifex",
-    "userName": "anna",
-    "magos": "artifex"
+    "userName": "anna"
   }, {
     "firstName": "Emma",
     "lastName": "arcitectus",
-    "userName": "emma",
-    "magos": "arcitectus"
+    "userName": "emma"
   }],
   "revision": {
+    "canvas": {
+      "blockSize": 48,
+      "rows": 8,
+      "columns": 12
+    },
     "gameComponents": [{
       "title": "Player",
       "slug": "player",

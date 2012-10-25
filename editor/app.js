@@ -86,10 +86,10 @@ app.get('/:slug', function(req, res) {
       return false;
     }
 
-    var text = 'From Redis:\n';
-    var enc = myMagos.base64Decode(data);
-    console.log(data);
-    console.log(enc);
+    var sessionObj = myMagos.parseSessionObject(data);
+
+
+
   });
 
   res.sendfile(__dirname + '/index.html');
@@ -229,9 +229,6 @@ var editor = io.sockets.on('connection', function(socket) {
 
               var json = JSON.stringify(game);
               client.set('game:' + slug, json, redis.print);
-
-              console.log('client null game:');
-              console.log(game);
               fn(game);
             } else {
               fn(false);
@@ -372,7 +369,7 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   /*
-  socket.on('join-room', function (slug, fn) {
+
 
     if(credentials.role === "student") {
       //
@@ -386,17 +383,6 @@ var editor = io.sockets.on('connection', function(socket) {
         // try first join as own role and if that is reserved join first one which is free
         var user = _.find(magoses, function(obj) { return obj.magos === author.magos; });
 
-        if(!_.isUndefined(user)) {
-          //
-          user = _.find(room.users, function(obj) { return obj.magos === author.magos; });
-          user.userName = credentials.userName;
-          user.role = credentials.role; //'student';
-          user.id = socket.id;
-
-          // emit message to other users
-          io.sockets.in(slug).emit('new user logged in', user);
-
-          fn('successfully joined to room \n - room: ' + slug + ' \n - magos: ' + user.magos);
 
         } else {
 
@@ -419,19 +405,6 @@ var editor = io.sockets.on('connection', function(socket) {
           fn('successfully joined to room \n - room: ' + slug + ' \n - magos: ' + user.magos);
 
         }
-
-        console.log(io.sockets.manager.rooms);
-        console.log(room.users);
-
-      } else {
-        fn('error! you cant join this room b/c you are not member of this game.');
-      }
-
-    } else if(role === "teacher") {
-      // big brother impl.
-    }
-
-  });
 */
 
   /*
@@ -492,6 +465,34 @@ myMagos.logEvent = function(log, sessionid, csrftoken) {
       return false;
     }
   });
+};
+
+myMagos.parseSessionObject = function(data) {
+  var sessionObj = {};
+
+  if(_.isString(data)) {
+
+    var enc = myMagos.base64Decode(data);
+
+    var clean = enc.replace(/[^a-z0-9\.]+/ig, '');
+
+    var userName = clean.match(/usernameX[a-z0-9\.]+U/g).join().replace(/U$/, '').split('X')[1];
+    var lang = clean.match(/langX[a-z]+U/g).join().replace(/U$/, '').split('X')[1];
+    var role = clean.match(/roleX[a-z]+U/g).join().replace(/U$/, '').split('X')[1];
+    var organization = clean.match(/organizationX[a-z]+u\./g).join().replace(/u\.$/, '').split('X')[1];
+
+    sessionObj = {
+      'userName': userName,
+      'lang': lang,
+      'role': role,
+      'org': organization
+    };
+  }
+
+  // console.log('sessionObj:');
+  // console.log(sessionObj);
+
+  return sessionObj;
 };
 
 myMagos.base64Encode = function(unencoded) {

@@ -909,6 +909,9 @@ $(function() {
           var user = App.usersController.get('user');
           // take the first free magos and set it as users role magos
           var freeMagos = controller.get('content').findProperty('user', null);
+
+          var freeMagos = controller.get('content').findProperty('magos', 'physicus');
+
           if (_.isObject(freeMagos)) {
             freeMagos.set('user', user);
           } else {
@@ -1382,7 +1385,9 @@ $(function() {
 
         socket.emit('joinGame', function(data) {
           var game = App.Game.create();
-console.log(data);
+          // debug
+          console.log(data);
+
           game.set('title', data.title);
           game.set('slug', data.slug);
           game.set('type', data.type);
