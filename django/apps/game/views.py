@@ -12,7 +12,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 
-from apps.game.models import Game, Author, Highscore, Review
+from apps.game.models import Game, Revision, Author, Highscore, Review
 from apps.game.forms import GameForm
 from apps.game.decorators import ajax_login_required
 
@@ -99,6 +99,39 @@ def create_game(request):
         form = GameForm(request.POST, request.FILES)
         if form.is_valid():
             game = form.save()
+            # figure out game resolution
+            resolution = form.cleaned_data['resolution']
+            resolution = resolution.split('_')
+            cols = 14
+            rows = 10
+            if len(resolution) == 2:
+                cols = int(resolution[0])
+                rows = int(resolution[1])
+            # create initial revision
+            revision_data = ('{ \
+                "canvas": { \
+                    "blockSize": %d, \
+                    "columns": %d, \
+                    "rows": %d \
+                }, \
+                "gameComponents": [], \
+                "scenes": [{ \
+                    "name": "intro", \
+                    "sceneComponents": [], \
+                    "gameComponents": [] \
+                }, { \
+                    "name": "game", \
+                    "sceneComponents": [], \
+                    "gameComponents": [] \
+                }, { \
+                    "name": "outro", \
+                    "sceneComponents": [], \
+                    "gameComponents": [] \
+                }] \
+            }' % (game.block_size, cols, rows))
+            revision_data = revision_data.strip()
+            revision = Revision(game=game, data=revision_data)
+            revision.save()
             # add user as author
             author = Author(game=game, user=user)
             author.save()

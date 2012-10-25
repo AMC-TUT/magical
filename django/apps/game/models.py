@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from audiofield.fields import AudioField
 import datetime, mimetypes
 
-# add introspection rules for South
+# add AudioField introspection rules for South
 rules = [
         (
         (AudioField, ),
@@ -264,6 +264,13 @@ class Audio(models.Model):
         
 class Game(models.Model):
     """Game model"""
+    # Game block sizes (32, 48, 64)
+    BLOCK_SIZE_CHOICES = (
+        (32, '32 pixels'),
+        (48, '48 pixels'),
+        (64, '64 pixels'),
+    )
+
     title = models.CharField(max_length=45, null=False, blank=False)
     slug = models.SlugField(max_length=45, null=False, blank=False, unique=True)
     type = models.ForeignKey(GameType)
@@ -273,7 +280,12 @@ class Game(models.Model):
     cloned = models.IntegerField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True, default=datetime.date.today)
     updated = models.DateTimeField(auto_now=True)
-    
+
+    rows = models.IntegerField(null=False, blank=False, default=0)
+    cols = models.IntegerField(null=False, blank=False, default=0)
+    block_size = models.IntegerField(null=False, blank=False, choices=BLOCK_SIZE_CHOICES, default=32)
+    #organization = models.ForeignKey(Organization)
+
     class Meta:
         verbose_name = _('game')
         verbose_name_plural = _('games')
@@ -284,7 +296,6 @@ class Game(models.Model):
     def __unicode__(self):
         return u"%s" % self.title
 
-        x
 class Revision(models.Model):
     """Game revision model"""
     game = models.ForeignKey(Game)

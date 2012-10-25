@@ -8,6 +8,7 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.core import serializers
 from django.utils.decorators import method_decorator
+import json
 
 from apps.game.models import Game, Language, Highscore, Review, Image, Audio, \
     GameType, Author, Revision
@@ -68,9 +69,13 @@ class RevisionView(RequestMixin, ResponseMixin, View):
         revisions = game.revision_set.all()
         for revision in revisions:
             revision_dict = {}
-            revision_dict['revision'] = revision.data
+            json_data = ""
+            try:
+                json_data = json.loads(revision.data)
+            except ValueError:
+                pass
+            revision_dict['revision'] = json_data
             revisions_list.append(revision_dict)
-
         result_dict = {}        
         result_dict['offset'] = rev_offset
         result_dict['limit'] = rev_limit
