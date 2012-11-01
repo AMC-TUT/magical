@@ -20,7 +20,6 @@ io.enable('browser client minification');
 io.enable('browser client etag');
 io.enable('browser client gzip');
 // io.set('log level', 0); // reduce logging
-
 // redis
 client.monitor(function(err, res) {
   console.log("Entering monitoring mode.");
@@ -76,19 +75,24 @@ app.get('/:slug', function(req, res) {
 
   // if sessionid or csrftoken equals undefined redirect to login page
   if(_.isUndefined(req.cookies) || _.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
+    // if no session exists
     res.redirect('http://magos.pori.tut.fi/game/login?next=/editor/' + slug);
     return false;
   }
 
   client.get('django_session:' + req.cookies.sessionid, function(err, data) {
     if(_.isNull(data)) {
+      // if no session info in redis
       res.redirect('http://magos.pori.tut.fi/game/login?next=/editor/' + slug);
       return false;
     }
 
     var sessionObj = myMagos.parseSessionObject(data);
 
-
+    // if no valid logged in user
+    if(_.isUndefined(sessionObj.userName)) {
+      res.redirect('http://magos.pori.tut.fi/game/login?next=/editor/' + slug);
+      return false;
     }
 
   });
@@ -121,10 +125,37 @@ var editor = io.sockets.on('connection', function(socket) {
     console.info('sucessfully established a connection with socket.io');
   });
 
+  socket.on('setUserCredentials', function(credentials, fn) {
+    //
+    socket.set('slug', credentials.slug, function() {});
+    socket.set('sessionid', credentials.sessionid, function() {});
+    socket.set('csrftoken', credentials.csrftoken, function() {});
+
+    client.get('game:' + credentials.slug, function(err, data) {
+
+      var session = myMagos.parseSessionObject(data);
+
+      socket.set('username', session.userName, function() {});
+      socket.set('lang', session.lang, function() {});
+      socket.set('org', session.org, function() {});
+      socket.set('role', session.role, function() {});
+
+      credentials.lang = session.lang;
+      credentials.userName = session.userName;
+      credentials.org = session.org;
+      credentials.role = credentials.role;
+
+      console.log('session');
+      console.log(session);
+
+      fn(credentials);
+    });
+  });
+
   socket.on('shout', function(shout, fn) {
     socket.get('slug', function(err, slug) {
       if(_.isObject(shout)) {
-        socket.broadcast. in (slug).emit('shout', shout);
+        socket.broadcast.in(slug).emit('shout', shout);
         fn(shout);
       }
     });
@@ -179,21 +210,13 @@ var editor = io.sockets.on('connection', function(socket) {
     fn(result);
   });
 
-  socket.on('setUserCredentials', function(credentials, fn) {
-    //
-    socket.set('slug', credentials.slug, function() {});
-    socket.set('username', credentials.username, function() {});
-    socket.set('sessionid', credentials.sessionid, function() {});
-    socket.set('csrftoken', credentials.csrftoken, function() {});
-
-    fn(credentials);
-  });
-
   socket.on('joinGame', function(fn) {
 
     var slug = '',
       sessionid = '',
-      csrftoken = '';
+      csrftoken = '',
+      role = '',
+      userName = '';
 
     socket.get('slug', function(err, name) {
       slug = name;
@@ -204,9 +227,13 @@ var editor = io.sockets.on('connection', function(socket) {
     socket.get('csrftoken', function(err, name) {
       csrftoken = name;
     });
+    socket.get('role', function(err, name) {
+      role = name;
+    });
+    socket.get('username', function(err, name) {
+      userName = name;
+    });
 
-    // join or make a room with slug name
-    socket.join(slug);
 
     client.get('game:' + slug, function(err, data) {
       //
@@ -230,6 +257,10 @@ var editor = io.sockets.on('connection', function(socket) {
 
               var json = JSON.stringify(game);
               client.set('game:' + slug, json, redis.print);
+
+
+
+
               fn(game);
             } else {
               fn(false);
@@ -241,6 +272,27 @@ var editor = io.sockets.on('connection', function(socket) {
 
       } else {
         game = JSON.parse(data);
+
+        console.log('role');
+        console.log(role);
+
+        if(role === 'teacher') {
+          // join or make a room with slug name
+          socket.join(slug);
+
+        } else if(role === 'student') {
+
+          var user = _.find(game.authors, function(author) { return author.userName === userName });
+
+          console.log('user:');
+          console.log(user);
+
+          // join or make a room with slug name
+          socket.join(slug);
+        }
+
+
+
         fn(game);
       }
     });
@@ -476,7 +528,7 @@ myMagos.parseSessionObject = function(data) {
     var enc = myMagos.base64Decode(data);
 
     var clean = enc.replace(/[^a-z0-9\.]+/ig, '');
-
+console.log(clean);
     var userName = clean.match(/usernameX[a-z0-9\.]+U/g).join().replace(/U$/, '').split('X')[1];
     var lang = clean.match(/langX[a-z]+U/g).join().replace(/U$/, '').split('X')[1];
     var role = clean.match(/roleX[a-z]+U/g).join().replace(/U$/, '').split('X')[1];
@@ -490,9 +542,8 @@ myMagos.parseSessionObject = function(data) {
     };
   }
 
-  // console.log('sessionObj:');
-  // console.log(sessionObj);
-
+   console.log('sessionObj:');
+   console.log(sessionObj);
   return sessionObj;
 };
 

@@ -139,15 +139,15 @@ $(function() {
           item.set('active', false);
         });
 
-        if (!_.isNull(selected)) selected.set('active', true);
+        if(!_.isNull(selected)) selected.set('active', true);
 
-        if (sceneName !== 'intro' && sceneName !== 'outro') {
+        if(sceneName !== 'intro' && sceneName !== 'outro') {
           $('body').addClass('game-scene');
         } else {
           $('body').removeClass('game-scene');
         }
 
-        if (this.get('firstRun') < 0) {
+        if(this.get('firstRun') < 0) {
           Em.run.next(function() {
             var $container = $('.canvas > .canvas-pane:visible');
             $container.fadeOut(250, function() {
@@ -169,7 +169,7 @@ $(function() {
         var array = [];
 
         _.each(scenes, function(scene) {
-          if (scene.name !== 'intro' && scene.name !== 'outro') array.push(scene);
+          if(scene.name !== 'intro' && scene.name !== 'outro') array.push(scene);
         });
 
         this.set('content', array);
@@ -262,7 +262,7 @@ $(function() {
           var str = component.scenes.join(' ');
           var reg = new RegExp(selectedSceneName);
 
-          if (str.match(reg)) array.push(component);
+          if(str.match(reg)) array.push(component);
         });
 
         return array;
@@ -339,13 +339,13 @@ $(function() {
           // set selected component
           App.selectedComponentController.set('content', selected);
           // if user busy, set not busy
-          if (App.usersController.getPath('user.busy')) {
+          if(App.usersController.getPath('user.busy')) {
             App.usersController.setPath('user.busy', false);
           }
 
           // if potion form open
           var $magos = $('.selected-magos');
-          if ($magos.is(':hidden')) {
+          if($magos.is(':hidden')) {
             $magos.siblings('.magos-potions').hide('slide', {
               direction: 'left'
             }, 250, function() {
@@ -380,9 +380,9 @@ $(function() {
       snapToGrid: function() {
         var snap = this.getPath('properties.controls.grid');
 
-        if (snap === false) {
+        if(snap === false) {
           return "No";
-        } else if (snap === true) {
+        } else if(snap === true) {
           return "Yes";
         } else {
           return snap;
@@ -392,9 +392,9 @@ $(function() {
       directionStr: function() {
         var dir = this.getPath('properties.gravitation.direction');
 
-        if (dir === false) {
+        if(dir === false) {
           return "Inverted";
-        } else if (dir === true) {
+        } else if(dir === true) {
           return "Normal";
         } else {
           return dir;
@@ -457,7 +457,7 @@ $(function() {
         $chest.find('li').each(function(index) {
           var $li = $(this);
 
-          if (!$li.hasClass('add-item') && !$li.hasClass('remove-item')) {
+          if(!$li.hasClass('add-item') && !$li.hasClass('remove-item')) {
 
             // ---
             $li.find('> img').draggable({
@@ -574,13 +574,13 @@ $(function() {
           // set selected component
           App.selectedComponentController.set('content', selected);
           // if user busy, set not busy
-          if (App.usersController.getPath('user.busy')) {
+          if(App.usersController.getPath('user.busy')) {
             App.usersController.setPath('user.busy', false);
           }
 
           // if potion form open
           var $magos = $('.selected-magos');
-          if ($magos.is(':hidden')) {
+          if($magos.is(':hidden')) {
             $magos.siblings('.magos-potions').hide('slide', {
               direction: 'left'
             }, 250, function() {
@@ -637,7 +637,7 @@ $(function() {
           drop: function(event, ui) {
             var $draggable = $(ui.draggable);
 
-            if ($draggable.hasClass("canvas-item")) {
+            if($draggable.hasClass("canvas-item")) {
 
               $draggable.remove();
 
@@ -678,7 +678,7 @@ $(function() {
 
         console.log(itemTitle + ':::' + compType);
         //
-        if (!itemTitle.length || !compType.length) return;
+        if(!itemTitle.length || !compType.length) return;
 
         var safeSlug = createSlug(itemTitle);
         var obj = {
@@ -722,7 +722,7 @@ $(function() {
 
           var $item = $modal.find('.assets-list').find('.ui-selected');
 
-          if(!$item.length && !_.isNull( App.selectedComponentController.get('content') )) {
+          if(!$item.length && !_.isNull(App.selectedComponentController.get('content'))) {
             return false;
           }
 
@@ -745,13 +745,15 @@ $(function() {
           $modal.find('.ui-selected').removeClass('.ui-selected');
 
         } else if($tgt.hasClass('btn-close')) {
-           $modal.modal('hide');
-           $modal.find('.ui-selected').removeClass('.ui-selected');
+          $modal.modal('hide');
+          $modal.find('.ui-selected').removeClass('.ui-selected');
         }
       },
       didInsertElement: function() {
-        Em.run.next( function() {
-          $('.assets-list').selectable({ filter: "li" });
+        Em.run.next(function() {
+          $('.assets-list').selectable({
+            filter: "li"
+          });
         });
       }
     }).appendTo('body');
@@ -912,14 +914,14 @@ $(function() {
 
           var freeMagos = controller.get('content').findProperty('magos', 'physicus');
 
-          if (_.isObject(freeMagos)) {
+          if(_.isObject(freeMagos)) {
             freeMagos.set('user', user);
           } else {
             alert('there is no free roles. this should have never happened!');
           }
 
           // set special class for dragging action
-          if (freeMagos.get('magos') === 'arcitectus') {
+          if(freeMagos.get('magos') === 'arcitectus') {
             $('.chest-container').addClass('arcitectus-magos');
           }
         });
@@ -927,7 +929,7 @@ $(function() {
       selectedObserver: function() {
         var magos = this.get('selected');
 
-        if (magos !== 'arcitectus') {
+        if(magos !== 'arcitectus') {
           $('.chest-container').removeClass('arcitectus-magos');
         } else {
           $('.chest-container').addClass('arcitectus-magos');
@@ -962,7 +964,7 @@ $(function() {
 
       }.observes('content.@each.busy'),
       selectedObserver: function() {
-      /*
+        /*
       console.log('selectedObserver: function() {');
 
       App.magosesController.set('content', App.magosesController.get('content'));
@@ -1108,11 +1110,15 @@ $(function() {
     App.componentTypesController = Em.ArrayController.create({
       selected: null,
       content: [
-        App.ComponentType.create({'name': 'Block'}),
-        App.ComponentType.create({'name': 'Collectible'}),
-        App.ComponentType.create({'name': 'Player'}),
-        App.ComponentType.create({'name': 'Pushable'})
-      ]
+      App.ComponentType.create({
+        'name': 'Block'
+      }), App.ComponentType.create({
+        'name': 'Collectible'
+      }), App.ComponentType.create({
+        'name': 'Player'
+      }), App.ComponentType.create({
+        'name': 'Pushable'
+      })]
     });
 
     /**************************
@@ -1134,9 +1140,9 @@ $(function() {
         var minutes = dt.getMinutes();
         var seconds = dt.getSeconds();
 
-        if (hours < 10) hours = '0' + hours;
-        if (minutes < 10) minutes = '0' + minutes;
-        if (seconds < 10) seconds = '0' + seconds;
+        if(hours < 10) hours = '0' + hours;
+        if(minutes < 10) minutes = '0' + minutes;
+        if(seconds < 10) seconds = '0' + seconds;
 
         return hours + ":" + minutes + ":" + seconds;
 
@@ -1185,7 +1191,7 @@ $(function() {
 
         var message = this.getPath('textField.value');
 
-        if (!message.length) return;
+        if(!message.length) return;
 
         var timestamp = Math.round((new Date()).getTime() / 1000); // to unix timestamp
         var shout = {
@@ -1246,7 +1252,7 @@ $(function() {
     App.imageAssetsController = Em.ArrayController.create({
       content: null,
       load: function() {
-         App.dataSource.getImageAssets(function(data) {
+        App.dataSource.getImageAssets(function(data) {
           this.set('content', data);
         });
       }
@@ -1267,18 +1273,14 @@ $(function() {
 
         var sessionid = $.cookie('sessionid');
         var csrftoken = $.cookie('csrftoken');
-        var username = 'matti.vanhanen';
         var paths = window.location.pathname.split('/');
         var slug = _.last(paths);
 
         var credentials = {
           sessionid: sessionid,
           csrftoken: csrftoken,
-          username: username,
           slug: slug
         };
-
-        console.log(credentials);
 
         socket.emit('setUserCredentials', credentials, function(data) {
           callback(data);
@@ -1363,8 +1365,10 @@ $(function() {
 
         var filter = filter_ || null;
 
-        var limit = null, offset = null,
-          width = null, height = null;
+        var limit = null,
+          offset = null,
+          width = null,
+          height = null;
 
         var canvas = App.gameController.getPath('content.revision.canvas');
 
@@ -1394,7 +1398,6 @@ $(function() {
           game.set('state', data.state);
           game.set('cloned', data.cloned);
           // game.set('canvas', data.revision.canvas);
-
           game.set('href', window.location.href);
 
           var authors = [];
@@ -1499,7 +1502,9 @@ $(function() {
     var slug = pathname.replace(/^\/editor\//, '').replace(/\/$/, '');
 
     var address = 'http://' + window.location.hostname;
-    var socket = io.connect(address, { resource: 'editor/socket.io' });
+    var socket = io.connect(address, {
+      resource: 'editor/socket.io'
+    });
 
     socket.on('connecting', function() {
       console.log('websocket connecting (editor');
@@ -1515,7 +1520,7 @@ $(function() {
 
     // receive shout
     socket.on('shout', function(shout) {
-      if (_.isObject(shout)) {
+      if(_.isObject(shout)) {
         App.shoutsController.get('content').pushObject(App.Shout.create(shout));
       }
     });
@@ -1571,7 +1576,7 @@ $(function() {
 
       var $modal = $('#dialog-preview');
 
-      if (!$modal.hasClass('styled')) {
+      if(!$modal.hasClass('styled')) {
         // count & set dialog size
         var canvas = App.gameController.content.canvas,
           rows = canvas.rows,
@@ -1621,13 +1626,13 @@ $(function() {
       event.preventDefault();
 
       // if user busy, set not busy
-      if (App.usersController.getPath('user.busy')) {
+      if(App.usersController.getPath('user.busy')) {
         App.usersController.setPath('user.busy', false);
       }
 
       // if potion form open
       var $magos = $('.selected-magos');
-      if ($magos.is(':hidden')) {
+      if($magos.is(':hidden')) {
         $magos.siblings('.magos-potions').hide('slide', {
           direction: 'left'
         }, 250, function() {
@@ -1695,7 +1700,7 @@ $(function() {
       var canvas = null;
       var interval = setInterval(function() {
         var canvas = App.gameController.getPath('content.revision.canvas');
-        if (canvas !== null) {
+        if(canvas !== null) {
           // stop loop
           clearInterval(interval);
           // vars
@@ -1707,9 +1712,9 @@ $(function() {
 
           var cells = '';
 
-          for (var i = 0; i < rows; i = i + 1) {
+          for(var i = 0; i < rows; i = i + 1) {
             cells += '<tr>';
-            for (var j = 0; j < columns; j = j + 1) {
+            for(var j = 0; j < columns; j = j + 1) {
               cells += '<td class="canvas-cell"></td>';
             }
             cells += '</tr>';
@@ -1783,9 +1788,9 @@ $(function() {
               var img = '<img src="/editor/static/img/icons/icon-' + slug + '.png" data-slug="' + slug + '" class="canvas-item" style="position:absolute;left:' + left + 'px;top:' + top + 'px;">';
               var $img = $(img);
 
-              if(slug === 'background' && _.isObject(sceneComponent.properties) && _.isString(properties.sprite) ) {
+              if(slug === 'background' && _.isObject(sceneComponent.properties) && _.isString(properties.sprite)) {
                 var backgroundImage = '/editor/user-media/image/' + properties.sprite + '.png';
-                $scene.css('background-image', 'url('+backgroundImage+')');
+                $scene.css('background-image', 'url(' + backgroundImage + ')');
               }
 
               // remove when clicked - impl. draggable later
@@ -1852,7 +1857,7 @@ $(function() {
         drop: function(event, ui) {
           var $tgt = $(this);
           //
-          if (!$tgt.is(":empty")) {
+          if(!$tgt.is(":empty")) {
             return false;
           }
 
@@ -1861,7 +1866,7 @@ $(function() {
 
           var slug = $draggable.data('slug');
 
-          if ($draggable.hasClass('game-item')) {
+          if($draggable.hasClass('game-item')) {
             $img = $draggable.clone().removeAttr('data-original-title rel alt class style').addClass('canvas-item');
           } else {
             $img = $draggable.removeAttr('data-original-title rel alt class style').addClass('canvas-item');
@@ -1933,7 +1938,7 @@ $(function() {
 
           var slug = $draggable.data('slug');
 
-          if ($draggable.hasClass('cloned')) {
+          if($draggable.hasClass('cloned')) {
             $img = $draggable;
           } else {
             $img = $draggable.clone().removeAttr('data-original-title rel alt class style ui-draggable').addClass('canvas-item cloned');
