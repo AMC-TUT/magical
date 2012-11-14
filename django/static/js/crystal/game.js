@@ -2,7 +2,7 @@
 
 */
 function getWords() {
-	$.getJSON("/crystal/ajax_list_words/foobar", function(data) {
+	$.getJSON("/crystal/ajax_list_words/italy_list", function(data) {
 		Game.words = data;
 		//console.log(Game.words);
 	});

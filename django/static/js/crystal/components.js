@@ -42,7 +42,7 @@ Crafty.c("CrystalBall", {
         this.bind("Dragging", function(e) {
 			//console.log(player.x + ' - '+ player.oldX);
 			this.moveCounter++;
-			console.log(this.moveCounter);
+			//console.log(this.moveCounter);
 			if(this.moveCounter >= 100) {
 				this.moveCounter = 0;
 				this.disableDrag();
@@ -50,7 +50,7 @@ Crafty.c("CrystalBall", {
 				this.tween({x: this.oldX, y: this.oldY}, 10);
 				// move to next stage
 				Game.stage++;
-				console.log('Stage # ' + Game.stage);
+				//console.log('Stage # ' + Game.stage);
 
 				if(Game.stage < 7) {
 					// show word on a ball

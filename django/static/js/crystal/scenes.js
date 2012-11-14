@@ -132,48 +132,6 @@ Crafty.scene("WriteDescription", function() {
 	});
 
 	showDescriptionForm();
-	/*
-    $('#description-form').live('submit', function(e) {
-		e.preventDefault();
-		var myForm = e.target;
-		console.log(myForm);
-		console.log($(myForm).serialize());
-		$(myForm).remove();
-		//$('#cr-stage > div').remove(); // remove orphan DOM elements div
-		// re-initialize game to overcome text input issue
-		Game.usedWords = {};
-		Crafty.scene("Game");
-    });
-	*/
-	//$('#cr-stage').append('<form id="describeForm"><h1>Describe Game Idea</h1><p><textarea name="description"></textarea></p><p><input id="submitDescription" type="submit"></p></form></div>');
-    /*        
-	var table = '<h3>Tulokset</h3><table class="table"> <thead> <tr> <th>#</th> <th>Pisteet</th> <th>Joukkuebonus</th> <th>Kokonaispisteet</th> <th>Pelaajat</th> </tr> </thead> <tbody>';
-	for (var i = 0; i < Game.hiScore.length; i++) {
-		table += "<tr><td>" + (i + 1) + "</td><td>" + Game.hiScore[i].score + "</td><td>" + Game.hiScore[i].teamBonus + "</td><td>" + Game.hiScore[i].totalScore +"</td><td>" + Game.hiScore[i].name + "</td></tr>";
-	}
-	table += '</tbody> </table>';
-	Crafty.e("2D, DOM, ScoreTable, Text")
-		.attr({ x: 50, y: 42, z: 4, w: 700, h: 600 })
-		.text(table);
-	var ent = Crafty.e("2D, DOM, Image, QRCode")
-		.attr({ x: 804, y: 548, z: 4 });
-	var json = { "action": 'close', "roomId": Game.sockets.roomID };
-	$.ajax({
-		type: "GET",
-		url: 'http://sportti.dreamschool.fi/galaxy/api/qrcode/JSON',
-		data: json,
-		cache: true,
-		success: function(data) {
-			var qr = $(data)[2];
-			ent.image( $(qr).attr('src') );
-			ent.addComponent('CLOSE');
-			ent.addComponent("QRCode-CLOSE");
-			Crafty.e("2D, DOM, Label, Text, QRCode-CLOSE")
-				.attr({ x: 804, y: 672, z: 4, w: 150, h: 20 })
-				.text("<strong>" + "Jatka" + "</strong>");
-		}
-	});
-	*/
 
 });
 
