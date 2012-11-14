@@ -46,7 +46,8 @@ def game_details(request, gameslug):
     user = request.user
     organization = None
     if user.is_authenticated():
-        organization = user.get_profile().organization        
+        organization = user.get_profile().organization
+    editor_url = settings.MAGOS_EDITOR_URL
     game = None
     authors = []
     can_edit = False
@@ -88,7 +89,7 @@ def game_details(request, gameslug):
         pass
     return render(request, tpl, {'user': user, 'game':game, 'users': users, 'can_edit': can_edit, \
                 'highscores' : highscores, 'has_reviewed':has_reviewed, 'num_reviews':num_reviews, 'avg_stars':avg_stars, \
-                'can_review': can_review})
+                'can_review': can_review, 'editor_url' : editor_url })
 
 @login_required
 def create_game(request):

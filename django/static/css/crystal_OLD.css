@@ -1,0 +1,194 @@
+html, body {
+    padding:0;
+    margin:0;
+    min-width: 800px;
+    width: 100%;
+    height: 100%;
+}
+
+/*.no-background-size #image {
+    background-image: url(lol.png);
+    min-height: 100%;
+    min-width: 100%;
+}*/
+
+#header {
+    width: 100%;
+    float: left;
+    font-family: 'Loved by the King', cursive;
+    color: #020202;
+    padding-top: 10px;
+}
+
+#header .stage {
+    display: inline-block;
+    position: relative;
+    width: 20%;
+    min-width: 160px;
+    margin-left:2%;
+    margin-right:2%;
+}
+
+#header .stage .circle span {
+    display:block;
+    font-size: 30px;
+    width: 100%;
+    text-align: center;
+    padding-top: 35%;
+    margin: 0;
+}
+
+#header .stage .dummy {
+    margin-top: 100%;
+}
+
+
+#crystalBallStage {
+    position: relative;
+    height: 700px;
+    background-image: url('../img/background.jpg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    background-size: cover;
+}
+
+#content {
+    clear: both;
+    width: 100%;
+    background-color: #ececec;
+}
+
+#game-ideas {
+    width: 180px;
+    float: left;
+    font-family: 'Loved by the King', cursive;
+}
+
+#game-ideas div.title {
+    text-align: center;
+    font-size: 44px;
+    text-decoration: underline;
+}
+
+#main-content {
+    margin-left:180px;
+}
+
+#crystalInfo {
+    display: none;
+    color: white;
+    text-align: center;
+    font-family: 'Loved by the King', cursive;
+    font-size: 44px;
+    background: rgb(224, 0, 255);
+    padding: 0.2em 1em;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select:none;
+    -webkit-touch-callout:none;
+}
+
+
+#header .stage.done .circle {
+    background-color: red;
+    color: #fff;    
+}
+
+
+#formBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 440px;
+    height: 400px;
+    background: rgb(224, 0, 255);
+    margin-left: -220px;
+    margin-top: -220px;
+    padding: 20px;
+    font-family: 'Loved by the King', cursive;
+    font-size: 20px;
+}
+
+#formBox label {
+    display: block;
+    font-size: 44px;
+}
+
+#formBox p {
+    font-size: 3em;
+    text-align: center;
+    margin: 20px 0;
+}
+
+#formBox input[type='submit'], a#restart {
+    font-size: 34px;
+    padding: 5px 10px;
+}
+
+#formBox textarea {
+    width: 440px;
+    height: 240px;
+    padding: 5px;
+    font-size: 16px;
+}
+
+a#restart {
+    display: block;
+    padding: 10px;
+    background: #222;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+
+
+#crystalBall {
+    display: block;
+    position: absolute;
+}
+
+#crystalBallLens {
+    width: 407px;
+    height: 407px;
+    background-image: url('../img/CrystalBall.png');
+    opacity: 0.5;
+    position: absolute;
+}
+
+#crystalBallCanvas {
+    position: absolute;
+}
+
+#contentHolder {
+    width: 407px;
+    height: 200px;
+    font-family: 'Loved by the King', cursive;
+    font-size: 64px;
+    text-align: center;
+    margin-top: 140px;
+    position: absolute;
+}
+
+.active {
+    border: 1px solid red;
+}
+
+.unselectable { 
+    -moz-user-select: none; 
+    -khtml-user-select: none; 
+    -webkit-user-select: none; 
+    -o-user-select: none; 
+}
+
+#header .stage .circle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 50%;
+    background-color: silver;
+}

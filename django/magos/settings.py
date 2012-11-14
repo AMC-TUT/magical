@@ -1,5 +1,6 @@
 ﻿import apps
 import sys
+from django.conf import global_settings
 import djcelery
 djcelery.setup_loader()
 
@@ -39,6 +40,9 @@ SESSION_COOKIE_HTTPONLY = False
 # using Celery with Redis as a broker
 BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+#MAGOS_EDITOR_URL = 'http://magos.pori.tut.fi/editor/'
+MAGOS_EDITOR_URL = 'http://localhost:8080/editor/'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -160,6 +164,12 @@ FREQ_TYPE_VALUE = 8000  # 0-Keep original, 8000-8000Hz, 16000-16000Hz, 22050-220
 CONVERT_TYPE_VALUE = 0 # 0-Keep original, 1-Convert to MP3, 2-Convert to WAV, 3-Convert to OGG
 
 
+# file upload handlers
+FILE_UPLOAD_HANDLERS = (
+    #'apps.game.upload_handlers.ContentUploadHandler',
+    'django.core.files.uploadhandler.MemoryFileUploadHandler',
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+)
 # -----------------------------------------------------------------------------
 # Authentication
 # -----------------------------------------------------------------------------
@@ -187,6 +197,7 @@ INSTALLED_APPS = (
     'south',
     'audiofield', #django-audiofield
     'djcelery',
+    'imagekit',
 )
 
 # A sample logging configuration. The only tangible logging

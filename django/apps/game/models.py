@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 from audiofield.fields import AudioField
 import datetime, mimetypes
+from imagekit.models import ImageSpecField
 
 # add AudioField introspection rules for South
 rules = [
@@ -17,6 +18,18 @@ rules = [
 ]
 from south.modelsinspector import add_introspection_rules
 add_introspection_rules(rules, ["^audiofield.fields.AudioField",])
+
+import uuid, os
+def get_image_path(instance, filename):
+    """
+    Come up with individual name for uploaded image file and return path.
+    """
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return os.path.join('user-media/images', filename)
+
+
+""" Model definitions -> """
 
 class Role(models.Model):
     """User role model"""
@@ -174,11 +187,16 @@ class UserProfile(models.Model):
 
         
 class Image(models.Model):
+    """Model for square game tile images"""
     name = models.CharField(max_length=45, null=False, blank=False)
     slug = models.SlugField(max_length=45, null=False, blank=False, unique=True)
     width = models.IntegerField(null=False, blank=False)
     height = models.IntegerField(null=False, blank=False)
-    file = models.ImageField(upload_to='images', height_field='height', width_field='width')
+    file = models.ImageField(upload_to=get_image_path, height_field='height', width_field='width')
+
+    #file = models.ImageField(storage=FILESTORAGE, height_field='height', width_field='width', upload_to=get_path)
+    sha = models.CharField(max_length=40, editable=False, db_index=True, unique=True)
+
     type = models.IntegerField(null=False, blank=False, default=0)
     state = models.IntegerField(null=False, blank=False, default=0)
     author = models.ForeignKey(User)
@@ -194,6 +212,7 @@ class Image(models.Model):
     created = models.DateTimeField(auto_now_add=True, default=datetime.date.today)
     updated = models.DateTimeField(auto_now=True)
     
+
     @property
     def image_url( self ):
         try:
@@ -360,6 +379,12 @@ class Author(models.Model):
 
     def __unicode__(self):
         return u"%s, %s" % (self.game, self.user)
+
+
+
+"""
+Signals functions
+"""
 
         
 def create_user_profile(sender, instance, created, **kwargs):

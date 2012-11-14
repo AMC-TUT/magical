@@ -5,19 +5,24 @@ var crystalInfo = {
 	stages : {
 		'begin' : 'Shake to begin',
 		'verbs-process' : 'Generating a verb...',
-		'nouns' : 'Shake to generate a noun',
+		'verbs' : 'Define a game action',
+		'nouns' : 'Nouns motherfucker...',
 		'nouns-process' : 'Generating a noun...',
 		'adjectives' : 'Shake to generate an adjective',
 		'adjectives-process' : 'Generating an adjective...',
+		'pre-finale' : 'Shake to write a decription...',
 		'finale' : 'Write a short description for game idea.'
 	},
 
 	showStageInfo : function(stageKey) {
 		$('#crystalInfo').html(this.stages[stageKey]).fadeIn(500);
+		console.log(stageKey);
+		$('#header').find('#stage-' + stageKey).addClass('done'); // mark steps with done class in header
 	},
 
 	restartCrystalBall : function() {
 		$('#formBox').remove();
+		$('#header').find('.stage').removeClass('done'); // remove done class from header steps
 		initCrystalBall();
 	},
 

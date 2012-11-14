@@ -52,7 +52,7 @@
             {% if can_edit %}
             <hr />
             <h2>Edit {{ game.title }}</h2>
-            <p><a class="btn btn-primary" href="http://magos.pori.tut.fi/editor/{{ game.slug }}" target="_blank">Launch game editor</a> (in a new window)</p>
+            <p><a class="btn btn-primary" href="{{ editor_url }}{{ game.slug }}" target="_blank">Launch game editor</a> (in a new window)</p>
             {% endif %}
             
         {% endif %}
