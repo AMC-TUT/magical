@@ -7,21 +7,18 @@ function bindFormSend() {
 		/*console.log(myForm);
 		console.log($(myForm).serialize());
 		*/
+		var desc = $(myForm).find('textarea')[0].value;
         $("#ajaxwrapper").load(
             $(myForm).attr('action') + ' #ajaxwrapper',
             $(myForm).serializeArray(),
             function(responseText, responseStatus) {
-                $("#sendbutton").attr('disabled', false);
-                //$('#restart').click(that.restartCrystalBall);
-
+                $("#sendbutton").attr('disabled', false);                
 				$(myForm).remove();
 				//$('#cr-stage > div').remove(); // remove orphan DOM elements div
-				// re-initialize game to overcome text input issue
 				if(Game.usedWords) {
-					Game.wordsHistory.push(Game.usedWords);
+					Game.wordsHistory.push({ 'words': Game.usedWords, 'desc': desc});
 				}
 				Crafty.scene("Game");
-
             }
         );
 
@@ -51,6 +48,8 @@ function showDescriptionForm() {
             $('#id_words').val(crystalWords);
             showUsedWords();
             bindFormSend();
+        	Crafty.selected = false;
+        	$('#id_description').focus();
         },
         error : function(jqXHR, textStatus, errorThrown) {
             $('#errors').html('Error in XHR request.<br/> ' + errorThrown).show();
@@ -60,10 +59,7 @@ function showDescriptionForm() {
 
 // Intro Scene
 Crafty.scene("Intro", function() {
-	Crafty.background("url(/static/img/turq-bg.jpg)");
-	var startBtn = Crafty.e();
-	startBtn.addComponent("CrystalBall");
-	startBtn.attr({ x: 200, y: 200, z: 5, w: 407, h: 407 });
+	
 });
 
 
@@ -94,15 +90,19 @@ Crafty.scene("Game", function() {
 	});
 
 	// crystall ball
-	var player = Crafty.e("CrystalBall");	
+	var player = Crafty.e("CrystalBall");
 
 	// show word triplets
 	if(Game.wordsHistory.length) {
-		var wordTripletY = 220;
-		_.each(Game.wordsHistory.reverse(), function(words) {
+		var wordTripletY = 215;
+		_.each(Game.wordsHistory.reverse(), function(wordsObj) {
 			var wordsTriplet = Crafty.e("WordTriplet")
-				.text(words.verbs + ", " + words.nouns + ", " + words.adjectives)
-				.attr({x: 10, y: wordTripletY});
+				.text(wordsObj.words.verbs + ", " + wordsObj.words.nouns + ", " + wordsObj.words.adjectives)
+				.attr({x: 10, y: wordTripletY, w: 220 , h: 40});
+			wordsTriplet.orig_x = 10;
+			wordsTriplet.orig_y = wordTripletY;
+			wordsTriplet.words = wordsObj.words.verbs + ", " + wordsObj.words.nouns + ", " + wordsObj.words.adjectives;
+			wordsTriplet.desc = wordsObj.desc;
 			wordTripletY += 50;
 		});
 	}

@@ -3,78 +3,13 @@
     <title>Crystall Ball</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='http://fonts.googleapis.com/css?family=Loved+by+the+King' rel='stylesheet' type='text/css'>
-    <!--link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet"-->
     <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/crystal.css" />
 </head>
 <body>
-    <!--
-    <div id="header">
-        <div id="stage-verbs" class="stage">
-            <div class="dummy"></div>
-            <div class="circle">
-                <span>1. Verb</span>
-            </div>
-        </div>
-        <div id="stage-nouns" class="stage">
-            <div class="dummy"></div>
-            <div class="circle">
-                <span>2. Noun</span>
-            </div>
-        </div>
-        <div id="stage-adjectives" class="stage">
-            <div class="dummy"></div>
-            <div class="circle">
-                <span>3. Adjective</span>
-            </div>
-        </div>
-        <div id="stage-finale" class="stage">
-            <div class="dummy"></div>
-            <div class="circle">
-                <span>4. Describe</span>
-            </div>
-        </div>
-
-    </div>
-    -->
-    <!--<p id="debug"><p>-->
     
-    <!--
-    <div id="content">
-
-    <div id="game-ideas">
-        <div class="title">Game Ideas</div>
-    </div>
-
-        <div id="main-content">
-
-            <div id="crystalInfo">
-            </div>
-
-            <div id="crystalBallStage">
-            
-                <div id="crystalBall">
-                    <canvas id='crystalBallCanvas' width='407px' height='407px'></canvas>
-            	<div id="crystalBallLens">
-            	    <div id="contentHolder" class="unselectable"></div>
-                    </div>
-                </div>
-
-            </div>
-
-    	</div>
-    
-    </div>    
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-    <script src="{{ STATIC_URL }}js/crystal/jquery.ui.touch-punch.min.js"></script>
-    -->
-
     <div class="container">
-      <div class="row">
-          <div id="cr-stage"></div>
-      </div>
-
+      <div id="cr-stage"></div>
     </div> <!-- /container -->
 
     <!-- libs & helper functions -->
@@ -89,7 +24,6 @@
     <script src="{{ STATIC_URL }}js/crystal/components.js"></script>
     <script src="{{ STATIC_URL }}js/crystal/scenes.js"></script>
     <script src="{{ STATIC_URL }}js/crystal/game.js"></script>
-
 
     <script>
     $(document).ready(function() {
@@ -120,11 +54,6 @@
 
     }); // document ready
     </script>
-    <!--
-    <script src="{{ STATIC_URL }}js/crystal/crystal-info.js"></script>
-    <script src="{{ STATIC_URL }}js/crystal/main.js"></script>
-    -->
-    <!--script src="http://remote-tilt.com/js/device-motion-polyfill.js"></script-->
 </body>
 </html>
 

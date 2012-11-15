@@ -10,16 +10,24 @@ function getWords() {
 
 window.onload = function() {
 	//Crafty.mobile = false;
-	getWords(); // we should wait for this to end
-
-	Crafty.init(Game.width, Game.height);
+	getWords(); // we should wait for this to end...
+	// Fullscreen up to Game.width (1024px)
+	if (window.innerWidth < Game.width) {
+	    Crafty.init(Crafty.DOM.window.width,Crafty.DOM.window.height);
+	    Game.width = Crafty.DOM.window.width;
+	    Game.height = Crafty.DOM.window.height;
+	} else {
+	    Crafty.init(Game.width,Game.height);
+	}
+    $('.container').width(Game.width);
 	Crafty.canvas.init();
 	Crafty.scene("Game");
+
 };
 
 var Game = {
-	width: 768,
-	height: 1004,
+	width: 1024,
+	height: 748,
 
 	stage: 0,
 	stages: [

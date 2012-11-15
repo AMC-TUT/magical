@@ -101,7 +101,7 @@ Crafty.c("InfoText", {
     init: function() {
         this.requires("2D, DOM, Text, infoText");
         // ShowText event
-        this.bind("ShowText", function(id) { 
+        this.bind("ShowText", function(id) {
         	var infoText = Game.stages[id].desc;
         	this.text(infoText);
        	});
@@ -111,8 +111,34 @@ Crafty.c("InfoText", {
 
 
 Crafty.c("WordTriplet", {
-    init: function() {
-        this.requires("2D, DOM, Text, wordTriplet");
-    	return this;
+	init: function() {
+		this.orig_x = 10;
+		this.orig_y = 215;
+		this.min_width = 220;
+		this.min_height = 40;
+		this.max_width = 400;
+		this.max_height = 500;
+		this._status = "closed";
+		this.words = '';
+		this.desc = '';
+        this.requires("2D, DOM, Text, Tween, Mouse, wordTriplet");
+        this.css("width", "220");
+        this.css("height", "40");
+        this.bind("Click", function() {
+        	if(this._status == "closed") {
+        		// maximize
+        		this._status = "open";
+	            this.tween({ x: (Game.width/2 - 200), y: 160, w: this.max_width, h: this.max_height, z: 120}, 8);
+	            this.text('<h3>' + this.words + '</h3><p>' + this.desc + '</p><p class="clickClose">Click to close</p>');
+	            this.addComponent('viewDescription');
+        	} else {
+        		// minimize
+        		this._status = "closed"
+        		this.tween({ x: this.orig_x, y: this.orig_y, w: this.min_width, h: this.min_height, z: 10}, 8);
+	            this.text(this.words);
+	            this.removeComponent('viewDescription');
+        	}
+        });
+        return this;
     }
 });

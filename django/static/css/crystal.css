@@ -12,7 +12,7 @@ html, body {
 }
 
 .container {
-	width: 1024px !important;
+	/*width: 1024px !important;*/
 }
 
 #cr-stage {
@@ -36,6 +36,12 @@ html, body {
     height: 120px;
     color: #020202;
     border-radius: 50%;
+    -webkit-box-shadow:0 0 10px rgba(0,0,0,0.5); 
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.5); 
+    box-shadow:0 0 10px rgba(0,0,0,0.5);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select:none;
+    -webkit-touch-callout:none;
 }
 
 .badgeDone {
@@ -53,7 +59,38 @@ html, body {
     color: #fff;
     border-radius: 3px;
     z-index: 50;
+    -webkit-box-shadow:0 3px 10px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    box-shadow:0 3px 10px rgba(0, 0, 0, 0.3);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select:none;
+    -webkit-touch-callout:none;
 }
+
+.wordTriplet.viewDescription {
+    background-color: rgb(224, 0, 255);
+    text-align: left;   
+}
+
+.wordTriplet.viewDescription h3 {
+    padding: 1em;
+    background: rgb(214, 0, 245);
+    font-size: 34px;
+    font-weight: normal;
+}
+
+.wordTriplet.viewDescription p {
+    padding: 2em;
+    font-size: 28px;
+    font-weight: normal;
+}
+
+.wordTriplet.viewDescription p.clickClose {
+    background: rgb(214, 0, 245);
+    padding: 5px 10px;
+    text-align: center;
+}
+
 
 .infoText {
     color: white;
@@ -63,6 +100,12 @@ html, body {
     background: rgba(224, 0, 255, 0.8);
     height: 70px;
     line-height: 70px;
+    -webkit-box-shadow:0 0 10px rgba(255,255,255,0.8); 
+    -moz-box-shadow: 0 0 10px rgba(255,255,255,0.8); 
+    box-shadow:0 0 10px rgba(255,255,255,0.8);'
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select:none;
+    -webkit-touch-callout:none;
 }
 
 .crystalBall {
@@ -74,6 +117,9 @@ html, body {
     font-size: 42px;
     color: #020202;
     z-index: 100;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select:none;
+    -webkit-touch-callout:none;    
 }
 
 #description-form {
@@ -87,6 +133,8 @@ html, body {
     background-color: rgba(255,255,255,0.8);
     width: 560px;
     margin-left: -300px;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 
@@ -112,5 +160,6 @@ html, body {
 
 #description-form .formWord {
     padding-right: 20px;
+    color: red;
 }
 
