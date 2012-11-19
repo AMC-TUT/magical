@@ -16,8 +16,8 @@ var app = express(),
   server = http.createServer(app),
   io = require('socket.io').listen(server);
 
-//var apiUri = 'http://magos.pori.tut.fi/api/v1/';
-var apiUri = 'http://localhost:8080/api/v1/';
+var apiUri = 'http://magos.pori.tut.fi/api/v1/';
+//var apiUri = 'http://localhost:8080/api/v1/';
 
 io.enable('browser client minification');
 io.enable('browser client etag');
