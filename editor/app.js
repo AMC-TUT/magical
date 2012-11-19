@@ -16,6 +16,9 @@ var app = express(),
   server = http.createServer(app),
   io = require('socket.io').listen(server);
 
+//var apiUri = 'http://magos.pori.tut.fi/api/v1/';
+var apiUri = 'http://localhost:8080/api/v1/';
+
 io.enable('browser client minification');
 io.enable('browser client etag');
 io.enable('browser client gzip');
@@ -193,7 +196,7 @@ var editor = io.sockets.on('connection', function(socket) {
 
         // game update request
         request.put({
-          url: 'http://magos.pori.tut.fi/api/v1/games/' + slug,
+          url: apiUri + 'games/' + slug,
           jar: j,
           form: {
             'state': state,
@@ -245,11 +248,10 @@ var editor = io.sockets.on('connection', function(socket) {
         var j = myMagos.createCookieJar(sessionid, csrftoken);
         // get game request
         request.get({
-          url: 'http://magos.pori.tut.fi/api/v1/games/' + slug,
+          url: apiUri + 'games/' + slug,
           jar: j
         }, function(error, response, body) {
           if(!error && response.statusCode == 200) {
-
             game = JSON.parse(body);
 
             if(_.isObject(game)) {
@@ -329,7 +331,7 @@ var editor = io.sockets.on('connection', function(socket) {
     var result = [];
 
     request.get({
-      url: 'http://magos.pori.tut.fi/api/v1/images',
+      url: apiUri + 'images',
       jar: j,
       form: data
     }, function(error, response, body) {
@@ -508,7 +510,7 @@ myMagos.logEvent = function(log, sessionid, csrftoken) {
 
   // game update request
   request.put({
-    url: 'http://magos.pori.tut.fi/api/v1/logs/' + slug,
+    url: apiUri + 'logs/' + slug,
     jar: j,
     form: data
   }, function(error, response, body) {
@@ -525,10 +527,10 @@ myMagos.parseSessionObject = function(data) {
 
   if(_.isString(data)) {
 
-    var enc = myMagos.base64Decode(data);
-
+    var enc = myMagos.base64Decode(data);    
     var clean = enc.replace(/[^a-z0-9\.]+/ig, '');
-console.log(clean);
+    //console.log(clean);
+    clean = clean.replace(/qX/g, 'X');
     var userName = clean.match(/usernameX[a-z0-9\.]+U/g).join().replace(/U$/, '').split('X')[1];
     var lang = clean.match(/langX[a-z]+U/g).join().replace(/U$/, '').split('X')[1];
     var role = clean.match(/roleX[a-z]+U/g).join().replace(/U$/, '').split('X')[1];
