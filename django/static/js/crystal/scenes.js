@@ -57,9 +57,46 @@ function showDescriptionForm() {
     });
 }
 
-// Intro Scene
-Crafty.scene("Intro", function() {
-	
+// Loading scene
+Crafty.scene("Loading", function () {
+	Crafty.e("HTML")
+			.append('<br/><br/>'
+			+ ' <div class="hero-unit span8 offset1">'
+			+ ' <div class="row">'
+			+ ' <img src="/static/img/magos-m-black.png" class="span6 offset1" alt="" />'
+			+ ' </div>'
+			+ ' <div class="row">'
+			+ ' <div class="progress progress-warning active">'
+			+ ' <div class="bar">'
+			+ ' </div>'
+			+ ' </div>'
+			+ ' </div>'
+			+ ' </div>');
+
+	// assets to preload and a callback when complete (don't put sprites here!)
+    Crafty.load(
+    	[
+    		"/static/img/turq-bg.jpg",
+    		"/static/img/green-bg.jpg"
+    	], 
+    	function () {
+    		Crafty.scene("Game"); //when assets has been loaded
+    	},
+		function(e) {
+			//progress
+			$(".progress .bar").css("width", Math.round(e.percent) + "%");
+		},
+		function(e) {
+			//error
+			alert('Error loading ' + e.src + ' while loading game assets (loaded ' + e.loaded + ' of ' + e.total + ')');
+		}    	
+    );
+
+    //black background with some loading text
+    Crafty.background("#000");
+    Crafty.e("2D, DOM, Text").attr({ w: 100, h: 20, x: 150, y: 120 })
+            .text("Loading")
+            .css({ "text-align": "center" });
 });
 
 

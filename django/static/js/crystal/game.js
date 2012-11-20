@@ -21,7 +21,7 @@ window.onload = function() {
 	}
     $('.container').width(Game.width);
 	Crafty.canvas.init();
-	Crafty.scene("Game");
+	Crafty.scene("Loading");
 
 };
 
