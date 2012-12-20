@@ -405,7 +405,7 @@ var editor = io.sockets.on('connection', function(socket) {
     });
 
     //
-    var json = fs.readFileSync('static/json/fakeHighscore.json', 'utf8'); // ?offset=0&limit=5
+    var json = fs.readFileSync(__dirname + '/static/json/fakeHighscore.json', 'utf8'); // ?offset=0&limit=5
     //
     var highscore = JSON.parse(json);
     // callback
@@ -414,7 +414,7 @@ var editor = io.sockets.on('connection', function(socket) {
 
   socket.on('getSceneComponents', function(noop, fn) {
     // read json file
-    var json = fs.readFileSync('static/json/sceneComponents.json', 'utf8');
+    var json = fs.readFileSync(__dirname + '/static/json/sceneComponents.json', 'utf8');
     // parse obj's
     var result = JSON.parse(json);
     // return components
@@ -423,7 +423,7 @@ var editor = io.sockets.on('connection', function(socket) {
 
   socket.on('getSkillsets', function(noop, fn) {
     // read json file
-    var json = fs.readFileSync('static/json/skillsets.json', 'utf8');
+    var json = fs.readFileSync(__dirname + '/static/json/skillsets.json', 'utf8');
     // parse obj's
     var result = JSON.parse(json);
     // return components
@@ -432,7 +432,7 @@ var editor = io.sockets.on('connection', function(socket) {
 
   socket.on('getLanguages', function(noob, fn) {
     // read json file
-    var json = fs.readFileSync('static/json/languages.json', 'utf8');
+    var json = fs.readFileSync(__dirname + '/static/json/languages.json', 'utf8');
     // parse obj's
     var result = JSON.parse(json);
     // return components
