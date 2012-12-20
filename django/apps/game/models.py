@@ -224,6 +224,8 @@ class Image(models.Model):
     
     def save(self, *args, **kwargs):
         #import ipdb; ipdb.set_trace()
+        if not self.slug:
+            self.slug = slugify(self.name)
         self.image_file.open('rb') # returns nothing
         content = self.image_file
         hashgen = hashlib.sha1()

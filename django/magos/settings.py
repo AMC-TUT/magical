@@ -2,7 +2,6 @@
 import sys
 from django.conf import global_settings
 import djcelery
-#import magos.json_redis_session
 
 djcelery.setup_loader()
 
