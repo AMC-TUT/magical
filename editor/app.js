@@ -16,8 +16,9 @@ var app = express(),
   server = http.createServer(app),
   io = require('socket.io').listen(server);
 
-var apiUri = 'http://magos.pori.tut.fi/api/v1/';
-//var apiUri = 'http://localhost:8080/api/v1/';
+//var djangoUri = 'http://magos.pori.tut.fi/';
+var djangoUri = 'http://localhost:8080/';
+var globalSessionObj = null;
 
 io.enable('browser client minification');
 io.enable('browser client etag');
@@ -64,7 +65,11 @@ io.configure(function() {
   io.set('transports', ['websocket', 'flashsocket', 'xhr-polling']);
 });
 
-// Routes
+
+/**
+ * ROUTES
+ */
+
 app.param('slug', /[a-zA-Z0-9-]+$/);
 
 app.get('/:slug', function(req, res) {
@@ -79,14 +84,14 @@ app.get('/:slug', function(req, res) {
   // if sessionid or csrftoken equals undefined redirect to login page
   if(_.isUndefined(req.cookies) || _.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
     // if no session exists
-    res.redirect('http://magos.pori.tut.fi/game/login?next=/editor/' + slug);
+    res.redirect(djangoUri + 'game/login?next=/editor/' + slug);
     return false;
   }
 
   client.get('django_session:' + req.cookies.sessionid, function(err, data) {
     if(_.isNull(data)) {
       // if no session info in redis
-      res.redirect('http://magos.pori.tut.fi/game/login?next=/editor/' + slug);
+      res.redirect(djangoUri + 'game/login?next=/editor/' + slug);
       return false;
     }
 
@@ -94,7 +99,7 @@ app.get('/:slug', function(req, res) {
 
     // if no valid logged in user
     if(_.isUndefined(sessionObj.userName)) {
-      res.redirect('http://magos.pori.tut.fi/game/login?next=/editor/' + slug);
+      res.redirect(djangoUri + 'game/login?next=/editor/' + slug);
       return false;
     }
 
@@ -105,10 +110,20 @@ app.get('/:slug', function(req, res) {
 
 // fallback response
 app.get('/', function(req, res) {
-  res.redirect('http://magos.pori.tut.fi/');
+  res.redirect(djangoUri);
 });
 
+
+/**
+ * START SERVER
+ */
 server.listen(9001);
+
+
+
+/**
+ * EDITOR SOCKET EVENTS
+ */
 
 var editor = io.sockets.on('connection', function(socket) {
 
@@ -129,28 +144,31 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   socket.on('setUserCredentials', function(credentials, fn) {
-    //
     socket.set('slug', credentials.slug, function() {});
     socket.set('sessionid', credentials.sessionid, function() {});
     socket.set('csrftoken', credentials.csrftoken, function() {});
 
     client.get('game:' + credentials.slug, function(err, data) {
-
+      /*
+      //data ==> is not django session data here but game json from redis
       var session = myMagos.parseSessionObject(data);
-
-      socket.set('username', session.userName, function() {});
-      socket.set('lang', session.lang, function() {});
-      socket.set('org', session.org, function() {});
-      socket.set('role', session.role, function() {});
-
-      credentials.lang = session.lang;
-      credentials.userName = session.userName;
-      credentials.org = session.org;
-      credentials.role = credentials.role;
-
       console.log('session');
       console.log(session);
+      */
 
+      socket.set('username', globalSessionObj.userName, function() {});
+      socket.set('lang', globalSessionObj.lang, function() {});
+      socket.set('org', globalSessionObj.org, function() {});
+      socket.set('role', globalSessionObj.role, function() {});
+
+      credentials.lang = globalSessionObj.lang;
+      credentials.userName = globalSessionObj.userName;
+      credentials.org = globalSessionObj.org;
+      credentials.role = globalSessionObj.role;
+      credentials.firstName = 'Mikko';
+      credentials.lastName = 'Koskela';
+
+      console.log(globalSessionObj);
       fn(credentials);
     });
   });
@@ -170,7 +188,6 @@ var editor = io.sockets.on('connection', function(socket) {
     socket.get('slug', function(err, slug) {
       // game in json format
       var json = JSON.stringify(game);
-
       if(mode === 0) { // saving mode to redis or redis&django
         // redis
         client.set('game:' + slug, json, redis.print);
@@ -196,7 +213,7 @@ var editor = io.sockets.on('connection', function(socket) {
 
         // game update request
         request.put({
-          url: apiUri + 'games/' + slug,
+          url: djangoUri + 'api/v1/games/' + slug,
           jar: j,
           form: {
             'state': state,
@@ -248,7 +265,7 @@ var editor = io.sockets.on('connection', function(socket) {
         var j = myMagos.createCookieJar(sessionid, csrftoken);
         // get game request
         request.get({
-          url: apiUri + 'games/' + slug,
+          url: djangoUri + 'api/v1/games/' + slug,
           jar: j
         }, function(error, response, body) {
           if(!error && response.statusCode == 200) {
@@ -301,7 +318,6 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   socket.on('getImageAssets', function(filter, width, height, limit, offset, fn) {
-
     var slug = '',
       sessionid = '',
       csrftoken = '';
@@ -318,7 +334,7 @@ var editor = io.sockets.on('connection', function(socket) {
 
     // set session cookies for request
     var j = myMagos.createCookieJar(sessionid, csrftoken);
-
+    console.log('>> FILTER: ' + filter);
     var data = {
       'filter': filter || null,
       'width': width || null,
@@ -327,13 +343,13 @@ var editor = io.sockets.on('connection', function(socket) {
       'offset': offset || 0
     };
 
-    // get game request
+    // get images request
     var result = [];
 
     request.get({
-      url: apiUri + 'images',
+      url: djangoUri + 'api/v1/images',
       jar: j,
-      form: data
+      qs: data
     }, function(error, response, body) {
       if(!error && response.statusCode == 200) {
 
@@ -510,7 +526,7 @@ myMagos.logEvent = function(log, sessionid, csrftoken) {
 
   // game update request
   request.put({
-    url: apiUri + 'logs/' + slug,
+    url: djangoUri + 'api/v1/logs/' + slug,
     jar: j,
     form: data
   }, function(error, response, body) {
@@ -523,29 +539,47 @@ myMagos.logEvent = function(log, sessionid, csrftoken) {
 };
 
 myMagos.parseSessionObject = function(data) {
-  var sessionObj = {};
-
+  var sessionObj = {},
+      json_data = {};
   if(_.isString(data)) {
+    var enc = myMagos.base64Decode(data);
+    try {
+      // thank God we have finally JSON
+      json_data = JSON.parse(enc);
 
-    var enc = myMagos.base64Decode(data);    
+      sessionObj = {
+        'userName': json_data.username,
+        'lang': json_data.lang,
+        'role': json_data.role,
+        'org': json_data.organization,
+        'firstName': json_data.firstname,
+        'lastName': json_data.lastname
+      };
+
+    } catch(e) {
+      console.log('There was an error when parsing session data. ' + e.message);
+    }
+    /*
     var clean = enc.replace(/[^a-z0-9\.]+/ig, '');
-    //console.log(clean);
     clean = clean.replace(/qX/g, 'X');
+    clean = clean.replace(/qU/g, 'U');
+    clean = clean.replace(/qu/g, 'u');
+    console.log(clean.match(/usernameX[a-z0-9\.]+U/g));
+    console.log(clean.match(/firstnameX[a-z0-9\.]+U/g));
+
     var userName = clean.match(/usernameX[a-z0-9\.]+U/g).join().replace(/U$/, '').split('X')[1];
     var lang = clean.match(/langX[a-z]+U/g).join().replace(/U$/, '').split('X')[1];
     var role = clean.match(/roleX[a-z]+U/g).join().replace(/U$/, '').split('X')[1];
     var organization = clean.match(/organizationX[a-z]+u\./g).join().replace(/u\.$/, '').split('X')[1];
-
-    sessionObj = {
-      'userName': userName,
-      'lang': lang,
-      'role': role,
-      'org': organization
-    };
+    var firstName = clean.match(/firstnameX[a-z]+U/g).join().replace(/U$/, '').split('X')[1];
+    var lastName = clean.match(/lastnameX[a-z]+U/g).join().replace(/U$/, '').split('X')[1];
+    */
   }
 
-   console.log('sessionObj:');
-   console.log(sessionObj);
+  console.log('sessionObj:');
+  console.log(sessionObj);
+
+  globalSessionObj = sessionObj; // save for later use
   return sessionObj;
 };
 

@@ -2,6 +2,8 @@
 import sys
 from django.conf import global_settings
 import djcelery
+#import magos.json_redis_session
+
 djcelery.setup_loader()
 
 #if "C:\\work\\projektit\\mag\\magical\\django" not in sys.path:
@@ -29,7 +31,8 @@ DATABASES = {
     }
 }
 
-SESSION_ENGINE = 'redis_sessions.session'
+#SESSION_ENGINE = 'redis_sessions.session'
+SESSION_ENGINE = 'magos.json_redis_session'
 SESSION_REDIS_HOST = 'localhost'
 SESSION_REDIS_PORT = 6379
 SESSION_REDIS_DB = 0

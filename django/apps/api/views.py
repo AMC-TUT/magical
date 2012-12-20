@@ -647,9 +647,10 @@ class ImageSearchView(RequestMixin, ResponseMixin, View):
             #data = img.read()
             result_dict['name'] = image.name
             result_dict['slug'] = image.slug
-            result_dict['type'] = image.type
+            result_dict['type'] = image.image_type
             result_dict['state'] = image.state
-            result_dict['file'] = image.image_url # base64 encoded
+            #result_dict['file'] = image.image_url # base64 encoded
+            result_dict['file'] = image.image_file.name  # path
             results_list.append(result_dict)
         
         response = Response(200, { \
@@ -798,8 +799,11 @@ class ImageView(RequestMixin, ResponseMixin, View):
                 img_offset = int(img_offset)
             except ValueError:
                 img_offset = DEFAULT_OFFSET
-        # TODO: filtering by type, offset and limit have to be implemented
-        images = Image.objects.all()
+        # filtering by type, offset and limit
+        kwargs = {}
+        if img_type:
+            kwargs['image_type'] = img_type
+        images = Image.objects.filter(**kwargs)
         img_count = images.count()
         results_list = []
         for image in images:
@@ -808,9 +812,10 @@ class ImageView(RequestMixin, ResponseMixin, View):
             #data = img.read()
             result_dict['name'] = image.name
             result_dict['slug'] = image.slug
-            result_dict['type'] = image.type
+            result_dict['type'] = image.image_type
             result_dict['state'] = image.state
-            result_dict['file'] = image.image_url # base64 encoded
+            #result_dict['file'] = image.image_url # base64 encoded
+            result_dict['file'] = image.image_file.name # path
             results_list.append(result_dict)
         
         response = Response(200, { \
@@ -827,7 +832,7 @@ class ImageView(RequestMixin, ResponseMixin, View):
     def dispatch(self,*args,**kwargs):
         return super(ImageView,self).dispatch(*args,**kwargs)
 
-        
+
 class GameReviewView(RequestMixin, ResponseMixin, View):
     renderers = DEFAULT_RENDERERS
     parsers = DEFAULT_PARSERS

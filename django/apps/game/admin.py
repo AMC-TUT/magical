@@ -32,7 +32,7 @@ admin.site.register(Game)
 admin.site.register(GameType)
 admin.site.register(Author)
 admin.site.register(Revision)
-admin.site.register(Image)
+#admin.site.register(Image)
 admin.site.register(Review)
 admin.site.register(Highscore)
 
@@ -73,3 +73,7 @@ class AudioFileAdmin(admin.ModelAdmin):
 
 admin.site.register(Audio, AudioFileAdmin)
 
+# remove automatically filled fields from Image admin
+class ImageAdmin(admin.ModelAdmin):
+    exclude = ['height', 'width', 'slug']
+admin.site.register(Image, ImageAdmin)

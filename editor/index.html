@@ -356,20 +356,34 @@
           <div class="modal-body">
             <ul class="nav nav-tabs">
               <li class="active">
-                <a href="#images-tab">Images</a>
+                <a href="#images-tab" data-toggle="tab">Images</a>
               </li>
               <li class="disabled"><a href="#">Animations</a></li>
-              <li class="disabled"><a href="#">Backgrounds</a></li>
+              <li><a href="#backgrounds-tab" data-toggle="tab">Backgrounds</a></li>
             </ul>
             <div class="tab-content">
               <div class="tab-pane active" id="images-tab">
-                {{#view App.ImageAssetsView contentBinding="App.imageAssetsController.content"}}
-                {{/view}}
                 <ul class="assets-list">
-                  <li data-sprite="rock"><img src="/editor/user-media/image/rock.png" /><span>Rock</span></li>
+                {{#view App.ImageAssetsView contentBinding="App.imageAssetsController.blocks"}}
+                  {{#each content}}
+                    <li {{bindAttr data-file="file"}} {{bindAttr data-type="type"}} {{bindAttr data-sprite="slug"}}><img {{bindAttr src="file"}} /><span>{{name}}</span></li>
+                  {{/each}}
+                {{/view}}
                 </ul>
               </div>
-            </div>
+              
+              <div class="tab-pane" id="backgrounds-tab">
+                <ul class="assets-list">
+                {{#view App.ImageAssetsView contentBinding="App.imageAssetsController.backgrounds"}}
+                  {{#each content}}
+                    <li {{bindAttr data-file="file"}} {{bindAttr data-type="type"}} {{bindAttr data-sprite="slug"}}><img {{bindAttr src="file"}} /><span>{{name}}</span></li>
+                  {{/each}}
+                {{/view}}
+                </ul>
+              </div>
+
+            </div> <!-- /* tab-content */ -->
+
           </div>
           <div class="modal-footer">
             <button class="btn btn-close" type="submit">Cancel</button>
@@ -494,7 +508,7 @@
             <ul class="chest item-chest">
               {{#each App.gameComponentsController}}
                 {{#view App.GameComponentsView tagName="li" itemBinding="this" classNameBindings="uiSelected"}}
-                <img class="game-item" {{bindAttr class="item.active"}} {{bindAttr src="item.icon"}} {{bindAttr alt="item.title"}} {{bindAttr title="item.title"}} {{bindAttr data-slug="item.slug"}} /></li>
+                <img class="game-item" {{bindAttr class="item.active"}} {{bindAttr src="item.file"}} {{bindAttr alt="item.title"}} {{bindAttr title="item.title"}} {{bindAttr data-slug="item.slug"}} /></li>
                 {{/view}}
               {{/each}}
 
@@ -614,7 +628,7 @@
                     {{#view App.MagosComponentPropertyView contentBinding="this"}}
                     <div class="image-action action-group">
                       <div class="control-group" style="text-align:center;">
-                        <button class="btn btn-success draw-image-button" style="width: 47%;padding-bottom: 3px;padding-top: 3px;"><i class="icon-pencil icon-white"></i> Draw</button>
+                        <!--<button class="btn btn-success draw-image-button" style="width: 47%;padding-bottom: 3px;padding-top: 3px;"><i class="icon-pencil icon-white"></i> Draw</button>-->
                         <button {{action "openImageAssetsDialog"}} class="btn btn-success borrow-image-button icon-white" style="width: 47%;padding-bottom: 3px;padding-top: 3px;height: 26px;"><i class="icon-folder-open icon-white"></i> Borrow</button>
                       </div>
                     </div>

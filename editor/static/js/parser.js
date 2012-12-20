@@ -78,7 +78,7 @@ var Parser = {
   },
   loadSprites: function(components) {
     // images path
-    var path = '/editor/user-media/image/',
+    var path = '/editor/user-media/images/',
       ext = '.png';
 
     _.each(components, function(component) {
@@ -104,7 +104,7 @@ var Parser = {
       });
 
       var backgroundImage = null,
-        path = '/editor/user-media/image/',
+        path = '/editor/user-media/images/',
         ext = '.png';
 
       if (_.isObject(backgroundComp) && _.isObject(backgroundComp.properties) && _.isString(backgroundComp.properties.sprite)) {
@@ -258,7 +258,7 @@ var Parser = {
       Crafty.e("HTML").append('<div style="width:' + width + 'px;" class="loader">' + ' <img src="/static/img/logo.png" class="loader-logo" />' + ' <p class="loader-procent">0%</p>' + ' </div>');
 
       var assets = [],
-        path = '/editor/user-media/image/',
+        path = '/editor/user-media/images/',
         ext = '.png';
 
       // game comps
@@ -315,7 +315,7 @@ var Parser = {
             // this_.addComponent(sprite + "-sprite");
             // sprite impl. exists and works. uncomment previous
             // line and comment out next line to use sprite impl.
-            this_.image('/editor/user-media/image/' + sprite + '.png');
+            this_.image('/editor/user-media/images/' + sprite + '.png');
           }
 
           // controls

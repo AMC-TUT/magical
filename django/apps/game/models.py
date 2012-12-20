@@ -3,8 +3,10 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 from audiofield.fields import AudioField
-import datetime, mimetypes
+import datetime, mimetypes, hashlib, time
 from imagekit.models import ImageSpecField
+
+CONST_DEFAULT_BLOCK_SIZE = 65536 # 64k
 
 # add AudioField introspection rules for South
 rules = [
@@ -27,6 +29,13 @@ def get_image_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return os.path.join('user-media/images', filename)
+
+
+def timestamp():
+   now = time.time()
+   localtime = time.localtime(now)
+   milliseconds = '%03d' % int((now - int(now)) * 1000)
+   return time.strftime('%Y%m%d%H%M%S', localtime) + milliseconds
 
 
 """ Model definitions -> """
@@ -192,13 +201,14 @@ class Image(models.Model):
     slug = models.SlugField(max_length=45, null=False, blank=False, unique=True)
     width = models.IntegerField(null=False, blank=False)
     height = models.IntegerField(null=False, blank=False)
-    file = models.ImageField(upload_to=get_image_path, height_field='height', width_field='width')
+    image_file = models.ImageField(upload_to=get_image_path, height_field='height', width_field='width')
 
     #file = models.ImageField(storage=FILESTORAGE, height_field='height', width_field='width', upload_to=get_path)
-    sha = models.CharField(max_length=40, editable=False, db_index=True, unique=True)
+    #sha1 = models.CharField(max_length=40, editable=False, db_index=True, blank=False, null=False, unique=True, default=timestamp)
+    sha1 = models.CharField(max_length=40, editable=False, db_index=True)
 
-    type = models.IntegerField(null=False, blank=False, default=0)
-    state = models.IntegerField(null=False, blank=False, default=0)
+    image_type = models.PositiveIntegerField(null=False, blank=False, default=0)
+    state = models.PositiveIntegerField(null=False, blank=False, default=0)
     author = models.ForeignKey(User)
     
     cloned = models.ForeignKey(
@@ -212,17 +222,33 @@ class Image(models.Model):
     created = models.DateTimeField(auto_now_add=True, default=datetime.date.today)
     updated = models.DateTimeField(auto_now=True)
     
+    def save(self, *args, **kwargs):
+        #import ipdb; ipdb.set_trace()
+        self.image_file.open('rb') # returns nothing
+        content = self.image_file
+        hashgen = hashlib.sha1()
+        while True:
+            chunk = content.read(CONST_DEFAULT_BLOCK_SIZE)
+            if not chunk:
+                break
+            hashgen.update(chunk)
+
+        hash_digest = hashgen.hexdigest()
+        print hash_digest
+        self.sha1 = hash_digest
+        super(Image, self).save(*args, **kwargs)
+
 
     @property
     def image_url( self ):
         try:
             # would be better to use python-magic for mimetype?
-            mimetype, encoding = mimetypes.guess_type(self.file.name)
-            img = open( self.file.path, "rb")
+            mimetype, encoding = mimetypes.guess_type(self.image_file.name)
+            img = open( self.image_file.path, "rb")
             data = img.read()
             return "data:%s;base64,%s" % (mimetype, data.encode('base64'))
         except IOError:
-            return self.file.url
+            return self.image_file.url
 
     class Meta:
         verbose_name = _('image')
@@ -431,4 +457,7 @@ def store_info_to_session(sender, user, request, **kwargs):
     request.session['role'] = request.user.userprofile.role.name
     request.session['lang'] = request.user.userprofile.language.slug
     request.session['organization'] = request.user.userprofile.organization.slug
+    request.session['firstname'] = request.user.first_name
+    request.session['lastname'] = request.user.last_name
+
 user_logged_in.connect(store_info_to_session)

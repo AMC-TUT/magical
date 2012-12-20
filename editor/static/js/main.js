@@ -82,6 +82,10 @@ $(function() {
 
         // set user credentials
         App.dataSource.setUserCredentials(function(data) {
+          
+          console.log('USER CREDS:');
+          console.log(data);
+
           // join game after credential
           App.dataSource.joinGame(function(data) {
             // set content to game controller
@@ -104,7 +108,14 @@ $(function() {
     });
 
     App.revisionController = Em.Object.create({
-      contentBinding: 'App.gameController.content.revision'
+      contentBinding: 'App.gameController.content.revision',
+      canvasObserver: function() {
+        var controller = this;
+        var canvas = controller.getPath('content.canvas');
+        if(canvas) {
+          App.imageAssetsController.populate();
+        }
+      }.observes('content')
     });
 
     /**************************
@@ -201,6 +212,63 @@ $(function() {
       }
     });
 
+
+    /**************************
+     * Image Assets
+     **************************/
+
+    App.ImageAsset = Em.Object.extend({
+      name: null,
+      slug: null,
+      file: null,
+      state: 0,
+      type: 0 // 0=block, 1=anim, 2=background
+    });
+
+    App.imageAssetsController = Em.ArrayController.create({
+      content: null,
+      populate: function() {
+        var controller = this;
+        App.dataSource.getImageAssets(function(data) {
+          console.log('. . . . image assets data:');
+          console.log(data);
+          controller.set('content', data);
+        });
+      },
+      // image assets of type 'block'
+      blocks: function() {
+        var components = this.get('content');
+        var array = [];
+        _.each(components, function(component) {
+          if(component.type == 0) array.push(component);
+        });
+        return array;
+      }.property('content'),
+      // image assets of type 'anim'
+      animations: function() {
+        var components = this.get('content');
+        var array = [];
+        _.each(components, function(component) {
+          if(component.type == 1) array.push(component);
+        });
+        return array;
+      }.property('content'),
+      // image assets of type 'background'
+      backgrounds: function() {
+        var components = this.get('content');
+        var array = [];
+        _.each(components, function(component) {
+          if(component.type == 2) array.push(component);
+        });
+        return array;
+      }.property('content')
+    });
+
+
+
+
+
+
     /**************************
      * SceneComponent
      **************************/
@@ -209,6 +277,7 @@ $(function() {
       title: null,
       slug: null,
       sprite: null,
+      file: null,
       scenes: [],
       potions: null,
       active: false,
@@ -372,10 +441,13 @@ $(function() {
     App.GameComponent = Em.Object.extend({
       title: null,
       slug: null,
+      file: null,
       properties: null,
       active: false,
       icon: function() {
-        return '/editor/user-media/image/' + this.getPath('properties.sprite') + '.png';
+        //return '/editor/user-media/images/' + this.getPath('properties.sprite') + '.png';
+        console.log(this.getPath('properties.file'));
+        return '/editor/' + this.getPath('properties.file');
       }.property('properties'),
       snapToGrid: function() {
         var snap = this.getPath('properties.controls.grid');
@@ -480,6 +552,7 @@ $(function() {
               activeClass: "ui-state-target",
               hoverClass: "ui-state-active",
               drop: function(event, ui) {
+
                 var $tgt = $(this),
                   view = Em.View.views[$tgt.attr('id')],
                   selected = view.get('item');
@@ -656,6 +729,7 @@ $(function() {
       }
     });
 
+
     /**************************
      * Dialog Add Component
      **************************/
@@ -686,6 +760,7 @@ $(function() {
           slug: safeSlug,
           properties: {
             sprite: 'empty1',
+            file: 'user-media/images/empty1.png',
             type: compType // TODO check order empty1,2,3,4 and choose unique
           }
         };
@@ -699,7 +774,7 @@ $(function() {
 
         App.dataSource.saveGame(1, function(data) {
           console.log('save (create new)');
-        });
+        });x
 
         this.set('itemTitle', null);
 
@@ -719,20 +794,25 @@ $(function() {
           $modal = $('#image-assets');
 
         if($tgt.hasClass('btn-select')) {
-
+          // image was selected from modal window
           var $item = $modal.find('.assets-list').find('.ui-selected');
 
           if(!$item.length && !_.isNull(App.selectedComponentController.get('content'))) {
             return false;
           }
 
+          var img_type = $item.data('type');
           var sprite = $item.data('sprite');
-
+          var file = $item.data('file');
+          console.log(img_type);
+          // TODO: If we are updating sceneComponents, should we update potions instead of properties...
           App.selectedComponentController.setPath('content.properties.sprite', sprite);
+          App.selectedComponentController.setPath('content.properties.file', file);
 
           // TODO proper view update to chest and canvas
           var slugName = App.selectedComponentController.getPath('content.slug');
-          var src = '/editor/user-media/image/' + sprite + '.png';
+          //var src = '/editor/user-media/images/' + sprite + '.png';
+          var src = '/editor/' + file;
           $('.item-chest').find("[data-slug='" + slugName + "']").attr('src', src);
 
           console.log(src);
@@ -760,6 +840,7 @@ $(function() {
 
     /**************************
      * Selected Component
+     * This can be either sceneComponent or gameComponent
      **************************/
 
     App.selectedComponentController = Em.Object.create({
@@ -801,7 +882,7 @@ $(function() {
         selected.set('active', true);
 
         //console.log('new selected component:');
-        //console.log(this.getPath('content.properties.sprite'))
+        //console.log(this.getPath('content.properties.sprite'));
       }.observes('content')
     });
 
@@ -912,7 +993,8 @@ $(function() {
           // take the first free magos and set it as users role magos
           var freeMagos = controller.get('content').findProperty('user', null);
 
-          var freeMagos = controller.get('content').findProperty('magos', 'physicus');
+          //var freeMagos = controller.get('content').findProperty('magos', 'physicus');
+          var freeMagos = controller.get('content').findProperty('magos', 'artifex');
 
           if(_.isObject(freeMagos)) {
             freeMagos.set('user', user);
@@ -1249,15 +1331,6 @@ $(function() {
       template: Em.Handlebars.compile('<h4 style="margin: 8px 0;">No Settings</h4>')
     });
 
-    App.imageAssetsController = Em.ArrayController.create({
-      content: null,
-      load: function() {
-        App.dataSource.getImageAssets(function(data) {
-          this.set('content', data);
-        });
-      }
-    });
-
     App.ImageAssetsView = Em.View.extend({
       tagName: 'ul',
       classNames: ['assets-list']
@@ -1361,18 +1434,20 @@ $(function() {
         });
 
       },
-      getImageAssets: function(filter_, type, callback) {
-
+      getImageAssets: function(callback, filter_, type) {
+        //console.log('--------imageAssets?');
         var filter = filter_ || null;
 
         var limit = null,
           offset = null,
           width = null,
           height = null;
+          //img_type = 0; // 0=block, 1=anim, 2=background
 
         var canvas = App.gameController.getPath('content.revision.canvas');
 
         if(type === 'background') {
+          //img_type = 2;
           width = canvas.blockSize * canvas.columns;
           height = canvas.blockSize * canvas.rows;
         } else {
@@ -1381,6 +1456,7 @@ $(function() {
         }
 
         socket.emit('getImageAssets', filter, width, height, limit, offset, function(data) {
+          //console.log(data);
           callback(data);
         });
 
@@ -1573,12 +1649,11 @@ $(function() {
 
     $(document).on('click tap', '.btn-preview', function(event) {
       event.preventDefault();
-
       var $modal = $('#dialog-preview');
 
       if(!$modal.hasClass('styled')) {
         // count & set dialog size
-        var canvas = App.gameController.content.canvas,
+        var canvas = App.revisionController.content.canvas,
           rows = canvas.rows,
           columns = canvas.columns,
           blockSize = canvas.blockSize;
@@ -1752,9 +1827,10 @@ $(function() {
                 column = gameComponent.position.column,
                 slug = gameComponent.slug,
                 oid = gameComponent.oid,
-                sprite = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).getPath('properties.sprite');
+                sprite = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).getPath('properties.sprite'),
+                file = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).getPath('properties.file');
 
-              var img = '<img src="/editor/user-media/image/' + sprite + '.png" data-slug="' + slug + '" data-oid="' + oid + '" class="canvas-item">';
+              var img = '<img src="/editor/' + file + '" data-slug="' + slug + '" data-oid="' + oid + '" class="canvas-item">';
               var $img = $(img);
 
               // remove when clicked - impl. draggable later
@@ -1789,7 +1865,7 @@ $(function() {
               var $img = $(img);
 
               if(slug === 'background' && _.isObject(sceneComponent.properties) && _.isString(properties.sprite)) {
-                var backgroundImage = '/editor/user-media/image/' + properties.sprite + '.png';
+                var backgroundImage = '/editor/user-media/images/' + properties.sprite + '.png';
                 $scene.css('background-image', 'url(' + backgroundImage + ')');
               }
 
@@ -1855,6 +1931,7 @@ $(function() {
         activeClass: "canvas-cell-hover",
         hoverClass: "canvas-cell-active",
         drop: function(event, ui) {
+
           var $tgt = $(this);
           //
           if(!$tgt.is(":empty")) {
@@ -1970,7 +2047,7 @@ $(function() {
 
           App.scenesController.getPath('selected.sceneComponents').pushObject(obj);
 
-          App.dataSource.saveGame(0, function(data) {
+          App.dataSource.saveGame(1, function(data) {
             console.log('save (drop)');
           });
 
