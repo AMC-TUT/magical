@@ -294,7 +294,7 @@
                       {{#view App.ShoutsView}}
                         {{#each content}}
                           <tr {{bindAttr class="magos" }}>
-                            <td>{{time}}</td><td>{{firstName}}</td><td>{{message}}</td>
+                            <td>{{time}}</td><td>{{userName}}</td><td>{{message}}</td>
                           </tr>
                         {{/each}}
                       {{/view}}
@@ -535,7 +535,7 @@
             {{#each content}}
               <div class="sortable-item well">
               {{#if user}}
-                <h3 class="sortable-handle">{{user.firstName}}</h3>
+                <h3 class="sortable-handle">{{user.userName}}</h3>
 
                 {{#if user.busy}}
                   <img src="/editor/static/img/icons/icon-busy.png" class="busy-icon" title="User is busy right now" />

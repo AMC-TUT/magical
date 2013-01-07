@@ -43,9 +43,9 @@ $(function() {
 
     App.usersController = Em.ArrayController.create({
       content: [],
-      user: null
+      user: null      
     });
-
+/*
     App.usersController.get('content').pushObject(
     App.User.create({
       userName: 'matti',
@@ -53,11 +53,11 @@ $(function() {
       lastName: 'Vanhanen',
       role: 'student'
     }));
-
+    
     // TODO
-    var user = App.usersController.get('content').findProperty('userName', 'matti');
+    var user = App.usersController.get('content').findProperty('userName', 'mkoskela');
     App.usersController.set('user', user);
-
+*/
     /**************************
      * Game
      **************************/
@@ -85,6 +85,17 @@ $(function() {
           
           console.log('USER CREDS:');
           console.log(data);
+          var currentUser = App.User.create({
+              userName: data.userName,
+              firstName: data.firstName,
+              lastName: data.lastName,
+              role: data.role
+            });
+          App.usersController.get('content').pushObject(currentUser);
+          
+          var thisUser = App.usersController.get('content').findProperty('userName', data.userName);
+          App.usersController.set('user', thisUser);
+
 
           // join game after credential
           App.dataSource.joinGame(function(data) {
@@ -113,6 +124,7 @@ $(function() {
         var controller = this;
         var canvas = controller.getPath('content.canvas');
         if(canvas) {
+          App.magosesController.populate();
           App.imageAssetsController.populate();
         }
       }.observes('content')
@@ -990,6 +1002,9 @@ $(function() {
           controller.set('content', data);
           // set selected
           var user = App.usersController.get('user');
+          console.log('***** USER');
+          console.log(user);
+
           // take the first free magos and set it as users role magos
           var freeMagos = controller.get('content').findProperty('user', null);
 
@@ -1237,6 +1252,7 @@ $(function() {
       App.Shout.create({ // initial content - welcome message
         'timestamp': Math.round((new Date()).getTime() / 1000),
         'firstName': 'Superioux',
+        'userName': 'Superioux',
         'magos': 'superioux',
         'message': 'Welcome to Magos'
       })]
@@ -1266,6 +1282,7 @@ $(function() {
       controller: null,
       textField: null,
       firstNameBinding: 'App.usersController.user.firstName',
+      userNameBinding: 'App.usersController.user.userName',
       magosBinding: 'App.usersController.user.magos',
       slugBinding: 'App.gameController.content.slug',
       submit: function(event) {
@@ -1279,6 +1296,7 @@ $(function() {
         var shout = {
           'timestamp': timestamp,
           'firstName': this.firstName,
+          'userName': this.userName,
           'magos': this.magos,
           'message': message
         };
@@ -1607,7 +1625,7 @@ $(function() {
 
     App.languagesController.populate();
 
-    App.magosesController.populate();
+    //App.magosesController.populate();
 
     // (function init() {
     // })();

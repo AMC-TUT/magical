@@ -155,7 +155,6 @@ var editor = io.sockets.on('connection', function(socket) {
       console.log('session');
       console.log(session);
       */
-
       socket.set('username', globalSessionObj.userName, function() {});
       socket.set('lang', globalSessionObj.lang, function() {});
       socket.set('org', globalSessionObj.org, function() {});
@@ -165,8 +164,8 @@ var editor = io.sockets.on('connection', function(socket) {
       credentials.userName = globalSessionObj.userName;
       credentials.org = globalSessionObj.org;
       credentials.role = globalSessionObj.role;
-      credentials.firstName = 'Mikko';
-      credentials.lastName = 'Koskela';
+      credentials.firstName = globalSessionObj.firstName;
+      credentials.lastName = globalSessionObj.lastName;
 
       console.log(globalSessionObj);
       fn(credentials);
