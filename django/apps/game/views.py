@@ -21,23 +21,24 @@ from django.contrib.auth.models import User
 def home(request):
     tpl = 'apps/game/index.html'
     user = request.user
+    ses = request.session
     """
     sess_id = request.COOKIES['sessionid']
     from django.contrib.sessions.models import Session
     print sess_id
-    ses = request.session
     print ses.load()
     redis_ses_key = ses.get_real_stored_key(sess_id)
-    print ses
-    try:
-        sess_obj = Session.objects.get(session_key=redis_ses_key)
-        print(sess_obj.session_data)
-        print("SESSION GET_DECODED: %s" % sess_obj.get_decoded())
-    except Session.DoesNotExist:
-        print "NO SESSION FOUND"
-        pass
-    print Session.objects.all()
+    print redis_ses_key
     """
+    if user.is_anonymous():
+        #print "CREATE ANONYMOUS SESSION"
+        ses['username'] = 'anonymous'
+        ses['role'] = 'player'
+        ses['lang'] = 'english'
+        ses['organization'] = 'magos'
+        ses['firstname'] = 'Magos'
+        ses['lastname'] = 'Player'
+
     return render(request, tpl, {'user': user})
 
 def game_details(request, gameslug):

@@ -21,7 +21,7 @@ var Parser = {
     Parser.game = game;
 
     // init Crafty
-    var init = Parser.initGame(game.canvas);
+    var init = Parser.initGame(game.revision.canvas);
     console.log('init: ' + init);
 
     // load sprite assests
@@ -78,18 +78,19 @@ var Parser = {
   },
   loadSprites: function(components) {
     // images path
-    var path = '/editor/user-media/images/',
+    var path = '/editor/',
       ext = '.png';
 
     _.each(components, function(component) {
       // vars
-      var sprite = (!_.isUndefined(component.properties.sprite) && _.isString(component.properties.sprite)) ? component.properties.sprite : '';
+      //var sprite = (!_.isUndefined(component.properties.sprite) && _.isString(component.properties.sprite)) ? component.properties.sprite : '';
+      var sprite = (!_.isUndefined(component.properties.file) && _.isString(component.properties.file)) ? component.properties.file : '';
       // if exists
       if (sprite.length) {
         var obj = {};
         obj[sprite + '-sprite'] = [0, 0];
 
-        Crafty.sprite(Parser.blockSize, path + sprite + ext, obj);
+        Crafty.sprite(Parser.blockSize, path + sprite, obj);
       }
     }); // each
     return true;
@@ -253,18 +254,19 @@ var Parser = {
       $('#cr-stage').css('background', '#111');
 
       // canvas size
-      var width = Parser.game.canvas.columns * Parser.game.canvas.blockSize;
+      var width = Parser.game.revision.canvas.columns * Parser.game.revision.canvas.blockSize;
 
-      Crafty.e("HTML").append('<div style="width:' + width + 'px;" class="loader">' + ' <img src="/static/img/logo.png" class="loader-logo" />' + ' <p class="loader-procent">0%</p>' + ' </div>');
+      Crafty.e("HTML").append('<div style="width:' + width + 'px;" class="loader">' + ' <img src="/static/img/magos-m-black.png" class="loader-logo" />' + ' <p class="loader-procent">0%</p>' + ' </div>');
 
       var assets = [],
+        componentsPath = '/editor/',
         path = '/editor/user-media/images/',
         ext = '.png';
 
       // game comps
       _.each(Parser.game.revision.gameComponents, function(comp) {
-        if (!_.isUndefined(comp.properties.sprite) && _.isString(comp.properties.sprite)) {
-          assets.push(path + comp.properties.sprite + ext);
+        if (!_.isUndefined(comp.properties.file) && _.isString(comp.properties.file)) {
+          assets.push(componentsPath + comp.properties.file);
         }
       });
       // scene comps
@@ -299,7 +301,7 @@ var Parser = {
     _.each(components, function(component) {
       var props = component.properties;
 
-      var sprite = _.isString(props.sprite) ? props.sprite : false;
+      var sprite = _.isString(props.file) ? props.file : false;
 
       Crafty.c(component.slug, {
         init: function() {
@@ -315,7 +317,7 @@ var Parser = {
             // this_.addComponent(sprite + "-sprite");
             // sprite impl. exists and works. uncomment previous
             // line and comment out next line to use sprite impl.
-            this_.image('/editor/user-media/images/' + sprite + '.png');
+            this_.image('/editor/' + sprite);
           }
 
           // controls
@@ -546,9 +548,9 @@ var Parser = {
     });
   },
   getGame: function(slug, webSocket) {
+    console.log('GET GAME:' +slug);
     socket = webSocket;
-
-    socket.emit('joinGame', slug, function(data) {
+    socket.emit('joinGame', function(data) {
       console.log('websocket getGame (game)');
       console.log(data);
       Parser.parseGame(data);

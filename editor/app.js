@@ -6,7 +6,7 @@ var fs = require('fs'),
   request = require('request'),
   querystring = require('querystring'),
   _ = require('underscore')._,
-  util = require("util");
+  util = require('util');
 
 var redis = require("redis"),
   client = redis.createClient(6379, 'localhost');
@@ -73,8 +73,9 @@ io.configure(function() {
 app.param('slug', /[a-zA-Z0-9-]+$/);
 
 app.get('/:slug', function(req, res) {
-
-  var slug = req.url.replace(/^\//, ''); // remove slash, orig: "/super-magos"
+  var slug = req.params.slug;
+  //var slug = req.url.replace(/^\//, ''); // remove slash, orig: "/super-magos"
+  
   /* // 4 dev
   req.cookies = {};
   req.cookies.sessionid = 'badaa213e2c71e5be7ecf9a37675c12b',
@@ -107,6 +108,14 @@ app.get('/:slug', function(req, res) {
 
   res.sendfile(__dirname + '/index.html');
 });
+
+
+// game play preview
+app.get('/play/:slug', function(req, res) {
+  var slug = req.params.slug;
+  res.sendfile(__dirname + '/play/index.html');
+});
+
 
 // fallback response
 app.get('/', function(req, res) {
@@ -181,12 +190,47 @@ var editor = io.sockets.on('connection', function(socket) {
     });
   });
 
+  socket.on('addGameComponent', function(item, fn) {
+    console.log('SOCKET: addGameComponent');
+    socket.get('slug', function(err, slug) {
+      console.log(item);
+      if(_.isObject(item)) {
+        socket.broadcast.in(slug).emit('addGameComponent', item);
+        fn(item);
+      }
+    });
+  });
+
+  socket.on('removeGameComponent', function(componentSlug, fn) {
+    console.log('SOCKET: removeGameComponent');
+    console.log(componentSlug);
+    socket.get('slug', function(err, slug) {
+      socket.broadcast.in(slug).emit('removeGameComponent', componentSlug);
+      fn(componentSlug);
+    });
+  });
+
+  socket.on('updateGameComponent', function(componentSlug, gameComponent, fn) {
+    console.log('SOCKET: updateGameComponent');
+    console.log(componentSlug);
+    console.log(gameComponent);
+    socket.get('slug', function(err, slug) {
+      socket.broadcast.in(slug).emit('updateGameComponent', componentSlug, gameComponent);
+      fn(componentSlug);
+    });
+  });
+
   socket.on('saveGame', function(mode, game, fn) {
     var result = false;
-
+    
+    console.log('----- GAME:');
+    console.log(game);
+    
     socket.get('slug', function(err, slug) {
+      console.log('----- SAVEGAME _____:' + slug);
       // game in json format
       var json = JSON.stringify(game);
+      //socket.broadcast.in(slug).emit('refreshRevision', game);
       if(mode === 0) { // saving mode to redis or redis&django
         // redis
         client.set('game:' + slug, json, redis.print);
@@ -225,11 +269,12 @@ var editor = io.sockets.on('connection', function(socket) {
         });
       }
     });
-
     fn(result);
   });
 
+
   socket.on('joinGame', function(fn) {
+    console.log('JOIN GAME');
 
     var slug = '',
       sessionid = '',
@@ -238,6 +283,7 @@ var editor = io.sockets.on('connection', function(socket) {
       userName = '';
 
     socket.get('slug', function(err, name) {
+      console.log('-- SLUG: ' + name);
       slug = name;
     });
     socket.get('sessionid', function(err, name) {
@@ -275,10 +321,6 @@ var editor = io.sockets.on('connection', function(socket) {
 
               var json = JSON.stringify(game);
               client.set('game:' + slug, json, redis.print);
-
-
-
-
               fn(game);
             } else {
               fn(false);
@@ -289,6 +331,8 @@ var editor = io.sockets.on('connection', function(socket) {
         });
 
       } else {
+        console.log('GAME DATA:');
+        console.log(data);
         game = JSON.parse(data);
 
         console.log('role');
@@ -309,12 +353,11 @@ var editor = io.sockets.on('connection', function(socket) {
           socket.join(slug);
         }
 
-
-
         fn(game);
       }
     });
   });
+
 
   socket.on('getImageAssets', function(filter, width, height, limit, offset, fn) {
     var slug = '',

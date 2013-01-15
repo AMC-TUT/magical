@@ -9,8 +9,31 @@
   window.onmessage = function(e) {
 
     // socket.io
-    var address = 'http://' + window.location.hostname + '/editor';
-    var socket = io.connect(address);
+    var address = 'http://' + window.location.hostname;
+    //var socket = io.connect(address);
+    var socket = io.connect(address, {
+      resource: 'editor/socket.io'
+    });
+
+
+    var sessionid = $.cookie('sessionid');
+    var csrftoken = $.cookie('csrftoken');
+    var paths = window.location.pathname.split('/');
+    var slug = _.last(paths);
+
+    var credentials = {
+      sessionid: sessionid,
+      csrftoken: csrftoken,
+      slug: slug
+    };
+    console.log('credentials:');
+    console.log(credentials);
+    
+    socket.emit('setUserCredentials', credentials, function(data) {
+      console.log(data);
+      //callback(data);
+      Parser.getGame(e.data, socket);
+    });
 
     socket.on('connecting', function() {
       console.log('websocket connecting (game)');
@@ -24,11 +47,15 @@
       console.log('websocket connected (game)');
     });
 
+    socket.on('error', function () {
+      console.log('socket error (game)');
+    });
+
     if (e.origin !== window.location.origin) {
       return;
     }
 
-    Parser.getGame(e.data, socket);
+    
   };
 
   $(document).on('click tap', '.volume-button', function(event) {
