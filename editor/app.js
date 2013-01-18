@@ -313,13 +313,19 @@ var editor = io.sockets.on('connection', function(socket) {
           url: djangoUri + 'api/v1/games/' + slug,
           jar: j
         }, function(error, response, body) {
+          console.log('=================');
+          console.log('ERROR: ' + error);
+          console.log('RESPONSE STATUS: ' + response.statusCode);
           if(!error && response.statusCode == 200) {
+            console.log('BODY: ' + body);
             game = JSON.parse(body);
+            console.log('GAME: ' + game);
 
             if(_.isObject(game)) {
               game.revision = myMagos.checkGameRevision(game.revision.data);
 
               var json = JSON.stringify(game);
+              console.log('GAME JSON: ' + json);
               client.set('game:' + slug, json, redis.print);
               fn(game);
             } else {
