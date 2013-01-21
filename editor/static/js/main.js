@@ -1610,10 +1610,12 @@ $(function() {
 
             var sceneArray = [];
             _.each(scene.sceneComponents, function(component) {
+              console.log(component.oid);
               // sceneArray.push( App.SceneComponent.create({ title: component.title, slug: component.slug, sprite: component.sprite, properties: component.properties }) );
               sceneArray.push(App.CanvasComponent.create({
                 slug: component.slug,
                 position: component.position,
+                oid: component.oid,
                 properties: component.properties
               }));
               // TODO component properties
@@ -1970,13 +1972,16 @@ $(function() {
       $(".canvas-pane").on('click tap', 'img.' + itemClass, function(event){
         var $tgt = $(event.target),
           oid = $tgt.data('oid');
-
+        console.log('* ITEMTYPE: ' + itemType);
+        console.log('* ITEM OID: ' + oid);
         var item = App.scenesController.getPath('selected.' + itemType).findProperty('oid', oid);
+        console.log('* ITEM: ');
+        console.log(item);
         App.scenesController.getPath('selected.'+ itemType).removeObject(item);
 
         $tgt.remove();
         
-        if(itemType === 'sceneComponents') {            
+        if(itemType === 'sceneComponents') {
           if(slug === 'background') {
             $scene.css('background-image', 'none');
           }
@@ -2024,13 +2029,14 @@ $(function() {
         
 
         _.each(sceneComponents, function(sceneComponent) {
+          console.log(sceneComponent.oid);
           var top = sceneComponent.position.top,
             left = sceneComponent.position.left,
             slug = sceneComponent.slug,
             oid = sceneComponent.oid,
             properties = sceneComponent.properties;
 
-          var img = '<img src="/editor/static/img/icons/icon-' + slug + '.png" data-slug="' + slug + '" class="canvas-item canvas-scene-component" style="position:absolute;left:' + left + 'px;top:' + top + 'px;">';
+          var img = '<img src="/editor/static/img/icons/icon-' + slug + '.png" data-slug="' + slug + '" data-oid="' + oid + '" class="canvas-item canvas-scene-component" style="position:absolute;left:' + left + 'px;top:' + top + 'px;">';
           var $img = $(img);
 
           if(slug === 'background' && _.isObject(sceneComponent.properties) && _.isString(properties.sprite)) {
@@ -2234,15 +2240,21 @@ $(function() {
 
             $tgt.remove();
           });
-
           var position = $img.position();
+          var pos_left = Math.round(position.left);
+          var pos_top = Math.round(position.top);
+
+          var oid = slug + pos_left + pos_top;
+          //console.log(oid);
           var obj = {
-            'slug': slug,
+            oid: oid,
+            slug: slug,
             position: {
-              'left': Math.round(position.left),
-              'top': Math.round(position.top)
+              left: pos_left,
+              top: pos_top
             }
           };
+
           console.log(obj);
 
           App.scenesController.getPath('selected.sceneComponents').pushObject(obj);
