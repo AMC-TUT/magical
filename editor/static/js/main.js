@@ -1026,13 +1026,10 @@ $(function() {
 
         console.log('magos changes');
 
-        App.magosesController.set('content', Em.copy(App.magosesController.get('content'), true));
-
-        //App.magosesController.get('content').findProperty('magos', 'artifex').get('user')
+        //App.magosesController.set('content', Em.copy(App.magosesController.get('content'), true));
 
         setTimeout(function() {
           Em.run.next(function() {
-            //
             refreshSidebar($('.sortable-sidearea'));
           });
         }, 500);
@@ -1083,10 +1080,22 @@ $(function() {
       },
       selectedObserver: function() {
         var controller = this;
-        var magos = this.get('selected');
+        var magos = this.get('selected'),
+            user = App.usersController.get('user');
+        console.log(user);
+        var prevMagos = App.magosesController.get('content').findProperty('user', user);
+        if(prevMagos) {
+          console.log('Previous MAGOS found: ' + prevMagos.magos);
+          prevMagos.set('user', null);
+        }
         console.log('Change user magos to: ' + magos);
+
         if(magos) {
-            App.usersController.set('user.magos', magos);
+          var newMagos = App.magosesController.get('content').findProperty('magos', magos);
+          if (newMagos) {
+            newMagos.set('user', user);
+          }
+          App.usersController.set('user.magos', magos);
         }
 
         if(magos !== 'arcitectus') {
@@ -1100,9 +1109,11 @@ $(function() {
     App.MagosView = Em.View.extend({
       contentBinding: 'App.magosesController.content',
       classNames: ['sidebar', 'sortable-sidearea'],
-      didInsertElement: function() {
 
+      didInsertElement: function() {
+        console.log('== MAGOS VIEW didInsertElement ==');
         var $sortableArea = this.$();
+        $sortableArea.sortable();
 
         Em.run.next(function() {
 
@@ -1124,8 +1135,7 @@ $(function() {
 
       }.observes('content.@each.busy'),
       selectedObserver: function() {
-        console.log('** WE SHOULD UPDATE SIDEBAR **');
-
+        
         /*
       console.log('selectedObserver: function() {');
 
@@ -1725,7 +1735,6 @@ $(function() {
 
     socket.on('refreshRevision', function(game) {
       if(_.isObject(game)) {
-        console.log('REVISION DATA UPDATED!!!');
         console.log(game);
         console.log(game.revision);
         //App.gameController.get('content').set('revision', App.Revision.create(game.revision));
@@ -1919,7 +1928,6 @@ $(function() {
     });
 
     function refreshSidebar($sortableArea) {
-      console.log('REFRESH SIDEBAR');
       // sortable well
       $sortableArea.sortable({
         placeholder: "sortable-highlight",
