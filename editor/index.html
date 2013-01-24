@@ -7,6 +7,7 @@
   <meta name="author" content="Magical">
   <link href="/editor/static/css/main.css" rel="stylesheet">
   <link id="theme" href="/editor/static/css/dark.css" rel="stylesheet">
+  <link href="/editor/static/css/flash.css" rel="stylesheet">
 </head>
 
 <body>
@@ -530,7 +531,7 @@
       </div><!--/ left side-->
 
       <div class="span3">
-          <script type="text/x-handlebars">
+          <script type="text/x-handlebars" data-template-name='magos-view-template'>
           {{#view App.MagosView}}
             {{#each content}}
               <div class="sortable-item well">
@@ -798,6 +799,15 @@
   </div>
   </script>
 
+  <!-- flash messages -->
+  <script type="text/x-handlebars">
+    {{#view Ember.FlashView id="flash-view"}}
+      <div id="message">
+        {{content.message}}
+      </div>
+    {{/view}}
+  </script>
+
   <audio id="potion-sound" preload src="/editor/static/audio/magic-chime-06.wav"></audio>
 
   <script type="text/javascript">
@@ -813,6 +823,10 @@
   <script src="/editor/static/js/vendor/ember.js"></script>
   <script src="/editor/socket.io/socket.io.js"></script>
   <script src="/editor/static/js/plugins.js"></script>
+  <script src="/editor/static/js/vendor/flash_message.js"></script>
+  <script src="/editor/static/js/vendor/flash_controller.js"></script>
+  <script src="/editor/static/js/vendor/flash_queue.js"></script>
+  <script src="/editor/static/js/vendor/flash_view.js"></script>
   <script src="/editor/static/js/main.js"></script>
 
 </body>

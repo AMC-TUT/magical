@@ -760,6 +760,7 @@ $(function() {
               } else {
                 // cannot remove
                 console.log('Can not remove gameComponent');
+                App.setFlash('error', 'Can not remove game component. It is in use.')
               }
 
             }
@@ -827,10 +828,9 @@ $(function() {
 
         } else {
           // component w/ same name already exists
-          
+          App.setFlash('error', 'Item name is already in use. Please choose a different name.');        
           return false;
         }
-
 
       }
     });
@@ -1028,6 +1028,8 @@ $(function() {
 
         App.magosesController.set('content', Em.copy(App.magosesController.get('content'), true));
 
+        //App.magosesController.get('content').findProperty('magos', 'artifex').get('user')
+
         setTimeout(function() {
           Em.run.next(function() {
             //
@@ -1082,17 +1084,11 @@ $(function() {
       selectedObserver: function() {
         var controller = this;
         var magos = this.get('selected');
-        console.log('CHANGE MAGOS FOR USER');
-        console.log(magos);
-        var user = App.usersController.get('user'),
-            magosObj = controller.get('content').findProperty('user', user);
-        if(magos && user) {
-          user.set('magos', magos);
-          magosObj.set('user', user);
-          
+        console.log('Change user magos to: ' + magos);
+        if(magos) {
+            App.usersController.set('user.magos', magos);
         }
-        console.log(user);
-        console.log(magos);
+
         if(magos !== 'arcitectus') {
           $('.chest-container').removeClass('arcitectus-magos');
         } else {
@@ -1128,6 +1124,8 @@ $(function() {
 
       }.observes('content.@each.busy'),
       selectedObserver: function() {
+        console.log('** WE SHOULD UPDATE SIDEBAR **');
+
         /*
       console.log('selectedObserver: function() {');
 
@@ -1163,6 +1161,11 @@ $(function() {
         $('#image-assets').modal().on('show');
       }
     });
+
+    App.setFlash = function(type, mesg) {
+      Em.flashQueue.pushFlash(type, mesg);
+    };
+
 
     /**************************
      * InfoBox Views
@@ -1916,6 +1919,7 @@ $(function() {
     });
 
     function refreshSidebar($sortableArea) {
+      console.log('REFRESH SIDEBAR');
       // sortable well
       $sortableArea.sortable({
         placeholder: "sortable-highlight",
