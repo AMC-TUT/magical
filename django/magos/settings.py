@@ -1,5 +1,4 @@
-﻿import apps
-import sys
+﻿import apps, sys, os
 from django.conf import global_settings
 import djcelery
 
@@ -9,6 +8,7 @@ djcelery.setup_loader()
 #    sys.path.append("C:\\work\\projektit\\mag\\magical\\django")
     
 # Django settings for magos project.
+PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),"..")) 
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -99,7 +99,8 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     #'c:/work/projektit/mag/magical/django/static/',
-    '/Users/mkoskela/work/tut/projects/magos/code/magical/django/static/',
+    #'/Users/mkoskela/work/tut/projects/magos/code/magical/django/static/',
+    PROJECT_DIR + '/static/',
     #'/home/mkoskela/dev/magical/django/static/',
 )
 
@@ -142,7 +143,8 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     #'c:/work/projektit/mag/magical/django/templates',
-    '/Users/mkoskela/work/tut/projects/magos/code/magical/django/templates',
+    #'/Users/mkoskela/work/tut/projects/magos/code/magical/django/templates',
+    PROJECT_DIR + '/templates',
     #'/home/mkoskela/dev/magical/django/templates',
 )
 
