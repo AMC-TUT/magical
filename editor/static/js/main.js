@@ -8,8 +8,12 @@
 $(function() {
 
   (function(App, $, Em, undefined) {
-
     "use strict";
+
+    App.settings = {
+      djangoUri : 'http://localhost:8080/'
+      //djangoUri : 'http://magos.pori.tut.fi/';
+    };
 
     /**************************
      * NumberField, ColorField
@@ -45,19 +49,48 @@ $(function() {
       content: [],
       user: null
     });
-/*
-    App.usersController.get('content').pushObject(
-    App.User.create({
-      userName: 'matti',
-      firstName: 'Matti',
-      lastName: 'Vanhanen',
-      role: 'student'
-    }));
-    
-    // TODO
-    var user = App.usersController.get('content').findProperty('userName', 'mkoskela');
-    App.usersController.set('user', user);
-*/
+
+
+    /**************************
+     * Room
+     **************************/
+
+    App.Room = Em.Object.extend({
+      slug: null,
+      authors: [],
+      teachers: [],
+      magosesBinding: 'App.magosesController.content'
+      /*,
+      magoses: [
+        { 'name': 'arcitectus', 'inUse': false },
+        { 'name': 'principes', 'inUse': false },
+        { 'name': 'physicus', 'inUse': false },
+        { 'name': 'artifex', 'inUse': false }
+      ]*/
+    });
+
+    App.roomController = Em.Object.create({
+      content: null,
+      populate: function(gameData) {
+        var controller = this;
+        console.log('POPULATE ROOM');
+        console.log(gameData);
+        App.dataSource.joinRoom(gameData, function(data) {
+          console.log(data);
+          if(_.isObject(data)) {
+            console.log('User joined room.');
+            var room = App.Room.create(data);
+            controller.set('content', room);
+
+          } else {
+            // user has no access to room
+            console.log('Not authorized.');
+            window.location.replace("http://localhost:8080");
+          }
+        });
+      }
+    });
+
     /**************************
      * Game
      **************************/
@@ -83,11 +116,8 @@ $(function() {
       content: null,
       populate: function() {
         var controller = this;
-
         // set user credentials
         App.dataSource.setUserCredentials(function(data) {          
-          //console.log('USER CREDS:');
-          //console.log(data);
           var gameSlug = data.slug;
           var currentUser = App.User.create({
               userName: data.userName,
@@ -96,15 +126,37 @@ $(function() {
               role: data.role
             });
           App.usersController.get('content').pushObject(currentUser);
-          
+
           var thisUser = App.usersController.get('content').findProperty('userName', data.userName);
           App.usersController.set('user', thisUser);
+          // add user to other instances also
+          App.dataSource.addUser(thisUser, function(data) {
+            console.log('emit (add user)');
+          });
 
           // join game after credential
           App.dataSource.joinGame(function(data) {
             // set content to game controller
             data.slug = gameSlug;
+            console.log('GAME data:');
+            console.log(data);
             controller.set('content', data);
+
+            App.roomController.populate(data);
+            /*
+            App.dataSource.joinRoom(data, function(data) {
+              console.log(data);
+              if(_.isObject(data)) {
+                console.log('User joined room.');
+
+              } else {
+                // user has no access to room
+                console.log('Not authorized.');
+                window.location.replace("http://localhost:8080");
+              }
+            });
+            */
+
           });
         });
 
@@ -161,7 +213,6 @@ $(function() {
       },
       selectedObserver: function() {
         var controller = this;
-        console.log('- - - - SELECTED SCENE OBSERVER');
 
         var sceneName = this.getPath('selected.name');
         var selected = controller.get('selected');
@@ -242,9 +293,24 @@ $(function() {
     App.ImageAsset = Em.Object.extend({
       name: null,
       slug: null,
-      file: null,
+      file: null, // this is uuid
       state: 0,
-      type: 0 // 0=block, 1=anim, 2=background
+      type: 0, // 0=block, 1=anim, 2=background
+      apiPath: function() {
+        var canvas = App.gameController.get('content').get('revision').canvas;
+        var blockSize = parseInt(canvas.blockSize, 10),
+            rows = parseInt(canvas.rows, 10),
+            cols = parseInt(canvas.columns, 10);
+        // block size for block
+        var width = blockSize, 
+            height = blockSize;
+        if(this.get('type') == 2) {
+          // block size for background
+          width = cols * blockSize;
+          height = rows * blockSize;
+        }
+        return App.settings.djangoUri + 'game/image/' + this.get('file') + '/' + width + 'x' + height;
+      }.property('file')
     });
 
     App.imageAssetsController = Em.ArrayController.create({
@@ -464,8 +530,16 @@ $(function() {
       active: false,
       icon: function() {
         //return '/editor/user-media/images/' + this.getPath('properties.sprite') + '.png';
-        console.log(this.getPath('properties.file'));
-        return '/editor/' + this.getPath('properties.file');
+        var file_uuid = this.getPath('properties.file');
+        var canvas = App.gameController.get('content').get('revision').canvas;
+        var blockSize = parseInt(canvas.blockSize, 10),
+            rows = parseInt(canvas.rows, 10),
+            cols = parseInt(canvas.columns, 10);
+        // block size for block
+        var width = blockSize, 
+            height = blockSize;
+        return App.settings.djangoUri + 'game/image/' + file_uuid + '/' + width + 'x' + height;
+        //return '/editor/' + this.getPath('properties.file');
       }.property('properties'),
       snapToGrid: function() {
         var snap = this.getPath('properties.controls.grid');
@@ -858,7 +932,9 @@ $(function() {
           var img_type = $item.data('type');
           var sprite = $item.data('sprite');
           var file = $item.data('file');
-          console.log(img_type);
+
+          var selectedImageAsset = App.imageAssetsController.get('content').findProperty('file', file);
+
           // TODO: If we are updating sceneComponents, should we update potions instead of properties...
           App.selectedComponentController.setPath('content.properties.sprite', sprite);
           App.selectedComponentController.setPath('content.properties.file', file);
@@ -868,7 +944,8 @@ $(function() {
           // TODO proper view update to chest and canvas
           var slugName = App.selectedComponentController.getPath('content.slug');
           //var src = '/editor/user-media/images/' + sprite + '.png';
-          var src = '/editor/' + file;
+          //var src = '/editor/' + file;
+          var src = selectedImageAsset.get('apiPath');
           $('.item-chest').find("[data-slug='" + slugName + "']").attr('src', src);
 
           console.log(src);
@@ -1025,6 +1102,14 @@ $(function() {
       magosObserver: function() {
 
         console.log('magos changes');
+        // update magoses to other instances
+        var user = this.get('user'),
+            magos = this.get('magos');
+        /*
+        App.dataSource.userChangedMagos(user, magos, function(data) {
+          console.log('emit (user changed magos)');
+        });
+        */
 
         //App.magosesController.set('content', Em.copy(App.magosesController.get('content'), true));
 
@@ -1046,7 +1131,7 @@ $(function() {
       selectedBinding: 'App.usersController.user.magos',
       populate: function() {
         var controller = this;
-
+        console.log('POPULATE MAGOSES');
         App.dataSource.getSkillsets(function(data) {
           // set content
           controller.set('content', data);
@@ -1059,15 +1144,51 @@ $(function() {
             console.log(obj.get('magos'));
             console.log(obj.get('user'));
           });
+          // get free magoses in the room (not in use)
+          var freeMagoses = App.roomController.get('content').get('magoses').filterProperty('user', null);
+          //var freeRoomMagoses = _.where(roomMagoses, {inUse: false});
+          //var freeMagosNames = _.pluck(freeRoomMagoses, 'name');
+          console.log(freeMagoses);
+          
+          /*
+          var freeMagoses = App.magosesController.get('content').filter(function (obj) {
+            var magosIsFree = false;
+            if(!_.indexOf(freeMagosNames, obj.magos) < 0) {
+              console.log(obj.magos + ' is taken');              
+            } else {
+              console.log(obj.magos + ' is free');
+              magosIsFree = true;
+            }
+            return (magosIsFree);
+          });
+          */
 
+          var freeMagos = null;
+          //var freeMagoses = App.magosesController.get('content').filterProperty('user', null);
+
+          /*
+          console.log('freeMagoses');
+          console.log(freeMagoses);
+          if(freeMagoses) {
+            // take the first free magos and set it as users role magos
+            freeMagos = freeMagoses[0];
+          }
+          
+          */
           // take the first free magos and set it as users role magos
-          //var freeMagos = controller.get('content').findProperty('user', null);
-
+          var freeMagos = controller.get('content').findProperty('user', null);
           //var freeMagos = controller.get('content').findProperty('magos', 'physicus');
-          var freeMagos = controller.get('content').findProperty('magos', 'artifex');
+          //var freeMagos = controller.get('content').findProperty('magos', 'artifex');
 
           if(_.isObject(freeMagos)) {
+            console.log('Set user to ' + freeMagos.magos);
             freeMagos.set('user', user);
+            App.roomController.get('content').findProperty('magos', freeMagos.magos).set('inUse', true);
+
+            App.dataSource.userChangedMagos(user, freeMagos.magos, function(data) {
+              console.log('emit (user changed magos on login)');
+            });
+
           } else {
             alert('there are no free roles. this should have never happened!');
           }
@@ -1082,15 +1203,15 @@ $(function() {
         var controller = this;
         var magos = this.get('selected'),
             user = App.usersController.get('user');
-        console.log(user);
+
         var prevMagos = App.magosesController.get('content').findProperty('user', user);
         if(prevMagos) {
           console.log('Previous MAGOS found: ' + prevMagos.magos);
           prevMagos.set('user', null);
         }
-        console.log('Change user magos to: ' + magos);
 
         if(magos) {
+          console.log('Change user magos to: ' + magos);
           var newMagos = App.magosesController.get('content').findProperty('magos', magos);
           if (newMagos) {
             newMagos.set('user', user);
@@ -1111,7 +1232,6 @@ $(function() {
       classNames: ['sidebar', 'sortable-sidearea'],
 
       didInsertElement: function() {
-        console.log('== MAGOS VIEW didInsertElement ==');
         var $sortableArea = this.$();
         $sortableArea.sortable();
 
@@ -1137,15 +1257,15 @@ $(function() {
       selectedObserver: function() {
         
         /*
-      console.log('selectedObserver: function() {');
+        console.log('selectedObserver: function() {');
 
-      App.magosesController.set('content', App.magosesController.get('content'));
+        App.magosesController.set('content', App.magosesController.get('content'));
 
-      Em.run.next(function() {
-        //
-        refreshSidebar( $('.sortable-sidearea') );
-      });
-      */
+        Em.run.next(function() {
+          //
+          refreshSidebar( $('.sortable-sidearea') );
+        });
+        */
       }.observes('content.selected')
 
     })
@@ -1180,6 +1300,31 @@ $(function() {
     /**************************
      * InfoBox Views
      **************************/
+
+App.LazyTextField = Ember.View.extend({
+  attributeBindings: ['value', 'type', 'size', 'name', 'placeholder', 'disabled', 'maxlength'],
+  tagName: 'input',
+  type: 'text',
+  getCurrentValue: function() {
+    return this.$().val();
+  }
+});
+
+App.PotionsControlsView = Ember.View.extend({
+  contentBinding: 'App.selectedComponentController.content',
+  methodBinding: 'App.selectedComponentController.content.properties.controls.method',
+      
+/*  template: Em.Handlebars.compile(
+    '<form>' +
+    '{{view App.LazyTextField valueBinding="view.method" viewName="textField"}}' +
+    '<input type="submit" value="Save" {{action save}}>' +
+    '</form>'),*/
+  save: function(e) {
+    e.preventDefault(); e.stopPropagation();
+    this.set('method', this.get('textField').getCurrentValue());
+  }
+});
+
 
     var infobox = App.InfoBoxView = Em.View.create({
       templateName: 'infobox-view'
@@ -1457,6 +1602,32 @@ $(function() {
           callback(data);
         });
       },
+
+      joinRoom: function(gameData, callback) {
+        console.log('JOIN ROOM');
+        
+        socket.emit('joinRoom', gameData, function(data) {
+          callback(data);
+        });
+        
+        /*
+        var sessionid = $.cookie('sessionid');
+        var csrftoken = $.cookie('csrftoken');
+        var paths = window.location.pathname.split('/');
+        var slug = _.last(paths);
+
+        var credentials = {
+          sessionid: sessionid,
+          csrftoken: csrftoken,
+          slug: slug
+        };
+
+        socket.emit('setUserCredentials', credentials, function(data) {
+          callback(data);
+        });
+        */
+      },
+
       shout: function(shout, callback) {
         socket.emit('shout', shout, function(data) {
           callback(data);
@@ -1477,6 +1648,21 @@ $(function() {
           callback(data);
         });
       },
+      addUser: function(user, callback) {
+        socket.emit('addUser', user, function(data) {
+          callback(data);
+        });
+      },
+
+      userChangedMagos: function(user, magos, callback) {
+        console.log('EMIT USER CHANGED MAGOS');
+        console.log(user);
+        console.log(magos);
+        socket.emit('userChangedMagos', user, magos, function(data) {
+          callback(data);
+        });
+      },
+
       saveGame: function(mode, callback) {
         // get game
         var game = App.gameController.get('content'); // JSON.stringify(this.get('content'));
@@ -1569,12 +1755,24 @@ $(function() {
 
         socket.emit('getImageAssets', filter, width, height, limit, offset, function(data) {
           //console.log(data);
-          callback(data);
+          var imageAssets = [];
+          _.each(data, function(obj) {
+            imageAssets.push(
+              App.ImageAsset.create({
+                'name': obj.name,
+                'slug': obj.slug,
+                'file': obj.file, // this is actually uuid
+                'state': obj.state,
+                'type': obj.type
+              })
+            );
+          });
+
+          callback(imageAssets);
         });
 
       },
       joinGame: function(callback) {
-
         socket.emit('joinGame', function(data) {
           var game = App.Game.create();
           // debug
@@ -1658,14 +1856,14 @@ $(function() {
           var audios = [];
           var sprites = [];
 
-          var rev = {
+          var rev = App.Revision.create({
             //'authors': authors,
             'canvas': revision.canvas,
             'scenes': scenes,
             'audios': audios,
             'sprites': sprites,
             'gameComponents': gameComponentsA
-          };
+          });
 
           game.set('revision', rev);
 
@@ -1732,6 +1930,38 @@ $(function() {
       App.gameComponentsController.updateItem('slug', slug, selectedComponent);
     });
 
+    socket.on('addUser', function(user) {
+      // add user if same user does not already exist
+      console.log('>>> SOCKET REQUEST: addUser');
+      console.log(user);
+      if(_.isObject(user)) {
+        if(!App.usersController.get('content').findProperty('userName', user.userName)) {
+          App.usersController.get('content').pushObject(App.User.create(user));
+        }
+      }
+    });
+
+    socket.on('userChangedMagos', function(user, magos) {      
+      console.log('>>> SOCKET REQUEST: userChangedMagos');
+      console.log(user);
+      console.log(magos);
+      // remove user from old magos
+      if(user.magos) {
+        var prevMagos = App.magosesController.get('content').findProperty('magos', user.magos);
+        if(_.isObject(prevMagos)) {
+          prevMagos.set('user', null);
+        }
+      }
+      // set user to new magos
+      var tgtMagos = App.magosesController.get('content').findProperty('magos', magos);
+      console.log(tgtMagos.user);
+      if(!tgtMagos.user) {
+        tgtMagos.set('user', user);
+      } else {
+        console.log('magos already in use');
+      }
+
+    });
 
     socket.on('refreshRevision', function(game) {
       if(_.isObject(game)) {
@@ -1965,6 +2195,13 @@ $(function() {
 
             App.magosesController.set('selected', tgtMagos);
             App.usersController.set('user.magos', tgtMagos);
+            
+            var user = App.usersController.get('user');
+            // inform other authors of the change
+            App.dataSource.userChangedMagos(user, tgtMagos, function(data) {
+              console.log('emit (user changed magos)');
+            });
+            
           }
         });
 
@@ -2023,13 +2260,15 @@ $(function() {
             slug = gameComponent.slug,
             oid = gameComponent.oid,
             sprite = null,
-            file = null;
+            file = null,
+            apiPath = null;
           // make sure we have no ghost components
           if(App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug)) {
             sprite = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).getPath('properties.sprite');
             file = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).getPath('properties.file');
+            apiPath = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).getPath('icon');
 
-            var img = '<img src="/editor/' + file + '" data-slug="' + slug + '" data-oid="' + oid + '" class="canvas-item canvas-game-component">';
+            var img = '<img src="' + apiPath + '" data-slug="' + slug + '" data-oid="' + oid + '" class="canvas-item canvas-game-component">';
             var $img = $(img);
 
             var cssRow = row + 1,
@@ -2041,7 +2280,6 @@ $(function() {
         
 
         _.each(sceneComponents, function(sceneComponent) {
-          console.log(sceneComponent.oid);
           var top = sceneComponent.position.top,
             left = sceneComponent.position.left,
             slug = sceneComponent.slug,

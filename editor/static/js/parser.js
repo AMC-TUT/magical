@@ -15,6 +15,10 @@ var Parser = {
   game: null,
   socket: null,
   blockSize: null,
+  settings: {
+      djangoUri: 'http://localhost:8080/'
+      //djangoUri: 'http://magos.pori.tut.fi/';
+  },
 
   parseGame: function(game) {
     // set global vars
@@ -52,7 +56,7 @@ var Parser = {
     var width = canvas.blockSize * canvas.columns;
     // set global var
     Parser.blockSize = canvas.blockSize;
-
+    console.log('BLOCK SIZE: ' + canvas.blockSize);
     Crafty.init(width, height);
     // obj for some magos vars
     Crafty.magos = {};
@@ -85,8 +89,10 @@ var Parser = {
       // vars
       //var sprite = (!_.isUndefined(component.properties.sprite) && _.isString(component.properties.sprite)) ? component.properties.sprite : '';
       var sprite = (!_.isUndefined(component.properties.file) && _.isString(component.properties.file)) ? component.properties.file : '';
+      console.log(sprite);
       // if exists
       if (sprite.length) {
+        //console.log(Parser.settings.djangoUri + 'game/image/' + sprite + '/' + Parser.blockSize + 'x' + Parser.blockSize);
         var obj = {};
         obj[sprite + '-sprite'] = [0, 0];
 

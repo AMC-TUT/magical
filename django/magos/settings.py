@@ -79,6 +79,7 @@ MEDIA_ROOT = '/Users/mkoskela/dev/django_media/magos/'
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = '/media/'
+USER_MEDIA_PREFIX = 'user-media/images/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -169,7 +170,7 @@ CONVERT_TYPE_VALUE = 0 # 0-Keep original, 1-Convert to MP3, 2-Convert to WAV, 3-
 # file upload handlers
 FILE_UPLOAD_HANDLERS = (
     #'apps.game.upload_handlers.ContentUploadHandler',
-    'django.core.files.uploadhandler.MemoryFileUploadHandler',
+    #'django.core.files.uploadhandler.MemoryFileUploadHandler',
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
 )
 # -----------------------------------------------------------------------------

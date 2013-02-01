@@ -156,29 +156,51 @@ var editor = io.sockets.on('connection', function(socket) {
     socket.set('slug', credentials.slug, function() {});
     socket.set('sessionid', credentials.sessionid, function() {});
     socket.set('csrftoken', credentials.csrftoken, function() {});
+    console.log('SET USER CREDS');
 
+    socket.set('username', globalSessionObj.userName, function() {});
+    socket.set('lang', globalSessionObj.lang, function() {});
+    socket.set('org', globalSessionObj.org, function() {});
+    socket.set('role', globalSessionObj.role, function() {});
+
+    credentials.lang = globalSessionObj.lang;
+    credentials.userName = globalSessionObj.userName;
+    credentials.org = globalSessionObj.org;
+    credentials.role = globalSessionObj.role;
+    credentials.firstName = globalSessionObj.firstName;
+    credentials.lastName = globalSessionObj.lastName;
+    
+    //console.log(globalSessionObj);
+    fn(credentials);
+
+    /*    
     client.get('game:' + credentials.slug, function(err, data) {
-      /*
-      //data ==> is not django session data here but game json from redis
-      var session = myMagos.parseSessionObject(data);
-      console.log('session');
-      console.log(session);
-      */
-      socket.set('username', globalSessionObj.userName, function() {});
-      socket.set('lang', globalSessionObj.lang, function() {});
-      socket.set('org', globalSessionObj.org, function() {});
-      socket.set('role', globalSessionObj.role, function() {});
+        
+        //data ==> is not django session data here but game json from redis
+        //var session = myMagos.parseSessionObject(data);
+        //console.log('session');
+        //console.log(session);
+        
+        socket.set('username', globalSessionObj.userName, function() {});
+        socket.set('lang', globalSessionObj.lang, function() {});
+        socket.set('org', globalSessionObj.org, function() {});
+        socket.set('role', globalSessionObj.role, function() {});
 
-      credentials.lang = globalSessionObj.lang;
-      credentials.userName = globalSessionObj.userName;
-      credentials.org = globalSessionObj.org;
-      credentials.role = globalSessionObj.role;
-      credentials.firstName = globalSessionObj.firstName;
-      credentials.lastName = globalSessionObj.lastName;
+        credentials.lang = globalSessionObj.lang;
+        credentials.userName = globalSessionObj.userName;
+        credentials.org = globalSessionObj.org;
+        credentials.role = globalSessionObj.role;
+        credentials.firstName = globalSessionObj.firstName;
+        credentials.lastName = globalSessionObj.lastName;
 
-      console.log(globalSessionObj);
-      fn(credentials);
+
+        //console.log(globalSessionObj);
+        fn(credentials);
+
+      } // if
+
     });
+    */
   });
 
   socket.on('shout', function(shout, fn) {
@@ -219,6 +241,26 @@ var editor = io.sockets.on('connection', function(socket) {
       fn(componentSlug);
     });
   });
+
+  socket.on('addUser', function(user, fn) {
+    console.log('SOCKET: addUser');
+    console.log(user);
+    socket.get('slug', function(err, slug) {
+      socket.broadcast.in(slug).emit('addUser', user);
+      fn(user);
+    });
+  });
+
+  socket.on('userChangedMagos', function(user, magos, fn) {
+    console.log('SOCKET: userChangedMagos');
+    console.log(user);
+    console.log(magos);
+    socket.get('slug', function(err, slug) {
+      socket.broadcast.in(slug).emit('userChangedMagos', user, magos);
+      fn(user, magos);
+    });
+  });
+
 
   socket.on('saveGame', function(mode, game, fn) {
     var result = false;
@@ -305,6 +347,7 @@ var editor = io.sockets.on('connection', function(socket) {
       var game;
 
       if(_.isNull(data)) {
+        console.log('GET GAME DATA FROM DJANGO');
         // query from django and set to redis
         // set session cookies for request
         var j = myMagos.createCookieJar(sessionid, csrftoken);
@@ -313,19 +356,13 @@ var editor = io.sockets.on('connection', function(socket) {
           url: djangoUri + 'api/v1/games/' + slug,
           jar: j
         }, function(error, response, body) {
-          console.log('=================');
-          console.log('ERROR: ' + error);
-          console.log('RESPONSE STATUS: ' + response.statusCode);
           if(!error && response.statusCode == 200) {
-            console.log('BODY: ' + body);
             game = JSON.parse(body);
-            console.log('GAME: ' + game);
-
+            console.log('--game--');
+            console.log(game);
             if(_.isObject(game)) {
-              game.revision = myMagos.checkGameRevision(game.revision.data);
-
+              game.revision = myMagos.checkGameRevision(game.revision);
               var json = JSON.stringify(game);
-              console.log('GAME JSON: ' + json);
               client.set('game:' + slug, json, redis.print);
               fn(game);
             } else {
@@ -362,6 +399,87 @@ var editor = io.sockets.on('connection', function(socket) {
         fn(game);
       }
     });
+  });
+
+
+  socket.on('joinRoom', function(gameData, fn) {
+    console.log('-- JOIN ROOM');
+    console.log(gameData);
+    
+      if(!_.isNull(gameData)){
+        //var gameData = JSON.parse(data);
+        if(_.isObject(gameData)) {
+          console.log('>>>>');
+          console.log(gameData);
+          console.log('<<<<');
+
+          // is user an author of this game?
+          // TODO: or teacher?
+          var isTeacher = (globalSessionObj.role == 'teacher') ? true : false;
+          console.log(isTeacher);
+          var authorUserNames = _.pluck(gameData.authors, 'userName');
+          console.log(authorUserNames);
+          var isAuthorized = (_.contains(authorUserNames, globalSessionObj.userName)) ? true : false;
+          if(isAuthorized) {
+            console.log('User "' + globalSessionObj.userName + '" authorized.');
+
+            client.get('room:' + gameData.slug, function(err, roomData) {
+              if(_.isNull(roomData)) {
+                // no previously saved room data
+                var roomData = {
+                  slug: gameData.slug,
+                  authors: [],
+                  teachers: []/*,
+                  magoses: [
+                    { 'name': 'arcitectus', 'inUse': false },
+                    { 'name': 'principes', 'inUse': false },
+                    { 'name': 'physicus', 'inUse': false },
+                    { 'name': 'artifex', 'inUse': false }
+                  ]*/
+                };
+                if (isTeacher) {
+                  roomData.teachers.push(globalSessionObj.userName);
+                } else {
+                  roomData.authors.push(globalSessionObj.userName);
+                }               
+                var jsonRoomData = JSON.stringify(roomData);
+                client.set('room:' + gameData.slug, jsonRoomData, redis.print);
+
+              } else {
+                // room data exists
+                roomData = JSON.parse(roomData);
+                console.log('We have room data: ' + JSON.stringify(roomData));
+                if (isTeacher) {
+                  console.log("SHOULD ADD TEACHER");
+                  if(!_.contains(roomData.teachers, globalSessionObj.userName)) {
+                    // add teacher
+                    roomData.teachers.push(globalSessionObj.userName);
+                    console.log('Teacher added to room.');
+                  }
+                } else {
+                  console.log("SHOULD ADD AUTHOR");
+                  console.log(roomData.authors.length);
+                  if(!_.contains(roomData.authors, globalSessionObj.userName) && roomData.authors.length < 4) {
+                    // add authorized user if there's room
+                    roomData.authors.push(globalSessionObj.userName);
+                    console.log('Author added to room.');
+                  }
+                }
+                var jsonRoomData = JSON.stringify(roomData);
+                client.set('room:' + gameData.slug, jsonRoomData, redis.print);
+              }
+              fn(roomData);
+            });
+
+
+          } else {
+            console.log('User "' + globalSessionObj.userName + '" not authorized!');
+            fn(false);
+          }
+        }
+      }
+
+
   });
 
 
@@ -661,6 +779,9 @@ myMagos.checkGameRevision = function(revision) {
   if(_.isString(revision)) {
     revision = JSON.parse(revision);
   }
+
+  console.log("::::REVISON:::::");
+  console.log(revision);
 
   if(!_.isObject(revision.canvas)) {
     // fallback 4 dev

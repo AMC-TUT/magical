@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from audiofield.fields import AudioField
 import datetime, mimetypes, hashlib, time
 from imagekit.models import ImageSpecField
+from magos.settings import USER_MEDIA_PREFIX
 
 CONST_DEFAULT_BLOCK_SIZE = 65536 # 64k
 
@@ -26,9 +27,23 @@ def get_image_path(instance, filename):
     """
     Come up with individual name for uploaded image file and return path.
     """
+    #import ipdb;ipdb.set_trace()
     ext = filename.split('.')[-1]
-    filename = "%s.%s" % (uuid.uuid4(), ext)
-    return os.path.join('user-media/images', filename)
+    image_uuid = uuid.uuid4()
+    instance.image_uuid = image_uuid
+    filename = "%s.%s" % (image_uuid, ext)
+    return os.path.join(USER_MEDIA_PREFIX, filename)
+
+def get_thumb_path(instance, filename):
+    """
+    Come up with individual name for thumbnail image file.
+    """
+    #import ipdb;ipdb.set_trace()
+    orig_path = instance.original.image_file.name.split('/')[-1]
+    image_name, ext = orig_path.split('.')
+    filename = image_name + '_' + str(instance.width) + 'x' + str(instance.height) + '.' + ext
+
+    return os.path.join(USER_MEDIA_PREFIX + 'thumbs/', filename)
 
 
 def timestamp():
@@ -39,6 +54,20 @@ def timestamp():
 
 
 """ Model definitions -> """
+
+class ContentFileType(models.Model):
+    """Content type for ContentFile."""
+    main_type = models.CharField(max_length=16, db_index=True)
+    sub_type = models.CharField(max_length=128, db_index=True)
+
+    class Meta:
+        """Meta class for ContentFileType."""
+        unique_together = (("main_type", "sub_type"),)
+
+    def __unicode__(self):
+        """String representation of the data."""
+        return u'%s/%s' % (self.main_type, self.sub_type)
+
 
 class Role(models.Model):
     """User role model"""
@@ -202,11 +231,11 @@ class Image(models.Model):
     width = models.IntegerField(null=False, blank=False)
     height = models.IntegerField(null=False, blank=False)
     image_file = models.ImageField(upload_to=get_image_path, height_field='height', width_field='width')
-
-    #file = models.ImageField(storage=FILESTORAGE, height_field='height', width_field='width', upload_to=get_path)
-    #sha1 = models.CharField(max_length=40, editable=False, db_index=True, blank=False, null=False, unique=True, default=timestamp)
+    image_uuid = models.CharField(max_length=36, null=True, blank=True)
+    
     sha1 = models.CharField(max_length=40, editable=False, db_index=True)
-
+    content_type = models.ForeignKey('ContentFileType', blank=True, null=True)
+    
     image_type = models.PositiveIntegerField(null=False, blank=False, default=0)
     state = models.PositiveIntegerField(null=False, blank=False, default=0)
     author = models.ForeignKey(User)
@@ -228,6 +257,7 @@ class Image(models.Model):
             self.slug = slugify(self.name)
         self.image_file.open('rb') # returns nothing
         content = self.image_file
+        
         hashgen = hashlib.sha1()
         while True:
             chunk = content.read(CONST_DEFAULT_BLOCK_SIZE)
@@ -236,8 +266,26 @@ class Image(models.Model):
             hashgen.update(chunk)
 
         hash_digest = hashgen.hexdigest()
-        print hash_digest
         self.sha1 = hash_digest
+        
+        #import ipdb;ipdb.set_trace()
+        # analyze content (mime) type
+        # this relies on temporary files written on disk
+        filename = self.image_file.file.temporary_file_path()
+        from apps.game.utils import get_mime_type
+        (main_type, sub_type) = get_mime_type(filename)
+        # if needed, add new content type to db
+        content_file_type, created = ContentFileType.objects.get_or_create(\
+            main_type=main_type, sub_type=sub_type)
+        self.content_type = content_file_type
+        """
+        if main_type == 'image':
+            # this is an image, set meta information
+            set_image_metas(filename, self)
+        """
+
+
+
         super(Image, self).save(*args, **kwargs)
 
 
@@ -409,12 +457,58 @@ class Author(models.Model):
         return u"%s, %s" % (self.game, self.user)
 
 
+class Thumbnail(models.Model):
+    """Thumbnail class for images."""
+    thumbnail = models.ImageField(upload_to=get_thumb_path, height_field='height', width_field='width')
+    original = models.ForeignKey('Image')
+    width = models.IntegerField()
+    height = models.IntegerField()
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+
+    def __unicode__(self):
+        """String representation of the data."""
+        return u'%s created:%s' % \
+                (self.thumbnail.name, self.created)
+
+    def create_thumbnail(self):
+        """Creates a thumbnail."""
+        # resize original image into temporary file
+        from apps.game.utils import make_thumbnail
+        try:
+            tn_file = make_thumbnail(self.original.image_file.file.name, int(self.width), int(self.height))
+            if tn_file:
+                # now move the temporary data into thumbnail storage
+                self.thumbnail.save(self._gen_filename(), tn_file)
+                # we don't need temporary file anymore
+                os.unlink(tn_file.name)
+                return True
+        except IOError, err:
+            print ("IOError when trying to create thumbnail: %s" % err)
+        return False
+
+    def get_or_create_thumbnail(self):
+        """Get or create thumbnail if it does not exist."""
+        #import ipdb;ipdb.set_trace()
+        #thumbs = Thumbnail.objects.filter(original=self.original, width=self.width, height=self.height)
+        #if len(thumbs) == 0:
+        if not self.thumbnail.name or not self.thumbnail.storage.exists(self.thumbnail.name):
+            # create the thumbnail
+            if self.create_thumbnail():
+                self.save()
+            else:
+                return False
+        # get the thumbnail
+        return self.thumbnail
+
+    def _gen_filename(self):
+        """Generate filename with thumbnail dimensions."""
+        image_name, ext = self.original.image_file.name.split('.')
+        return '%s_%sx%s.%s' % (image_name, self.width, self.height, ext)
 
 """
 Signals functions
 """
 
-        
 def create_user_profile(sender, instance, created, **kwargs):
     profile = None
     default_country, country_created = Country.objects.get_or_create(name='Suomi', slug='finland')

@@ -75,5 +75,5 @@ admin.site.register(Audio, AudioFileAdmin)
 
 # remove automatically filled fields from Image admin
 class ImageAdmin(admin.ModelAdmin):
-    exclude = ['height', 'width', 'slug']
+    exclude = ['height', 'width', 'slug', 'content_type', 'image_uuid']
 admin.site.register(Image, ImageAdmin)

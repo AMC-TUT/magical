@@ -201,11 +201,13 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
         if revision:
             revision_dict['data'] = revision.data
 
-        jsonSerializer = JSONSerializer()
-        revision_json = jsonSerializer.serialize(revision)
+        json_data = ""
+        try:
+            json_data = json.loads(revision.data)
+        except ValueError:
+            pass
+        result_dict['revision'] = json_data
 
-        result_dict['revision'] = revision_json
-        
         response = Response(200, result_dict)
         return self.render(response)
 
@@ -815,7 +817,8 @@ class ImageView(RequestMixin, ResponseMixin, View):
             result_dict['type'] = image.image_type
             result_dict['state'] = image.state
             #result_dict['file'] = image.image_url # base64 encoded
-            result_dict['file'] = image.image_file.name # path
+            #result_dict['file'] = image.image_file.name # path
+            result_dict['file'] = image.image_uuid # image uuid
             results_list.append(result_dict)
         
         response = Response(200, { \

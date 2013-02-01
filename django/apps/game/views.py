@@ -7,16 +7,20 @@ from django.utils import simplejson
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.core import serializers
+from django.core.exceptions import MultipleObjectsReturned
+from django.core.servers.basehttp import FileWrapper
 from django.db.models import Q
+import json
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 
-from apps.game.models import Game, Revision, Author, Highscore, Review
+from apps.game.models import Game, Revision, Author, Highscore, Review, Image, Thumbnail
 from apps.game.forms import GameForm
 from apps.game.decorators import ajax_login_required
 
 from django.contrib.auth.models import User
+from magos.settings import USER_MEDIA_PREFIX
 
 def home(request):
     tpl = 'apps/game/index.html'
@@ -92,6 +96,37 @@ def game_details(request, gameslug):
                 'highscores' : highscores, 'has_reviewed':has_reviewed, 'num_reviews':num_reviews, 'avg_stars':avg_stars, \
                 'can_review': can_review, 'editor_url' : editor_url })
 
+
+def download_image(request, uuid, width, height):
+    """View for downloading image with uuid.
+       Creates image with given width and height on the fly
+       if it does not exist."""
+    #import ipdb;ipdb.set_trace()
+    originals = Image.objects.filter(image_uuid=uuid)
+    if len(originals) == 0:
+        raise Http404("Image not found")
+    original = originals[0]
+
+    try:
+        thumbnail_obj, created = Thumbnail.objects.get_or_create(\
+            original=original, width=width, height=height)
+    except MultipleObjectsReturned:
+        thumbnail_obj = Thumbnail.objects.filter(original=original.file,
+                        width=width, height=height)[0]
+    thumbnail = thumbnail_obj.get_or_create_thumbnail()
+    """
+    if not thumbnail:
+        return _show_other_thumbnail(settings.MEDIA_ROOT + \
+                        "/customi/images/content/default.png",
+                        width, height)
+    """
+    wrapper = FileWrapper(open(thumbnail.path))
+    response = HttpResponse(wrapper, content_type=str(original.content_type))
+    response['Content-Length'] = thumbnail.size
+    return response
+
+
+
 @login_required
 def create_game(request):
     tpl = 'apps/game/create.html'
@@ -110,28 +145,36 @@ def create_game(request):
                 cols = int(resolution[0])
                 rows = int(resolution[1])
             # create initial revision
-            revision_data = ('{ \
-                "canvas": { \
-                    "blockSize": %d, \
-                    "columns": %d, \
-                    "rows": %d \
-                }, \
-                "gameComponents": [], \
-                "scenes": [{ \
-                    "name": "intro", \
-                    "sceneComponents": [], \
-                    "gameComponents": [] \
-                }, { \
-                    "name": "game", \
-                    "sceneComponents": [], \
-                    "gameComponents": [] \
-                }, { \
-                    "name": "outro", \
-                    "sceneComponents": [], \
-                    "gameComponents": [] \
-                }] \
-            }' % (game.block_size, cols, rows))
-            revision_data = revision_data.strip()
+            revision_data = {}
+            canvas_data = {
+                "blockSize": game.block_size,
+                "columns": cols,
+                "rows": rows
+            }
+            scenes_data = [
+                {
+                    "name" : "intro",
+                    "sceneComponents" : [],
+                    "gameComponents" : []
+                },
+                {
+                    "name" : "game",
+                    "sceneComponents" : [],
+                    "gameComponents" : []
+                },
+                {
+                    "name" : "outro",
+                    "sceneComponents" : [],
+                    "gameComponents" : []
+                }
+            ]
+            revision_data['canvas'] = canvas_data
+            revision_data['gameComponents'] = []
+            revision_data['scenes'] = scenes_data
+
+
+            #revision_data = revision_data.strip()
+            revision_data = json.dumps(revision_data)
             revision = Revision(game=game, data=revision_data)
             revision.save()
             # add user as author

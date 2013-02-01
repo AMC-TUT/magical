@@ -8,6 +8,8 @@ urlpatterns = patterns('',
     url(r'^details/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.game_details', name="game_details"),
     url(r'^create/$', 'apps.game.views.create_game', name="create_game"),
 
+    url(r'^image/(?P<uuid>[a-z0-9-]{36})/(?P<width>\d+)x(?P<height>\d+)$', 'apps.game.views.download_image'),
+    
 	url(r'^rate/(?P<game_pk>\d*)/(?P<stars>0|1|2|3|4|5)$', 'apps.game.views.rate_game', name="rate_game"),
 
     url(r'^watch/$', direct_to_template, {'template': 'apps/game/watch.html'}, name="watch"),

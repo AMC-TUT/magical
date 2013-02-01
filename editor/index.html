@@ -367,7 +367,7 @@
                 <ul class="assets-list">
                 {{#view App.ImageAssetsView contentBinding="App.imageAssetsController.blocks"}}
                   {{#each content}}
-                    <li {{bindAttr data-file="file"}} {{bindAttr data-type="type"}} {{bindAttr data-sprite="slug"}}><img {{bindAttr src="file"}} /><span>{{name}}</span></li>
+                    <li {{bindAttr data-file="file"}} {{bindAttr data-type="type"}} {{bindAttr data-sprite="slug"}}><img {{bindAttr src="apiPath"}} /><span>{{name}}</span></li>
                   {{/each}}
                 {{/view}}
                 </ul>
@@ -377,7 +377,7 @@
                 <ul class="assets-list">
                 {{#view App.ImageAssetsView contentBinding="App.imageAssetsController.backgrounds"}}
                   {{#each content}}
-                    <li {{bindAttr data-file="file"}} {{bindAttr data-type="type"}} {{bindAttr data-sprite="slug"}}><img {{bindAttr src="file"}} /><span>{{name}}</span></li>
+                    <li {{bindAttr data-file="file"}} {{bindAttr data-type="type"}} {{bindAttr data-sprite="slug"}}><img {{bindAttr src="apiPath"}} /><span>{{name}}</span></li>
                   {{/each}}
                 {{/view}}
                 </ul>
@@ -509,7 +509,7 @@
             <ul class="chest item-chest">
               {{#each App.gameComponentsController}}
                 {{#view App.GameComponentsView tagName="li" itemBinding="this" classNameBindings="uiSelected"}}
-                <img class="game-item" {{bindAttr class="item.active"}} {{bindAttr src="item.properties.file"}} {{bindAttr alt="item.title"}} {{bindAttr title="item.title"}} {{bindAttr data-slug="item.slug"}} /></li>
+                <img class="game-item" {{bindAttr class="item.active"}} {{bindAttr src="item.icon"}} {{bindAttr alt="item.title"}} {{bindAttr title="item.title"}} {{bindAttr data-slug="item.slug"}} /></li>
                 {{/view}}
               {{/each}}
 
@@ -649,6 +649,50 @@
 
                 {{#if isPhysicus}}
 
+                <div {{bindAttr class="magos:magos-potions magos magos:controls magos:hide"}} style="display:none;">
+                <form class="form-vertical">
+                  <fieldset>
+                    <legend>Controls</legend>
+                    {{#view App.PotionsControlsView }}
+                      {{view App.LazyTextField valueBinding="view.method" viewName="textField"}}
+
+                      {{#view Ember.Select contentBinding="view.method" optionLabelPath="content.name" optionValuePath="content.name" selectionBinding="view.method" class="input-xlarge"}}
+                        {{log content}}
+                      {{/view}}
+
+                    {{/view}}
+                    <div class="form-actions">
+                      <button class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
+                      <button class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
+                    </div>
+                </div>
+
+                <div {{bindAttr class="magos:magos-potions magos magos:collision magos:hide"}} style="display:none;">
+                <form class="form-vertical">
+                  <fieldset>
+                    <legend>Collision</legend>
+                      {{#view App.MagosComponentPropertyView contentBinding="this"}}
+                      <div class="action-group">
+                        <div class="control-group">
+                          <label class="control-label">Collision</label>
+                          <div class="controls">
+                            {{#view Ember.Select contentBinding="App.selectedComponentController.content.collisions" optionLabelPath="content.name" optionValuePath="content.name" selectionBinding="collision" class="input-xlarge"}}
+                              {{log content}}
+                            {{/view}}
+                          </div>
+                        </div>
+                      </div>
+                    {{/view}}
+
+                    <div class="form-actions">
+                      <button class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
+                      <button class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
+                    </div>
+                    </fieldset>
+                  </form>
+                </div>
+
+
                 <div {{bindAttr class="magos:magos-potions magos magos:type magos:hide"}} style="display:none;">
                 <form class="form-vertical">
                   <fieldset>
@@ -662,9 +706,7 @@
                             <select class="span12">
                               <option>---</option>
                               <option>Block</option>
-                              <option>Collectilbe</option>
-                              <option>Enemy</option>
-                              <option>Ladder</option>
+                              <option>Collectible</option>
                               <option>Player</option>
                               <option>Pushable</option>
                             </select>
