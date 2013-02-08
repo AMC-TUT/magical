@@ -2537,7 +2537,6 @@ $(function() {
     }
 
     function canvasResizable() {
-
       $('.canvas-cell').bind('resize', function(event) {
         var $tgt = $(event.target);
         var width = $tgt.width();
@@ -2545,15 +2544,8 @@ $(function() {
           'height': width + ' !important'
         });
       });
-
       var $canvas = $('.canvas-pane'),
         ratio = $canvas.height() / $canvas.width();
-      /*
-    $('.canvas-pane').bind('resize', function(event) {
-      var width = $(event.target).width();
-      $(event.target).height(parseInt(width*ratio));
-    });
-    */
     }
     
     // remove game component from game canvas (after socket message)
@@ -2564,22 +2556,15 @@ $(function() {
       var $scene = $('.canvas-' + sceneName);
       var row = gameComponent.position.row,
         column = gameComponent.position.column;
-
       var cssRow = row + 1,
-          cssColumn = column + 1;
+        cssColumn = column + 1;
+      
       // append to scene
-      var $tgt = $scene.find('tr:nth-child(' + cssRow + ')').find('td:nth-child(' + cssColumn + ')');
-
-      var oid = gameComponent.oid;
-      console.log('* ITEMTYPE: ' + itemType);
-      console.log('* ITEM OID: ' + oid);
-        
+      var $tgt = $scene.find('tr:nth-child(' + cssRow + ')').find('td:nth-child(' + cssColumn + ') img');
+      var oid = gameComponent.oid;        
       var item = App.scenesController.get('content').findProperty('name', sceneName).get('gameComponents').findProperty('oid', oid);
       
-      console.log('* ITEM: ');
-      console.log(item);
       App.scenesController.get('content').findProperty('name', sceneName).get('gameComponents').removeObject(item);
-
       $tgt.remove();
 
       if(itemType === 'sceneComponents') {
@@ -2587,9 +2572,7 @@ $(function() {
           $scene.css('background-image', 'none');
         }
       }
-
     }
-
 
     // add game component to game canvas (after socket message)
     function addGameComponentToCavas(gameComponent, sceneName) {
@@ -2624,9 +2607,6 @@ $(function() {
 
         $img.data('oid', gameComponent.oid);
         $tgt.append($img);
-
-        // bind events
-        //bindClickToRemove('gameComponents');
       }
 
     }
@@ -2657,23 +2637,6 @@ $(function() {
           } else {
             $img = $draggable.removeAttr('data-original-title rel alt class style').addClass('canvas-item canvas-game-component');
           }
-
-          // remove when clicked - impl. draggable later
-          /*
-          $img.on('click tap', function(event) {
-            var $tgt = $(event.target),
-              oid = $tgt.data('oid');
-
-            var item = App.scenesController.getPath('selected.gameComponents').findProperty('oid', oid);
-            App.scenesController.getPath('selected.gameComponents').removeObject(item);
-
-            $tgt.remove();
-
-            App.dataSource.saveGame(0, function(data) {
-              console.log('save (click)');
-            });
-          });
-          */
 
           var $row = $tgt.closest('tr');
           var column = $row.find('td').index($tgt);
@@ -2739,18 +2702,6 @@ $(function() {
 
           $tgt.append($img);
 
-          // remove when clicked - impl. draggable later
-          /*
-          $img.on('click tap', function(event) {
-            var $tgt = $(event.target),
-              slug = $tgt.data('slug');
-
-            var item = App.scenesController.getPath('selected.sceneComponents').findProperty('slug', slug);
-            App.scenesController.getPath('selected.sceneComponents').removeObject(item);
-
-            $tgt.remove();
-          });
-          */
           var position = $img.position();
           var pos_left = Math.round(position.left);
           var pos_top = Math.round(position.top);
@@ -2767,19 +2718,17 @@ $(function() {
           };
 
           console.log(obj);
-
           App.scenesController.getPath('selected.sceneComponents').pushObject(obj);
-
           App.dataSource.saveGame(1, function(data) {
             // scene component
             console.log('save scene component (drop)');
           });
 
-
         } // drop
       });
     } // /function
-    // /canvas
+
+
     // main area sortable elements (shoutbox, infobox)
     $('.sortable-mainarea').sortable({
       placeholder: "sortable-highlight",
