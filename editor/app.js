@@ -261,6 +261,17 @@ var editor = io.sockets.on('connection', function(socket) {
     });
   });
 
+  socket.on('removeGameComponentFromCanvas', function(component, sceneName, fn) {
+    console.log('SOCKET: removeGameComponentFromCanvas');
+    console.log(component);
+    console.log(sceneName);
+    socket.get('slug', function(err, slug) {
+      socket.broadcast.in(slug).emit('removeGameComponentFromCanvas', component, sceneName);
+      fn(component, sceneName);
+    });
+  });
+
+
   socket.on('userChangedMagos', function(user, magos, fn) {
     console.log('SOCKET: userChangedMagos');
     console.log(user);

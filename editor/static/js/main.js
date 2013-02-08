@@ -1751,6 +1751,13 @@ $(function() {
         });
       },
 
+      // remove game component from game canvas
+      removeGameComponentFromCanvas: function(gameComponent, sceneName, callback) {
+        socket.emit('removeGameComponentFromCanvas', gameComponent, sceneName, function(data) {
+          callback(data);
+        });
+      },
+
       addUser: function(user, callback) {
         socket.emit('addUser', user, function(data) {
           callback(data);
@@ -2062,6 +2069,13 @@ $(function() {
       console.log('>>> SOCKET REQUEST: saveGameComponentToCanvas');
       addGameComponentToCavas(component, sceneName)
     });
+
+    // add game component to game canvas
+    socket.on('removeGameComponentFromCanvas', function(component, sceneName) {      
+      console.log('>>> SOCKET REQUEST: removeGameComponentFromCanvas');
+      removeGameComponentFromCanvas(component, sceneName)
+    });
+
 
     socket.on('addUser', function(user) {
       // add user if same user does not already exist
@@ -2377,6 +2391,8 @@ $(function() {
 
     function bindClickToRemove(itemType) {
       var itemClass = (itemType == 'gameComponents') ? 'canvas-game-component' : 'canvas-scene-component';
+      console.log('---- BINDING ' + itemType);
+      $(".canvas-pane").off('click tap', 'img.' + itemClass);
       $(".canvas-pane").on('click tap', 'img.' + itemClass, function(event){
         var $tgt = $(event.target),
           oid = $tgt.data('oid');
@@ -2386,9 +2402,7 @@ $(function() {
         console.log('* ITEM: ');
         console.log(item);
         App.scenesController.getPath('selected.'+ itemType).removeObject(item);
-
         $tgt.remove();
-        
         if(itemType === 'sceneComponents') {
           if(slug === 'background') {
             $scene.css('background-image', 'none');
@@ -2397,9 +2411,11 @@ $(function() {
 
         App.dataSource.saveGame(0, function(data) {
           console.log('save (click)');
-          
-
-
+          // emit removal via socket
+          var sceneName = App.scenesController.get('selected').get('name');
+          App.dataSource.removeGameComponentFromCanvas(item, sceneName, function(data) {
+            console.log('emit (remove game component from game canvas');
+          });
         });
       });
     }
@@ -2539,9 +2555,44 @@ $(function() {
     });
     */
     }
+    
+    // remove game component from game canvas (after socket message)
+    function removeGameComponentFromCanvas(gameComponent, sceneName) {
+      var itemType = 'gameComponents';
+      var itemClass = (itemType == 'gameComponents') ? 'canvas-game-component' : 'canvas-scene-component';
+        
+      var $scene = $('.canvas-' + sceneName);
+      var row = gameComponent.position.row,
+        column = gameComponent.position.column;
+
+      var cssRow = row + 1,
+          cssColumn = column + 1;
+      // append to scene
+      var $tgt = $scene.find('tr:nth-child(' + cssRow + ')').find('td:nth-child(' + cssColumn + ')');
+
+      var oid = gameComponent.oid;
+      console.log('* ITEMTYPE: ' + itemType);
+      console.log('* ITEM OID: ' + oid);
+        
+      var item = App.scenesController.get('content').findProperty('name', sceneName).get('gameComponents').findProperty('oid', oid);
+      
+      console.log('* ITEM: ');
+      console.log(item);
+      App.scenesController.get('content').findProperty('name', sceneName).get('gameComponents').removeObject(item);
+
+      $tgt.remove();
+
+      if(itemType === 'sceneComponents') {
+        if(slug === 'background') {
+          $scene.css('background-image', 'none');
+        }
+      }
+
+    }
+
 
     // add game component to game canvas (after socket message)
-    function addGameComponentToCavas(gameComponent, sceneName) {          
+    function addGameComponentToCavas(gameComponent, sceneName) {
       var $scene = $('.canvas-' + sceneName);
       var row = gameComponent.position.row,
         column = gameComponent.position.column;
@@ -2573,7 +2624,11 @@ $(function() {
 
         $img.data('oid', gameComponent.oid);
         $tgt.append($img);
+
+        // bind events
+        //bindClickToRemove('gameComponents');
       }
+
     }
 
 
@@ -2598,12 +2653,13 @@ $(function() {
           var slug = $draggable.data('slug');
 
           if($draggable.hasClass('game-item')) {
-            $img = $draggable.clone().removeAttr('data-original-title rel alt class style').addClass('canvas-item');
+            $img = $draggable.clone().removeAttr('data-original-title rel alt class style').addClass('canvas-item canvas-game-component');
           } else {
-            $img = $draggable.removeAttr('data-original-title rel alt class style').addClass('canvas-item');
+            $img = $draggable.removeAttr('data-original-title rel alt class style').addClass('canvas-item canvas-game-component');
           }
 
           // remove when clicked - impl. draggable later
+          /*
           $img.on('click tap', function(event) {
             var $tgt = $(event.target),
               oid = $tgt.data('oid');
@@ -2617,6 +2673,7 @@ $(function() {
               console.log('save (click)');
             });
           });
+          */
 
           var $row = $tgt.closest('tr');
           var column = $row.find('td').index($tgt);
@@ -2633,7 +2690,7 @@ $(function() {
           });
 
           App.scenesController.getPath('selected.gameComponents').pushObject(obj);
-
+          $img.attr({'data-oid': oid});
           $img.data('oid', oid);
           $tgt.append($img);
 
@@ -2683,6 +2740,7 @@ $(function() {
           $tgt.append($img);
 
           // remove when clicked - impl. draggable later
+          /*
           $img.on('click tap', function(event) {
             var $tgt = $(event.target),
               slug = $tgt.data('slug');
@@ -2692,6 +2750,7 @@ $(function() {
 
             $tgt.remove();
           });
+          */
           var position = $img.position();
           var pos_left = Math.round(position.left);
           var pos_top = Math.round(position.top);
@@ -2715,6 +2774,7 @@ $(function() {
             // scene component
             console.log('save scene component (drop)');
           });
+
 
         } // drop
       });
