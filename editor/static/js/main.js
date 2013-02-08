@@ -1,14 +1,10 @@
 /* Magos Editor */
 
-// @codekit-prepend "vendor/jquery.min.js"
-// @codekit-prepend "vendor/jquery-ui.min.js"
-// @codekit-prepend "vendor/bootstrap.min.js"
-// @codekit-prepend "vendor/ember.js"
-// @codekit-prepend "plugins.js"
 $(function() {
 
   (function(App, $, Em, undefined) {
     "use strict";
+    App.VERSION = '0.0.1',
 
     App.settings = {
       djangoUri : 'http://localhost:8080/'
@@ -57,16 +53,14 @@ $(function() {
 
     App.Room = Em.Object.extend({
       slug: null,
-      authors: [],
-      teachers: [],
-      magosesBinding: 'App.magosesController.content'
-      /*,
-      magoses: [
-        { 'name': 'arcitectus', 'inUse': false },
-        { 'name': 'principes', 'inUse': false },
-        { 'name': 'physicus', 'inUse': false },
-        { 'name': 'artifex', 'inUse': false }
-      ]*/
+      authors: null,
+      teachers: null,
+      magosesBinding: 'App.magosesController.content',
+      init: function() {
+        this._super();
+        this.set("authors", []);
+        this.set("teachers", []);
+      }
     });
 
     App.roomController = Em.Object.create({
@@ -81,7 +75,31 @@ $(function() {
             console.log('User joined room.');
             var room = App.Room.create(data);
             controller.set('content', room);
-
+            var activeUser = App.usersController.get('user');
+            // convert magoses to Ember objects
+            _.each(data.magoses, function(obj) {
+              var emMagos = App.Magos.create(obj);
+              if(emMagos.get('user')) {
+                //console.log(obj.magos);
+                //console.log(obj.user);
+                if(activeUser.userName == emMagos.get('user').userName) {
+                  console.log('Set magos ' + emMagos.get('magos') + ' for active user ' + activeUser.userName);
+                  //App.usersController.get('user').set('magos', obj.magos);
+                  activeUser.set('magos', emMagos.get('magos'));
+                }
+                var emUser = App.User.create(obj.user);
+                emMagos.set('user', emUser);
+              }
+              // Emberify potions
+              var potions = [];
+              _.each(obj.potions, function(potion) {
+                var emPotion = App.Potion.create(potion);
+                potions.push(emPotion);
+              });
+              emMagos.set('potions', potions);
+              App.magosesController.get('content').pushObject(emMagos);
+            });
+            App.magosesController.populate();
           } else {
             // user has no access to room
             console.log('Not authorized.');
@@ -107,7 +125,7 @@ $(function() {
       href: null,
       playPath: function() {
         return '/editor/play/' + this.get('slug');
-      }.property('playPath'),
+      }.property('playPath')
 
     });
 
@@ -143,19 +161,6 @@ $(function() {
             controller.set('content', data);
 
             App.roomController.populate(data);
-            /*
-            App.dataSource.joinRoom(data, function(data) {
-              console.log(data);
-              if(_.isObject(data)) {
-                console.log('User joined room.');
-
-              } else {
-                // user has no access to room
-                console.log('Not authorized.');
-                window.location.replace("http://localhost:8080");
-              }
-            });
-            */
 
           });
         });
@@ -184,7 +189,7 @@ $(function() {
         var controller = this;
         var canvas = controller.getPath('content.canvas');
         if(canvas) {
-          App.magosesController.populate();
+          //App.magosesController.populate();
           App.imageAssetsController.populate();
         }
       }.observes('content')
@@ -324,32 +329,32 @@ $(function() {
         });
       },
       // image assets of type 'block'
-      blocks: function() {
+      blocks: Em.computed(function() {
         var components = this.get('content');
         var array = [];
         _.each(components, function(component) {
           if(component.type == 0) array.push(component);
         });
         return array;
-      }.property('content'),
+      }).property('content'),
       // image assets of type 'anim'
-      animations: function() {
+      animations: Em.computed(function() {
         var components = this.get('content');
         var array = [];
         _.each(components, function(component) {
           if(component.type == 1) array.push(component);
         });
         return array;
-      }.property('content'),
+      }).property('content'),
       // image assets of type 'background'
-      backgrounds: function() {
+      backgrounds: Em.computed(function() {
         var components = this.get('content');
         var array = [];
         _.each(components, function(component) {
           if(component.type == 2) array.push(component);
         });
         return array;
-      }.property('content')
+      }).property('content')
     });
 
 
@@ -529,7 +534,7 @@ $(function() {
       properties: null,
       active: false,
       icon: function() {
-        //return '/editor/user-media/images/' + this.getPath('properties.sprite') + '.png';
+        //return '/editor/user-media/images/' + this.get('properties.sprite') + '.png';
         var file_uuid = this.getPath('properties.file');
         var canvas = App.gameController.get('content').get('revision').canvas;
         var blockSize = parseInt(canvas.blockSize, 10),
@@ -539,7 +544,7 @@ $(function() {
         var width = blockSize, 
             height = blockSize;
         return App.settings.djangoUri + 'game/image/' + file_uuid + '/' + width + 'x' + height;
-        //return '/editor/' + this.getPath('properties.file');
+        //return '/editor/' + this.get('properties.file');
       }.property('properties'),
       snapToGrid: function() {
         var snap = this.getPath('properties.controls.grid');
@@ -590,7 +595,7 @@ $(function() {
 
       }.property('properties'),
       filteredDialogEvents: function() {
-        //var collisions = this.getPath('properties.collisions');
+        //var collisions = this.get('properties.collisions');
         //return _.isObject(collisions) ? collisions.filterProperty('text') : false;
         return false;
       }.property('properties')
@@ -605,6 +610,7 @@ $(function() {
       },
       updateItem: function(propName, value, newItem) {
         // replace old gameComponent with a new one when properties change
+        console.log(newItem);
         newItem.active = false;
         var obj = this.findProperty(propName, value),
             src = newItem.properties.file,
@@ -613,7 +619,7 @@ $(function() {
             idx = this.indexOf(obj);
         this.replaceContent(idx, 1, [item]);
         // update instances in the canvas w/ the new graphic
-        $('.canvas-pane').find("[data-slug='" + slug + "']").attr('src', src);
+        $('.canvas-pane').find("[data-slug='" + slug + "']").attr('src', item.get('icon'));
       }
     });
 
@@ -790,6 +796,11 @@ $(function() {
       }
     });
 
+
+
+
+
+
     /**************************
      * Remove Game Components
      **************************/
@@ -834,7 +845,7 @@ $(function() {
               } else {
                 // cannot remove
                 console.log('Can not remove gameComponent');
-                App.setFlash('error', 'Can not remove game component. It is in use.')
+                App.setFlash('error', 'Can not remove game component. It is in use.');
               }
 
             }
@@ -878,7 +889,8 @@ $(function() {
             slug: safeSlug,
             properties: {
               sprite: 'empty1',
-              file: 'user-media/images/empty1.png',
+              //file: 'user-media/images/empty1.png',
+              file: 'cc7ec50c-b014-4363-850e-35a8c5e30a6c', // uuid of empty icon
               type: compType // TODO check order empty1,2,3,4 and choose unique
             }
           };
@@ -993,7 +1005,8 @@ $(function() {
         var sceneItems = $('.scene-chest').find('li');
         var gameItems = $('.item-chest').find('li');
 
-        console.log(JSON.stringify(this.getPath('content')));
+        console.log('SELECTED COMPONENT');
+        console.log(JSON.stringify(this.get('content')));
 
         // loop elements and remove ui-selected class
         _.each(sceneItems, function(item) {
@@ -1022,18 +1035,19 @@ $(function() {
         selected.set('active', true);
 
         //console.log('new selected component:');
-        //console.log(this.getPath('content.properties.sprite'));
+        //console.log(this.get('content.properties.sprite'));
       }.observes('content')
     });
 
     /**************************
      * Potion
      **************************/
-
+    /*
     App.Potion = Em.Object.extend({
       magos: null,
       potions: []
     });
+*/
 
     /**************************
      * Potions Controller
@@ -1084,7 +1098,6 @@ $(function() {
       activeUser: function() {
         var user = this.get('user');
         var active = this.get('userActive');
-
         return Em.isEqual(user, active);
       }.property('user', 'userActive'),
       isArcitectus: function() {
@@ -1129,9 +1142,61 @@ $(function() {
     App.magosesController = Em.ArrayController.create({
       content: [],
       selectedBinding: 'App.usersController.user.magos',
+      updateItem: function(propName, value, newItem) {
+        // replace old magos with a new one
+        var obj = this.findProperty(propName, value),
+            item = App.Magos.create(newItem),
+            idx = this.indexOf(obj);
+        this.replaceContent(idx, 1, [item]);
+        // update instances in the canvas w/ the new graphic
+        //$('.canvas-pane').find("[data-slug='" + slug + "']").attr('src', src);
+      },
       populate: function() {
         var controller = this;
-        console.log('POPULATE MAGOSES');
+        var user = App.usersController.get('user');
+        var userMagos = user.get('magos');
+        if(userMagos) {
+          // user has Magos role already
+          console.log('User has magos: ' + userMagos);
+          var userMagosObj = controller.get('content').findProperty('magos', userMagos);
+          userMagosObj.set('user', user);
+          //controller.updateItem('magos', userMagos, userMagosObj);
+          App.dataSource.userChangedMagos(user, userMagos, function(data) {
+            console.log('emit (user has a magos on login)');
+          });
+
+        } else {
+          // user has no magos role yet, assign a free one
+          var freeMagoses = controller.get('content').filterProperty('user', null);
+          console.log(freeMagoses);
+          var freeMagos = null;
+          if(freeMagoses.length > 0) {
+            freeMagos = freeMagoses[0];
+            //var freeMagosObj = controller.get('content').findProperty('magos', freeMagos.magos);
+            var freeMagosObj = App.Magos.create(freeMagos);
+            console.log(freeMagosObj);
+            console.log('Set user to ' + freeMagos.magos);
+            freeMagosObj.set('user', user);
+            //controller.get('content').findProperty('magos', freeMagos.magos).set('magos', freeMagosObj);
+            controller.updateItem('magos', freeMagos.magos, freeMagosObj);
+            App.dataSource.userChangedMagos(user, freeMagos.magos, function(data) {
+              console.log('emit (user assigned a magos on login)');
+            });
+            // set special class for dragging action
+            if(freeMagos.magos === 'arcitectus') {
+              $('.chest-container').addClass('arcitectus-magos');
+            }
+
+          } else {
+            alert('There are no free roles.');
+          }
+
+
+
+        }
+        //Em.run.sync();
+
+        /*
         App.dataSource.getSkillsets(function(data) {
           // set content
           controller.set('content', data);
@@ -1144,46 +1209,30 @@ $(function() {
             console.log(obj.get('magos'));
             console.log(obj.get('user'));
           });
+          Em.run.sync();
           // get free magoses in the room (not in use)
           var freeMagoses = App.roomController.get('content').get('magoses').filterProperty('user', null);
+          //var freeMagoses = App.roomController.get('content').get('magoses').filter(function(obj) { return !obj.user });
           //var freeRoomMagoses = _.where(roomMagoses, {inUse: false});
           //var freeMagosNames = _.pluck(freeRoomMagoses, 'name');
+          console.log('freeMagoses');
           console.log(freeMagoses);
           
-          /*
-          var freeMagoses = App.magosesController.get('content').filter(function (obj) {
-            var magosIsFree = false;
-            if(!_.indexOf(freeMagosNames, obj.magos) < 0) {
-              console.log(obj.magos + ' is taken');              
-            } else {
-              console.log(obj.magos + ' is free');
-              magosIsFree = true;
-            }
-            return (magosIsFree);
-          });
-          */
 
           var freeMagos = null;
           //var freeMagoses = App.magosesController.get('content').filterProperty('user', null);
 
-          /*
-          console.log('freeMagoses');
-          console.log(freeMagoses);
-          if(freeMagoses) {
-            // take the first free magos and set it as users role magos
-            freeMagos = freeMagoses[0];
-          }
-          
-          */
           // take the first free magos and set it as users role magos
-          var freeMagos = controller.get('content').findProperty('user', null);
+          //var freeMagos = controller.get('content').findProperty('user', null);
+          var freeMagos = freeMagoses[0];
           //var freeMagos = controller.get('content').findProperty('magos', 'physicus');
           //var freeMagos = controller.get('content').findProperty('magos', 'artifex');
 
           if(_.isObject(freeMagos)) {
+            Em.run.sync(); // room controller's magoses are not autosynced for some reason
             console.log('Set user to ' + freeMagos.magos);
             freeMagos.set('user', user);
-            App.roomController.get('content').findProperty('magos', freeMagos.magos).set('inUse', true);
+            App.roomController.get('content').get('magoses').findProperty('magos', freeMagos.magos).set('inUse', true);
 
             App.dataSource.userChangedMagos(user, freeMagos.magos, function(data) {
               console.log('emit (user changed magos on login)');
@@ -1198,13 +1247,14 @@ $(function() {
             $('.chest-container').addClass('arcitectus-magos');
           }
         });
+        */
       },
       selectedObserver: function() {
         var controller = this;
         var magos = this.get('selected'),
             user = App.usersController.get('user');
 
-        var prevMagos = App.magosesController.get('content').findProperty('user', user);
+        var prevMagos = controller.get('content').findProperty('user', user);
         if(prevMagos) {
           console.log('Previous MAGOS found: ' + prevMagos.magos);
           prevMagos.set('user', null);
@@ -1212,7 +1262,9 @@ $(function() {
 
         if(magos) {
           console.log('Change user magos to: ' + magos);
-          var newMagos = App.magosesController.get('content').findProperty('magos', magos);
+          var newMagos = controller.get('content').findProperty('magos', magos);
+          console.log('newMagos:');
+          console.log(newMagos);
           if (newMagos) {
             newMagos.set('user', user);
           }
@@ -1260,17 +1312,61 @@ $(function() {
         console.log('selectedObserver: function() {');
 
         App.magosesController.set('content', App.magosesController.get('content'));
-
         Em.run.next(function() {
           //
           refreshSidebar( $('.sortable-sidearea') );
         });
         */
+        
       }.observes('content.selected')
 
     })
 
+
+    App.MagosPotionView = Em.View.extend({
+      templateName: 'magos-potion',
+      contentBinding: 'App.potionsController.content',
+
+      // properties of title 'controls'
+      controls: function() {
+        var components = this.get('content');
+        var array = [];
+        _.each(components, function(component) {
+          if(component.title == 'controls') {
+            array.push(component.properties);
+            console.log('----------');
+            console.log(component.properties);
+          }
+        });
+        return array;
+      }.observes('prop'),
+      
+      propBinding: "content.@each.properties",
+
+    });
+
+
+
     App.MagosComponentPropertyView = Em.View.extend({
+      contentBinding: 'App.potionsController.content',
+
+      // properties of title 'controls'
+      controls: function() {
+        var components = this.get('content');
+        var array = [];
+        _.each(components, function(component) {
+          if(component.title == 'controls') {
+            array.push(component.properties);
+            console.log('----------');
+            console.log(component.properties);
+          }
+        });
+        return array;
+      }.observes('prop'),
+      
+      propBinding: "content.@each.properties.controls",
+
+
       removeComponentProperty: function(event) {
         event.preventDefault();
 
@@ -1278,7 +1374,7 @@ $(function() {
         var $view = $tgt.closest('.ember-view');
         var view = Em.View.views[$view.attr('id')];
 
-        var content = view.getPath('content');
+        var content = view.get('content');
 
         delete content['score'];
 
@@ -1300,30 +1396,25 @@ $(function() {
     /**************************
      * InfoBox Views
      **************************/
-
-App.LazyTextField = Ember.View.extend({
-  attributeBindings: ['value', 'type', 'size', 'name', 'placeholder', 'disabled', 'maxlength'],
-  tagName: 'input',
-  type: 'text',
-  getCurrentValue: function() {
-    return this.$().val();
-  }
-});
-
-App.PotionsControlsView = Ember.View.extend({
-  contentBinding: 'App.selectedComponentController.content',
-  methodBinding: 'App.selectedComponentController.content.properties.controls.method',
-      
-/*  template: Em.Handlebars.compile(
-    '<form>' +
-    '{{view App.LazyTextField valueBinding="view.method" viewName="textField"}}' +
-    '<input type="submit" value="Save" {{action save}}>' +
-    '</form>'),*/
-  save: function(e) {
-    e.preventDefault(); e.stopPropagation();
-    this.set('method', this.get('textField').getCurrentValue());
-  }
-});
+/*
+  App.LazyTextField = Ember.View.extend({
+    attributeBindings: ['value', 'type', 'size', 'name', 'placeholder', 'disabled', 'maxlength'],
+    tagName: 'input',
+    type: 'text',
+    getCurrentValue: function() {
+      return this.$().val();
+    }
+  });
+*/
+  App.PotionsControlsView = Ember.View.extend({
+    contentBinding: 'App.selectedComponentController.content',
+    methodBinding: 'App.selectedComponentController.content.properties.controls.method',
+        
+    save: function(e) {
+      e.preventDefault(); e.stopPropagation();
+      this.set('method', this.get('textField').getCurrentValue());
+    }
+  });
 
 
     var infobox = App.InfoBoxView = Em.View.create({
@@ -1648,6 +1739,14 @@ App.PotionsControlsView = Ember.View.extend({
           callback(data);
         });
       },
+
+      // add game component to game canvas
+      saveGameComponent: function(gameComponent, sceneName, callback) {
+        socket.emit('saveGameComponent', gameComponent, sceneName, function(data) {
+          callback(data);
+        });
+      },
+
       addUser: function(user, callback) {
         socket.emit('addUser', user, function(data) {
           callback(data);
@@ -1663,6 +1762,15 @@ App.PotionsControlsView = Ember.View.extend({
         });
       },
 
+      canUserChangeMagos: function(gameSlug, user, magos, callback) {
+        console.log('EMIT CAN USER CHANGE MAGOS');
+        console.log(user);
+        console.log(magos);
+        socket.emit('canUserChangeMagos', gameSlug, user, magos, function(data) {
+          callback(data);
+        });
+      },
+      
       saveGame: function(mode, callback) {
         // get game
         var game = App.gameController.get('content'); // JSON.stringify(this.get('content'));
@@ -1674,7 +1782,7 @@ App.PotionsControlsView = Ember.View.extend({
       },
       getSkillsets: function(callback) {
         socket.emit('getSkillsets', '', function(data) {
-          var components = [];
+          var components = [], allPotions = [];
 
           _.each(data, function(obj) {
 
@@ -1684,15 +1792,18 @@ App.PotionsControlsView = Ember.View.extend({
                 'title': potion.title,
                 'properties': potion.properties
               });
+              App.potionsController.get('content').pushObject(p);
+              allPotions.push(p);
               potions.push(p);
             });
-
             components.push(
             App.Magos.create({
               "magos": obj.magos,
               "potions": potions
             }));
           });
+
+          //App.potionsController.set('content', allPotions);
 
           callback(components);
         });
@@ -1884,7 +1995,7 @@ App.PotionsControlsView = Ember.View.extend({
 
     /**************************
      * Init Magos
-     **************************/
+     **************************/    
 
     var pathname = window.location.pathname;
     var slug = pathname.replace(/^\/editor\//, '').replace(/\/$/, '');
@@ -1895,7 +2006,7 @@ App.PotionsControlsView = Ember.View.extend({
     });
 
     socket.on('connecting', function() {
-      console.log('websocket connecting (editor');
+      console.log('websocket connecting (editor)');
     });
 
     socket.on('connect_failed', function(reason) {
@@ -1905,6 +2016,15 @@ App.PotionsControlsView = Ember.View.extend({
     socket.on('connect', function() {
       console.log('websocket connected (editor)');
     });
+
+
+    socket.on('foobar', function(user) {
+      console.log(user);
+      App.setFlash('notice', 'User ' + user.userName + ' requests Magos change from ' + user.magos);
+
+
+    });
+
 
     // receive shout
     socket.on('shout', function(shout) {
@@ -1930,6 +2050,17 @@ App.PotionsControlsView = Ember.View.extend({
       App.gameComponentsController.updateItem('slug', slug, selectedComponent);
     });
 
+
+    socket.on('saveGameComponent', function(component, sceneName) {      
+      // add game component to game canvas
+      console.log('>>> SOCKET REQUEST: saveGameComponent');
+      var obj = App.CanvasComponent.create(component);
+      console.log(obj);
+      console.log(sceneName);
+      App.scenesController.get('content').findProperty('name', sceneName).get('gameComponents').pushObject(obj);
+
+    });
+
     socket.on('addUser', function(user) {
       // add user if same user does not already exist
       console.log('>>> SOCKET REQUEST: addUser');
@@ -1941,7 +2072,7 @@ App.PotionsControlsView = Ember.View.extend({
       }
     });
 
-    socket.on('userChangedMagos', function(user, magos) {      
+    socket.on('userChangedMagos', function(user, magos) {     
       console.log('>>> SOCKET REQUEST: userChangedMagos');
       console.log(user);
       console.log(magos);
@@ -1957,6 +2088,7 @@ App.PotionsControlsView = Ember.View.extend({
       console.log(tgtMagos.user);
       if(!tgtMagos.user) {
         tgtMagos.set('user', user);
+        console.log('new magos ' + magos + ' assigned to ' + user.userName);
       } else {
         console.log('magos already in use');
       }
@@ -2193,15 +2325,29 @@ App.PotionsControlsView = Ember.View.extend({
               magos = $draggable.data('magos'),
               tgtMagos = $tgt.find('.skillset-icon').data('magos');
 
-            App.magosesController.set('selected', tgtMagos);
-            App.usersController.set('user.magos', tgtMagos);
             
             var user = App.usersController.get('user');
             // inform other authors of the change
-            App.dataSource.userChangedMagos(user, tgtMagos, function(data) {
-              console.log('emit (user changed magos)');
+            var gameSlug = App.gameController.getPath('content.slug');
+            App.dataSource.canUserChangeMagos(gameSlug, user, tgtMagos, function(data) {
+              console.log('emit (can user change magos)');
+              if(data) {
+                console.log('can change magos');
+                // change user magos
+                App.magosesController.set('selected', tgtMagos);
+                App.usersController.set('user.magos', tgtMagos);
+
+                App.dataSource.userChangedMagos(user, tgtMagos, function(data) {
+                  console.log('emit (user changed magos)');
+                });
+              } else {
+                // not allowed to change magos
+                console.log('cannot change magos');
+                App.setFlash('error', 'Can not change Magos');
+              }
+
             });
-            
+        
           }
         });
 
@@ -2245,7 +2391,6 @@ App.PotionsControlsView = Ember.View.extend({
 
     function populateScenes() {
       $('.canvas-cell').empty();
-
       // add items to canvas
       var scenes = App.gameController.getPath('content.revision.scenes');
 
@@ -2264,9 +2409,9 @@ App.PotionsControlsView = Ember.View.extend({
             apiPath = null;
           // make sure we have no ghost components
           if(App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug)) {
-            sprite = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).getPath('properties.sprite');
-            file = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).getPath('properties.file');
-            apiPath = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).getPath('icon');
+            sprite = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).get('properties.sprite');
+            file = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).get('properties.file');
+            apiPath = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).get('icon');
 
             var img = '<img src="' + apiPath + '" data-slug="' + slug + '" data-oid="' + oid + '" class="canvas-item canvas-game-component">';
             var $img = $(img);
@@ -2379,6 +2524,53 @@ App.PotionsControlsView = Ember.View.extend({
     */
     }
 
+    function addGameComponentToCavans(gameComponent, sceneName) {
+          // where to get the target from?
+          var $tgt = $(this);
+          //
+          if(!$tgt.is(":empty")) {
+            return false;
+          }
+
+          var $draggable = $(ui.draggable),
+            $img = '';
+
+          var slug = $draggable.data('slug');
+
+          if($draggable.hasClass('game-item')) {
+            $img = $draggable.clone().removeAttr('data-original-title rel alt class style').addClass('canvas-item');
+          } else {
+            $img = $draggable.removeAttr('data-original-title rel alt class style').addClass('canvas-item');
+          }
+
+          // remove when clicked - impl. draggable later
+          $img.on('click tap', function(event) {
+            var $tgt = $(event.target),
+              oid = $tgt.data('oid');
+
+            var item = App.scenesController.getPath('selected.gameComponents').findProperty('oid', oid);
+            App.scenesController.getPath('selected.gameComponents').removeObject(item);
+
+            $tgt.remove();
+
+            App.dataSource.saveGame(0, function(data) {
+              console.log('save (click)');
+            });
+          });
+
+          var $row = $tgt.closest('tr');
+          var column = $row.find('td').index($tgt);
+          var row = $row.closest('table').find('tr').index($row);
+          var oid = slug + column + row;
+
+          var obj = App.CanvasComponent.create(gameComponent);
+          App.scenesController.get('content').findProperty('name', sceneName).get('gameComponents').pushObject(obj);
+
+          $img.data('oid', oid);
+          $tgt.append($img);
+    }
+
+
     function initCanvasDroppable() {
 
       $(".canvas-cell").droppable({
@@ -2440,9 +2632,13 @@ App.PotionsControlsView = Ember.View.extend({
           $tgt.append($img);
 
           App.dataSource.saveGame(0, function(data) {
-            console.log('save (drop)');
+            // game component            
+            console.log('save game component (drop)');
+            var sceneName = App.scenesController.get('selected').get('name');
+            App.dataSource.saveGameComponent(obj, sceneName, function(data) {
+              console.log('emit (save game component (drop))');
+            });
           });
-
         }
       });
 
@@ -2510,7 +2706,8 @@ App.PotionsControlsView = Ember.View.extend({
           App.scenesController.getPath('selected.sceneComponents').pushObject(obj);
 
           App.dataSource.saveGame(1, function(data) {
-            console.log('save (drop)');
+            // scene component
+            console.log('save scene component (drop)');
           });
 
         } // drop

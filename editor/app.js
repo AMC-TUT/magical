@@ -251,6 +251,16 @@ var editor = io.sockets.on('connection', function(socket) {
     });
   });
 
+  socket.on('saveGameComponent', function(component, sceneName, fn) {
+    console.log('SOCKET: saveGameComponent');
+    console.log(component);
+    console.log(sceneName);
+    socket.get('slug', function(err, slug) {
+      socket.broadcast.in(slug).emit('saveGameComponent', component, sceneName);
+      fn(component, sceneName);
+    });
+  });
+
   socket.on('userChangedMagos', function(user, magos, fn) {
     console.log('SOCKET: userChangedMagos');
     console.log(user);
@@ -261,6 +271,52 @@ var editor = io.sockets.on('connection', function(socket) {
     });
   });
 
+  socket.on('canUserChangeMagos', function(gameSlug, user, magos, fn) {
+    console.log('SOCKET: canUserChangeMagos');
+
+    var sessionid = '';    
+    socket.get('sessionid', function(err, name) {
+      sessionid = name;
+    });
+    console.log(sessionid);
+    console.log(socket.id);
+    console.log(io.sockets.clients(gameSlug));
+    
+    //socket.clients[sessionid].send('foobar');
+
+    console.log(user);
+    console.log(magos);
+
+    client.get('room:' + gameSlug, function(err, roomData) {
+      // is magos in use?
+      roomData = JSON.parse(roomData);
+      console.log('We have room data: ' + JSON.stringify(roomData));
+      var magosUser = myMagos.getMagosUser(roomData, magos);
+      console.log(magosUser);
+      if(!magosUser) {
+        fn(true);
+      } else {
+        // ask permission
+        var targetUser = _.find(roomData.authors, function (author) { return magosUser.userName == author.userName });
+        if(targetUser) {
+          if(targetUser.socket_id) {
+            io.sockets.socket(targetUser.socket_id).emit("foobar", user);
+          }
+        }
+
+        fn(false);
+
+      }
+
+
+    });
+    /*
+    socket.get('slug', function(err, slug) {
+      socket.broadcast.in(slug).emit('canUserChangeMagos', user, magos);
+      fn(user, magos);
+    });
+    */
+  });
 
   socket.on('saveGame', function(mode, game, fn) {
     var result = false;
@@ -405,79 +461,85 @@ var editor = io.sockets.on('connection', function(socket) {
   socket.on('joinRoom', function(gameData, fn) {
     console.log('-- JOIN ROOM');
     console.log(gameData);
-    
-      if(!_.isNull(gameData)){
-        //var gameData = JSON.parse(data);
-        if(_.isObject(gameData)) {
-          console.log('>>>>');
-          console.log(gameData);
-          console.log('<<<<');
+    if(!_.isNull(gameData)){
+      //var gameData = JSON.parse(data);
+      if(_.isObject(gameData)) {
+        console.log('>>>>');
+        console.log(gameData);
+        console.log('<<<<');
 
-          // is user an author of this game?
-          // TODO: or teacher?
-          var isTeacher = (globalSessionObj.role == 'teacher') ? true : false;
-          console.log(isTeacher);
-          var authorUserNames = _.pluck(gameData.authors, 'userName');
-          console.log(authorUserNames);
-          var isAuthorized = (_.contains(authorUserNames, globalSessionObj.userName)) ? true : false;
-          if(isAuthorized) {
-            console.log('User "' + globalSessionObj.userName + '" authorized.');
+        // is user an author of this game?
+        // TODO: what to do with teachers?
+        var isTeacher = (globalSessionObj.role == 'teacher') ? true : false;
+        console.log(isTeacher);
+        var authorUserNames = _.pluck(gameData.authors, 'userName');
+        console.log(authorUserNames);
+        var isAuthorized = (_.contains(authorUserNames, globalSessionObj.userName)) ? true : false;
+        if(isAuthorized) {
+          console.log('User "' + globalSessionObj.userName + '" authorized.');
 
-            client.get('room:' + gameData.slug, function(err, roomData) {
-              if(_.isNull(roomData)) {
-                // no previously saved room data
-                var roomData = {
-                  slug: gameData.slug,
-                  authors: [],
-                  teachers: []/*,
-                  magoses: [
-                    { 'name': 'arcitectus', 'inUse': false },
-                    { 'name': 'principes', 'inUse': false },
-                    { 'name': 'physicus', 'inUse': false },
-                    { 'name': 'artifex', 'inUse': false }
-                  ]*/
-                };
-                if (isTeacher) {
-                  roomData.teachers.push(globalSessionObj.userName);
-                } else {
-                  roomData.authors.push(globalSessionObj.userName);
-                }               
-                var jsonRoomData = JSON.stringify(roomData);
-                client.set('room:' + gameData.slug, jsonRoomData, redis.print);
-
+          client.get('room:' + gameData.slug, function(err, roomData) {
+            if(_.isNull(roomData)) {
+              // no previously saved room data
+              var skillsetsJson = fs.readFileSync(__dirname + '/static/json/skillsets.json', 'utf8');
+              // parse obj's
+              var skillsetsResult = JSON.parse(skillsetsJson);
+              console.log(skillsetsResult);
+              var magoses = [];
+              _.each(skillsetsResult, function(obj) {
+                obj.user = null;
+                magoses.push(obj);
+              });
+              console.log(magoses);
+              var roomData = {
+                slug: gameData.slug,
+                authors: [],
+                teachers: [],
+                magoses: magoses
+              };
+              if (isTeacher) {
+                roomData.teachers.push(globalSessionObj.userName);
               } else {
-                // room data exists
-                roomData = JSON.parse(roomData);
-                console.log('We have room data: ' + JSON.stringify(roomData));
-                if (isTeacher) {
-                  console.log("SHOULD ADD TEACHER");
-                  if(!_.contains(roomData.teachers, globalSessionObj.userName)) {
-                    // add teacher
-                    roomData.teachers.push(globalSessionObj.userName);
-                    console.log('Teacher added to room.');
-                  }
-                } else {
-                  console.log("SHOULD ADD AUTHOR");
-                  console.log(roomData.authors.length);
-                  if(!_.contains(roomData.authors, globalSessionObj.userName) && roomData.authors.length < 4) {
-                    // add authorized user if there's room
-                    roomData.authors.push(globalSessionObj.userName);
-                    console.log('Author added to room.');
-                  }
-                }
-                var jsonRoomData = JSON.stringify(roomData);
-                client.set('room:' + gameData.slug, jsonRoomData, redis.print);
+                // TRY TO ADD MAGOS TO AUTHOR
+                var roomData = myMagos.addAuthorToRoom(roomData, socket.id);
+                var roomData = myMagos.addMagosToAuthor(roomData);
+                console.log('AFTER NULL data: ');
+                console.log(roomData);
               }
-              fn(roomData);
-            });
+              var jsonRoomData = JSON.stringify(roomData);
+              console.log(jsonRoomData);
+              client.set('room:' + gameData.slug, jsonRoomData, redis.print);
+
+            } else {
+              // room data exists
+              roomData = JSON.parse(roomData);
+              console.log('We have room data: ' + JSON.stringify(roomData));
+              
+              if (isTeacher) {
+                console.log("SHOULD ADD TEACHER");
+                if(!_.contains(roomData.teachers, globalSessionObj.userName)) {
+                  // add teacher
+                  roomData.teachers.push(globalSessionObj.userName);
+                  console.log('Teacher added to room.');
+                }
+              } else {
+                // TRY TO ADD MAGOS TO AUTHOR
+                var roomData = myMagos.addAuthorToRoom(roomData, socket.id);
+                var roomData = myMagos.addMagosToAuthor(roomData);
+              }
+              var jsonRoomData = JSON.stringify(roomData);
+              client.set('room:' + gameData.slug, jsonRoomData, redis.print);
+            }
+            fn(roomData);
+          });
 
 
-          } else {
-            console.log('User "' + globalSessionObj.userName + '" not authorized!');
-            fn(false);
-          }
+        } else {
+          console.log('User "' + globalSessionObj.userName + '" not authorized!');
+          fn(false);
         }
       }
+    }
 
 
   });
@@ -642,16 +704,16 @@ var editor = io.sockets.on('connection', function(socket) {
           fn('successfully joined to room \n - room: ' + slug + ' \n - magos: ' + user.magos);
 
         }
-*/
 
-  /*
-  socket.on('get room members', function(room, fn) {
+  socket.on('getRoomMembers', function(slug, fn) {
     console.log('get room members');
-    var members = io.sockets.clients(room.slug);
+    client.set('room:' + slug
+    //var members = io.sockets.clients(room.slug);
     console.log(members);
-    fn(members);
+    //fn(members);
   });
 */
+
   socket.on('disconnect', function() {
     // user = _.find(rooms.)
     console.info('user ' + socket.id + ' disconnected from magos!');
@@ -748,6 +810,74 @@ myMagos.parseSessionObject = function(data) {
   globalSessionObj = sessionObj; // save for later use
   return sessionObj;
 };
+
+
+myMagos.addAuthorToRoom = function(roomData, socket_id) {
+  var roomAuthors = _.pluck(roomData.authors, 'userName');
+  //console.log(roomAuthors);
+  //console.log('ADD AUTHOR TO ROOM FUNCTION: ' + _.indexOf(roomAuthors, globalSessionObj.userName));
+  if(_.indexOf(roomAuthors, globalSessionObj.userName) == -1 && roomAuthors.length < 4) {
+    // add new authorized user if there's room
+    roomData.authors.push({'userName': globalSessionObj.userName, 'socket_id': socket_id });
+    console.log('Author ' + globalSessionObj.userName + ' added to room.');
+    //console.log(roomData);
+  } else if(_.indexOf(roomAuthors, globalSessionObj.userName) != -1) {
+    // update existing user information
+    roomData.authors = _(roomData.authors).reject(function(el) { return el.userName === globalSessionObj.userName; });
+    roomData.authors.push({'userName': globalSessionObj.userName, 'socket_id': socket_id });
+    console.log('Author ' + globalSessionObj.userName + ' room information updated.');
+    //console.log(roomData);
+  }
+  return roomData;
+}
+
+myMagos.addMagosToAuthor = function(roomData) {
+  var userHasMagos = false;
+  _.each(roomData.magoses, function(obj) {
+    if(obj.user) {
+      if(obj.user.userName == globalSessionObj.userName) userHasMagos = true;
+    }
+  });
+  if( !userHasMagos ) {
+    console.log('Trying to add free magos role to user.');
+    // allocate new magos to user
+    var freeMagoses = [], reservedMagoses = [];
+    _.each(roomData.magoses, function(obj) {
+      if(!obj.user) {
+        freeMagoses.push(obj);
+      } else {
+        reservedMagoses.push(obj);
+      }
+    });
+    console.log('freeMagoses:' + freeMagoses.length);
+    console.log('reservedMagoses:' + reservedMagoses.length);
+    if(freeMagoses.length) {
+      freeMagoses[0].user = globalSessionObj;
+      console.log('Magos ' + freeMagoses[0].magos + ' was set to user ' + globalSessionObj.userName);
+      roomData.magoses = _.union(freeMagoses, reservedMagoses);
+    } else {
+      console.log('No free Magos roles.');
+    }
+  } else {
+    console.log('User already has magos role.');    
+  }
+  return roomData;
+};
+
+myMagos.getMagosUser = function(roomData, magos) {
+  var magosUser = null;
+  console.log('GET MAGOS USER');
+  _.each(roomData.magoses, function(obj) {
+    if(obj.magos == magos) {
+      console.log(magos + ' found');
+      console.log('user ' + obj.user);
+      magosUser = obj.user;
+    }
+  });
+  console.log(magosUser);
+  return magosUser;
+};
+
 
 myMagos.base64Encode = function(unencoded) {
   //

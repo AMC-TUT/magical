@@ -82,8 +82,10 @@ var Parser = {
   },
   loadSprites: function(components) {
     // images path
-    var path = '/editor/',
-      ext = '.png';
+    //var path = '/editor/',
+    var path = Parser.settings.djangoUri + 'game/image/',
+      ext = '.png',
+      spriteSize = '/' + Parser.blockSize + 'x' + Parser.blockSize;
 
     _.each(components, function(component) {
       // vars
@@ -96,7 +98,7 @@ var Parser = {
         var obj = {};
         obj[sprite + '-sprite'] = [0, 0];
 
-        Crafty.sprite(Parser.blockSize, path + sprite, obj);
+        Crafty.sprite(Parser.blockSize, path + sprite + spriteSize, obj);
       }
     }); // each
     return true;
