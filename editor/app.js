@@ -251,12 +251,12 @@ var editor = io.sockets.on('connection', function(socket) {
     });
   });
 
-  socket.on('saveGameComponent', function(component, sceneName, fn) {
-    console.log('SOCKET: saveGameComponent');
+  socket.on('saveGameComponentToCanvas', function(component, sceneName, fn) {
+    console.log('SOCKET: saveGameComponentToCanvas');
     console.log(component);
     console.log(sceneName);
     socket.get('slug', function(err, slug) {
-      socket.broadcast.in(slug).emit('saveGameComponent', component, sceneName);
+      socket.broadcast.in(slug).emit('saveGameComponentToCanvas', component, sceneName);
       fn(component, sceneName);
     });
   });
@@ -715,10 +715,29 @@ var editor = io.sockets.on('connection', function(socket) {
 */
 
   socket.on('disconnect', function() {
-    // user = _.find(rooms.)
-    console.info('user ' + socket.id + ' disconnected from magos!');
-    // io.sockets.clients('room')
-    // socket.broadcast.emit('user disconnected');
+    console.info('user ' + globalSessionObj.userName + ' (' + socket.id + ') disconnected from magos');
+    var slug = '';
+    socket.get('slug', function(err, name) {
+      slug = name;
+    });
+    client.get('room:' + slug, function(err, roomData) {
+      roomData = JSON.parse(roomData);
+      if(!_.isNull(roomData)) {
+        if(globalSessionObj.role == 'student') {
+          // remove user from authors and free magos
+          var userMagos = myMagos.getUserMagos(roomData, globalSessionObj.userName);
+          roomData = myMagos.removeMagosFromUser(roomData);
+          roomData = myMagos.removeUserFromAuthors(roomData);
+          socket.broadcast.in(slug).emit('disconnectUser', globalSessionObj.userName, userMagos);
+          // persist change
+          var jsonRoomData = JSON.stringify(roomData);
+          client.set('room:' + slug, jsonRoomData, redis.print);
+        } else {
+          // teacher?
+
+        }
+      }
+    });
   });
 
 });
@@ -804,9 +823,10 @@ myMagos.parseSessionObject = function(data) {
     */
   }
 
+  /*
   console.log('sessionObj:');
   console.log(sessionObj);
-
+  */
   globalSessionObj = sessionObj; // save for later use
   return sessionObj;
 };
@@ -864,6 +884,7 @@ myMagos.addMagosToAuthor = function(roomData) {
   return roomData;
 };
 
+// find magos user
 myMagos.getMagosUser = function(roomData, magos) {
   var magosUser = null;
   console.log('GET MAGOS USER');
@@ -878,6 +899,52 @@ myMagos.getMagosUser = function(roomData, magos) {
   return magosUser;
 };
 
+// find users magos
+myMagos.getUserMagos = function(roomData, userName) {
+  var magos = null;
+  console.log('GET USER MAGOS');
+  _.each(roomData.magoses, function(obj) {
+    if(obj.user) {    
+      if(obj.user.userName == userName) {
+        magos = obj.magos;
+      }
+    }
+  });
+  return magos;
+};
+
+
+myMagos.removeMagosFromUser = function(roomData) {
+  console.log('Trying to free magos role from user.');
+  var freeMagoses = [], reservedMagoses = [];
+  _.each(roomData.magoses, function(obj) {
+    if(obj.user) {
+      if(obj.user.userName == globalSessionObj.userName) {
+        obj.user = null;
+        freeMagoses.push(obj);
+      } else {
+        reservedMagoses.push(obj);
+      }
+    } else {
+      freeMagoses.push(obj);
+    }
+  });
+  console.log('freeMagoses:' + freeMagoses.length);
+  console.log('reservedMagoses:' + reservedMagoses.length);
+  roomData.magoses = _.union(freeMagoses, reservedMagoses);
+  return roomData;
+};
+
+myMagos.removeUserFromAuthors = function(roomData) {
+  var activeAuthors = [];
+  _.each(roomData.authors, function(obj) {
+    if(obj.userName != globalSessionObj.userName) {
+      activeAuthors.push(obj);
+    }
+  });
+  roomData.authors = activeAuthors;
+  return roomData;
+};
 
 myMagos.base64Encode = function(unencoded) {
   //

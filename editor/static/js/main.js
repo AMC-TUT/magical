@@ -43,7 +43,11 @@ $(function() {
 
     App.usersController = Em.ArrayController.create({
       content: [],
-      user: null
+      user: null,
+      removeItem: function(propName, value) {
+        var obj = this.findProperty(propName, value);
+        this.removeObject(obj);
+      },
     });
 
 
@@ -1741,8 +1745,8 @@ $(function() {
       },
 
       // add game component to game canvas
-      saveGameComponent: function(gameComponent, sceneName, callback) {
-        socket.emit('saveGameComponent', gameComponent, sceneName, function(data) {
+      saveGameComponentToCanvas: function(gameComponent, sceneName, callback) {
+        socket.emit('saveGameComponentToCanvas', gameComponent, sceneName, function(data) {
           callback(data);
         });
       },
@@ -2033,6 +2037,7 @@ $(function() {
       }
     });
 
+    // add new game component
     socket.on('addGameComponent', function(item) {
       console.log('>>> SOCKET REQUEST: addGameComponent');
       if(_.isObject(item)) {
@@ -2040,6 +2045,7 @@ $(function() {
       }
     });
 
+    // remove game component
     socket.on('removeGameComponent', function(slug) {
       console.log('>>> SOCKET REQUEST: removeGameComponent');
       App.gameComponentsController.removeItem('slug', slug);
@@ -2051,14 +2057,10 @@ $(function() {
     });
 
 
-    socket.on('saveGameComponent', function(component, sceneName) {      
-      // add game component to game canvas
-      console.log('>>> SOCKET REQUEST: saveGameComponent');
-      var obj = App.CanvasComponent.create(component);
-      console.log(obj);
-      console.log(sceneName);
-      App.scenesController.get('content').findProperty('name', sceneName).get('gameComponents').pushObject(obj);
-
+    // add game component to game canvas
+    socket.on('saveGameComponentToCanvas', function(component, sceneName) {      
+      console.log('>>> SOCKET REQUEST: saveGameComponentToCanvas');
+      addGameComponentToCavas(component, sceneName)
     });
 
     socket.on('addUser', function(user) {
@@ -2069,6 +2071,17 @@ $(function() {
         if(!App.usersController.get('content').findProperty('userName', user.userName)) {
           App.usersController.get('content').pushObject(App.User.create(user));
         }
+      }
+    });
+
+    socket.on('disconnectUser', function(userName, userMagos) {
+      // remove user
+      console.log('>>> SOCKET REQUEST: disconnectUser');
+      console.log(userName);
+      App.usersController.removeItem('userName', userName);
+      var userMagos = App.magosesController.get('content').findProperty('magos', userMagos);
+      if(_.isObject(userMagos)) {
+        userMagos.set('user', null);
       }
     });
 
@@ -2384,6 +2397,9 @@ $(function() {
 
         App.dataSource.saveGame(0, function(data) {
           console.log('save (click)');
+          
+
+
         });
       });
     }
@@ -2524,50 +2540,40 @@ $(function() {
     */
     }
 
-    function addGameComponentToCavans(gameComponent, sceneName) {
-          // where to get the target from?
-          var $tgt = $(this);
-          //
-          if(!$tgt.is(":empty")) {
-            return false;
-          }
+    // add game component to game canvas (after socket message)
+    function addGameComponentToCavas(gameComponent, sceneName) {          
+      var $scene = $('.canvas-' + sceneName);
+      var row = gameComponent.position.row,
+        column = gameComponent.position.column;
 
-          var $draggable = $(ui.draggable),
-            $img = '';
+      var cssRow = row + 1,
+          cssColumn = column + 1;
+      // append to scene
+      var $tgt = $scene.find('tr:nth-child(' + cssRow + ')').find('td:nth-child(' + cssColumn + ')');
 
-          var slug = $draggable.data('slug');
+      if(!$tgt.is(":empty")) {
+        return false;
+      }
+      var slug = gameComponent.slug,
+        oid = gameComponent.oid,
+        sprite = null,
+        file = null,
+        apiPath = null;
+      
+      if(App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug)) {
+        sprite = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).get('properties.sprite');
+        file = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).get('properties.file');
+        apiPath = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).get('icon');
 
-          if($draggable.hasClass('game-item')) {
-            $img = $draggable.clone().removeAttr('data-original-title rel alt class style').addClass('canvas-item');
-          } else {
-            $img = $draggable.removeAttr('data-original-title rel alt class style').addClass('canvas-item');
-          }
+        var img = '<img src="' + apiPath + '" data-slug="' + slug + '" data-oid="' + oid + '" class="canvas-item canvas-game-component">';
+        var $img = $(img);
 
-          // remove when clicked - impl. draggable later
-          $img.on('click tap', function(event) {
-            var $tgt = $(event.target),
-              oid = $tgt.data('oid');
+        var obj = App.CanvasComponent.create(gameComponent);
+        App.scenesController.get('content').findProperty('name', sceneName).get('gameComponents').pushObject(obj);
 
-            var item = App.scenesController.getPath('selected.gameComponents').findProperty('oid', oid);
-            App.scenesController.getPath('selected.gameComponents').removeObject(item);
-
-            $tgt.remove();
-
-            App.dataSource.saveGame(0, function(data) {
-              console.log('save (click)');
-            });
-          });
-
-          var $row = $tgt.closest('tr');
-          var column = $row.find('td').index($tgt);
-          var row = $row.closest('table').find('tr').index($row);
-          var oid = slug + column + row;
-
-          var obj = App.CanvasComponent.create(gameComponent);
-          App.scenesController.get('content').findProperty('name', sceneName).get('gameComponents').pushObject(obj);
-
-          $img.data('oid', oid);
-          $tgt.append($img);
+        $img.data('oid', gameComponent.oid);
+        $tgt.append($img);
+      }
     }
 
 
@@ -2635,7 +2641,7 @@ $(function() {
             // game component            
             console.log('save game component (drop)');
             var sceneName = App.scenesController.get('selected').get('name');
-            App.dataSource.saveGameComponent(obj, sceneName, function(data) {
+            App.dataSource.saveGameComponentToCanvas(obj, sceneName, function(data) {
               console.log('emit (save game component (drop))');
             });
           });
