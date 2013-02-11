@@ -86,11 +86,7 @@
             {
               "title": "player",
               "properties": []
-            }/*,
-            {
-              "title": "enemy",
-              "properties": []
-            }*/
+            }
           ]
         }
       }

@@ -164,7 +164,6 @@ $(function() {
             console.log('GAME data:');
             console.log(data);
             controller.set('content', data);
-
             App.roomController.populate(data);
 
           });
@@ -550,7 +549,7 @@ $(function() {
             height = blockSize;
         return App.settings.djangoUri + 'game/image/' + file_uuid + '/' + width + 'x' + height;
         //return '/editor/' + this.get('properties.file');
-      }.property('properties'),
+      }.property('properties.file'),
       snapToGrid: function() {
         var snap = this.getPath('properties.controls.grid');
 
@@ -562,7 +561,7 @@ $(function() {
           return snap;
         }
 
-      }.property('properties'),
+      }.property('properties.controls.grid'),
       directionStr: function() {
         var dir = this.getPath('properties.gravitation.direction');
 
@@ -574,7 +573,7 @@ $(function() {
           return dir;
         }
 
-      }.property('properties'),
+      }.property('properties.gravitation.direction'),
       collisions: function() {
         var collisions = this.getPath('properties.collisions');
 
@@ -1008,7 +1007,6 @@ $(function() {
         var sceneItems = $('.scene-chest').find('li');
         var gameItems = $('.item-chest').find('li');
 
-        console.log('SELECTED COMPONENT');
         console.log(JSON.stringify(this.get('content')));
 
         // loop elements and remove ui-selected class
@@ -1061,6 +1059,11 @@ $(function() {
 
       controls: Em.computed(function() {
         var components = this.get('content').findProperty('title', 'controls').get('properties');
+        return Em.Object.create(components);
+      }).property('content'),
+
+      gravitation: Em.computed(function() {
+        var components = this.get('content').findProperty('title', 'gravitation').get('properties');
         return Em.Object.create(components);
       }).property('content'),
 
@@ -1342,9 +1345,6 @@ $(function() {
     });
 
 
-
-
-
     /* VIEW FOR POTION PROPERTY FORMS */
     App.MagosComponentPropertyView = Em.View.extend({
       contentBinding: 'App.potionsController.content',
@@ -1356,8 +1356,10 @@ $(function() {
       controlsMethodBinding:  'App.potionsController.controls.method', // controls
       speedBinding: 'App.potionsController.controls.speed', // controls
       jumpHeightBinding: 'App.potionsController.controls.jumpHeight', // controls
+      gridBinding: 'App.potionsController.controls.grid', // controls
 
       strengthBinding: 'gravitation.strength', // gravitation
+      directionBinding: 'gravitation.direction', // gravitation
 
       compTypeBinding:  'compTypes.title', // compType
       
@@ -1424,9 +1426,10 @@ $(function() {
       submitGravitationProperties: function(event) {
         event.preventDefault();
         var strength = this.getPath('strength');
+        var direction = this.getPath('direction');
         // get values from the form
         var gravitation = {
-          // TODO: 'direction' : direction // boolean
+          'direction' : direction, // boolean
           'strength' : strength
         }
         App.selectedComponentController.setPath('content.properties.gravitation', gravitation);
@@ -1450,11 +1453,12 @@ $(function() {
         var controlsMethod = this.getPath('controlsMethod.method');
         var speed = this.getPath('speed');
         var jumpHeight = this.getPath('jumpHeight');
+        var grid = this.getPath('grid');
         // get values from the form
         var controls = { 
           'method' : controlsMethod, 
           'speed' : speed,
-          // TODO: 'grid' : grid, // boolean
+          'grid' : grid,
           'jumpHeight' : jumpHeight
         };
 
@@ -1993,100 +1997,108 @@ $(function() {
       },
       joinGame: function(callback) {
         socket.emit('joinGame', function(data) {
-          var game = App.Game.create();
-          // debug
-          console.log(data);
+          if(data) {
 
-          game.set('title', data.title);
-          game.set('slug', data.slug);
-          game.set('type', data.type);
-          game.set('state', data.state);
-          game.set('cloned', data.cloned);
-          // game.set('canvas', data.revision.canvas);
-          game.set('href', window.location.href);
+            var game = App.Game.create();
+            // debug
+            console.log(data);
 
-          var authors = [];
-          _.each(data.authors, function(author) {
-            //
-            var obj = App.User.create({
-              'userName': author.userName,
-              'firstName': author.firstName,
-              'lastName': author.lastName,
-              'magos': author.magos
+            game.set('title', data.title);
+            game.set('slug', data.slug);
+            game.set('type', data.type);
+            game.set('state', data.state);
+            game.set('cloned', data.cloned);
+            // game.set('canvas', data.revision.canvas);
+            game.set('href', window.location.href);
+
+            var authors = [];
+            _.each(data.authors, function(author) {
+              //
+              var obj = App.User.create({
+                'userName': author.userName,
+                'firstName': author.firstName,
+                'lastName': author.lastName,
+                'magos': author.magos
+              });
+              //
+              authors.push(obj);
             });
-            //
-            authors.push(obj);
-          });
-          game.set('authors', authors);
+            game.set('authors', authors);
 
-          var revision = data.revision;
+            var revision = data.revision;
 
-          if(_.isString(revision)) {
-            revision = JSON.parse(revision);
-          }
+            if(_.isString(revision)) {
+              revision = JSON.parse(revision);
+            }
 
-          var gameComponentsA = [];
-          _.each(revision.gameComponents, function(component) {
-            console.log(component);
-            gameComponentsA.push(App.GameComponent.create({
-              title: component.title,
-              slug: component.slug,
-              properties: component.properties
-            }));
-          });
-
-          var scenes = [];
-          _.each(revision.scenes, function(scene) {
-
-            var sceneArray = [];
-            _.each(scene.sceneComponents, function(component) {
-              console.log(component.oid);
-              // sceneArray.push( App.SceneComponent.create({ title: component.title, slug: component.slug, sprite: component.sprite, properties: component.properties }) );
-              sceneArray.push(App.CanvasComponent.create({
+            var gameComponentsA = [];
+            _.each(revision.gameComponents, function(component) {
+              console.log(component);
+              gameComponentsA.push(App.GameComponent.create({
+                title: component.title,
                 slug: component.slug,
-                position: component.position,
-                oid: component.oid,
                 properties: component.properties
               }));
-              // TODO component properties
             });
 
-            var gameArray = [];
-            _.each(scene.gameComponents, function(component) {
-              // gameArray.push( App.GameComponent.create({ title: component.title, slug: component.slug, properties: component.properties }) );
-              gameArray.push(App.CanvasComponent.create({
-                slug: component.slug,
-                position: component.position,
-                oid: component.oid
-              }));
-              // TODO component properties
+            var scenes = [];
+            _.each(revision.scenes, function(scene) {
+
+              var sceneArray = [];
+              _.each(scene.sceneComponents, function(component) {
+                console.log(component.oid);
+                // sceneArray.push( App.SceneComponent.create({ title: component.title, slug: component.slug, sprite: component.sprite, properties: component.properties }) );
+                sceneArray.push(App.CanvasComponent.create({
+                  slug: component.slug,
+                  position: component.position,
+                  oid: component.oid,
+                  properties: component.properties
+                }));
+                // TODO component properties
+              });
+
+              var gameArray = [];
+              _.each(scene.gameComponents, function(component) {
+                // gameArray.push( App.GameComponent.create({ title: component.title, slug: component.slug, properties: component.properties }) );
+                gameArray.push(App.CanvasComponent.create({
+                  slug: component.slug,
+                  position: component.position,
+                  oid: component.oid
+                }));
+                // TODO component properties
+              });
+
+              //
+              var obj = App.Scene.create({
+                name: scene.name,
+                sceneComponents: sceneArray,
+                gameComponents: gameArray
+              });
+              //
+              scenes.push(obj);
             });
 
-            //
-            var obj = App.Scene.create({
-              name: scene.name,
-              sceneComponents: sceneArray,
-              gameComponents: gameArray
+            var audios = [];
+            var sprites = [];
+
+            var rev = App.Revision.create({
+              //'authors': authors,
+              'canvas': revision.canvas,
+              'scenes': scenes,
+              'audios': audios,
+              'sprites': sprites,
+              'gameComponents': gameComponentsA
             });
-            //
-            scenes.push(obj);
-          });
 
-          var audios = [];
-          var sprites = [];
+            game.set('revision', rev);
 
-          var rev = App.Revision.create({
-            //'authors': authors,
-            'canvas': revision.canvas,
-            'scenes': scenes,
-            'audios': audios,
-            'sprites': sprites,
-            'gameComponents': gameComponentsA
-          });
+            callback(game);
 
-          game.set('revision', rev);
-
-          callback(game);
+          } else {
+            // game by that slug was not found
+            console.log('Game not found.');
+            window.location.replace("http://localhost:8080");
+          }
         });
       }
     });
@@ -2837,6 +2849,11 @@ $(function() {
             $img = {};
 
           var slug = $draggable.data('slug');
+
+          if(slug == 'background') {
+            // apply background image to canvas background
+
+          }
 
           if($draggable.hasClass('cloned')) {
             $img = $draggable;

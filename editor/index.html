@@ -67,14 +67,12 @@
                               {{content.properties.controls.jumpHeight}}
                             </td>
                           </tr>
-                          <!--
                           <tr>
                             <td>Snap to Grid</td>
                             <td>
                               {{content.snapToGrid}}
                             </td>
                           </tr>
-                          -->
                         {{/view}}
                       {{/if}}
 
@@ -677,6 +675,14 @@
                           </div>
                         </div>
 
+
+                        <div class="control-group">
+                          <label class="control-label">Snap to grid</label>
+                          <div class="controls">
+                            {{view Ember.Checkbox checkedBinding="view.grid"}}
+                          </div>
+                        </div>
+
                       </div>
 
                       <div class="form-actions">
@@ -727,6 +733,13 @@
                           <label class="control-label">Strength</label>
                           <div class="controls">
                             {{view App.NumberField valueBinding="view.strength" class="input" min="0" max="1000"}}
+                          </div>
+                        </div>
+
+                        <div class="control-group">
+                          <label class="control-label">Direction</label>
+                          <div class="controls">
+                            {{view Ember.Checkbox checkedBinding="view.direction"}}
                           </div>
                         </div>
 

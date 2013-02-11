@@ -437,7 +437,7 @@ var editor = io.sockets.on('connection', function(socket) {
       var game;
 
       if(_.isNull(data)) {
-        console.log('GET GAME DATA FROM DJANGO');
+        //console.log('GET GAME DATA FROM DJANGO');
         // query from django and set to redis
         // set session cookies for request
         var j = myMagos.createCookieJar(sessionid, csrftoken);
@@ -448,7 +448,6 @@ var editor = io.sockets.on('connection', function(socket) {
         }, function(error, response, body) {
           if(!error && response.statusCode == 200) {
             game = JSON.parse(body);
-            console.log('--game--');
             console.log(game);
             if(_.isObject(game)) {
               game.revision = myMagos.checkGameRevision(game.revision);
