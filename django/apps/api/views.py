@@ -805,7 +805,7 @@ class ImageView(RequestMixin, ResponseMixin, View):
         kwargs = {}
         if img_type:
             kwargs['image_type'] = img_type
-        images = Image.objects.filter(**kwargs)
+        images = Image.objects.filter(**kwargs).order_by('name')
         img_count = images.count()
         results_list = []
         for image in images:
