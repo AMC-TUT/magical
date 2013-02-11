@@ -99,6 +99,7 @@ $(function() {
               _.each(obj.potions, function(potion) {
                 var emPotion = App.Potion.create(potion);
                 potions.push(emPotion);
+                App.potionsController.get('content').pushObject(emPotion);
               });
               emMagos.set('potions', potions);
               App.magosesController.get('content').pushObject(emMagos);
@@ -957,10 +958,8 @@ $(function() {
           
           var selectedComponent = App.selectedComponentController.get('content');
 
-          // TODO proper view update to chest and canvas
           var slugName = App.selectedComponentController.getPath('content.slug');
-          //var src = '/editor/user-media/images/' + sprite + '.png';
-          //var src = '/editor/' + file;
+
           var src = selectedImageAsset.get('apiPath');
           $('.item-chest').find("[data-slug='" + slugName + "']").attr('src', src);
 
@@ -1058,7 +1057,19 @@ $(function() {
      **************************/
 
     App.potionsController = Em.ArrayController.create({
-      content: []
+      content: [],
+
+      controls: Em.computed(function() {
+        var components = this.get('content').findProperty('title', 'controls').get('properties');
+        return Em.Object.create(components);
+      }).property('content'),
+
+      compTypes: Em.computed(function() {
+        var components = this.get('content').findProperty('title', 'type').get('properties');
+        return Em.Object.create(components);
+      }).property('content')
+
+
     });
 
     /**************************
@@ -1324,52 +1335,104 @@ $(function() {
         
       }.observes('content.selected')
 
-    })
-
-
-    App.MagosPotionView = Em.View.extend({
-      templateName: 'magos-potion',
-      contentBinding: 'App.potionsController.content',
-
-      // properties of title 'controls'
-      controls: function() {
-        var components = this.get('content');
-        var array = [];
-        _.each(components, function(component) {
-          if(component.title == 'controls') {
-            array.push(component.properties);
-            console.log('----------');
-            console.log(component.properties);
-          }
-        });
-        return array;
-      }.observes('prop'),
-      
-      propBinding: "content.@each.properties",
-
     });
 
 
 
+
+
+    /* VIEW FOR POTION PROPERTY FORMS */
     App.MagosComponentPropertyView = Em.View.extend({
       contentBinding: 'App.potionsController.content',
+      controlsBinding: 'App.potionsController.controls',
+      gravitationBinding: 'App.potionsController.gravitation',
+      compTypesBinding: 'App.potionsController.compTypes',
+      // field bindings
+      controlsMethodBinding:  'App.potionsController.controls.method', // controls
+      speedBinding: 'App.potionsController.controls.speed', // controls
+      jumpHeightBinding: 'App.potionsController.controls.jumpHeight', // controls
 
-      // properties of title 'controls'
-      controls: function() {
-        var components = this.get('content');
-        var array = [];
-        _.each(components, function(component) {
-          if(component.title == 'controls') {
-            array.push(component.properties);
-            console.log('----------');
-            console.log(component.properties);
-          }
-        });
-        return array;
-      }.observes('prop'),
+      strengthBinding: 'gravitation.strength', // gravitation
+
+      compTypeBinding:  'compTypes.title', // type -> App.potionsController.type.types?
       
-      propBinding: "content.@each.properties.controls",
+      submitScoresProperties: function(event) {
+        event.preventDefault();
+        // TODO: implementation of score        
+      },
 
+
+      submitCompTypeProperties: function(event) {
+        event.preventDefault();
+        var typeTitle = this.getPath('compType.title');
+        console.log(typeTitle);
+        
+        App.selectedComponentController.setPath('content.properties.type', typeTitle);
+
+        var selectedComponent = App.selectedComponentController.get('content');
+        var slugName = App.selectedComponentController.getPath('content.slug');
+        // save game
+        App.dataSource.saveGame(0, function(data) {
+          console.log('save (edit properties)');
+        });
+        // inform others of property change
+        App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
+          console.log('emit (update game component properties)');
+        });          
+
+      },
+
+      submitGravitationProperties: function(event) {
+        event.preventDefault();
+        var strength = this.getPath('strength');
+        // get values from the form
+        var gravitation = {
+          // TODO: 'direction' : direction // boolean
+          'strength' : strength
+        }
+        App.selectedComponentController.setPath('content.properties.gravitation', gravitation);
+
+        var selectedComponent = App.selectedComponentController.get('content');
+        var slugName = App.selectedComponentController.getPath('content.slug');
+        // save game
+        App.dataSource.saveGame(0, function(data) {
+          console.log('save (edit properties)');
+        });
+        // inform others of property change
+        App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
+          console.log('emit (update game component properties)');
+        });          
+
+      },
+
+      
+      submitControlsProperties: function(event) {
+        event.preventDefault();
+        var controlsMethod = this.getPath('controlsMethod.method');
+        var speed = this.getPath('speed');
+        var jumpHeight = this.getPath('jumpHeight');
+        // get values from the form
+        var controls = { 
+          'method' : controlsMethod, 
+          'speed' : speed,
+          // TODO: 'grid' : grid, // boolean
+          'jumpHeight' : jumpHeight
+        };
+
+        App.selectedComponentController.setPath('content.properties.controls', controls);
+
+        var selectedComponent = App.selectedComponentController.get('content');
+        var slugName = App.selectedComponentController.getPath('content.slug');
+        // save game
+        App.dataSource.saveGame(0, function(data) {
+          console.log('save (edit properties)');
+        });
+        // inform others of property change
+        App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
+          console.log('emit (update game component properties)');
+        });
+
+      },
 
       removeComponentProperty: function(event) {
         event.preventDefault();
@@ -1413,7 +1476,7 @@ $(function() {
   App.PotionsControlsView = Ember.View.extend({
     contentBinding: 'App.selectedComponentController.content',
     methodBinding: 'App.selectedComponentController.content.properties.controls.method',
-        
+
     save: function(e) {
       e.preventDefault(); e.stopPropagation();
       this.set('method', this.get('textField').getCurrentValue());
@@ -1699,28 +1762,9 @@ $(function() {
       },
 
       joinRoom: function(gameData, callback) {
-        console.log('JOIN ROOM');
-        
         socket.emit('joinRoom', gameData, function(data) {
           callback(data);
-        });
-        
-        /*
-        var sessionid = $.cookie('sessionid');
-        var csrftoken = $.cookie('csrftoken');
-        var paths = window.location.pathname.split('/');
-        var slug = _.last(paths);
-
-        var credentials = {
-          sessionid: sessionid,
-          csrftoken: csrftoken,
-          slug: slug
-        };
-
-        socket.emit('setUserCredentials', credentials, function(data) {
-          callback(data);
-        });
-        */
+        });        
       },
 
       shout: function(shout, callback) {
@@ -1754,6 +1798,20 @@ $(function() {
       // remove game component from game canvas
       removeGameComponentFromCanvas: function(gameComponent, sceneName, callback) {
         socket.emit('removeGameComponentFromCanvas', gameComponent, sceneName, function(data) {
+          callback(data);
+        });
+      },
+
+      // add game component to game canvas
+      saveSceneComponentToCanvas: function(sceneComponent, sceneName, callback) {
+        socket.emit('saveSceneComponentToCanvas', sceneComponent, sceneName, function(data) {
+          callback(data);
+        });
+      },
+
+      // remove scene component from game canvas
+      removeSceneComponentFromCanvas: function(sceneComponent, sceneName, callback) {
+        socket.emit('removeSceneComponentFromCanvas', sceneComponent, sceneName, function(data) {
           callback(data);
         });
       },
@@ -2067,14 +2125,32 @@ $(function() {
     // add game component to game canvas
     socket.on('saveGameComponentToCanvas', function(component, sceneName) {      
       console.log('>>> SOCKET REQUEST: saveGameComponentToCanvas');
-      addGameComponentToCavas(component, sceneName)
+      addGameComponentToCavas(component, sceneName);
     });
 
-    // add game component to game canvas
+    // remove game component from game canvas
     socket.on('removeGameComponentFromCanvas', function(component, sceneName) {      
       console.log('>>> SOCKET REQUEST: removeGameComponentFromCanvas');
-      removeGameComponentFromCanvas(component, sceneName)
+      removeGameComponentFromCanvas(component, sceneName);
     });
+
+
+    // add scene component to game canvas
+    socket.on('saveSceneComponentToCanvas', function(component, sceneName) {      
+      console.log('>>> SOCKET REQUEST: saveSceneComponentToCanvas');
+      addSceneComponentToCavas(component, sceneName);
+    });
+
+    // remove scene component from game canvas
+    socket.on('removeSceneComponentFromCanvas', function(component, sceneName) {      
+      console.log('>>> SOCKET REQUEST: removeSceneComponentFromCanvas');
+      removeSceneComponentFromCanvas(component, sceneName);
+    });
+
+
+
+
+
 
 
     socket.on('addUser', function(user) {
@@ -2391,15 +2467,11 @@ $(function() {
 
     function bindClickToRemove(itemType) {
       var itemClass = (itemType == 'gameComponents') ? 'canvas-game-component' : 'canvas-scene-component';
-      console.log('---- BINDING ' + itemType);
-      $(".canvas-pane").off('click tap', 'img.' + itemClass);
       $(".canvas-pane").on('click tap', 'img.' + itemClass, function(event){
         var $tgt = $(event.target),
           oid = $tgt.data('oid');
-        console.log('* ITEMTYPE: ' + itemType);
-        console.log('* ITEM OID: ' + oid);
         var item = App.scenesController.getPath('selected.' + itemType).findProperty('oid', oid);
-        console.log('* ITEM: ');
+        console.log('REMOVABLE ITEM:');
         console.log(item);
         App.scenesController.getPath('selected.'+ itemType).removeObject(item);
         $tgt.remove();
@@ -2413,9 +2485,17 @@ $(function() {
           console.log('save (click)');
           // emit removal via socket
           var sceneName = App.scenesController.get('selected').get('name');
-          App.dataSource.removeGameComponentFromCanvas(item, sceneName, function(data) {
-            console.log('emit (remove game component from game canvas');
-          });
+          if(itemType == 'gameComponents') {
+            // emit game component removal
+            App.dataSource.removeGameComponentFromCanvas(item, sceneName, function(data) {
+              console.log('emit (remove game component from game canvas');
+            });
+          } else {
+            // emit scene component removal
+            App.dataSource.removeSceneComponentFromCanvas(item, sceneName, function(data) {
+              console.log('emit (remove scene component from game canvas');
+            });
+          }
         });
       });
     }
@@ -2463,7 +2543,7 @@ $(function() {
             oid = sceneComponent.oid,
             properties = sceneComponent.properties;
 
-          var img = '<img src="/editor/static/img/icons/icon-' + slug + '.png" data-slug="' + slug + '" data-oid="' + oid + '" class="canvas-item canvas-scene-component" style="position:absolute;left:' + left + 'px;top:' + top + 'px;">';
+          var img = '<img src="/editor/static/img/icons/icon-' + slug + '.png" id="' + oid + '" data-slug="' + slug + '" data-oid="' + oid + '" class="canvas-item canvas-scene-component" style="position:absolute;left:' + left + 'px;top:' + top + 'px;">';
           var $img = $(img);
 
           if(slug === 'background' && _.isObject(sceneComponent.properties) && _.isString(properties.sprite)) {
@@ -2548,6 +2628,34 @@ $(function() {
         ratio = $canvas.height() / $canvas.width();
     }
     
+
+    // remove game component from game canvas (after socket message)
+    function removeSceneComponentFromCanvas(sceneComponent, sceneName) {
+      var $scene = $('.canvas-' + sceneName);
+      $scene.find('img.canvas-scene-component#'+ sceneComponent.oid).remove();
+
+    }
+
+    // add scene component to game canvas (after socket message)
+    function addSceneComponentToCavas(sceneComponent, sceneName) {
+      var $scene = $('.canvas-' + sceneName);
+      var top = sceneComponent.position.top,
+        left = sceneComponent.position.left,
+        slug = sceneComponent.slug,
+        oid = sceneComponent.oid,
+        properties = sceneComponent.properties;
+      var img = '<img src="/editor/static/img/icons/icon-' + slug + '.png" id="' + oid + '" data-slug="' + slug + '" data-oid="' + oid + '" class="canvas-item canvas-scene-component" style="position:absolute;left:' + left + 'px;top:' + top + 'px;">';
+      var $img = $(img);
+
+      if(slug === 'background' && _.isObject(sceneComponent.properties) && _.isString(properties.sprite)) {
+        var backgroundImage = '/editor/user-media/images/' + properties.sprite + '.png';
+        $scene.css('background-image', 'url(' + backgroundImage + ')');
+      }
+      // append to scene
+      $scene.append($img);
+    }
+
+
     // remove game component from game canvas (after socket message)
     function removeGameComponentFromCanvas(gameComponent, sceneName) {
       var itemType = 'gameComponents';
@@ -2620,14 +2728,12 @@ $(function() {
         activeClass: "canvas-cell-hover",
         hoverClass: "canvas-cell-active",
         drop: function(event, ui) {
-
           var $tgt = $(this);
-          //
           if(!$tgt.is(":empty")) {
             return false;
           }
 
-          var $draggable = $(ui.draggable),
+          var $draggable = $(ui.draggable), 
             $img = '';
 
           var slug = $draggable.data('slug');
@@ -2699,7 +2805,7 @@ $(function() {
             $img = $draggable.clone().removeAttr('data-original-title rel alt class style ui-draggable').addClass('canvas-item cloned');
             $img.css(newStyle);
           }
-
+          $img.addClass('canvas-scene-component');
           $tgt.append($img);
 
           var position = $img.position();
@@ -2707,6 +2813,8 @@ $(function() {
           var pos_top = Math.round(position.top);
 
           var oid = slug + pos_left + pos_top;
+          $img.attr({'id': oid});
+
           //console.log(oid);
           var obj = {
             oid: oid,
@@ -2722,6 +2830,10 @@ $(function() {
           App.dataSource.saveGame(1, function(data) {
             // scene component
             console.log('save scene component (drop)');
+            var sceneName = App.scenesController.get('selected').get('name');
+            App.dataSource.saveSceneComponentToCanvas(obj, sceneName, function(data) {
+              console.log('emit (save scene component (drop))');
+            });
           });
 
         } // drop

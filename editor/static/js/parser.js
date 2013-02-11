@@ -97,7 +97,6 @@ var Parser = {
         //console.log(Parser.settings.djangoUri + 'game/image/' + sprite + '/' + Parser.blockSize + 'x' + Parser.blockSize);
         var obj = {};
         obj[sprite + '-sprite'] = [0, 0];
-
         Crafty.sprite(Parser.blockSize, path + sprite + spriteSize, obj);
       }
     }); // each
@@ -274,19 +273,24 @@ var Parser = {
       // game comps
       _.each(Parser.game.revision.gameComponents, function(comp) {
         if (!_.isUndefined(comp.properties.file) && _.isString(comp.properties.file)) {
-          assets.push(componentsPath + comp.properties.file);
+          //assets.push(componentsPath + comp.properties.file);
+          assets.push(Parser.settings.djangoUri + 'game/image/' + comp.properties.file + '/' + Parser.blockSize + 'x' + Parser.blockSize);
         }
       });
       // scene comps
       _.each(scenes, function(scene) {
+        console.log('SCENE COMPS:');
+        console.log(scene.sceneComponents);
         _.each(scene.sceneComponents, function(comp) {
           if (!_.isUndefined(comp.sprite) && _.isString(comp.sprite)) {
             assets.push(path + comp.sprite + ext);
           }
         });
       });
-
+      console.log(assets);
       // TODO audio assets
+      Crafty.scene("intro");
+      /*
       Crafty.load(
       assets, function() {
         setTimeout(function() {
@@ -299,7 +303,7 @@ var Parser = {
         //console.log('Error loading ' + e.src + ' while loading game assets (loaded ' + e.loaded + ' of ' + e.total + ')');
         alert('Error loading ' + e.src + ' while loading game assets (loaded ' + e.loaded + ' of ' + e.total + ')');
       });
-
+      */
     });
 
     return true;
@@ -322,10 +326,10 @@ var Parser = {
 
           // sprite
           if (sprite && !sprite.match(/^empty/)) {
-            // this_.addComponent(sprite + "-sprite");
+            this_.addComponent(sprite + "-sprite");
             // sprite impl. exists and works. uncomment previous
             // line and comment out next line to use sprite impl.
-            this_.image('/editor/' + sprite);
+            //this_.image('/editor/' + sprite);
           }
 
           // controls

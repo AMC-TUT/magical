@@ -272,6 +272,29 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
 
+
+  socket.on('saveSceneComponentToCanvas', function(component, sceneName, fn) {
+    console.log('SOCKET: saveSceneComponentToCanvas');
+    console.log(component);
+    console.log(sceneName);
+    socket.get('slug', function(err, slug) {
+      socket.broadcast.in(slug).emit('saveSceneComponentToCanvas', component, sceneName);
+      fn(component, sceneName);
+    });
+  });
+
+  socket.on('removeSceneComponentFromCanvas', function(component, sceneName, fn) {
+    console.log('SOCKET: removeSceneComponentFromCanvas');
+    console.log(component);
+    console.log(sceneName);
+    socket.get('slug', function(err, slug) {
+      socket.broadcast.in(slug).emit('removeSceneComponentFromCanvas', component, sceneName);
+      fn(component, sceneName);
+    });
+  });
+
+
+
   socket.on('userChangedMagos', function(user, magos, fn) {
     console.log('SOCKET: userChangedMagos');
     console.log(user);

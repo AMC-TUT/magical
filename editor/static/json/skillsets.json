@@ -46,7 +46,7 @@
       {
         "title": "controls",
         "properties": {
-            "methods": ["twoway", "fourway", "multiway"],
+            "methods": [{"method":"twoway"}, {"method":"fourway"}, {"method":"multiway"}],
             "speed": 4,
             "jumpHeight": 14,
             "grid": true,
@@ -86,11 +86,11 @@
             {
               "title": "player",
               "properties": []
-            },
+            }/*,
             {
               "title": "enemy",
               "properties": []
-            }
+            }*/
           ]
         }
       }
