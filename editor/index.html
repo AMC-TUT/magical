@@ -752,6 +752,7 @@
                           <div class="controls">
                             {{view Ember.Select contentBinding="App.potionsController.compTypes.types" optionLabelPath="content.title" optionValuePath="content.title" selectionBinding="compType" class="input-xlarge" }}
                           </div>
+
                         </div>
 
                       </div>
@@ -773,6 +774,39 @@
                 {{/if}}
 
                 {{#if isPrincipes}}
+
+
+
+                <div {{bindAttr class="magos:magos-potions magos magos:font magos:hide"}} style="display:none;">
+                <form class="form-vertical">
+                  <fieldset>
+                    <legend>Font</legend>
+                    {{#view App.MagosComponentPropertyView}}
+                      <div class="action-group">
+
+                        <div class="control-group">
+                          <label class="control-label">Family</label>
+                          <div class="controls">
+                            {{view Ember.TextField type="text" class="input" valueBinding="view.family" }}
+                          </div>
+                        </div>
+
+                        <div class="control-group">
+                          <label class="control-label">Size</label>
+                          <div class="controls">
+                            {{view App.NumberField valueBinding="view.fontSize" class="input" min="8" max="40"}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-actions">
+                        <button {{action "submitFontProperties"}} class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
+                        <button class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
+                      </div>
+
+                    {{/view}}
+
+                </div>
 
                 <div {{bindAttr class="magos:magos-potions magos magos:score magos:hide"}} style="display:none;">
                 <form class="form-vertical">

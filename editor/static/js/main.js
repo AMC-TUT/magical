@@ -1067,8 +1067,12 @@ $(function() {
       compTypes: Em.computed(function() {
         var components = this.get('content').findProperty('title', 'type').get('properties');
         return Em.Object.create(components);
-      }).property('content')
+      }).property('content'),
 
+      fonts: Em.computed(function() {
+        var components = this.get('content').findProperty('title', 'font').get('properties');
+        return Em.Object.create(components);
+      }).property('content')
 
     });
 
@@ -1347,6 +1351,7 @@ $(function() {
       controlsBinding: 'App.potionsController.controls',
       gravitationBinding: 'App.potionsController.gravitation',
       compTypesBinding: 'App.potionsController.compTypes',
+      fontsBinding: 'App.potionsController.fonts',
       // field bindings
       controlsMethodBinding:  'App.potionsController.controls.method', // controls
       speedBinding: 'App.potionsController.controls.speed', // controls
@@ -1354,18 +1359,47 @@ $(function() {
 
       strengthBinding: 'gravitation.strength', // gravitation
 
-      compTypeBinding:  'compTypes.title', // type -> App.potionsController.type.types?
+      compTypeBinding:  'compTypes.title', // compType
       
+      familyBinding: 'fonts.family', // font
+      fontSizeBinding: 'fonts.size', // font
+
       submitScoresProperties: function(event) {
         event.preventDefault();
         // TODO: implementation of score        
       },
 
 
+      submitFontProperties: function(event) {
+        event.preventDefault();
+        // get values from the form
+        var family = this.getPath('family');
+        var size = this.getPath('fontSize');
+        // TODO: var color = this.getPath('fontColor');
+        // TODO: var background = this.get();
+        console.log(size);
+        var font = {
+          'size' : size,
+          'family' : family
+        }
+        App.selectedComponentController.setPath('content.properties.font', font);
+
+        var selectedComponent = App.selectedComponentController.get('content');
+        var slugName = App.selectedComponentController.getPath('content.slug');
+        // save game
+        App.dataSource.saveGame(0, function(data) {
+          console.log('save (edit properties)');
+        });
+        // inform others of property change
+        App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
+          console.log('emit (update game component properties)');
+        });          
+
+      },
+
       submitCompTypeProperties: function(event) {
         event.preventDefault();
         var typeTitle = this.getPath('compType.title');
-        console.log(typeTitle);
         
         App.selectedComponentController.setPath('content.properties.type', typeTitle);
 
@@ -1378,7 +1412,7 @@ $(function() {
         // inform others of property change
         App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
           console.log('emit (update game component properties)');
-        });          
+        });
 
       },
 
