@@ -1363,6 +1363,8 @@ $(function() {
       
       familyBinding: 'fonts.family', // font
       fontSizeBinding: 'fonts.size', // font
+      fontColorBinding: 'fonts.color', // font
+      fontBackgroundBinding: 'fonts.background', // font
 
       submitScoresProperties: function(event) {
         event.preventDefault();
@@ -1375,12 +1377,15 @@ $(function() {
         // get values from the form
         var family = this.getPath('family');
         var size = this.getPath('fontSize');
-        // TODO: var color = this.getPath('fontColor');
+        var fontColor = this.getPath('fontColor');
+        var fontBackground = this.getPath('fontBackground');
         // TODO: var background = this.get();
         console.log(size);
         var font = {
           'size' : size,
-          'family' : family
+          'family' : family,
+          'color' : fontColor,
+          'background' : fontBackground
         }
         App.selectedComponentController.setPath('content.properties.font', font);
 
