@@ -56,7 +56,8 @@
       {
         "title": "collision",
         "properties": {
-            "events": [],
+            "events": [{"event":"destroySelf"}, {"event":"destroyTarget"}],
+            "speed": 4,
             "target": null
         }
       },

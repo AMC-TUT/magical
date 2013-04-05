@@ -1,3 +1,8 @@
+function capitaliseFirstLetter(string) {
+    string = string.toLowerCase();
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 
 Crafty.c("Controls", {
   init: function() {
@@ -38,10 +43,11 @@ var Parser = {
 
     // create game components
     var gameComps = Parser.createGameComponents(game.revision.gameComponents);
+    console.log('gameComps:' + gameComps);
 
     // create scene components
     var sceneComps = Parser.createSceneComponents(game.revision.scenes);
-    console.log('gameComps:' + sceneComps);
+    console.log('sceneComps:' + sceneComps);
 
     // create scenes
     var scenes = Parser.createScenes(game.revision.scenes);
@@ -84,11 +90,12 @@ var Parser = {
     // images path
     //var path = '/editor/',
     var path = Parser.settings.djangoUri + 'game/image/',
-      ext = '.png',
-      spriteSize = '/' + Parser.blockSize + 'x' + Parser.blockSize;
+      //ext = '.png',
+      spriteSize = '_' + Parser.blockSize + 'x' + Parser.blockSize;
 
     _.each(components, function(component) {
       // vars
+      var ext = '.' + component.properties.ext;
       //var sprite = (!_.isUndefined(component.properties.sprite) && _.isString(component.properties.sprite)) ? component.properties.sprite : '';
       var sprite = (!_.isUndefined(component.properties.file) && _.isString(component.properties.file)) ? component.properties.file : '';
       console.log(sprite);
@@ -97,7 +104,7 @@ var Parser = {
         //console.log(Parser.settings.djangoUri + 'game/image/' + sprite + '/' + Parser.blockSize + 'x' + Parser.blockSize);
         var obj = {};
         obj[sprite + '-sprite'] = [0, 0];
-        Crafty.sprite(Parser.blockSize, path + sprite + spriteSize, obj);
+        Crafty.sprite(Parser.blockSize, path + sprite + spriteSize + ext, obj);
       }
     }); // each
     return true;
@@ -234,13 +241,12 @@ var Parser = {
           } // /title
         });
 
-        // game comps
+        // create game component entities
         _.each(scene.gameComponents, function(comp) {
-
           // position
           var x_ = comp.position.column * Parser.blockSize;
           var y_ = comp.position.row * Parser.blockSize;
-
+          
           Crafty.e(comp.slug).attr({
             x: x_,
             y: y_,
@@ -274,7 +280,7 @@ var Parser = {
       _.each(Parser.game.revision.gameComponents, function(comp) {
         if (!_.isUndefined(comp.properties.file) && _.isString(comp.properties.file)) {
           //assets.push(componentsPath + comp.properties.file);
-          assets.push(Parser.settings.djangoUri + 'game/image/' + comp.properties.file + '/' + Parser.blockSize + 'x' + Parser.blockSize);
+          assets.push(Parser.settings.djangoUri + 'game/image/' + comp.properties.file + '_' + Parser.blockSize + 'x' + Parser.blockSize + '.' + comp.properties.ext);
         }
       });
       // scene comps
@@ -289,40 +295,46 @@ var Parser = {
       });
       console.log(assets);
       // TODO audio assets
-      Crafty.scene("intro");
-      /*
+      //Crafty.scene("intro");
+
       Crafty.load(
-      assets, function() {
-        setTimeout(function() {
-          Crafty.scene("intro");
-        }, 700);
-      }, function(e) {
-        $('.loader-procent').text(Math.round(e.percent) + "%");
-      }, function(e) {
-        //console.log(e)
-        //console.log('Error loading ' + e.src + ' while loading game assets (loaded ' + e.loaded + ' of ' + e.total + ')');
-        alert('Error loading ' + e.src + ' while loading game assets (loaded ' + e.loaded + ' of ' + e.total + ')');
-      });
-      */
+        assets, 
+        function() {
+          setTimeout(function() {
+            Crafty.scene("intro");
+          }, 700);
+        },
+        function(e) {
+          $('.loader-procent').text(Math.round(e.percent) + "%");
+        }, 
+        function(e) {
+          //console.log(e)
+          //console.log('Error loading ' + e.src + ' while loading game assets (loaded ' + e.loaded + ' of ' + e.total + ')');
+          alert('Error loading ' + e.src + ' while loading game assets (loaded ' + e.loaded + ' of ' + e.total + ')');
+        }
+      );
+
+      
     });
 
     return true;
   },
   createGameComponents: function(components) {
-
     _.each(components, function(component) {
+      console.log(component);
       var props = component.properties;
-
+      console.log(props);
       var sprite = _.isString(props.file) ? props.file : false;
 
-      Crafty.c(component.slug, {
+      var gcComp = Crafty.c(component.slug, {
         init: function() {
           var this_ = this;
-
           // for all game comps
           this_.addComponent('2D', 'Canvas', 'Image');
+          //this_.addComponent('2D', 'DOM', 'Image');
 
-          this_.addComponent(component.title);
+          var cTitle = capitaliseFirstLetter(component.slug);
+          this_.addComponent(cTitle);
 
           // sprite
           if (sprite && !sprite.match(/^empty/)) {
@@ -340,19 +352,25 @@ var Parser = {
             this_.attr({
               z: 100
             });
-
+            console.log(props.controls.method);
             // twoway === platform
-            if (props.controls.method === 'Twoway') {
+            if (props.controls.method.toLowerCase() === 'twoway') {
               var jumpHeight = _.isNumber(props.controls.jumpHeight) ? props.controls.jumpHeight : 12;
-
+              
               this_.addComponent('Controls', 'Keyboard', 'Gravity', 'Collision');
               this_.Controls(speed, jumpHeight);
               this_.gravity('Platform');
             }
 
             // fourway
-            if (props.controls.method === 'Fourway') {
+            if (props.controls.method.toLowerCase() === 'fourway') {
               this_.addComponent('Fourway', 'Keyboard');
+              this_.speed(speed);
+            }
+
+            // multiway
+            if (props.controls.method.toLowerCase() === 'multiway') {
+              this_.addComponent('Multiway', 'Keyboard');
               this_.speed(speed);
             }
 
@@ -362,16 +380,16 @@ var Parser = {
           if (_.isString(props.type)) {
             this_.addComponent(props.type);
 
-            if(props.type === "Platform") {
+            if(props.type.toLowerCase() === "platform") {
               this_.addComponent('Platform');
             }
 
-            if(props.type === 'Block') {
+            if(props.type.toLowerCase() === 'block') {
               this_.addComponent('Platform');
               this_.addComponent('Solid');
             }
 
-            if(props.type === "Pushable") {
+            if(props.type.toLowerCase() === "pushable") {
               this_.addComponent('Platform');
               this_.addComponent('Solid');
               this_.addComponent("Collision");

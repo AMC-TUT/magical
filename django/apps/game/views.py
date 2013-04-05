@@ -97,7 +97,7 @@ def game_details(request, gameslug):
                 'can_review': can_review, 'editor_url' : editor_url })
 
 
-def download_image(request, uuid, width, height):
+def download_image(request, uuid, width, height, ext):
     """View for downloading image with uuid.
        Creates image with given width and height on the fly
        if it does not exist."""

@@ -816,6 +816,7 @@ class ImageView(RequestMixin, ResponseMixin, View):
             result_dict['slug'] = image.slug
             result_dict['type'] = image.image_type
             result_dict['state'] = image.state
+            result_dict['ext'] = image.content_type.sub_type
             #result_dict['file'] = image.image_url # base64 encoded
             #result_dict['file'] = image.image_file.name # path
             result_dict['file'] = image.image_uuid # image uuid

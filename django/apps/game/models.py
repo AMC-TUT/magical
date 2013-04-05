@@ -34,6 +34,14 @@ def get_image_path(instance, filename):
     filename = "%s.%s" % (image_uuid, ext)
     return os.path.join(USER_MEDIA_PREFIX, filename)
 
+def get_image_ext(instance, filename):
+    """
+    Get extension of uploaded image file.
+    """
+    #import ipdb;ipdb.set_trace()
+    ext = filename.split('.')[-1]
+    return ext
+
 def get_thumb_path(instance, filename):
     """
     Come up with individual name for thumbnail image file.
