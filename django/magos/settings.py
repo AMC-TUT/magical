@@ -39,6 +39,8 @@ SESSION_REDIS_DB = 0
 SESSION_REDIS_PREFIX = 'django_session'
 SESSION_COOKIE_HTTPONLY = False
 
+GAME_REDIS_PREFIX = 'game'
+
 # using Celery with Redis as a broker
 BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'

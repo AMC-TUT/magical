@@ -8,10 +8,8 @@
                     
         <div id="main-content">
         {% if form %}
-                       
             <h1>Create a new game</h1>
             <p>Here you can define a new Magos game.</p>
-            
             <hr />
             <form action="/game/create/" enctype="multipart/form-data" method="post">
                 {{ form.non_field_errors }}
@@ -19,7 +17,6 @@
                 {{ form.as_p }}
                 <input type="submit" value="Submit" />
             </form>
-            
         {% endif %}
         </div>
     

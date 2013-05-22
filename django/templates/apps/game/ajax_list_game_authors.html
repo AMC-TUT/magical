@@ -1,0 +1,11 @@
+<h2>Authors</h2>
+
+{% if authors %}
+    <ul class="authors-list">
+    {% for author in authors %}
+        <li>{{ author.user.first_name }} {{ author.user.last_name }} [{{ author.user.username }}] {% if allowed_to_modify %}<i class="icon-minus-sign remove-author" data-username="{{ author.user.username }}" data-gameslug="{{ game.slug }}"></i>{% endif %}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <h1 class="not-found">No authors found</h1>
+{% endif %}

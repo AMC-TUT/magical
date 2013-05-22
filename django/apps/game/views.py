@@ -18,12 +18,14 @@ from django.contrib.auth.forms import AuthenticationForm
 from apps.game.models import Game, Revision, Author, Highscore, Review, Image, Thumbnail
 from apps.game.forms import GameForm
 from apps.game.decorators import ajax_login_required
+from apps.game.utils import get_redis_game_data, set_redis_game_data
 
 from django.contrib.auth.models import User
 from magos.settings import USER_MEDIA_PREFIX
 
 def home(request):
     tpl = 'apps/game/index.html'
+    context = RequestContext(request)
     user = request.user
     ses = request.session
     """
@@ -43,12 +45,15 @@ def home(request):
         ses['firstname'] = 'Magos'
         ses['lastname'] = 'Player'
 
-    return render(request, tpl, {'user': user})
+    context['user'] = user
+    return render(request, tpl, context)
 
 def game_details(request, gameslug):
     """Game details"""
     tpl = 'apps/game/details.html'
+    context = RequestContext(request)
     user = request.user
+    context['user'] = user
     organization = None
     if user.is_authenticated():
         organization = user.get_profile().organization
@@ -60,8 +65,9 @@ def game_details(request, gameslug):
     has_reviewed = False
     num_reviews = 0
     avg_stars = 0
-    users = []
+    game_authors = []
     can_review = False
+    available_authors = []
     try:
         if not user.is_authenticated():
             game = Game.objects.get(slug=gameslug, state=2)
@@ -69,9 +75,11 @@ def game_details(request, gameslug):
             game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)            
         authors = game.author_set.all()
         for author in authors:
-            users.append(author.user)
-        if user in users:
+            game_authors.append(author.user)
+        if user in game_authors:
             can_edit = True
+        # authors that can be added as game authors
+        available_authors = User.objects.filter(userprofile__organization=organization).exclude(id__in=[o.id for o in game_authors])
         # top 10 highscore
         highscores = Highscore.objects.filter(game=game).order_by('-score')[:10]
         if user.is_authenticated():
@@ -92,9 +100,20 @@ def game_details(request, gameslug):
 
     except Game.DoesNotExist:
         pass
-    return render(request, tpl, {'user': user, 'game':game, 'users': users, 'can_edit': can_edit, \
-                'highscores' : highscores, 'has_reviewed':has_reviewed, 'num_reviews':num_reviews, 'avg_stars':avg_stars, \
-                'can_review': can_review, 'editor_url' : editor_url })
+    # set context variables
+    context['game'] = game
+    context['user'] = user
+    context['game_authors'] = game_authors
+    context['available_authors'] = available_authors
+    context['can_edit'] = can_edit
+    context['highscores'] = highscores
+    context['has_reviewed'] = has_reviewed
+    context['num_reviews'] = num_reviews
+    context['avg_stars'] = avg_stars
+    context['can_review'] = can_review
+    context['editor_url'] = editor_url
+
+    return render(request, tpl, context)
 
 
 def download_image(request, uuid, width, height, ext):
@@ -130,6 +149,7 @@ def download_image(request, uuid, width, height, ext):
 @login_required
 def create_game(request):
     tpl = 'apps/game/create.html'
+    context = RequestContext(request)
     user = request.user
     organization = user.get_profile().organization
     if request.method == 'POST':
@@ -185,8 +205,8 @@ def create_game(request):
             return redirect(url)
     else:
         form = GameForm()
-
-    return render(request, tpl, {'form':form})
+    context['form'] = form
+    return render(request, tpl, context)
 
 
 def logout_view(request):
@@ -209,7 +229,7 @@ def rate_game(request, game_pk, stars):
 
     user = request.user
     stars = int(stars)
-    print stars
+
     if stars in [0,1,2,3,4,5]:
         review = None
         try:
@@ -233,6 +253,118 @@ def rate_game(request, game_pk, stars):
     return HttpResponse(json, mimetype='application/json')
 
 
+def add_author(request, gameslug):
+    """
+    Add author to game
+    :param request: Http request object.
+    :param gameslug: Slug for the game.
+    """
+    game = None
+    try:
+        game = Game.objects.get(slug=gameslug)
+    except Game.DoesNotExist:
+        raise Http404
+
+    if request.method == 'POST':
+        author_id = request.POST.get('available_author', None)
+        if author_id:
+            user = User.objects.get(id=author_id)
+            if user and game:
+                game_author, created = Author.objects.get_or_create(user=user, game=game)
+                # we have to edit redis game data too, so get it...
+                data = get_redis_game_data(gameslug)
+                jdata = json.loads(data)
+                authors = jdata.get('authors', None)
+                if not any(author.get('userName', None) == user.username for author in authors):
+                    # author not yet in game authors, add it
+                    #print 'add %s as an author' % (user.username)
+                    new_author = {
+                        'userName' : user.username,
+                        'firstName' : user.first_name,
+                        'lastName' : user.last_name,
+                        'magos' : None
+                    }
+                    authors.append(new_author)
+                    jdata['authors'] = authors
+                    jresult = json.dumps(jdata)
+                    # ...and write modified data back to redis
+                    set_redis_game_data(gameslug, jresult)
+
+    # redirect to game details page
+    return redirect(game_details, gameslug=gameslug)
+
+
+def remove_author(request, gameslug, username):
+    user = request.user
+    authors = []
+    allowed_to_modify = False
+    game = Game.objects.get(slug=gameslug)
+    if game:
+        try:
+            author = game.author_set.get(user__username=username)
+            author.delete()
+            data = get_redis_game_data(gameslug)
+            jdata = json.loads(data)
+            authors = jdata.get('authors', None)
+            if any(author.get('userName', None) == user.username for author in authors):
+                # author in game authors, remove it
+                for author in authors:
+                    if author['userName'] == username:
+                        authors.remove(author)
+                        break
+                jdata['authors'] = authors
+                jresult = json.dumps(jdata)
+                # ...and write modified data back to redis
+                set_redis_game_data(gameslug, jresult)
+        except Author.DoesNotExist:
+            pass
+
+    json_data = simplejson.dumps({ 'success': True })
+    return HttpResponse(json_data, mimetype='application/json')
+
+
+def game_authors(request, gameslug):
+    tpl = 'apps/game/ajax_list_game_authors.html'
+    context = RequestContext(request)
+    user = request.user
+    authors = []
+    allowed_to_modify = False
+    game = Game.objects.get(slug=gameslug)
+    if game:
+        authors = game.author_set.all()
+        game_author_ids = authors.values_list('user', flat=True)
+        if user.id in game_author_ids:
+            allowed_to_modify = True
+    print allowed_to_modify
+    print authors
+    context['authors'] = authors
+    context['allowed_to_modify'] = allowed_to_modify
+    return render(request, tpl, context)
+
+
+def available_authors(request, gameslug):
+    tpl = 'apps/game/ajax_list_available_authors.html'
+    context = RequestContext(request)
+    user = request.user
+    organization = None
+    if user.is_authenticated():
+        organization = user.get_profile().organization
+    available_authors = []
+    game = Game.objects.get(slug=gameslug)
+    allowed_to_modify = False
+    if game and organization:
+        game_author_ids = game.author_set.all().values_list('user', flat=True)
+        if user.id in game_author_ids:
+            allowed_to_modify = True
+        print allowed_to_modify
+        if allowed_to_modify:
+            # authors that can be added as game authors
+            available_authors = User.objects.filter(userprofile__organization=organization).exclude(id__in=game_author_ids)
+
+    context['game'] = game
+    context['available_authors'] = available_authors
+    return render(request, tpl, context)
+
 
 def ajax_list_games(request):
     """
@@ -240,6 +372,7 @@ def ajax_list_games(request):
     :param request: Http request object.
     """
     tpl = 'apps/game/ajax_list_games.html'
+    context = RequestContext(request)
     user = request.user
     if user.is_authenticated():
         # authenticated users get list of their own games
@@ -248,6 +381,5 @@ def ajax_list_games(request):
     else:
         # anonymous users get list of public games, state=2
         games = Game.objects.filter(state=2)
-    data = { 'games': games }
-    return render_to_response( tpl, data, context_instance = RequestContext(request))
-
+    context['games'] = games
+    return render(request, tpl, context)

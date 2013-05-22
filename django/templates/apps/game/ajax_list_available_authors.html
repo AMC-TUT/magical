@@ -1,0 +1,11 @@
+{% if available_authors %}
+    <form id="add-author-to-game" action="/game/add-author/{{ game.slug }}" method="POST">
+        {% csrf_token %}
+        <select class="available-authors" name="available_author">
+        {% for user in available_authors %}
+            <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }} [{{ user.username }}]</option>
+        {% endfor %}
+        </select>
+        <button class="btn btn-primary add-author" id="add-author">Add as author</button>
+    </form>
+{% endif %}

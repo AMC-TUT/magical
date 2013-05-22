@@ -1,5 +1,7 @@
 from django.core.files import File
 import re, tempfile, Image, magic
+from redis import Redis
+from django.conf import settings
 
 def make_thumbnail(original, width, height):
     """Resizes images, used in thumbnail creation.
@@ -62,3 +64,36 @@ def get_mime_type(filename):
             sub_type = mime_type_parts[1]
         return (main_type, sub_type)
     return (u'application', u'octet-stream') # this is the default
+
+def init_redis():
+    redis_db = Redis(
+        host=getattr(settings, 'SESSION_REDIS_HOST', 'localhost'),
+        port=getattr(settings, 'SESSION_REDIS_PORT', 6379),
+        db=getattr(settings, 'SESSION_REDIS_DB', 0),
+        password=getattr(settings, 'SESSION_REDIS_PASSWORD', None)
+    )
+    return redis_db
+
+def get_redis_game_data(gameslug):
+    redis_db = init_redis()
+    """
+    redis_db = Redis(
+        host=getattr(settings, 'SESSION_REDIS_HOST', 'localhost'),
+        port=getattr(settings, 'SESSION_REDIS_PORT', 6379),
+        db=getattr(settings, 'SESSION_REDIS_DB', 0),
+        password=getattr(settings, 'SESSION_REDIS_PASSWORD', None)
+    )
+    """
+    prefix = getattr(settings, 'GAME_REDIS_PREFIX', '')
+    game_key = ':'.join([prefix, gameslug])
+    data = redis_db.get(game_key)
+    return data
+
+def set_redis_game_data(gameslug, data):
+    redis_db = init_redis()
+    prefix = getattr(settings, 'GAME_REDIS_PREFIX', '')
+    game_key = ':'.join([prefix, gameslug])
+    data = redis_db.set(game_key, data)
+
+    return True
+

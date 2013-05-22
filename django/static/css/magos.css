@@ -434,8 +434,6 @@ ul.nav {
       visibility: hidden;
 }
 
-
-
 #ajax_loading {
     display: none;
     position: absolute;
@@ -449,4 +447,10 @@ h1.ajax-loading {
     padding: 0;
 }
 
+.remove-author {
+    cursor:pointer;
+}
 
+.add-author {
+    margin-bottom: 9px;
+}

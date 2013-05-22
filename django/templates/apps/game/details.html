@@ -30,16 +30,12 @@
             <p>{{ game.description }}</p>
             
             <hr />
+            
+            <div id="game-authors"></div>
+            
+            <div id="available-authors"></div>
 
-            {% if users %}
-            <h2>Authors</h2>
-            <ul class="authors-list">
-                {% for user in users %}
-                    <li>{{ user.first_name }} {{ user.last_name }} [{{ user.username }}]</li>
-                {% endfor %}
-            </ul>
             <hr />
-            {% endif %}
 
             <p>Game created on {{ game.created }}</p>
             <p>Played 0 times</p>
@@ -88,14 +84,12 @@
 
         </div>
 
-    
-    
-    
 {% endblock %}
 
 {% block extrajs %}
 <script>
-var gameId = {{ game.id }};
+var gameId = {{ game.id }},
+    gameSlug = '{{ game.slug }}';
 
 $(document).ready(function() {
 	
@@ -156,7 +150,70 @@ $(document).ready(function() {
     });
 
 
-    
+    function bindAddAuthorSubmit() {
+        $('form#add-author-to-game').on('submit', function(e) {
+            e.preventDefault();
+            var url = $(this).attr('action');
+            var formData = $(this).serializeArray();
+            var xhr = $.ajax({
+                dataType : 'html',
+                type: 'POST',
+                data: formData,
+                url : url
+            });
+            xhr.done(function(data) {
+                getGameAuthors();
+                getAvailableAuthors();
+            });
+        });
+    }
+
+
+    function bindRemoveAuthors() {
+        $('.remove-author').on('click', function(e) {
+            var username = $(this).data('username');
+            $.ajax({
+                dataType : 'json',
+                url : '/game/remove-author/' + gameSlug + '/' + username,
+                type: 'GET',
+                success: function (data) {
+                    getGameAuthors();
+                },
+                error: function (jxhr, msg, err) {
+                }
+            });
+        });    
+    }
+
+
+    function getAvailableAuthors() {
+        var xhr = $.ajax({
+            dataType : 'html',
+            url : '/game/available-authors/' + gameSlug,
+            type: 'GET'
+        });
+        xhr.done(function(data) {
+            $('#available-authors').html(data);
+            bindAddAuthorSubmit();
+        });
+    }
+
+
+    function getGameAuthors() {
+        var xhr = $.ajax({
+            dataType : 'html',
+            url : '/game/game-authors/' + gameSlug,
+            type: 'GET'
+        });
+        xhr.done(function(data) {
+            $('#game-authors').html(data);
+            bindRemoveAuthors();
+            getAvailableAuthors();
+        });
+    }
+
+    getGameAuthors();
+
 }); // document ready
 </script>
 {% endblock %}
