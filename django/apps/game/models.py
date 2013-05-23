@@ -383,6 +383,7 @@ class Game(models.Model):
     cloned = models.IntegerField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True, default=datetime.date.today)
     updated = models.DateTimeField(auto_now=True)
+    creator = models.ForeignKey(User, blank = True, null = True)
 
     rows = models.IntegerField(null=False, blank=False, default=0)
     cols = models.IntegerField(null=False, blank=False, default=0)

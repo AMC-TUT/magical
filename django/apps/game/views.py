@@ -76,7 +76,7 @@ def game_details(request, gameslug):
         authors = game.author_set.all()
         for author in authors:
             game_authors.append(author.user)
-        if user in game_authors:
+        if user in game_authors or user == game.creator:
             can_edit = True
         # authors that can be added as game authors
         available_authors = User.objects.filter(userprofile__organization=organization).exclude(id__in=[o.id for o in game_authors])
@@ -333,7 +333,7 @@ def game_authors(request, gameslug):
     if game:
         authors = game.author_set.all()
         game_author_ids = authors.values_list('user', flat=True)
-        if user.id in game_author_ids:
+        if user.id in game_author_ids or user == game.creator:
             allowed_to_modify = True
     print allowed_to_modify
     print authors
@@ -354,7 +354,7 @@ def available_authors(request, gameslug):
     allowed_to_modify = False
     if game and organization:
         game_author_ids = game.author_set.all().values_list('user', flat=True)
-        if user.id in game_author_ids:
+        if user.id in game_author_ids or user == game.creator:
             allowed_to_modify = True
         print allowed_to_modify
         if allowed_to_modify:

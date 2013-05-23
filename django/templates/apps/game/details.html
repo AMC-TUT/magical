@@ -15,6 +15,10 @@
             {% else %}
             <img src="{{ STATIC_URL }}img/default-game-image.png" class="game-image embedded">
             {% endif %}
+
+            {% if game.creator %}
+            <p>Created by {{ game.creator.username }}</p>
+            {% endif %}
         
             {% if can_review %}
                 <input type="range" value="{{ avg_stars }}" step="1" id="ratingSettings">
