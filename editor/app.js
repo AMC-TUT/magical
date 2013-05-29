@@ -284,7 +284,7 @@ var editor = io.sockets.on('connection', function(socket) {
         // is magos in use?
         roomData = JSON.parse(roomData);
         roomData = myMagos.changeUserMagos(roomData, user, newMagos);
-
+        
         // persist change
         var jsonRoomData = JSON.stringify(roomData);
         client.set('room:' + slug, jsonRoomData, redis.print);
@@ -998,10 +998,10 @@ myMagos.removeUserFromMagos = function(roomData, userName) {
   return roomData;
 };
 
-
 myMagos.addUserToMagos = function(roomData, user, targetMagos) {
   _.each(roomData.magoses, function(obj) {
     if(obj.magos == targetMagos) {
+      user.magos = targetMagos;
       obj.user = user;
       console.log('added user ' + user.userName + ' to magos ' + obj.magos);
     }

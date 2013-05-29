@@ -1896,6 +1896,7 @@ $(function() {
       userChangedMagos: function(user, magos, callback) {
         console.log('EMIT USER CHANGED MAGOS');
         console.log(user);
+        console.log(user.get('magos'));
         console.log(magos);
         socket.emit('userChangedMagos', user, magos, function(data) {
           callback(data);
