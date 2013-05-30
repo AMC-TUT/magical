@@ -104,6 +104,12 @@ $(function() {
               emMagos.set('potions', potions);
               App.magosesController.get('content').pushObject(emMagos);
             });
+            
+            // add user to other instances also
+            App.dataSource.addUser(activeUser, function(data) {
+              console.log('emit (add user AGAIN)');
+            });
+            
             App.magosesController.populate();
           } else {
             // user has no access to room
