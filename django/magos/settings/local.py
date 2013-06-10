@@ -13,7 +13,7 @@ TEMPLATE_DEBUG = DEBUG
 
 
 ########## EDITOR URL CONFIGURATION
-MAGOS_EDITOR_URL = 'http://localhost:8080/editor/'
+MAGOS_EDITOR_URL = 'http://localhost:8082/editor/'
 ########## END EDITOR URL CONFIGURATION
 
 

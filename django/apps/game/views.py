@@ -17,7 +17,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from apps.game.models import Game, Revision, Author, Highscore, Review, Image, Thumbnail
 from apps.game.forms import GameForm
 from apps.game.decorators import ajax_login_required
-from apps.game.utils import get_redis_game_data, set_redis_game_data
+from apps.game.utils import get_redis_game_data, set_redis_game_data, create_game_for_redis
 
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -199,6 +199,12 @@ def create_game(request):
             # add user as author
             author = Author(game=game, user=user)
             author.save()
+
+            # we have to create and save initial game data to Redis
+            redis_game_data = create_game_for_redis(game.slug)
+            jresult = json.dumps(redis_game_data)
+            set_redis_game_data(game.slug, jresult)
+
             # redirect to newly created game
             url = '/game/details/%s' % game.slug
             return redirect(url)
@@ -272,6 +278,7 @@ def add_author(request, gameslug):
                 game_author, created = Author.objects.get_or_create(user=user, game=game)
                 # we have to edit redis game data too, so get it...
                 data = get_redis_game_data(gameslug)
+                print data
                 jdata = json.loads(data)
                 authors = jdata.get('authors', None)
                 if not any(author.get('userName', None) == user.username for author in authors):

@@ -21,7 +21,7 @@ var Parser = {
   socket: null,
   blockSize: null,
   settings: {
-      djangoUri: 'http://localhost:8080/'
+      djangoUri: 'http://localhost:8000/'
       //djangoUri: 'http://magos.pori.tut.fi/';
   },
 
@@ -269,7 +269,7 @@ var Parser = {
       // canvas size
       var width = Parser.game.revision.canvas.columns * Parser.game.revision.canvas.blockSize;
 
-      Crafty.e("HTML").append('<div style="width:' + width + 'px;" class="loader">' + ' <img src="/static/img/magos-m-black.png" class="loader-logo" />' + ' <p class="loader-procent">0%</p>' + ' </div>');
+      Crafty.e("HTML").append('<div style="width:' + width + 'px;" class="loader">' + ' <img src="' + Parser.settings.djangoUri + 'static/img/magos-m-black.png" class="loader-logo" />' + ' <p class="loader-procent">0%</p>' + ' </div>');
 
       var assets = [],
         componentsPath = '/editor/',

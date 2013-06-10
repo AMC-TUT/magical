@@ -14,10 +14,8 @@ var redis = require("redis"),
 var app = express(),
   http = require('http'),
   server = http.createServer(app),
-  io = require('socket.io').listen(server);
+  io = require('socket.io').listen(server,  { resource: '/editor/socket.io' });
 
-//var djangoUri = 'http://magos.pori.tut.fi/';
-var djangoUri = 'http://localhost:8080/';
 var globalSessionObj = null;
 
 io.enable('browser client minification');
@@ -40,12 +38,13 @@ client.on("error", function(err) {
 
 params.extend(app);
 
-app.use('/static', express.static(__dirname + '/static'));
-app.use('/user-media', express.static(__dirname + '/user-media'));
+app.use('/editor/static', express.static(__dirname + '/static'));
+app.use('/editor/user-media', express.static(__dirname + '/user-media'));
 
 app.use(express.cookieParser());
 
 app.configure('development', function() {
+  app.set('djangoUrl', 'http://localhost:8000/');
 
   app.use(express.errorHandler({
     dumpExceptions: true,
@@ -54,6 +53,8 @@ app.configure('development', function() {
 });
 
 app.configure('production', function() {
+  app.set('djangoUrl', 'http://magos.pori.tut.fi/');
+
   app.use(express.errorHandler());
 });
 
@@ -73,7 +74,7 @@ io.configure(function() {
 
 app.param('slug', /[a-zA-Z0-9-]+$/);
 
-app.get('/:slug', function(req, res) {
+app.get('/editor/:slug', function(req, res) {
   var slug = req.params.slug;
   //var slug = req.url.replace(/^\//, ''); // remove slash, orig: "/super-magos"
   
@@ -82,18 +83,17 @@ app.get('/:slug', function(req, res) {
   req.cookies.sessionid = 'badaa213e2c71e5be7ecf9a37675c12b',
   req.cookies.csrftoken = 'uc71V2tmsVlCtgXEbQqCMboHiCTrBhCR';
   */
-
   // if sessionid or csrftoken equals undefined redirect to login page
   if(_.isUndefined(req.cookies) || _.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
     // if no session exists
-    res.redirect(djangoUri + 'game/login?next=/editor/' + slug);
+    res.redirect(app.get('djangoUrl') + 'game/login?next=/editor/' + slug);
     return false;
   }
   // query django session data from Redis
   client.get('django_session:' + req.cookies.sessionid, function(err, data) {
     if(_.isNull(data)) {
       // if no session info in redis
-      res.redirect(djangoUri + 'game/login?next=/editor/' + slug);
+      res.redirect(app.get('djangoUrl') + 'game/login?next=/editor/' + slug);
       return false;
     }
 
@@ -101,7 +101,7 @@ app.get('/:slug', function(req, res) {
 
     // if no valid logged in user
     if(_.isUndefined(sessionObj.userName)) {
-      res.redirect(djangoUri + 'game/login?next=/editor/' + slug);
+      res.redirect(app.get('djangoUrl') + 'game/login?next=/editor/' + slug);
       return false;
     }
 
@@ -120,14 +120,14 @@ app.get('/play/:slug', function(req, res) {
 
 // fallback response
 app.get('/', function(req, res) {
-  res.redirect(djangoUri);
+  res.redirect(app.get('djangoUrl'));
 });
 
 
 /**
  * START SERVER
  */
-server.listen(9001);
+server.listen(8082);
 
 
 /**
@@ -387,7 +387,7 @@ var editor = io.sockets.on('connection', function(socket) {
 
         // game update request
         request.put({
-          url: djangoUri + 'api/v1/games/' + slug,
+          url: app.get('djangoUrl') + 'api/v1/games/' + slug,
           jar: j,
           form: {
             'state': state,
@@ -438,7 +438,7 @@ var editor = io.sockets.on('connection', function(socket) {
         var j = myMagos.createCookieJar(sessionid, csrftoken);
         // get game request
         request.get({
-          url: djangoUri + 'api/v1/games/' + slug,
+          url: app.get('djangoUrl') + 'api/v1/games/' + slug,
           jar: j
         }, function(error, response, body) {
           if(!error && response.statusCode == 200) {
@@ -604,10 +604,13 @@ var editor = io.sockets.on('connection', function(socket) {
     var result = [];
 
     request.get({
-      url: djangoUri + 'api/v1/images',
+      url: app.get('djangoUrl') + 'api/v1/images',
       jar: j,
       qs: data
     }, function(error, response, body) {
+      console.log(error);
+      console.log(response);
+      console.log(body);
       if(!error && response.statusCode == 200) {
 
         var assets = JSON.parse(body);
@@ -816,7 +819,7 @@ myMagos.logEvent = function(log, sessionid, csrftoken) {
 
   // game update request
   request.put({
-    url: djangoUri + 'api/v1/logs/' + slug,
+    url: app.get('djangoUrl') + 'api/v1/logs/' + slug,
     jar: j,
     form: data
   }, function(error, response, body) {

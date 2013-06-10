@@ -1,7 +1,8 @@
 from django.core.files import File
-import re, tempfile, Image, magic
+import re, tempfile, Image, magic, json
 from redis import Redis
 from django.conf import settings
+from apps.game.models import Game
 
 def make_thumbnail(original, width, height):
     """Resizes images, used in thumbnail creation.
@@ -64,6 +65,53 @@ def get_mime_type(filename):
             sub_type = mime_type_parts[1]
         return (main_type, sub_type)
     return (u'application', u'octet-stream') # this is the default
+
+def create_game_for_redis(gameslug):
+    """Create game data as dict ready for Redis."""
+    game = None
+    result_dict = {}
+    try:
+        game = Game.objects.get(slug=gameslug)
+    except Game.DoesNotExist:
+        pass
+
+    if game:
+        result_dict['title'] = game.title
+        result_dict['id'] = game.id
+        result_dict['type'] = game.type.name
+        result_dict['state'] = game.state
+        result_dict['description'] = game.description
+        result_dict['cloned'] = game.cloned
+        # get game authors and organization
+        authors = game.author_set.all()
+        authors_list = []
+        organization = None
+        if authors:
+            organization = authors[0].user.userprofile.organization.name # organization (=author's organization)
+        for author in authors:
+            author_dict = {}
+            author_dict['firstName'] = author.user.first_name
+            author_dict['lastName'] = author.user.last_name
+            author_dict['userName'] = author.user.username
+            authors_list.append(author_dict)
+
+        result_dict['authors'] = authors_list
+        result_dict['organization'] = organization
+
+        revision = game.get_latest_revision()
+        revision_dict = {}
+        if revision:
+            revision_dict['data'] = revision.data
+
+        json_data = ""
+        try:
+            json_data = json.loads(revision.data)
+        except ValueError:
+            pass
+        result_dict['revision'] = json_data
+    
+    return result_dict
+
 
 def init_redis():
     redis_db = Redis(
