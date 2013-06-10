@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from audiofield.fields import AudioField
 import datetime, mimetypes, hashlib, time
 from imagekit.models import ImageSpecField
-from magos.settings import USER_MEDIA_PREFIX
+from django.conf import settings
 
 CONST_DEFAULT_BLOCK_SIZE = 65536 # 64k
 
@@ -32,7 +32,7 @@ def get_image_path(instance, filename):
     image_uuid = uuid.uuid4()
     instance.image_uuid = image_uuid
     filename = "%s.%s" % (image_uuid, ext)
-    return os.path.join(USER_MEDIA_PREFIX, filename)
+    return os.path.join(settings.USER_MEDIA_PREFIX, filename)
 
 def get_image_ext(instance, filename):
     """
@@ -51,7 +51,7 @@ def get_thumb_path(instance, filename):
     image_name, ext = orig_path.split('.')
     filename = image_name + '_' + str(instance.width) + 'x' + str(instance.height) + '.' + ext
 
-    return os.path.join(USER_MEDIA_PREFIX + 'thumbs/', filename)
+    return os.path.join(settings.USER_MEDIA_PREFIX + 'thumbs/', filename)
 
 
 def timestamp():

@@ -1,5 +1,6 @@
 ﻿from django.conf.urls import patterns, include, url
 from apps.game.api import UserResource
+from django.views.generic import RedirectView
 #from tastypie.api import Api
 from djangorestframework.views import ListOrCreateModelView, InstanceModelView
 from django.conf import settings
@@ -46,8 +47,8 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/static/favicon.ico'}),
-
+    #url(r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/static/favicon.ico'}),
+    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/favicon.ico')),
 )
 
 #if settings.DEBUG:

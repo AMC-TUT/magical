@@ -275,7 +275,7 @@ body.explore #main-nav ul li a.explore {
     background-image: -moz-linear-gradient(bottom, transparent 70%, rgba(0, 0, 0, 0.53));
     background-image: -ms-linear-gradient(bottom, transparent 70%, rgba(0, 0, 0, 0.53));
     background-image: -o-linear-gradient(bottom, transparent 70%, rgba(0, 0, 0, 0.53));
-    background-image: linear-gradient(to bottom, transparent 70%, rgba(0, 0, 0, 0.53));
+    background-image: linear-gradient(to top, transparent 70%, rgba(0, 0, 0, 0.53));
 }
 
 #main-nav ul li a span.home-icon {

@@ -12,7 +12,6 @@ from django.core.servers.basehttp import FileWrapper
 from django.db.models import Q
 import json
 
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 
 from apps.game.models import Game, Revision, Author, Highscore, Review, Image, Thumbnail
@@ -21,7 +20,7 @@ from apps.game.decorators import ajax_login_required
 from apps.game.utils import get_redis_game_data, set_redis_game_data
 
 from django.contrib.auth.models import User
-from magos.settings import USER_MEDIA_PREFIX
+from django.conf import settings
 
 def home(request):
     tpl = 'apps/game/index.html'
@@ -335,8 +334,8 @@ def game_authors(request, gameslug):
         game_author_ids = authors.values_list('user', flat=True)
         if user.id in game_author_ids or user == game.creator:
             allowed_to_modify = True
-    print allowed_to_modify
-    print authors
+    #print allowed_to_modify
+    #print authors
     context['authors'] = authors
     context['allowed_to_modify'] = allowed_to_modify
     return render(request, tpl, context)
@@ -356,7 +355,7 @@ def available_authors(request, gameslug):
         game_author_ids = game.author_set.all().values_list('user', flat=True)
         if user.id in game_author_ids or user == game.creator:
             allowed_to_modify = True
-        print allowed_to_modify
+        #print allowed_to_modify
         if allowed_to_modify:
             # authors that can be added as game authors
             available_authors = User.objects.filter(userprofile__organization=organization).exclude(id__in=game_author_ids)

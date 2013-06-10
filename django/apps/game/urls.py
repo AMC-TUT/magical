@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import patterns, url
-from django.views.generic.simple import direct_to_template
+from django.views.generic import TemplateView
 
 urlpatterns = patterns('',
     url(r'^$', 'apps.game.views.home'),
@@ -17,12 +17,12 @@ urlpatterns = patterns('',
     
 	url(r'^rate/(?P<game_pk>\d*)/(?P<stars>0|1|2|3|4|5)$', 'apps.game.views.rate_game', name="rate_game"),
 
-    url(r'^watch/$', direct_to_template, {'template': 'apps/game/watch.html'}, name="watch"),
-    url(r'^invent/$', direct_to_template, {'template': 'apps/game/invent.html'}, name="invent"),
+    #url(r'^watch/$', direct_to_template, {'template': 'apps/game/watch.html'}, name="watch"),
+    url(r'^watch/$', TemplateView.as_view(template_name='apps/game/watch.html'), name='watch'),
+    url(r'^invent/$', TemplateView.as_view(template_name='apps/game/invent.html'), name='invent'),
 
     url(r'^login$', 'django.contrib.auth.views.login', {'template_name': 'apps/game/login.html'}),
     #url(r'^login$', 'apps.game.views.login'),
     url(r'^logout/$', 'apps.game.views.logout_view'),
     
-
 )

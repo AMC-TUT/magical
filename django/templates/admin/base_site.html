@@ -1,11 +1,11 @@
 {% extends "admin/base.html" %}
 {% load i18n %}
-{% load adminmedia %}
+{% load staticfiles %}
 
 {% block title %}{{ title }} | {% trans 'Magos admin' %}{% endblock %}
 
 {% block branding %}
-<h1 id="site-name"><img src="{{ STATIC_URL }}img/magos-logo-footer.png" style="margin-right: 40px;" />{% trans 'Administration' %}</h1>
+<h1 id="site-name"><img src="{% static "img/magos-logo-footer.png"%}" style="margin-right: 40px;" />{% trans 'Administration' %}</h1>
 {% endblock %}
 
 {% block nav-global %}{% endblock %}
