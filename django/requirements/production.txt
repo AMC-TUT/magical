@@ -1,2 +1,2 @@
 # Production requirements
--r base.txt # include base requirements
+-r base.txt
