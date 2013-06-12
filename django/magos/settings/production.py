@@ -23,5 +23,5 @@ DATABASES = {
 ########## SITE CONFIGURATION
 # Hosts/domain names that are valid for this site
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['magos.pori.tut.fi']
 ########## END SITE CONFIGURATION
