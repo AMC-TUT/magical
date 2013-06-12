@@ -8,7 +8,7 @@ $(function() {
 
     App.settings = {
       djangoUri : 'http://localhost:8000/'
-      //djangoUri : 'http://magos.pori.tut.fi/';
+      //djangoUri : 'http://magos.pori.tut.fi/'
     };
 
     /**************************
