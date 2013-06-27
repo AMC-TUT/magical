@@ -114,7 +114,7 @@ $(function() {
           } else {
             // user has no access to room
             console.log('Not authorized.');
-            window.location.replace("http://localhost:8080");
+            window.location.replace(djangoUri);
           }
         });
       }
@@ -182,6 +182,7 @@ $(function() {
     });
 
     App.GameView = Em.View.extend({
+      classNames: ['game-preview-view'],
       playPathBinding: 'App.gameController.content.playPath'
     });
 

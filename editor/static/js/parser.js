@@ -359,7 +359,7 @@ var Parser = {
               
               this_.addComponent('Controls', 'Keyboard', 'Gravity', 'Collision');
               this_.Controls(speed, jumpHeight);
-              this_.gravity('Platform');
+              this_.gravity('platform');
             }
 
             // fourway
@@ -381,18 +381,18 @@ var Parser = {
             this_.addComponent(props.type);
 
             if(props.type.toLowerCase() === "platform") {
-              this_.addComponent('Platform');
+              this_.addComponent('platform');
             }
 
             if(props.type.toLowerCase() === 'block') {
-              this_.addComponent('Platform');
-              this_.addComponent('Solid');
+              this_.addComponent('platform');
+              this_.addComponent('solid');
             }
 
             if(props.type.toLowerCase() === "pushable") {
-              this_.addComponent('Platform');
-              this_.addComponent('Solid');
-              this_.addComponent("Collision");
+              this_.addComponent('platform');
+              this_.addComponent('solid');
+              this_.addComponent("collision");
             }
           }
 
@@ -400,8 +400,8 @@ var Parser = {
           if (!_.isUndefined(props.gravitation) && _.isUndefined(props.controls)) {
             //var sign = props.gravitation.direction ? 1 : -1;
 
-            this_.addComponent("Gravity");
-            this_.gravity("Platform");
+            this_.addComponent("gravity");
+            this_.gravity("platform");
             this_.gravityConst(3); ///sign * props.gravitation.strength);
           }
 

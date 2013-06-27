@@ -602,7 +602,7 @@ var editor = io.sockets.on('connection', function(socket) {
 
     // get images request
     var result = [];
-
+    console.log(app.get('djangoUrl'));
     request.get({
       url: app.get('djangoUrl') + 'api/v1/images',
       jar: j,

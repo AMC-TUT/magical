@@ -154,7 +154,6 @@ def create_game(request):
     if request.method == 'POST':
         form = GameForm(request.POST, request.FILES)
         if form.is_valid():
-            game = form.save()
             # figure out game resolution
             resolution = form.cleaned_data['resolution']
             resolution = resolution.split('_')
@@ -163,6 +162,11 @@ def create_game(request):
             if len(resolution) == 2:
                 cols = int(resolution[0])
                 rows = int(resolution[1])
+            game = form.save()
+            game.rows = rows
+            game.cols = cols
+            game.save()
+            
             # create initial revision
             revision_data = {}
             canvas_data = {
