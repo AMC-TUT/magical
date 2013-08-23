@@ -1,6 +1,7 @@
 {% load url from future %}
 {% load i18n %}
 {% load login_form %}
+{% load git_rev_tag %}
 <!DOCTYPE html>
 <html lang="fi">
 <head>
@@ -79,7 +80,7 @@
         </nav>
 
         <div class="footer-wide">
-            <p>&copy; Copyright 2012 Magos.</p>
+            <p>&copy; Copyright 2012 Magos. <br /><span class="version-info">Version info: {% git_rev_tag %}</span></p>
         </div>
 
     </footer>

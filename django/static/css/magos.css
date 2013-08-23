@@ -454,3 +454,7 @@ h1.ajax-loading {
 .add-author {
     margin-bottom: 9px;
 }
+
+.version-info {
+    color: #777;    
+}
