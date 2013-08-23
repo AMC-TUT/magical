@@ -22,7 +22,7 @@ var Parser = {
   blockSize: null,
   settings: {
       djangoUri: 'http://localhost:8000/'
-      //djangoUri: 'http://magos.pori.tut.fi/';
+      //djangoUri: 'http://magos.pori.tut.fi/'
   },
 
   parseGame: function(game) {
@@ -357,8 +357,11 @@ var Parser = {
             if (props.controls.method.toLowerCase() === 'twoway') {
               var jumpHeight = _.isNumber(props.controls.jumpHeight) ? props.controls.jumpHeight : 12;
               
-              this_.addComponent('Controls', 'Keyboard', 'Gravity', 'Collision');
-              this_.Controls(speed, jumpHeight);
+              //this_.addComponent('Controls', 'Keyboard', 'Gravity', 'Collision');
+              //this_.Controls(speed, jumpHeight);
+              this_.addComponent('Twoway', 'Keyboard', 'Gravity', 'Collision');
+              //this_.twoway(speed, jumpHeight);
+              this_.twoway(speed, 10);
               this_.gravity('platform');
             }
 
@@ -386,23 +389,25 @@ var Parser = {
 
             if(props.type.toLowerCase() === 'block') {
               this_.addComponent('platform');
-              this_.addComponent('solid');
+              this_.addComponent('Solid');
             }
 
             if(props.type.toLowerCase() === "pushable") {
               this_.addComponent('platform');
-              this_.addComponent('solid');
+              this_.addComponent('Solid');
               this_.addComponent("collision");
             }
           }
 
           // gravity
-          if (!_.isUndefined(props.gravitation) && _.isUndefined(props.controls)) {
-            //var sign = props.gravitation.direction ? 1 : -1;
+          console.log(props.gravitation);
+          console.log(props.controls);
 
+          if (!_.isUndefined(props.gravitation) && !_.isUndefined(props.controls)) {
+            //var sign = props.gravitation.direction ? 1 : -1;
             this_.addComponent("gravity");
             this_.gravity("platform");
-            this_.gravityConst(3); ///sign * props.gravitation.strength);
+            this_.gravityConst(parseFloat(props.gravitation.strength)); ///sign * props.gravitation.strength);
           }
 
           // bind events
@@ -420,20 +425,39 @@ var Parser = {
             }
           });
 
-          // TODO this has done for presentation
-          if(_.isArray(props.collisions) && _.isObject(props.collisions[0])) {
+          // TODO implement startDialog and createElement
+          // TODO handle scores
+          if(_.isArray(props.collisions)) {
+            console.log('HAS COLLISIONS');
             this_.addComponent('Collision');
 
             this_.onHit("Player", function(ent) {
-              if(props.collisions[0].event === "destroySelf") {
-                this.destroy();
+              var target = ent[0].obj;
 
-              } else if(props.collisions[0].event === "destroyTarget") {
-                var obj = ent[0].obj;
-                obj.destroy();
-                //
-                Crafty.scene('outro');
-              }
+              _.each(props.collisions, function(collision) {
+                  if (_.isObject(props.collisions[0]) ) {
+                    var col_event = collision.event;
+                    var col_score = collision.score;
+                    if(col_event === "destroySelf") {
+                        this_.destroy();
+                    } else if (col_event === "destroyTarget") {
+                        target.destroy();
+                        Crafty.scene('outro'); // TODO reduce hitpoints, don't die immediately
+                    } else if (col_event === "startDialog") {
+                        console.log('Collision: Init dialog');
+                    } else if (col_event === "createElement") {
+                        console.log('Collision: Create element');
+                    }
+
+                    // handle score
+                    if(col_score) {
+                        col_score = parseInt(col_score);
+                        console.log('Score: ' + col_score);
+                    }
+
+                  }
+
+              });
 
             });
           }

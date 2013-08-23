@@ -46,6 +46,17 @@
                         {{/unless}}
                       {{/unless}}
 
+                      {{#if App.selectedComponentController.content.properties.type}}
+                        <h4>Element Type</h4>
+                        {{#view App.InfoBoxTypeView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-type"}}
+                        <tr>
+                          <td>
+                          {{content.properties.type}}
+                          </td>
+                        </tr>
+                        {{/view}}
+                      {{/if}}
+
                       {{#if App.selectedComponentController.content.properties.controls}}
                         <h4>Controls</h4>
                         {{#view App.InfoBoxControlsView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-controls"}}
@@ -75,36 +86,35 @@
                           </tr>
                         {{/view}}
                       {{/if}}
-
-                      {{#if App.selectedComponentController.content.properties.type}}
-                        <h4>Element Type</h4>
-                        {{#view App.InfoBoxTypeView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-type"}}
-                        <tr>
-                          <td>
-                          {{content.properties.type}}
-                          </td>
-                        </tr>
-                        {{/view}}
-                      {{/if}}
+                      
 
                       {{#if App.selectedComponentController.content.properties.collisions}}
-                        <h4>Collision</h4>
-                        {{#view App.InfoBoxCollisionView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-collision"}}
-                        <tr>
-                          <th>Target</th><th>Action</th>
-                        </tr>
-                        {{#each content.properties.collisions}}
-                        <tr>
-                          <td>
-                            {{#if target}} {{target}} {{else}} ---{{/if}}
-                          </td>
-                          <td>
-                            {{#if event}} {{event}} {{else}} ---{{/if}}
-                          </td>
-                        </tr>
-                        {{/each}}
+                        <h4>Collisions</h4>
+                        {{#view App.InfoBoxCollisionView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-collisions"}}
+                          <tr>
+                            <th>Target</th><th>Event</th><th>Score</th><th></th>
+                          </tr>
+                          {{#each content.properties.collisions}}
+                          <tr>
+                            <td>
+                              {{#if target}} {{target}} {{else}} ---{{/if}}
+                            </td>
+                            <td>
+                              {{#if event}} {{event}} {{else}} ---{{/if}}
+                            </td>
+                            <td>
+                              {{#if score}} {{score}} {{else}} ---{{/if}}
+                            </td>
+                            <td>
+                              <button {{action removeCollision target="view"}}>Delete</button>
+                            </td>
+                          </tr>
+                          {{/each}}
+
                         {{/view}}
                       {{/if}}
+
+
 
                       {{#if App.selectedComponentController.content.properties.gravitation}}
                       <h4>Gravitation</h4>
@@ -573,10 +583,10 @@
 
                 {{#if isArcitectus}}
 
-                <div {{bindAttr class="magos:magos-potions magos magos:finish magos:hide"}} style="display:none;">
+                <div {{bindAttr class="magos:magos-potions magos magos:rules magos:hide"}} style="display:none;">
                 <form class="form-vertical">
                   <fieldset>
-                    <legend>Finish</legend>
+                    <legend>Rules</legend>
                     {{#view App.MagosComponentPropertyView contentBinding="this"}}
                     <div class="finish-action action-group">
                       <div class="control-group">
@@ -707,7 +717,14 @@
                         <div class="control-group">
                           <label class="control-label">Event</label>
                           <div class="controls">
-                            {{view Ember.Select contentBinding="App.potionsController.collision.events" optionLabelPath="content.event" optionValuePath="content.event" selectionBinding="collisionEvent" class="input-xlarge" }}
+                            {{view Ember.Select contentBinding="App.potionsController.collision.events" optionLabelPath="content.title" optionValuePath="content.event" selectionBinding="collisionEvent" class="input-xlarge" }}
+                          </div>
+                        </div>
+
+                        <div class="control-group">
+                          <label class="control-label">Score</label>
+                          <div class="controls">
+                            {{view App.NumberField valueBinding="view.collision.score" class="input" min="-1000" max="1000"}}
                           </div>
                         </div>
 
@@ -735,7 +752,7 @@
                         <div class="control-group">
                           <label class="control-label">Strength</label>
                           <div class="controls">
-                            {{view App.NumberField valueBinding="view.strength" class="input" min="0" max="1000"}}
+                            {{view App.DecimalNumberField valueBinding="view.strength" class="input" min="0.0" max="1.0" step="0.01" }}
                           </div>
                         </div>
 

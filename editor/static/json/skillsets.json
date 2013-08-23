@@ -3,7 +3,7 @@
     "magos": "arcitectus",
     "potions": [
       {
-        "title": "finish",
+        "title": "rules",
         "properties": {}
       }
     ]
@@ -56,15 +56,15 @@
       {
         "title": "collision",
         "properties": {
-            "events": [{"event":"destroySelf"}, {"event":"destroyTarget"}],
-            "speed": 4,
+            "events": [{"event":"destroySelf", "title": "Destroy self"}, {"event":"destroyTarget", "title": "Destroy target"}, {"event":"startDialog", "title": "Start dialog"}, {"event":"createElement", "title": "Create element"}],
+            "score": 10,
             "target": null
         }
       },
       {
         "title": "gravitation",
         "properties": {
-            "strength": 4,
+            "strength": 0.2,
             "direction": true
         }
       },

@@ -20,6 +20,11 @@ $(function() {
       type: 'number'
     });
 
+    App.DecimalNumberField = Em.TextField.extend({
+      attributeBindings: ['name', 'min', 'max', 'step'],
+      type: 'number'
+    });
+
     App.ColorField = Em.TextField.extend({
       type: 'color'
     });
@@ -591,12 +596,12 @@ $(function() {
         }
 
       }.property('properties.gravitation.direction'),
+      
       collisions: function() {
         var collisions = this.getPath('properties.collisions');
-
         return collisions;
-
       }.property('properties'),
+
       filteredScoreEvents: function() {
         var collisions = this.getPath('properties.collisions');
 
@@ -611,7 +616,7 @@ $(function() {
       }.property('properties'),
       filteredTextEvents: function() {
         var collisions = this.getPath('properties.collisions');
-
+        console.log(collisions);
         return _.isObject(collisions) ? collisions.filterProperty('text') : false;
 
       }.property('properties'),
@@ -628,6 +633,10 @@ $(function() {
       removeItem: function(propName, value) {
         var obj = this.findProperty(propName, value);
         this.removeObject(obj);
+        // force game data save
+        App.dataSource.saveGame(0, function(data) {
+          console.log('save (remove game component)');
+        });          
       },
       updateItem: function(propName, value, newItem) {
         // replace old gameComponent with a new one when properties change
@@ -638,6 +647,12 @@ $(function() {
             slug = newItem.slug,
             item = App.GameComponent.create(newItem),
             idx = this.indexOf(obj);
+        var emCollisions = [];
+        _.each(newItem.properties.collisions, function(collision) {
+            var emCollision = App.Collision.create(collision);
+            emCollisions.push(emCollision);
+        });
+        item.getPath('properties.collisions').set(emCollisions);
         this.replaceContent(idx, 1, [item]);
         // update instances in the canvas w/ the new graphic
         $('.canvas-pane').find("[data-slug='" + slug + "']").attr('src', item.get('icon'));
@@ -874,6 +889,15 @@ $(function() {
           }
         });
       }
+    });
+
+    /**************************
+     * Collision
+     **************************/
+    App.Collision = Em.Object.extend({
+      event: null,
+      target: null,
+      score: 0
     });
 
 
@@ -1384,8 +1408,9 @@ $(function() {
       jumpHeightBinding: 'App.potionsController.controls.jumpHeight', // controls
       gridBinding: 'App.potionsController.controls.grid', // controls
 
-      collisionEventBinding: 'collision.event', // collision
+      collisionEventBinding: 'App.potionsController.collisions.event', // collision
       collisionTargetBinding: 'collision.target', // collision
+      collisionScoreBinding: 'collision.score', // collision
 
       strengthBinding: 'gravitation.strength', // gravitation
       directionBinding: 'gravitation.direction', // gravitation
@@ -1405,8 +1430,32 @@ $(function() {
 
       submitCollisionProperties: function(event) {
         event.preventDefault();
-        // TODO: implementation of collision
+        var col_target = this.getPath('collisionTarget');
+        var col_event = this.getPath('collisionEvent');
+        var col_score = this.getPath('collisionScore');
+        var collision = App.Collision.create({
+          'target' : col_target,
+          'event' : col_event.event,
+          'score' : col_score
+        });
+        if(App.selectedComponentController.getPath('content.properties.collisions') === undefined) {
+            // no existing collisions
+            App.selectedComponentController.setPath('content.properties.collisions', [collision]);
+        } else {
+            // we can have multiple collisions per one component
+            App.selectedComponentController.getPath('content.properties.collisions').pushObject(collision);
+        }
 
+        var selectedComponent = App.selectedComponentController.get('content');
+        var slugName = App.selectedComponentController.getPath('content.slug');
+        // save game
+        App.dataSource.saveGame(0, function(data) {
+          console.log('save (edit properties)');
+        });
+        // inform others of property change
+        App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
+          console.log('emit (update game component properties)');
+        });
       },
 
       submitFontProperties: function(event) {
@@ -1417,7 +1466,6 @@ $(function() {
         var fontColor = this.getPath('fontColor');
         var fontBackground = this.getPath('fontBackground');
         // TODO: var background = this.get();
-        console.log(size);
         var font = {
           'size' : size,
           'family' : family,
@@ -1460,9 +1508,9 @@ $(function() {
 
       submitGravitationProperties: function(event) {
         event.preventDefault();
+        // get values from the form
         var strength = this.getPath('strength');
         var direction = this.getPath('direction');
-        // get values from the form
         var gravitation = {
           'direction' : direction, // boolean
           'strength' : strength
@@ -1561,14 +1609,30 @@ $(function() {
     }
   });
 
-
     var infobox = App.InfoBoxView = Em.View.create({
       templateName: 'infobox-view'
     });
 
     // TODO make these child views with container view
     App.InfoBoxControlsView = Em.View.extend();
-    App.InfoBoxCollisionView = Em.View.extend();
+    App.InfoBoxCollisionView = Em.View.extend({
+      contentBinding: 'App.selectedComponentController.content.properties.collisions',
+      removeCollision: function(evt) {
+        var collision = evt.context;
+        App.selectedComponentController.getPath('content.properties.collisions').removeObject(collision);
+        var selectedComponent = App.selectedComponentController.get('content');
+        var slugName = App.selectedComponentController.getPath('content.slug');
+        // force game data save
+        App.dataSource.saveGame(0, function(data) {
+          console.log('save (remove collision)');
+        });
+        // inform others of property change
+        App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
+          console.log('emit (update game component properties)');
+        });          
+
+      }
+    });
     App.InfoBoxGravitationView = Em.View.extend();
     App.InfoBoxScoreView = Em.View.extend();
     App.InfoBoxDialogView = Em.View.extend();
