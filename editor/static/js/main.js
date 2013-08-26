@@ -119,7 +119,7 @@ $(function() {
           } else {
             // user has no access to room
             console.log('Not authorized.');
-            window.location.replace(djangoUri);
+            window.location.replace(App.settings.djangoUri);
           }
         });
       }
@@ -934,7 +934,6 @@ $(function() {
             slug: safeSlug,
             properties: {
               sprite: 'empty1',
-              //file: 'user-media/images/empty1.png',
               file: 'cc7ec50c-b014-4363-850e-35a8c5e30a6c', // uuid of empty icon
               ext: 'png',
               type: compType // TODO check order empty1,2,3,4 and choose unique

@@ -355,26 +355,22 @@ var Parser = {
             console.log(props.controls.method);
             // twoway === platform
             if (props.controls.method.toLowerCase() === 'twoway') {
-              var jumpHeight = _.isNumber(props.controls.jumpHeight) ? props.controls.jumpHeight : 12;
-              
-              //this_.addComponent('Controls', 'Keyboard', 'Gravity', 'Collision');
-              //this_.Controls(speed, jumpHeight);
+              var jumpHeight = _.isNumber(props.controls.jumpHeight) ? parseInt(props.controls.jumpHeight) : 12;              
               this_.addComponent('Twoway', 'Keyboard', 'Gravity', 'Collision');
-              //this_.twoway(speed, jumpHeight);
-              this_.twoway(speed, 10);
+              this_.twoway(speed, jumpHeight);
               this_.gravity('platform');
             }
 
             // fourway
             if (props.controls.method.toLowerCase() === 'fourway') {
               this_.addComponent('Fourway', 'Keyboard');
-              this_.speed(speed);
+              this_.fourway(speed);
             }
 
             // multiway
             if (props.controls.method.toLowerCase() === 'multiway') {
               this_.addComponent('Multiway', 'Keyboard');
-              this_.speed(speed);
+              this_.multiway(speed, {UP_ARROW: -90, DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180});
             }
 
           }
@@ -397,6 +393,11 @@ var Parser = {
               this_.addComponent('Solid');
               this_.addComponent("collision");
             }
+
+            if(props.type.toLowerCase() === "player") {
+              this_.addComponent('Player');
+              console.log("WE HAVE A PLAYER!");
+            }
           }
 
           // gravity
@@ -405,7 +406,7 @@ var Parser = {
 
           if (!_.isUndefined(props.gravitation) && !_.isUndefined(props.controls)) {
             //var sign = props.gravitation.direction ? 1 : -1;
-            this_.addComponent("gravity");
+            this_.addComponent("Gravity");
             this_.gravity("platform");
             this_.gravityConst(parseFloat(props.gravitation.strength)); ///sign * props.gravitation.strength);
           }
