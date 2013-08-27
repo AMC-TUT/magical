@@ -213,7 +213,7 @@ def create_game(request):
             url = '/game/details/%s' % game.slug
             return redirect(url)
     else:
-        form = GameForm()
+        form = GameForm(organization=organization)
     context['form'] = form
     return render(request, tpl, context)
 

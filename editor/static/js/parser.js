@@ -386,17 +386,18 @@ var Parser = {
             if(props.type.toLowerCase() === 'block') {
               this_.addComponent('platform');
               this_.addComponent('Solid');
+              this_.addComponent("Collision");
             }
 
             if(props.type.toLowerCase() === "pushable") {
               this_.addComponent('platform');
               this_.addComponent('Solid');
-              this_.addComponent("collision");
+              this_.addComponent("Collision");
             }
 
             if(props.type.toLowerCase() === "player") {
               this_.addComponent('Player');
-              console.log("WE HAVE A PLAYER!");
+              this_.addComponent("Collision");
             }
           }
 
@@ -415,6 +416,8 @@ var Parser = {
           this_.bind("EnterFrame", function(frame) {
             //destroy if it goes out of bounds
             if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
+              
+              /*
               this.destroy();
 
               if(this.has('Player')) {
@@ -422,14 +425,45 @@ var Parser = {
                   Crafty.scene('outro');
                 }, 500);
               }
-
+              */
             }
+
+
+            // stop item on viewport bounds
+            if(this._x > Crafty.viewport.width - Parser.blockSize) {
+                this.x = Crafty.viewport.width - Parser.blockSize;
+            }
+            if(this._x < 0) {
+                this.x =  0;
+            }
+            if(this._y > Crafty.viewport.height - Parser.blockSize) {
+                this.y = Crafty.viewport.height - Parser.blockSize;
+            }
+            if(this._y < 0) {
+                this.y = 0;
+            }
+
+            // TODO: move item to the opposite side of viewport
+            /*
+            if(this._x > Crafty.viewport.width) {
+                this.x = 0;
+            }
+            if(this._x < 0) {
+                this.x =  Crafty.viewport.width;
+            }
+            if(this._y > Crafty.viewport.height) {
+                this.y = 0;
+            }
+            if(this._y < 0) {
+                this.y = Crafty.viewport.height;
+            }
+            */
+
           });
 
           // TODO implement startDialog and createElement
           // TODO handle scores
           if(_.isArray(props.collisions)) {
-            console.log('HAS COLLISIONS');
             this_.addComponent('Collision');
 
             this_.onHit("Player", function(ent) {
@@ -485,7 +519,7 @@ var Parser = {
 
               // hit solid
               } else if(this.hit('Solid')) {
-
+                console.log("HIT SOLID");
                 this.attr({
                   x: from.x,
                   y: from.y
@@ -493,6 +527,8 @@ var Parser = {
 
               }
             } // if collision
+
+
           });
 
         } // /init
