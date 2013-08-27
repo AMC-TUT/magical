@@ -465,10 +465,11 @@ var Parser = {
           // TODO handle scores
           if(_.isArray(props.collisions)) {
             this_.addComponent('Collision');
-
             this_.onHit("Player", function(ent) {
-              var target = ent[0].obj;
+              console.log('SOMEONE HIT PLAYER!');
+              console.log(ent);
 
+              var target = ent[0].obj;
               _.each(props.collisions, function(collision) {
                   if (_.isObject(props.collisions[0]) ) {
                     var col_event = collision.event;
@@ -495,6 +496,7 @@ var Parser = {
               });
 
             });
+
           }
 
           this_.bind('Moved', function(from) {
@@ -520,10 +522,15 @@ var Parser = {
               // hit solid
               } else if(this.hit('Solid')) {
                 console.log("HIT SOLID");
+                /*
+                var target = this.hit('Solid')[0].obj;
+                console.log(target);
+                */
                 this.attr({
                   x: from.x,
                   y: from.y
                 });
+
 
               }
             } // if collision
@@ -537,6 +544,7 @@ var Parser = {
 
     return true;
   },
+
   createSceneComponents: function(scenes) {
 
     var path = '/static/img/icons/',

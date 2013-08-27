@@ -152,7 +152,7 @@ def create_game(request):
     user = request.user
     organization = user.get_profile().organization
     if request.method == 'POST':
-        form = GameForm(request.POST, request.FILES)
+        form = GameForm(request.POST, request.FILES, organization=organization)
         if form.is_valid():
             # figure out game resolution
             resolution = form.cleaned_data['resolution']
