@@ -16,6 +16,13 @@ Crafty.c("Controls", {
   }
 });
 
+Crafty.c("GameOver", {
+  init: function() {
+    this.requires('2D, DOM, Text, gameOver');
+    this.attr({x:10, y:25, w: 300});
+  }
+});
+
 var Parser = {
   game: null,
   socket: null,
@@ -132,6 +139,16 @@ var Parser = {
         if (!_.isNull(backgroundImage)) {
           Crafty.background("url(" + backgroundImage + ")");
         }
+
+        if(scene.name == 'outro') {
+            Crafty.e('GameOver').attr({
+              x: 100,
+              y: 100,
+              w: 400,
+              h: 100
+            }).text("Game Over");
+        }
+
 
         // scene comps
         _.each(scene.sceneComponents, function(comp) {
@@ -393,23 +410,24 @@ var Parser = {
               this_.addComponent('platform');
               this_.addComponent('Solid');
               this_.addComponent("Collision");
+              this_.addComponent("Pushable");
             }
 
             if(props.type.toLowerCase() === "player") {
               this_.addComponent('Player');
               this_.addComponent("Collision");
+
+              this_.direction = '';
+
             }
           }
 
           // gravity
-          console.log(props.gravitation);
-          console.log(props.controls);
-
-          if (!_.isUndefined(props.gravitation) && !_.isUndefined(props.controls)) {
-            //var sign = props.gravitation.direction ? 1 : -1;
+          if (!_.isUndefined(props.gravitation)) {
+            var sign = props.gravitation.direction ? 1 : -1; // gravity direction
             this_.addComponent("Gravity");
             this_.gravity("platform");
-            this_.gravityConst(parseFloat(props.gravitation.strength)); ///sign * props.gravitation.strength);
+            this_.gravityConst(parseFloat(sign * props.gravitation.strength));
           }
 
           // bind events
@@ -506,17 +524,24 @@ var Parser = {
               var hitPushable = this.hit('Pushable');
               if(hitPushable) {
                 // platformer
-                var dir = this._x > from._x ? 'left' : 'right';
-                var posThis = this._x;
+                var dir = this._x > from.x ? 'left' : 'right';
+                //console.log(dir);
+                var leftX = this._x;
                 var widthThis = this._w;
-                var rightThis = posThis + widthThis;
+                var rightX = leftX + widthThis;
 
                 _.each(hitPushable, function(pushable) {
-                  var obj = pushable.obj;
-                  var posObj = rightThis - obj._x;
-
-                  obj.attr({ x: obj._x + posObj });
-
+                    var tgt = pushable.obj;
+                    if(dir == 'left') {
+                        // push from left to right
+                        var posObj = rightX - tgt._x;
+                        tgt.attr({ x: tgt._x + posObj });
+                    } else {
+                        // push from right to left
+                        var posObj = (tgt._x + tgt._w) - leftX;
+                        tgt.attr({ x: tgt._x - posObj });
+                    }
+                    // TODO: push top/down?
                 });
 
               // hit solid
@@ -612,7 +637,7 @@ var Parser = {
             init: function() {
               var this_ = this;
 
-              this_.addComponent('2D', 'DOM', 'Text');
+              this_.addComponent('2D', 'DOM', 'Text', 'gameTitle');
               this_.text(Parser.game.title);
             }
           });

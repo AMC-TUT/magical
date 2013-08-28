@@ -27,7 +27,7 @@
                 <div class="reviewInfo">({{ avg_stars }} average, {{ num_reviews }} votes)</div>
                 <div id="response"></div>
             {% endif %}
-            <p><a class="btn btn-primary" href="http://magos.pori.tut.fi/play/{{ game.slug }}" target="_blank">Play</a></p>
+            <p><a class="btn btn-primary" id="play-game" href="{{ play_url }}{{ game.slug }}" target="_blank">Play game</a></p>
 
             <hr />
 
@@ -216,7 +216,17 @@ $(document).ready(function() {
         });
     }
 
+
+    function bindPlayGame() {
+        $('#play-game').on('click', function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            console.log(url);
+        });
+    }
+
     getGameAuthors();
+    bindPlayGame();
 
 }); // document ready
 </script>

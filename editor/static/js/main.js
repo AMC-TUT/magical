@@ -604,19 +604,16 @@ $(function() {
 
       filteredScoreEvents: function() {
         var collisions = this.getPath('properties.collisions');
-
         return _.isObject(collisions) ? collisions.filterProperty('score') : false;
 
       }.property('properties'),
       filteredAudioEvents: function() {
         var collisions = this.getPath('properties.collisions');
-
         return _.isObject(collisions) ? collisions.filterProperty('audio') : false;
 
       }.property('properties'),
       filteredTextEvents: function() {
         var collisions = this.getPath('properties.collisions');
-        console.log(collisions);
         return _.isObject(collisions) ? collisions.filterProperty('text') : false;
 
       }.property('properties'),
@@ -698,7 +695,6 @@ $(function() {
               activeClass: "ui-state-target",
               hoverClass: "ui-state-active",
               drop: function(event, ui) {
-
                 var $tgt = $(this),
                   view = Em.View.views[$tgt.attr('id')],
                   selected = view.get('item');
@@ -711,7 +707,6 @@ $(function() {
                 var $draggable = $(ui.draggable),
                   $container = $draggable.closest('.magos-potions'),
                   potion = $draggable.data('potion');
-
                 // play sound
                 var sound = document.querySelector('#potion-sound');
                 sound.play();
@@ -722,6 +717,10 @@ $(function() {
                   $container.siblings('.magos-potions.' + potion).show('slide', {
                     direction: "left"
                   }, 250);
+                  // in case of image potion, open modal window on drop
+                  if(potion == 'image') {
+                      $('#image-assets').modal().on('show');
+                  }
                 });
               }
             });
@@ -756,7 +755,6 @@ $(function() {
             App.selectedComponentController.set('content', selected);
           }
         });
-
         $li.droppable({
           greedy: true,
           accept: ".potion-icon",
@@ -779,9 +777,13 @@ $(function() {
             $container.hide("slide", {
               direction: "right"
             }, 250, function() {
-              $container.siblings('.magos-potions.' + potion).show('slide', {
-                direction: "left"
-              }, 250);
+                $container.siblings('.magos-potions.' + potion).show('slide', {
+                  direction: "left"
+                }, 250);
+                // in case of image potion, open modal window on drop
+                if(potion == 'image') {
+                    $('#image-assets').modal().on('show');
+                }
             });
           }
         });
@@ -2537,8 +2539,9 @@ $(function() {
 
       // if potion form open
       var $magos = $('.selected-magos');
+
       if($magos.is(':hidden')) {
-        $magos.siblings('.magos-potions').hide('slide', {
+        $magos.siblings('.magos-potion-form:visible').hide('slide', {
           direction: 'left'
         }, 250, function() {
           $magos.show('slide', {
@@ -2584,7 +2587,6 @@ $(function() {
               magos = $draggable.data('magos'),
               tgtMagos = $tgt.find('.skillset-icon').data('magos');
 
-            
             var user = App.usersController.get('user');
             // inform other authors of the change
             var gameSlug = App.gameController.getPath('content.slug');

@@ -57,6 +57,7 @@ def game_details(request, gameslug):
     if user.is_authenticated():
         organization = user.get_profile().organization
     editor_url = settings.MAGOS_EDITOR_URL
+    play_url = settings.MAGOS_PLAY_URL
     game = None
     authors = []
     can_edit = False
@@ -111,6 +112,7 @@ def game_details(request, gameslug):
     context['avg_stars'] = avg_stars
     context['can_review'] = can_review
     context['editor_url'] = editor_url
+    context['play_url'] = play_url
 
     return render(request, tpl, context)
 
