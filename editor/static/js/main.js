@@ -1027,6 +1027,18 @@ $(function() {
           $modal.modal('hide');
           $modal.find('.ui-selected').removeClass('.ui-selected');
         }
+        // return back to potions view
+        var $magos = $('.selected-magos');
+        if($magos.is(':hidden')) {
+          $magos.siblings('.magos-potions').hide('slide', {
+            direction: 'left'
+          }, 250, function() {
+            $magos.show('slide', {
+              direction: 'right'
+            }, 250);
+          });
+        }
+
       },
       didInsertElement: function() {
         Em.run.next(function() {
