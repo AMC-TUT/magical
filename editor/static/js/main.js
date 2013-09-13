@@ -584,19 +584,7 @@ $(function() {
         }
 
       }.property('properties.controls.grid'),
-      directionStr: function() {
-        var dir = this.getPath('properties.gravitation.direction');
-
-        if(dir === false) {
-          return "Inverted";
-        } else if(dir === true) {
-          return "Normal";
-        } else {
-          return dir;
-        }
-
-      }.property('properties.gravitation.direction'),
-      
+            
       collisions: function() {
         var collisions = this.getPath('properties.collisions');
         return collisions;
@@ -1426,8 +1414,7 @@ $(function() {
       collisionScoreBinding: 'collision.score', // collision
 
       strengthBinding: 'gravitation.strength', // gravitation
-      directionBinding: 'gravitation.direction', // gravitation
-
+      
       compTypeBinding:  'compTypes.title', // compType
       
       familyBinding: 'fonts.family', // font
@@ -1523,9 +1510,7 @@ $(function() {
         event.preventDefault();
         // get values from the form
         var strength = this.getPath('strength');
-        var direction = this.getPath('direction');
         var gravitation = {
-          'direction' : direction, // boolean
           'strength' : strength
         }
         App.selectedComponentController.setPath('content.properties.gravitation', gravitation);

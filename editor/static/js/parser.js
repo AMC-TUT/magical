@@ -424,10 +424,10 @@ var Parser = {
 
           // gravity
           if (!_.isUndefined(props.gravitation)) {
-            var sign = props.gravitation.direction ? 1 : -1; // gravity direction
+            //var sign = props.gravitation.direction ? 1 : -1; // gravity direction
             this_.addComponent("Gravity");
             this_.gravity("platform");
-            this_.gravityConst(parseFloat(sign * props.gravitation.strength));
+            this_.gravityConst(parseFloat(props.gravitation.strength));
           }
 
           // bind events

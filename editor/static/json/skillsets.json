@@ -64,8 +64,7 @@
       {
         "title": "gravitation",
         "properties": {
-            "strength": 0.2,
-            "direction": true
+            "strength": 0.2
         }
       },
       {
