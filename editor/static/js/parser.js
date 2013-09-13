@@ -376,7 +376,6 @@ var Parser = {
               this_.addComponent('Twoway', 'Keyboard', 'Gravity', 'Collision');
               this_.twoway(speed, jumpHeight);
               this_.gravity('platform');
-              console.log('speed: ' + speed + ' - jumpspeed: ' + jumpHeight);
             }
 
             // fourway
