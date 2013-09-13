@@ -372,10 +372,11 @@ var Parser = {
             console.log(props.controls.method);
             // twoway === platform
             if (props.controls.method.toLowerCase() === 'twoway') {
-              var jumpHeight = _.isNumber(props.controls.jumpHeight) ? parseInt(props.controls.jumpHeight) : 12;              
+              var jumpHeight = !_.isNull(props.controls.jumpHeight) ? parseInt(props.controls.jumpHeight) : 12;              
               this_.addComponent('Twoway', 'Keyboard', 'Gravity', 'Collision');
               this_.twoway(speed, jumpHeight);
               this_.gravity('platform');
+              console.log('speed: ' + speed + ' - jumpspeed: ' + jumpHeight);
             }
 
             // fourway
@@ -432,50 +433,55 @@ var Parser = {
 
           // bind events
           this_.bind("EnterFrame", function(frame) {
-            //destroy if it goes out of bounds
-            if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
-              
-              /*
-              this.destroy();
 
-              if(this.has('Player')) {
-                setTimeout(function() {
-                  Crafty.scene('outro');
-                }, 500);
+              //destroy if it goes out of bounds
+              if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
+                
+                /*
+                this.destroy();
+
+                if(this.has('Player')) {
+                  setTimeout(function() {
+                    Crafty.scene('outro');
+                  }, 500);
+                }
+                */
+              }
+
+
+              // stop item on viewport bounds
+              if(this._x > Crafty.viewport.width - Parser.blockSize) {
+                  this.x = Crafty.viewport.width - Parser.blockSize;
+              }
+              if(this._x < 0) {
+                  this.x =  0;
+              }
+              if(this._y > Crafty.viewport.height - Parser.blockSize) {
+                  this.y = Crafty.viewport.height - Parser.blockSize;
+              }
+              if(this._y < 0) {
+                  this.y = 0;
+              }
+
+              // TODO: move item to the opposite side of viewport
+              /*
+              if(this._x > Crafty.viewport.width) {
+                  this.x = 0;
+              }
+              if(this._x < 0) {
+                  this.x =  Crafty.viewport.width;
+              }
+              if(this._y > Crafty.viewport.height) {
+                  this.y = 0;
+              }
+              if(this._y < 0) {
+                  this.y = Crafty.viewport.height;
               }
               */
-            }
 
 
-            // stop item on viewport bounds
-            if(this._x > Crafty.viewport.width - Parser.blockSize) {
-                this.x = Crafty.viewport.width - Parser.blockSize;
-            }
-            if(this._x < 0) {
-                this.x =  0;
-            }
-            if(this._y > Crafty.viewport.height - Parser.blockSize) {
-                this.y = Crafty.viewport.height - Parser.blockSize;
-            }
-            if(this._y < 0) {
-                this.y = 0;
-            }
 
-            // TODO: move item to the opposite side of viewport
-            /*
-            if(this._x > Crafty.viewport.width) {
-                this.x = 0;
-            }
-            if(this._x < 0) {
-                this.x =  Crafty.viewport.width;
-            }
-            if(this._y > Crafty.viewport.height) {
-                this.y = 0;
-            }
-            if(this._y < 0) {
-                this.y = Crafty.viewport.height;
-            }
-            */
+
 
           });
 
@@ -483,6 +489,7 @@ var Parser = {
           // TODO handle scores
           if(_.isArray(props.collisions)) {
             this_.addComponent('Collision');
+            
             this_.onHit("Player", function(ent) {
               console.log('SOMEONE HIT PLAYER!');
               console.log(ent);
@@ -522,6 +529,8 @@ var Parser = {
             if (this.has('Collision')) {
 
               var hitPushable = this.hit('Pushable');
+
+              // hit pushable
               if(hitPushable) {
                 // platformer
                 var dir = this._x > from.x ? 'left' : 'right';
@@ -544,20 +553,22 @@ var Parser = {
                     // TODO: push top/down?
                 });
 
+              } 
+
               // hit solid
-              } else if(this.hit('Solid')) {
-                console.log("HIT SOLID");
-                /*
-                var target = this.hit('Solid')[0].obj;
-                console.log(target);
-                */
-                this.attr({
-                  x: from.x,
-                  y: from.y
-                });
-
-
+              if(this.hit('Solid')) {
+                  console.log("HIT SOLID");
+                  /*
+                  var target = this.hit('Solid')[0].obj;
+                  console.log(target);
+                  */
+                  this.attr({
+                    x: from.x,
+                    y: from.y
+                  });
               }
+
+
             } // if collision
 
 
