@@ -5,6 +5,7 @@
   <title>Magos Editor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Magical">
+  <link href="/editor/static/css/vendor/jquery-ui.min.css" rel="stylesheet">
   <link href="/editor/static/css/main.css" rel="stylesheet">
   <link id="theme" href="/editor/static/css/dark.css" rel="stylesheet">
   <link href="/editor/static/css/flash.css" rel="stylesheet">
@@ -106,7 +107,7 @@
                               {{#if score}} {{score}} {{else}} ---{{/if}}
                             </td>
                             <td>
-                              <button {{action removeCollision target="view"}}>Delete</button>
+                              <button {{action removeCollision target="view"}} class="btn"><span class="icon icon-trash"></span></button>
                             </td>
                           </tr>
                           {{/each}}
@@ -123,6 +124,9 @@
                             <td>Strength</td>
                             <td>
                               {{content.properties.gravitation.strength}}
+                            </td>
+                            <td>
+                              <button {{action removeGravitation target="view"}} class="btn"><span class="icon icon-trash"></span></button>
                             </td>
                           </tr>
                         {{/view}}
@@ -745,8 +749,12 @@
 
                         <div class="control-group">
                           <label class="control-label">Strength</label>
-                          <div class="controls">
-                            {{view App.DecimalNumberField valueBinding="view.strength" class="input" min="0.0" max="1.0" step="0.01" }}
+                          <div class="controls" id="gravitation-controls" style="position:relative;">
+                            <span class="gravitation-strength low"></span>
+                            <div id="gravitationStrength">                            <span class="slider-tooltip"></span>
+</div>
+                            <span class="gravitation-strength high"></span>
+                            {{view App.HiddenDecimalNumberField valueBinding="view.strength" class="input gravitationStrengthVal" min="0.0" max="1.0" step="0.1" }}
                           </div>
                         </div>
 

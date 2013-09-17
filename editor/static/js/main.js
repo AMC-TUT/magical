@@ -25,6 +25,11 @@ $(function() {
       type: 'number'
     });
 
+    App.HiddenDecimalNumberField = Em.TextField.extend({
+      attributeBindings: ['name', 'min', 'max', 'step'],
+      type: 'hidden'
+    });
+
     App.ColorField = Em.TextField.extend({
       type: 'color'
     });
@@ -623,6 +628,11 @@ $(function() {
           console.log('save (remove game component)');
         });          
       },
+
+      collisionTargets: function() {
+        return this.get('content').filterBy('type', 'players');
+      }.property('content.@each.type'),
+
       updateItem: function(propName, value, newItem) {
         // replace old gameComponent with a new one when properties change
         console.log(newItem);
@@ -709,6 +719,9 @@ $(function() {
                   if(potion == 'image') {
                       $('#image-assets').modal().on('show');
                   }
+                  if(potion == 'gravitation') {
+                    activateGravitationSlider();
+                  }
                 });
               }
             });
@@ -772,6 +785,9 @@ $(function() {
                 if(potion == 'image') {
                     $('#image-assets').modal().on('show');
                 }
+                if(potion == 'gravitation') {
+                  activateGravitationSlider();
+                } 
             });
           }
         });
@@ -1240,7 +1256,7 @@ $(function() {
         } else {
           // user has no magos role yet, assign a free one
           var freeMagoses = controller.get('content').filterProperty('user', null);
-          console.log(freeMagoses);
+          //console.log(freeMagoses);
           var freeMagos = null;
           if(freeMagoses.length > 0) {
             freeMagos = freeMagoses[0];
@@ -1458,6 +1474,31 @@ $(function() {
         });
       },
 
+
+      submitGravitationProperties: function(event) {
+        event.preventDefault();
+        // get values from the form
+        var gravitationStrengthVal = $('.gravitationStrengthVal');
+        var strength = gravitationStrengthVal.val();
+        var gravitation = {
+          'strength' : strength
+        }
+        App.selectedComponentController.setPath('content.properties.gravitation', gravitation);
+
+        var selectedComponent = App.selectedComponentController.get('content');
+        var slugName = App.selectedComponentController.getPath('content.slug');
+        // save game
+        App.dataSource.saveGame(0, function(data) {
+          console.log('save (edit properties)');
+        });
+        // inform others of property change
+        App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
+          console.log('emit (update game component properties)');
+        });          
+
+      },
+
+
       submitFontProperties: function(event) {
         event.preventDefault();
         // get values from the form
@@ -1506,27 +1547,6 @@ $(function() {
 
       },
 
-      submitGravitationProperties: function(event) {
-        event.preventDefault();
-        // get values from the form
-        var strength = this.getPath('strength');
-        var gravitation = {
-          'strength' : strength
-        }
-        App.selectedComponentController.setPath('content.properties.gravitation', gravitation);
-
-        var selectedComponent = App.selectedComponentController.get('content');
-        var slugName = App.selectedComponentController.getPath('content.slug');
-        // save game
-        App.dataSource.saveGame(0, function(data) {
-          console.log('save (edit properties)');
-        });
-        // inform others of property change
-        App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
-          console.log('emit (update game component properties)');
-        });          
-
-      },
 
       
       submitControlsProperties: function(event) {
@@ -1560,17 +1580,12 @@ $(function() {
 
       removeComponentProperty: function(event) {
         event.preventDefault();
-
         var $tgt = $(event.target);
         var $view = $tgt.closest('.ember-view');
         var view = Em.View.views[$view.attr('id')];
-
         var content = view.get('content');
-
         delete content['score'];
 
-        console.log(score);
-        console.log('App.MagosComponentPropertyView')
       },
       openImageAssetsDialog: function() {
         event.preventDefault();
@@ -1628,10 +1643,24 @@ $(function() {
         App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
           console.log('emit (update game component properties)');
         });          
-
       }
     });
-    App.InfoBoxGravitationView = Em.View.extend();
+    App.InfoBoxGravitationView = Em.View.extend({
+      contentBinding: 'App.selectedComponentController.content.properties.gravitation',
+      removeGravitation: function(evt) {
+        App.selectedComponentController.setPath('content.properties.gravitation', null);
+        var selectedComponent = App.selectedComponentController.get('content');
+        var slugName = App.selectedComponentController.getPath('content.slug');
+        // force game data save
+        App.dataSource.saveGame(0, function(data) {
+          console.log('save (remove gravitation)');
+        });
+        // inform others of property change
+        App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
+          console.log('emit (update game component properties)');
+        });
+      }
+    });
     App.InfoBoxScoreView = Em.View.extend();
     App.InfoBoxDialogView = Em.View.extend();
     App.InfoBoxTextView = Em.View.extend();
@@ -2548,6 +2577,32 @@ $(function() {
       }
     });
 
+
+    function activateGravitationSlider() {
+      var tooltip = $('.slider-tooltip');
+      tooltip.hide();
+      var gravitationStrengthVal = App.selectedComponentController.getPath('content.properties.gravitation.strength') ? App.selectedComponentController.getPath('content.properties.gravitation.strength') : 0.0;
+      $("#gravitationStrength").slider({
+          min: 0,
+          max: 10,
+          step: 1,
+          value: parseFloat(gravitationStrengthVal) * 10,
+          start: function(event,ui) {
+              tooltip.fadeIn('fast');
+          },
+          slide: function(event, ui) {
+              var strength = ui.value / 10;
+              var value  = $(this).slider('value');
+              $('.gravitationStrengthVal').val(strength);
+              tooltip.css('left', ui.value * 10 + '%').text(strength);
+          },
+          stop: function(event,ui) {
+              tooltip.fadeOut('slow');
+          },
+      });
+    }
+
+
     function refreshSidebar($sortableArea) {
       // sortable well
       $sortableArea.sortable({
@@ -2558,7 +2613,7 @@ $(function() {
         opacity: 0.8,
         forceHelperSize: true
       });
-      //
+
       $sortableArea.disableSelection();
 
       // small delay required to make this work
@@ -2657,7 +2712,6 @@ $(function() {
 
 
     function populateScenes() {
-      console.log('POPULATE SCENES');
       $('.canvas-cell').empty();
       // add items to canvas
       var scenes = App.gameController.getPath('content.revision.scenes');
