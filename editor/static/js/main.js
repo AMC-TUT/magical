@@ -525,18 +525,8 @@ $(function() {
           if(App.usersController.getPath('user.busy')) {
             App.usersController.setPath('user.busy', false);
           }
-
           // if potion form open
-          var $magos = $('.selected-magos');
-          if($magos.is(':hidden')) {
-            $magos.siblings('.magos-potions').hide('slide', {
-              direction: 'left'
-            }, 250, function() {
-              $magos.show('slide', {
-                direction: 'right'
-              }, 250);
-            });
-          }
+          closePotionForm();
         }
       })
     });
@@ -617,9 +607,10 @@ $(function() {
       }.property('properties')
     });
 
+
     App.gameComponentsController = Em.ArrayController.create({
       contentBinding: 'App.gameController.content.revision.gameComponents',
-      // 'App.scenesController.selected.gameComponents',
+
       removeItem: function(propName, value) {
         var obj = this.findProperty(propName, value);
         this.removeObject(obj);
@@ -629,9 +620,31 @@ $(function() {
         });          
       },
 
+      removeCollisionTarget: function(collisionTarget) {
+        //this.collisionTargets.removeObject(collisionTarget);
+        this.notifyPropertyChange('collisionTargets');
+      },
+
+      // objects suitable for collision target
       collisionTargets: function() {
-        return this.get('content').filterBy('type', 'players');
-      }.property('content.@each.type'),
+        var targets = [];
+        //console.log('fuck');
+        var currentSlug = null;
+        var currentComponent = App.selectedComponentController.get('content');
+        if(currentComponent) {
+          currentSlug = App.selectedComponentController.get('content').slug;
+        }
+        _.each(App.gameComponentsController.get('content'), function(obj) { 
+          if(obj.properties.type.toLowerCase() == 'collectible' || obj.properties.type.toLowerCase() == 'player' || obj.properties.type.toLowerCase() == 'pushable') {
+            if(obj.slug.toLowerCase() != currentSlug) {
+              targets.push(
+                App.GameComponent.create(obj)
+              );
+            }
+          }
+        });
+        return targets;
+      }.property('content.@each'),
 
       updateItem: function(propName, value, newItem) {
         // replace old gameComponent with a new one when properties change
@@ -802,19 +815,8 @@ $(function() {
           if(App.usersController.getPath('user.busy')) {
             App.usersController.setPath('user.busy', false);
           }
-
           // if potion form open
-          var $magos = $('.selected-magos');
-          if($magos.is(':hidden')) {
-            $magos.siblings('.magos-potions').hide('slide', {
-              direction: 'left'
-            }, 250, function() {
-              $magos.show('slide', {
-                direction: 'right'
-              }, 250);
-            });
-          }
-
+          closePotionForm();
         }
       })
     });
@@ -837,10 +839,6 @@ $(function() {
         });
       }
     });
-
-
-
-
 
 
     /**************************
@@ -1032,17 +1030,7 @@ $(function() {
           $modal.find('.ui-selected').removeClass('.ui-selected');
         }
         // return back to potions view
-        var $magos = $('.selected-magos');
-        if($magos.is(':hidden')) {
-          $magos.siblings('.magos-potions').hide('slide', {
-            direction: 'left'
-          }, 250, function() {
-            $magos.show('slide', {
-              direction: 'right'
-            }, 250);
-          });
-        }
-
+        closePotionForm();
       },
       didInsertElement: function() {
         Em.run.next(function() {
@@ -1063,10 +1051,11 @@ $(function() {
       sceneComponentsBinding: 'App.sceneComponentsController.content',
       gameComponentsBinding: 'App.gameComponentsController.content',
       contentObserver: function() {
-        //
         var selected = this.get('content');
         var sceneItems = $('.scene-chest').find('li');
         var gameItems = $('.item-chest').find('li');
+
+        App.gameComponentsController.removeCollisionTarget();
 
         console.log(JSON.stringify(this.get('content')));
 
@@ -1438,6 +1427,12 @@ $(function() {
       fontColorBinding: 'fonts.color', // font
       fontBackgroundBinding: 'fonts.background', // font
 
+      cancelFormSubmit: function(event) {
+        event.preventDefault();
+        closePotionForm();
+      },
+
+
       submitScoresProperties: function(event) {
         event.preventDefault();
         // TODO: implementation of score        
@@ -1448,12 +1443,15 @@ $(function() {
         event.preventDefault();
         var col_target = this.getPath('collisionTarget');
         var col_event = this.getPath('collisionEvent');
-        var col_score = this.getPath('collisionScore');
+        //var col_score = this.getPath('collisionScore');
+        var targetSlug = (col_target) ? col_target.slug : null;
+        
         var collision = App.Collision.create({
-          'target' : col_target,
-          'event' : col_event.event,
-          'score' : col_score
+          'target' : targetSlug,
+          'event' : col_event.event
+          //'score' : col_score
         });
+        console.log(targetSlug);
         if(App.selectedComponentController.getPath('content.properties.collisions') === undefined) {
             // no existing collisions
             App.selectedComponentController.setPath('content.properties.collisions', [collision]);
@@ -1554,12 +1552,12 @@ $(function() {
         var controlsMethod = this.getPath('controlsMethod.method');
         var speed = this.getPath('speed');
         var jumpHeight = this.getPath('jumpHeight');
-        var grid = this.getPath('grid');
+        //var grid = this.getPath('grid');
         // get values from the form
         var controls = { 
           'method' : controlsMethod, 
           'speed' : speed,
-          'grid' : grid,
+          //'grid' : grid,
           'jumpHeight' : jumpHeight
         };
 
@@ -2557,24 +2555,12 @@ $(function() {
 
     $(document).on('click tap', '.btn-back-potion', function(event) {
       event.preventDefault();
-
       // if user busy, set not busy
       if(App.usersController.getPath('user.busy')) {
         App.usersController.setPath('user.busy', false);
       }
-
       // if potion form open
-      var $magos = $('.selected-magos');
-
-      if($magos.is(':hidden')) {
-        $magos.siblings('.magos-potion-form:visible').hide('slide', {
-          direction: 'left'
-        }, 250, function() {
-          $magos.show('slide', {
-            direction: 'right'
-          }, 250);
-        });
-      }
+      closePotionForm();
     });
 
 
@@ -2710,6 +2696,19 @@ $(function() {
       });
     }
 
+    function closePotionForm() {
+      // close potion form
+      var $magos = $('.selected-magos');
+      if($magos.is(':hidden')) {
+        $magos.siblings('.magos-potion-form:visible').hide('slide', {
+          direction: 'left'
+        }, 250, function() {
+          $magos.show('slide', {
+            direction: 'right'
+          }, 250);
+        });
+      }
+    }
 
     function populateScenes() {
       $('.canvas-cell').empty();

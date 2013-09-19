@@ -79,12 +79,6 @@
                               {{content.properties.controls.jumpHeight}}
                             </td>
                           </tr>
-                          <tr>
-                            <td>Snap to Grid</td>
-                            <td>
-                              {{content.snapToGrid}}
-                            </td>
-                          </tr>
                         {{/view}}
                       {{/if}}
                       
@@ -93,21 +87,18 @@
                         <h4>Collisions</h4>
                         {{#view App.InfoBoxCollisionView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-collisions"}}
                           <tr>
-                            <th>Target</th><th>Event</th><th>Score</th><th></th>
+                            <th class="oneOf3">Target</th><th class="oneOf3">Event</th><th class="alignRight"></th>
                           </tr>
                           {{#each content.properties.collisions}}
                           <tr>
-                            <td>
+                            <td class="oneOf3">
                               {{#if target}} {{target}} {{else}} ---{{/if}}
                             </td>
-                            <td>
+                            <td class="oneOf3">
                               {{#if event}} {{event}} {{else}} ---{{/if}}
                             </td>
-                            <td>
-                              {{#if score}} {{score}} {{else}} ---{{/if}}
-                            </td>
-                            <td>
-                              <button {{action removeCollision target="view"}} class="btn"><span class="icon icon-trash"></span></button>
+                            <td class="alignRight">
+                              <button {{action removeCollision target="view"}} class="btn btn-danger"><span class="icon icon-trash"></span></button>
                             </td>
                           </tr>
                           {{/each}}
@@ -115,18 +106,16 @@
                         {{/view}}
                       {{/if}}
 
-
-
                       {{#if App.selectedComponentController.content.properties.gravitation}}
                       <h4>Gravitation</h4>
                         {{#view App.InfoBoxGravitationView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-gravitation"}}
                           <tr>
-                            <td>Strength</td>
-                            <td>
+                            <td class="oneOf3">Strength</td>
+                            <td class="oneOf3">
                               {{content.properties.gravitation.strength}}
                             </td>
-                            <td>
-                              <button {{action removeGravitation target="view"}} class="btn"><span class="icon icon-trash"></span></button>
+                            <td class="alignRight">
+                              <button {{action removeGravitation target="view"}} class="btn btn-danger"><span class="icon icon-trash"></span></button>
                             </td>
                           </tr>
                         {{/view}}
@@ -684,18 +673,11 @@
                         </div>
 
 
-                        <div class="control-group">
-                          <label class="control-label">Snap to grid</label>
-                          <div class="controls">
-                            {{view Ember.Checkbox checkedBinding="view.grid"}}
-                          </div>
-                        </div>
-
                       </div>
 
                       <div class="form-actions">
                         <button {{action "submitControlsProperties"}} class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
-                        <button class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
+                        <button {{action "cancelFormSubmit"}} class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
                       </div>
                     {{/view}}
 
@@ -713,16 +695,16 @@
                       <div class="action-group">
 
                         <div class="control-group">
-                          <label class="control-label">Event</label>
+                          <label class="control-label">Target</label>
                           <div class="controls">
-                            {{view Ember.Select contentBinding="App.potionsController.collision.events" optionLabelPath="content.title" optionValuePath="content.event" selectionBinding="collisionEvent" class="input-xlarge" }}
+                            {{view Ember.Select contentBinding="App.gameComponentsController.collisionTargets" optionLabelPath="content.title" optionValuePath="content.slug" selectionBinding="collisionTarget" class="input-xlarge" }}
                           </div>
                         </div>
 
                         <div class="control-group">
-                          <label class="control-label">Score</label>
+                          <label class="control-label">Event</label>
                           <div class="controls">
-                            {{view App.NumberField valueBinding="view.collision.score" class="input" min="-1000" max="1000"}}
+                            {{view Ember.Select contentBinding="App.potionsController.collision.events" optionLabelPath="content.title" optionValuePath="content.event" selectionBinding="collisionEvent" class="input-xlarge" }}
                           </div>
                         </div>
 
@@ -731,7 +713,7 @@
 
                       <div class="form-actions">
                         <button {{action "submitCollisionProperties"}} class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
-                        <button class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
+                        <button {{action "cancelFormSubmit"}} class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
                       </div>
 
                     {{/view}}
@@ -763,7 +745,7 @@
 
                       <div class="form-actions">
                         <button {{action "submitGravitationProperties"}} class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
-                        <button class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
+                        <button {{action "cancelFormSubmit"}} class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
                       </div>
 
                     {{/view}}
@@ -789,7 +771,7 @@
 
                       <div class="form-actions">
                         <button {{action "submitCompTypeProperties"}} class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
-                        <button class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
+                        <button {{action "cancelFormSubmit"}} class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
                       </div>
                     {{/view}}
 

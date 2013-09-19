@@ -842,7 +842,7 @@ footer{color:#E9E9E9;}footer p{margin:0 9px 9px;}
 
 #gravitationStrength {
 	display: inline-block;
-	width: 175px;
+	width: 160px;
 }
 
 .infobox .btn{ 
@@ -851,3 +851,15 @@ footer{color:#E9E9E9;}footer p{margin:0 9px 9px;}
 	margin:0;
 	line-height:14px;
 }
+
+.magos-infobox .table tr td.alignRight {
+	text-align: right;
+	width: 20%;
+}
+
+.magos-infobox .table tr td.oneOf3 {
+	width: 40% !important;
+}
+
+
+
