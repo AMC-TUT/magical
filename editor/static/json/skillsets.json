@@ -84,6 +84,10 @@
               "properties": []
             },
             {
+              "title": "decoration",
+              "properties": []
+            },
+            {
               "title": "player",
               "properties": []
             }
@@ -107,13 +111,6 @@
             "events": [],
             "audio": null,
             "plays": 0
-        }
-      },
-      {
-        "title": "animation",
-        "properties": {
-          "events": null,
-          "sprite": null
         }
       }
     ]

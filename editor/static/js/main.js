@@ -584,21 +584,17 @@ $(function() {
         var collisions = this.getPath('properties.collisions');
         return collisions;
       }.property('properties'),
-
       filteredScoreEvents: function() {
         var collisions = this.getPath('properties.collisions');
         return _.isObject(collisions) ? collisions.filterProperty('score') : false;
-
       }.property('properties'),
       filteredAudioEvents: function() {
         var collisions = this.getPath('properties.collisions');
         return _.isObject(collisions) ? collisions.filterProperty('audio') : false;
-
       }.property('properties'),
       filteredTextEvents: function() {
         var collisions = this.getPath('properties.collisions');
         return _.isObject(collisions) ? collisions.filterProperty('text') : false;
-
       }.property('properties'),
       filteredDialogEvents: function() {
         //var collisions = this.get('properties.collisions');
@@ -610,6 +606,8 @@ $(function() {
 
     App.gameComponentsController = Em.ArrayController.create({
       contentBinding: 'App.gameController.content.revision.gameComponents',
+      selectedScoreTarget: null,
+      selectedScoreEvent: null,
 
       removeItem: function(propName, value) {
         var obj = this.findProperty(propName, value);
@@ -620,22 +618,23 @@ $(function() {
         });          
       },
 
-      removeCollisionTarget: function(collisionTarget) {
-        //this.collisionTargets.removeObject(collisionTarget);
+      refreshCollisionTargets: function() {
         this.notifyPropertyChange('collisionTargets');
       },
 
       // objects suitable for collision target
       collisionTargets: function() {
         var targets = [];
-        //console.log('fuck');
         var currentSlug = null;
         var currentComponent = App.selectedComponentController.get('content');
         if(currentComponent) {
           currentSlug = App.selectedComponentController.get('content').slug;
         }
         _.each(App.gameComponentsController.get('content'), function(obj) { 
-          if(obj.properties.type.toLowerCase() == 'collectible' || obj.properties.type.toLowerCase() == 'player' || obj.properties.type.toLowerCase() == 'pushable') {
+          if( obj.properties.type.toLowerCase() == 'collectible' || 
+              obj.properties.type.toLowerCase() == 'player' || 
+              obj.properties.type.toLowerCase() == 'pushable' || 
+              obj.properties.type.toLowerCase() == 'decoration') {
             if(obj.slug.toLowerCase() != currentSlug) {
               targets.push(
                 App.GameComponent.create(obj)
@@ -644,6 +643,76 @@ $(function() {
           }
         });
         return targets;
+      }.property('content.@each'),
+
+      refreshScoreCollisionTargets: function() {
+        this.notifyPropertyChange('scoreCollisionTargets');
+      },
+
+      // collision targets for selected component
+      scoreCollisionTargets: function() {
+        var targets = [],
+            collisions = [],
+            slugNames = [],
+            controller = this;
+        controller.set('selectedScoreTarget', null);
+        var currentComponent = App.selectedComponentController.get('content');
+        if(currentComponent) {
+          var collisions = currentComponent.getPath('properties.collisions');
+        }
+        console.log('1. ====>>> selectedScoreTarget: ' + controller.selectedScoreTarget);
+        _.each(collisions, function(obj) {
+          var colTarget = App.gameComponentsController.get('content').filterProperty('slug', obj.target.slug);
+          console.log(colTarget[0]);
+          // we don't want duplicates
+          console.log(obj.target.slug);
+          if(_.indexOf(slugNames, obj.target.slug) == -1) {
+            slugNames.push(obj.target.slug);
+            if(!controller.selectedScoreTarget) {
+              controller.set('selectedScoreTarget', colTarget[0]);
+              console.log('2. ---->>> selectedScoreTarget: ' + controller.selectedScoreTarget);
+            }
+            targets.push(
+              App.GameComponent.create(colTarget[0])
+            );
+          }
+        });
+        return targets;
+      }.property('content.@each'),
+
+      selectedScoreTargetObserver: function() {
+        console.log('SELECTED SCORE TARGET CHANGED');
+        var selectedScoreTarget = this.get('selectedScoreTarget');
+        this.refreshScoreCollisionEvents();
+
+      }.observes('selectedScoreTarget'),
+
+      refreshScoreCollisionEvents: function() {
+        console.log('REFRESH....');
+        this.notifyPropertyChange('scoreCollisionEvents');
+      },
+
+      // collision events for selected target
+      scoreCollisionEvents: function() {
+        console.log('UPDATE EVENTS...');
+        var colEvents = [],
+            collisions = [],
+            controller = this;
+        controller.set('selectedScoreEvent', null);
+        var currentComponent = App.selectedComponentController.get('content');
+        var selectedScoreTarget = controller.get('selectedScoreTarget');
+        if(currentComponent) {
+          var collisions = currentComponent.getPath('properties.collisions');
+        }
+        _.each(collisions, function(obj) {
+          if(obj.target.slug == selectedScoreTarget.slug) {
+            if(!controller.selectedScoreEvent) controller.set('selectedScoreEvent', obj.event);
+            colEvents.push(
+              App.GameComponent.create(obj.event)
+            );
+          }
+        });
+        return colEvents;
       }.property('content.@each'),
 
       updateItem: function(propName, value, newItem) {
@@ -1041,6 +1110,12 @@ $(function() {
       }
     }).appendTo('body');
 
+/*
+    App.selectedScoreTargetController = Em.Object.create({
+      content: null,
+      scoreTargetBinding: 'App.sceneComponentsController.content'
+    });
+*/
     /**************************
      * Selected Component
      * This can be either sceneComponent or gameComponent
@@ -1054,23 +1129,21 @@ $(function() {
         var selected = this.get('content');
         var sceneItems = $('.scene-chest').find('li');
         var gameItems = $('.item-chest').find('li');
+        
+        App.gameComponentsController.refreshCollisionTargets();
+        App.gameComponentsController.refreshScoreCollisionTargets();
 
-        App.gameComponentsController.removeCollisionTarget();
-
-        console.log(JSON.stringify(this.get('content')));
-
+        //console.log(JSON.stringify(this.get('content')));
         // loop elements and remove ui-selected class
         _.each(sceneItems, function(item) {
           var view = Em.View.views[$(item).attr('id')];
           var component = view.get('item');
-
           view.set('uiSelected', component === selected ? true : false);
         });
 
         _.each(gameItems, function(item) {
           var view = Em.View.views[$(item).attr('id')];
           var component = view.get('item');
-
           view.set('uiSelected', component === selected ? true : false);
         });
 
@@ -1084,10 +1157,10 @@ $(function() {
         });
 
         selected.set('active', true);
-
         //console.log('new selected component:');
         //console.log(this.get('content.properties.sprite'));
       }.observes('content')
+
     });
 
     /**************************
@@ -1098,7 +1171,7 @@ $(function() {
       magos: null,
       potions: []
     });
-*/
+    */
 
     /**************************
      * Potions Controller
@@ -1399,7 +1472,6 @@ $(function() {
 
     });
 
-
     /* VIEW FOR POTION PROPERTY FORMS */
     App.MagosComponentPropertyView = Em.View.extend({
       contentBinding: 'App.potionsController.content',
@@ -1408,6 +1480,7 @@ $(function() {
       collisionBinding: 'App.potionsController.collision',
       compTypesBinding: 'App.potionsController.compTypes',
       fontsBinding: 'App.potionsController.fonts',
+      scoreBinding: 'App.potionsController.score',
       // field bindings
       controlsMethodBinding:  'App.potionsController.controls.method', // controls
       speedBinding: 'App.potionsController.controls.speed', // controls
@@ -1421,37 +1494,52 @@ $(function() {
       strengthBinding: 'gravitation.strength', // gravitation
       
       compTypeBinding:  'compTypes.title', // compType
-      
+
       familyBinding: 'fonts.family', // font
       fontSizeBinding: 'fonts.size', // font
       fontColorBinding: 'fonts.color', // font
       fontBackgroundBinding: 'fonts.background', // font
+
+      // selection bindings
+      selectedCollisionTarget: null,
+      selectedCollisionEvent: null,
+
+      selectedScoreScore: null,
+
 
       cancelFormSubmit: function(event) {
         event.preventDefault();
         closePotionForm();
       },
 
-
       submitScoresProperties: function(event) {
         event.preventDefault();
-        // TODO: implementation of score        
+        var col_target = App.gameComponentsController.get('selectedScoreTarget');
+        var col_event = App.gameComponentsController.get('selectedScoreEvent');
+        var col_score = this.get('selectedScoreScore');
+        var targetSlug = (col_target) ? col_target.slug : null;
+        console.log(targetSlug);
+        console.log(col_event);
+        console.log(col_score);
+
       },
 
 
       submitCollisionProperties: function(event) {
         event.preventDefault();
-        var col_target = this.getPath('collisionTarget');
-        var col_event = this.getPath('collisionEvent');
-        //var col_score = this.getPath('collisionScore');
+        var col_target = App.gameComponentsController.get('selectedCollisionTarget');
+        var col_event = App.gameComponentsController.get('selectedCollisionEvent');
         var targetSlug = (col_target) ? col_target.slug : null;
-        
+        var simple_target = {
+          'slug': col_target.slug,
+          'title': col_target.title
+        };
         var collision = App.Collision.create({
-          'target' : targetSlug,
-          'event' : col_event.event
+          'target' : simple_target,
+          //'event' : col_event.event
+          'event' : col_event
           //'score' : col_score
         });
-        console.log(targetSlug);
         if(App.selectedComponentController.getPath('content.properties.collisions') === undefined) {
             // no existing collisions
             App.selectedComponentController.setPath('content.properties.collisions', [collision]);
@@ -1459,7 +1547,6 @@ $(function() {
             // we can have multiple collisions per one component
             App.selectedComponentController.getPath('content.properties.collisions').pushObject(collision);
         }
-
         var selectedComponent = App.selectedComponentController.get('content');
         var slugName = App.selectedComponentController.getPath('content.slug');
         // save game
@@ -1765,6 +1852,8 @@ $(function() {
         'name': 'Player'
       }), App.ComponentType.create({
         'name': 'Pushable'
+      }), App.ComponentType.create({
+        'name': 'Decoration'
       })]
     });
 

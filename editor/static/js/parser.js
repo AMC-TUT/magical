@@ -3,6 +3,24 @@ function capitaliseFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+function handleCollision(collider, collides) {
+    _.each(collider.collisions, function(collision) {
+      if(collision.target.slug == collides.slug) {
+        var eventName = collision.event.event;
+        if(eventName === "destroySelf") {
+            collider.destroy();
+        } else if (eventName === "destroyTarget") {
+            collides.destroy();
+            Crafty.scene('outro'); // TODO reduce hitpoints, don't die immediately
+        } else if (eventName === "startDialog") {
+            console.log('Collision: Init dialog');
+        } else if (eventName === "createElement") {
+            console.log('Collision: Create element');
+        }  
+      }
+    });
+}
+
 
 Crafty.c("Controls", {
   init: function() {
@@ -349,7 +367,7 @@ var Parser = {
           // for all game comps
           this_.addComponent('2D', 'Canvas', 'Image');
           //this_.addComponent('2D', 'DOM', 'Image');
-
+          this_.slug = component.slug;
           var cTitle = capitaliseFirstLetter(component.slug);
           this_.addComponent(cTitle);
 
@@ -487,8 +505,22 @@ var Parser = {
           // TODO implement startDialog and createElement
           // TODO handle scores
           if(_.isArray(props.collisions)) {
+            console.log(props.collisions);
             this_.addComponent('Collision');
-            
+            this_.collisions = props.collisions;
+            _.each(props.collisions, function(collision) {
+                if (_.isObject(props.collisions[0]) ) {
+                  var col_target = collision.target;
+                  var col_event = collision.event;
+                  this_.onHit(col_target.slug, function(ent) {
+                    var target = ent[0].obj;
+                    console.log(col_target.slug + ' HIT ' + this_.slug);
+                    handleCollision(this_, target);
+                  });
+                }
+            });
+
+            /*
             this_.onHit("Player", function(ent) {
               console.log('SOMEONE HIT PLAYER!');
               console.log(ent);
@@ -497,7 +529,7 @@ var Parser = {
               _.each(props.collisions, function(collision) {
                   if (_.isObject(props.collisions[0]) ) {
                     var col_event = collision.event;
-                    var col_score = collision.score;
+                    //var col_score = collision.score;
                     if(col_event === "destroySelf") {
                         this_.destroy();
                     } else if (col_event === "destroyTarget") {
@@ -514,12 +546,13 @@ var Parser = {
                         col_score = parseInt(col_score);
                         console.log('Score: ' + col_score);
                     }
-
+             
                   }
 
               });
 
             });
+            */
 
           }
 

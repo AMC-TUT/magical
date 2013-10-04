@@ -92,10 +92,10 @@
                           {{#each content.properties.collisions}}
                           <tr>
                             <td class="oneOf3">
-                              {{#if target}} {{target}} {{else}} ---{{/if}}
+                              {{#if target}} {{target.title}} {{else}} ---{{/if}}
                             </td>
                             <td class="oneOf3">
-                              {{#if event}} {{event}} {{else}} ---{{/if}}
+                              {{#if event}} {{event.title}} {{else}} ---{{/if}}
                             </td>
                             <td class="alignRight">
                               <button {{action removeCollision target="view"}} class="btn btn-danger"><span class="icon icon-trash"></span></button>
@@ -625,7 +625,6 @@
                     {{#view App.MagosComponentPropertyView contentBinding="this"}}
                     <div class="image-action action-group">
                       <div class="control-group" style="text-align:center;">
-                        <!--<button class="btn btn-success draw-image-button" style="width: 47%;padding-bottom: 3px;padding-top: 3px;"><i class="icon-pencil icon-white"></i> Draw</button>-->
                         <button {{action "openImageAssetsDialog"}} class="btn btn-success borrow-image-button icon-white" style="width: 47%;padding-bottom: 3px;padding-top: 3px;height: 26px;"><i class="icon-folder-open icon-white"></i> Borrow</button>
                       </div>
                     </div>
@@ -695,24 +694,25 @@
                       <div class="action-group">
 
                         <div class="control-group">
-                          <label class="control-label">Target</label>
+                          <label class="control-label">When this element hits</label>
                           <div class="controls">
-                            {{view Ember.Select contentBinding="App.gameComponentsController.collisionTargets" optionLabelPath="content.title" optionValuePath="content.slug" selectionBinding="collisionTarget" class="input-xlarge" }}
+                            {{view Ember.Select contentBinding="App.gameComponentsController.collisionTargets" optionLabelPath="content.title" optionValuePath="content.slug" selectionBinding="App.gameComponentsController.selectedCollisionTarget" class="input-xlarge" }}
                           </div>
                         </div>
 
                         <div class="control-group">
-                          <label class="control-label">Event</label>
+                          <label class="control-label">then</label>
                           <div class="controls">
-                            {{view Ember.Select contentBinding="App.potionsController.collision.events" optionLabelPath="content.title" optionValuePath="content.event" selectionBinding="collisionEvent" class="input-xlarge" }}
+                            {{view Ember.Select contentBinding="App.potionsController.collision.events" optionLabelPath="content.title" optionValuePath="content.event" selectionBinding="App.gameComponentsController.selectedCollisionEvent" class="input-xlarge" }}
                           </div>
                         </div>
-
 
                       </div>
 
                       <div class="form-actions">
+                        {{#if App.gameComponentsController.collisionTargets}}
                         <button {{action "submitCollisionProperties"}} class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
+                        {{/if}}
                         <button {{action "cancelFormSubmit"}} class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
                       </div>
 
@@ -733,8 +733,9 @@
                           <label class="control-label">Strength</label>
                           <div class="controls" id="gravitation-controls" style="position:relative;">
                             <span class="gravitation-strength low"></span>
-                            <div id="gravitationStrength">                            <span class="slider-tooltip"></span>
-</div>
+                            <div id="gravitationStrength">
+                              <span class="slider-tooltip"></span>
+                            </div>
                             <span class="gravitation-strength high"></span>
                             {{view App.HiddenDecimalNumberField valueBinding="view.strength" class="input gravitationStrengthVal" min="0.0" max="1.0" step="0.1" }}
                           </div>
@@ -762,7 +763,7 @@
                         <div class="control-group">
                           <label class="control-label">Type</label>
                           <div class="controls">
-                            {{view Ember.Select contentBinding="App.potionsController.compTypes.types" optionLabelPath="content.title" optionValuePath="content.title" selectionBinding="compType" class="input-xlarge" }}
+                            {{view Ember.Select contentBinding="App.potionsController.compTypes.types" optionLabelPath="content.title" optionValuePath="content.title" selectionBinding="view.curCompType" class="input-xlarge" }}
                           </div>
 
                         </div>
@@ -864,28 +865,45 @@
                     {{/each}}
 
                     {{else}}
-                      <div class="action-group">
-                        <div class="control-group">
-                          <label class="control-label">Action</label>
-                          <div class="controls">
-                            <select class="span12">
-                              <option>---</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="control-group">
-                          <label class="control-label">Score</label>
-                          <div class="controls">
-                            {{view App.NumberField class="input" min="-1000" max="1000" valueBinding="score"}}
-                          </div>
-                        </div>
-                      </div>
-                    {{/if}}
+                      {{#view App.MagosComponentPropertyView}}
+                      {{#if App.gameComponentsController.scoreCollisionTargets}}
+                        <div class="action-group">
+                          
+                          <div class="control-group">
+                            <label class="control-label">When this element hits</label>
+                            <div class="controls">
+                            {{view Ember.Select contentBinding="App.gameComponentsController.scoreCollisionTargets" optionLabelPath="content.title" optionValuePath="content.slug" selectionBinding="App.gameComponentsController.selectedScoreTarget" class="input-xlarge"}}
 
-                    <div class="form-actions">
-                      <button {{action "submitScoresProperties"}} class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
-                      <button class="btn btn-success btn-add-action pull-right"><i class="icon-plus icon-white"></i></button>
-                    </div>
+                            </div>
+                          </div>
+
+                          <div class="control-group">
+                            <label class="control-label">with action</label>
+                            <div class="controls">
+                              {{view Ember.Select contentBinding="App.gameComponentsController.scoreCollisionEvents" optionLabelPath="content.title" optionValuePath="content.slug" selectionBinding="App.gameComponentsController.selectedScoreEvent" class="input-xlarge" }}
+                            </div>
+                          </div>
+
+                          <div class="control-group">
+                            <label class="control-label">Score</label>
+                            <div class="controls">
+                              {{view App.NumberField class="input" min="-1000" max="1000" valueBinding="selectedScoreScore"}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-actions">
+                          <button {{action "submitScoresProperties"}} class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
+                          <button {{action "cancelFormSubmit"}} class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
+                        </div>
+                      {{else}}
+                        <p>No collisions found. Please define a collision first.</p>
+                        <div class="form-actions">
+                          <button {{action "cancelFormSubmit"}} class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
+                        </div>
+                      {{/if}}
+
+                      {{/view}}
+                    {{/if}}
 
                     </fieldset>
                   </form>
