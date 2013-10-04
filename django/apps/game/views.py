@@ -165,6 +165,7 @@ def create_game(request):
                 cols = int(resolution[0])
                 rows = int(resolution[1])
             game = form.save()
+            game.creator = user
             game.rows = rows
             game.cols = cols
             game.save()

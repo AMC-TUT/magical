@@ -15,12 +15,10 @@ class GameForm(forms.ModelForm):
 
 	class Meta:
 		model = Game
-		exclude = ('cloned','slug','state','rows','cols',)
+		exclude = ('creator', 'cloned','slug','state','rows','cols',)
 
 	def __init__(self, *args, **kwargs):
 		# only allow creators from user's own organization
 		if kwargs.has_key('organization'):
 			organization = kwargs.pop('organization')
 		super(GameForm, self).__init__(*args, **kwargs)
-		available_creators = User.objects.filter(userprofile__organization=organization)
-		self.fields['creator'].queryset = available_creators
