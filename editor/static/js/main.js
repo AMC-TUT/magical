@@ -688,13 +688,11 @@ $(function() {
       }.observes('selectedScoreTarget'),
 
       refreshScoreCollisionEvents: function() {
-        console.log('REFRESH....');
         this.notifyPropertyChange('scoreCollisionEvents');
       },
 
       // collision events for selected target
       scoreCollisionEvents: function() {
-        console.log('UPDATE EVENTS...');
         var colEvents = [],
             collisions = [],
             controller = this;
@@ -1125,6 +1123,7 @@ $(function() {
       content: null,
       sceneComponentsBinding: 'App.sceneComponentsController.content',
       gameComponentsBinding: 'App.gameComponentsController.content',
+
       contentObserver: function() {
         var selected = this.get('content');
         var sceneItems = $('.scene-chest').find('li');
@@ -1151,7 +1150,7 @@ $(function() {
         var sceneComponents = this.get('sceneComponents');
         var gameComponents = this.get('gameComponents');
         var items = sceneComponents.concat(gameComponents);
-
+        
         _.each(items, function(item) {
           item.set('active', false);
         });
@@ -1179,6 +1178,7 @@ $(function() {
 
     App.potionsController = Em.ArrayController.create({
       content: [],
+      hideJumpHeight: false, // whether to show or hide jump height
 
       controls: Em.computed(function() {
         var components = this.get('content').findProperty('title', 'controls').get('properties');
@@ -1454,7 +1454,6 @@ $(function() {
             });
           });
         });
-
       }.observes('content.@each.busy'),
       selectedObserver: function() {
         
@@ -1506,7 +1505,6 @@ $(function() {
 
       selectedScoreScore: null,
 
-
       cancelFormSubmit: function(event) {
         event.preventDefault();
         closePotionForm();
@@ -1528,6 +1526,8 @@ $(function() {
       submitCollisionProperties: function(event) {
         event.preventDefault();
         var col_target = App.gameComponentsController.get('selectedCollisionTarget');
+        console.log(App.potionsController.get('controls').method.method);
+        
         var col_event = App.gameComponentsController.get('selectedCollisionEvent');
         var targetSlug = (col_target) ? col_target.slug : null;
         var simple_target = {
@@ -1672,6 +1672,18 @@ $(function() {
         delete content['score'];
 
       },
+
+      controlsMethodObserver: function() {
+        // hide jump height for fourway and multiway
+        if(this.getPath('controlsMethod.method') != 'twoway') {
+          App.potionsController.set('hideJumpHeight', true);          
+        } else {
+          App.potionsController.set('hideJumpHeight', false);
+          this.set
+        }
+      }.observes('controlsMethod'),
+
+
       openImageAssetsDialog: function() {
         event.preventDefault();
 
@@ -1687,32 +1699,36 @@ $(function() {
     /**************************
      * InfoBox Views
      **************************/
-/*
-  App.LazyTextField = Ember.View.extend({
-    attributeBindings: ['value', 'type', 'size', 'name', 'placeholder', 'disabled', 'maxlength'],
-    tagName: 'input',
-    type: 'text',
-    getCurrentValue: function() {
-      return this.$().val();
-    }
-  });
-*/
-  App.PotionsControlsView = Ember.View.extend({
-    contentBinding: 'App.selectedComponentController.content',
-    methodBinding: 'App.selectedComponentController.content.properties.controls.method',
 
-    save: function(e) {
-      e.preventDefault(); e.stopPropagation();
-      this.set('method', this.get('textField').getCurrentValue());
-    }
-  });
+    App.PotionsControlsView = Ember.View.extend({
+      contentBinding: 'App.selectedComponentController.content',
+      methodBinding: 'App.selectedComponentController.content.properties.controls.method',
+
+      save: function(e) {
+        e.preventDefault(); e.stopPropagation();
+        this.set('method', this.get('textField').getCurrentValue());
+      }
+    });
 
     var infobox = App.InfoBoxView = Em.View.create({
       templateName: 'infobox-view'
     });
 
-    // TODO make these child views with container view
-    App.InfoBoxControlsView = Em.View.extend();
+    App.InfoBoxControlsView = Em.View.extend({
+      contentBinding: 'App.selectedComponentController.content.properties.controls',
+      showJumpHeight: false,
+      contentObserver: function() {
+        var controlsMethod = this.getPath('content.properties.controls.method');
+        if( !_.isUndefined(controlsMethod) && controlsMethod == 'twoway') {
+          this.set('showJumpHeight', true);
+        } else {
+          this.set('showJumpHeight', false);
+        }
+        var showJumpHeight = this.get('showJumpHeight');
+      }.observes('content')
+
+    });
+
     App.InfoBoxCollisionView = Em.View.extend({
       contentBinding: 'App.selectedComponentController.content.properties.collisions',
       removeCollision: function(evt) {
@@ -2624,6 +2640,7 @@ $(function() {
 
       $modal.find('button').on('click tap', function(event) {
         $modal.modal('hide');
+        document.getElementById("preview").contentWindow.location.reload(true);
       });
 
       $modal.modal();

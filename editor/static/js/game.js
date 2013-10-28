@@ -26,13 +26,8 @@
       csrftoken: csrftoken,
       slug: slug
     };
-    console.log('credentials:');
-    console.log(credentials);
     
     socket.emit('setUserCredentials', credentials, function(data) {
-      console.log('DATA ---->');
-      console.log(data);
-      //callback(data);
       Parser.getGame(e.data, socket);
     });
 

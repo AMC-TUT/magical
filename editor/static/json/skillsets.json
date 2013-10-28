@@ -56,7 +56,7 @@
       {
         "title": "collision",
         "properties": {
-            "events": [{"event":"destroySelf", "title": "Destroy self"}, {"event":"destroyTarget", "title": "Destroy player"}, {"event":"startDialog", "title": "Start dialog"}, {"event":"createElement", "title": "Create element"}],
+            "events": [{"event":"destroySelf", "title": "Destroy self"}, {"event":"destroyTarget", "title": "Destroy target"}, {"event":"reduceHitpoints", "title": "Reduce hitpoints"}, {"event":"addHitpoints", "title": "Add hitpoints"}, {"event":"startDialog", "title": "Start dialog"}, {"event":"createElement", "title": "Create element"}],
             "score": 10,
             "target": null
         }

@@ -3,6 +3,16 @@ function capitaliseFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+function changeHitpoints(amount) {
+  Parser.settings.hitPoints += amount;
+  Crafty("hitPoints").each(function () { 
+    this.text(Parser.settings.hitPoints + " hits") 
+  });
+  if(Parser.settings.hitPoints == 0) {
+    Crafty.scene('outro');
+  }
+}
+
 function handleCollision(collider, collides) {
     _.each(collider.collisions, function(collision) {
       if(collision.target.slug == collides.slug) {
@@ -11,11 +21,17 @@ function handleCollision(collider, collides) {
             collider.destroy();
         } else if (eventName === "destroyTarget") {
             collides.destroy();
-            Crafty.scene('outro'); // TODO reduce hitpoints, don't die immediately
+            //Crafty.scene('outro'); // TODO reduce hitpoints, don't die immediately
         } else if (eventName === "startDialog") {
             console.log('Collision: Init dialog');
         } else if (eventName === "createElement") {
             console.log('Collision: Create element');
+        } else if (eventName === "addHitpoints") {
+            collider.destroy();
+            changeHitpoints(10);
+        } else if (eventName === "reduceHitpoints") {
+            collider.destroy();
+            changeHitpoints(-10);
         }  
       }
     });
@@ -41,13 +57,29 @@ Crafty.c("GameOver", {
   }
 });
 
+Crafty.c("HitPoints", {
+  init: function() {
+    this.requires('2D, DOM, Text, hitPoints');
+    this.attr({x:10, y:25, w: 300});
+  }
+});
+
+Crafty.c("Score", {
+  init: function() {
+    this.requires('2D, DOM, Text, score');
+    this.attr({x:10, y:25, w: 300});
+  }
+});
+
 var Parser = {
   game: null,
   socket: null,
   blockSize: null,
   settings: {
-      djangoUri: 'http://localhost:8000/'
-      //djangoUri: 'http://magos.pori.tut.fi/'
+      djangoUri: 'http://localhost:8000/',
+      //djangoUri: 'http://magos.pori.tut.fi/',
+      score: 0,
+      hitPoints: 100
   },
 
   parseGame: function(game) {
@@ -87,7 +119,6 @@ var Parser = {
     var width = canvas.blockSize * canvas.columns;
     // set global var
     Parser.blockSize = canvas.blockSize;
-    console.log('BLOCK SIZE: ' + canvas.blockSize);
     Crafty.init(width, height);
     // obj for some magos vars
     Crafty.magos = {};
@@ -167,6 +198,24 @@ var Parser = {
             }).text("Game Over");
         }
 
+        if(scene.name == 'game') {
+          Parser.settings.hitPoints = 100;
+          Parser.settings.score = 0;
+
+          Crafty.e('HitPoints').attr({
+            x: 350,
+            y: 0,
+            w: 200,
+            h: 40
+          }).text("100 hits");
+
+          Crafty.e('Score').attr({
+            x: 100,
+            y: 0,
+            w: 200,
+            h: 40
+          }).text("Score: 0");
+        }
 
         // scene comps
         _.each(scene.sceneComponents, function(comp) {
@@ -192,7 +241,7 @@ var Parser = {
             var ent = Crafty.e(comp.slug).attr({
               x: x_,
               y: y_
-            })
+            });
 
             if (_.isObject(comp.properties) && _.isObject(comp.properties.font)) {
               var font = comp.properties.font;
@@ -215,6 +264,8 @@ var Parser = {
                 ent.css('border', '1px solid ' + font.background);
               }
             } // /font
+
+
           } // /play
           if (comp.slug === 'highscore') {
 
@@ -387,7 +438,7 @@ var Parser = {
             this_.attr({
               z: 100
             });
-            console.log(props.controls.method);
+
             // twoway === platform
             if (props.controls.method.toLowerCase() === 'twoway') {
               var jumpHeight = !_.isNull(props.controls.jumpHeight) ? parseInt(props.controls.jumpHeight) : 12;              
@@ -441,11 +492,11 @@ var Parser = {
           }
 
           // gravity
-          if (!_.isUndefined(props.gravitation)) {
-            //var sign = props.gravitation.direction ? 1 : -1; // gravity direction
-            this_.addComponent("Gravity");
-            this_.gravity("platform");
-            this_.gravityConst(parseFloat(props.gravitation.strength));
+          if ( ( !_.isUndefined(props.gravitation) && !_.isNull(props.gravitation) ) && !_.isNull(props.gravitation.strength) ) {
+              //var sign = props.gravitation.direction ? 1 : -1; // gravity direction
+              this_.addComponent("Gravity");
+              this_.gravity("platform");
+              this_.gravityConst(parseFloat(props.gravitation.strength));              
           }
 
           // bind events
@@ -613,6 +664,7 @@ var Parser = {
     return true;
   },
 
+
   createSceneComponents: function(scenes) {
 
     var path = '/static/img/icons/',
@@ -652,7 +704,6 @@ var Parser = {
           Crafty.c(comp.slug, {
             init: function() {
               var this_ = this;
-
               this_.addComponent('2D', 'DOM', 'Text');
               this_.text('Start New Game')
               this_.addComponent('start-button'); // class for click event and styling
@@ -685,7 +736,6 @@ var Parser = {
             }
           });
         }
-
 
       });
     });

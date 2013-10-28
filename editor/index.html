@@ -73,12 +73,15 @@
                               {{content.properties.controls.speed}}
                             </td>
                           </tr>
+                          {{#if view.showJumpHeight }}
                           <tr>
                             <td>Jump Height</td>
                             <td>
                               {{content.properties.controls.jumpHeight}}
                             </td>
                           </tr>
+                          {{/if}}
+
                         {{/view}}
                       {{/if}}
                       
@@ -656,20 +659,21 @@
                             {{view Ember.Select contentBinding="App.potionsController.controls.methods" optionLabelPath="content.method" optionValuePath="content.method" selectionBinding="controlsMethod" class="input-xlarge" }}
                           </div>
                         </div>
-
+                        
                         <div class="control-group">
                           <label class="control-label">Speed</label>
                           <div class="controls">
                             {{view App.NumberField valueBinding="view.controls.speed" class="input" min="0" max="1000"}}
                           </div>
                         </div>
-
+                        {{#unless App.potionsController.hideJumpHeight }}
                         <div class="control-group">
                           <label class="control-label">Jump Height</label>
                           <div class="controls">
                             {{view App.NumberField valueBinding="view.controls.jumpHeight" class="input" min="0" max="1000"}}
                           </div>
                         </div>
+                        {{/unless}}
 
 
                       </div>
@@ -942,7 +946,7 @@
   <div class="modal fade hide" id="dialog-preview">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal">×</button>
-      <h3>Game Preview</h3>      
+      <h3>Game Preview</h3>
     </div>
     <div class="modal-body">
       {{#view App.GameView}}
