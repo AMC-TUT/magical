@@ -1,0 +1,69 @@
+[
+  {
+    "title": "Background",
+    "slug": "background",
+    "properties": {
+      "sprite": null
+    },
+    "scenes": [
+      "intro",
+      "game",
+      "outro"
+    ],
+    "potions": [
+      "image"
+    ]
+  },
+  {
+    "title": "Time",
+    "slug": "time",
+    "scenes": [
+      "game"
+    ],
+    "potions": [
+      "font"
+    ]
+  },
+  {
+    "title": "Title",
+    "slug": "title",
+    "scenes": [
+      "game"
+    ],
+    "potions": [
+      "font"
+    ]
+  },
+  {
+    "title": "Highscore",
+    "slug": "highscore",
+    "scenes": [
+      "intro",
+      "outro"
+    ],
+    "potions": [
+      "font"
+    ]
+  },
+  {
+    "title": "Volume",
+    "slug": "volume",
+    "scenes": [
+      "intro",
+      "game",
+      "outro"
+    ],
+    "potions": []
+  },
+  {
+    "title": "Play Button",
+    "slug": "play",
+    "scenes": [
+      "intro",
+      "outro"
+    ],
+    "potions": [
+      "font"
+    ]
+  }
+]

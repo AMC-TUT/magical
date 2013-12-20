@@ -145,11 +145,11 @@
                         <h4>Score</h4>
                         {{#view App.InfoBoxScoreView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-score"}}
                           <tr>
-                            <th>Action</th><th>Score</th>
+                            <th>Target</th><th>Event</th><th>Score</th>
                           </tr>
                           {{#each content.filteredScoreEvents}}
                             <tr>
-                              <td>Collision {{target}}</td><td>{{score}}</td>
+                              <td>{{target.title}}</td><td>{{event.title}}</td><td>{{score}}</td>
                             </tr>
                           {{/each}}
                         {{/view}}
@@ -845,30 +845,6 @@
                   <fieldset>
                     <legend>Scores</legend>
 
-                    {{#if App.selectedComponentController.content.filteredScoreEvents}}
-                    {{#each App.selectedComponentController.content.filteredScoreEvents}}
-                      {{#view App.MagosComponentPropertyView contentBinding="this"}}
-                      <div class="action-group">
-                        <div class="control-group">
-                          <button {{action "removeComponentProperty"}} class="btn btn-danger btn-del-action pull-right"><i class="icon-minus icon-white"></i></button>
-                          <label class="control-label">Action</label>
-                          <div class="controls">
-                            <select class="span12" disabled="disabled">
-                              <option>Collision {{content.target}}</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="control-group">
-                          <label class="control-label">Score</label>
-                          <div class="controls">
-                            {{view App.NumberField class="input" min="-1000" max="1000" valueBinding="content.score"}}
-                          </div>
-                        </div>
-                      </div>
-                      {{/view}}
-                    {{/each}}
-
-                    {{else}}
                       {{#view App.MagosComponentPropertyView}}
                       {{#if App.gameComponentsController.scoreCollisionTargets}}
                         <div class="action-group">
@@ -877,7 +853,6 @@
                             <label class="control-label">When this element hits</label>
                             <div class="controls">
                             {{view Ember.Select contentBinding="App.gameComponentsController.scoreCollisionTargets" optionLabelPath="content.title" optionValuePath="content.slug" selectionBinding="App.gameComponentsController.selectedScoreTarget" class="input-xlarge"}}
-
                             </div>
                           </div>
 
@@ -907,7 +882,7 @@
                       {{/if}}
 
                       {{/view}}
-                    {{/if}}
+ 
 
                     </fieldset>
                   </form>
@@ -936,7 +911,7 @@
     <hr>
 
     <footer>
-      <p>&copy; Magical 2012</p>
+      <p>&copy; Magical 2012-2013</p>
     </footer>
 
   </div>

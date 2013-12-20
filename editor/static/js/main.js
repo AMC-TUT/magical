@@ -603,11 +603,22 @@ $(function() {
       }.property('properties')
     });
 
+    App.selectedScoreTargetController = Ember.Object.create({
+      option: null
+    });
+
+    App.selectedScoreEventController = Ember.Object.create({
+      option: null
+    });
+
 
     App.gameComponentsController = Em.ArrayController.create({
       contentBinding: 'App.gameController.content.revision.gameComponents',
-      selectedScoreTarget: null,
-      selectedScoreEvent: null,
+      //selectedScoreTargetBinding: 'App.selectedScoreTargetController.option',
+      //selectedScoreTarget: null,
+      //selectedScoreTarget: this.scoreCollisionTargets.get('firstObject'),
+      //selectedScoreEventBinding: 'App.selectedScoreEventController.option',
+      //selectedScoreEvent: null,
 
       removeItem: function(propName, value) {
         var obj = this.findProperty(propName, value);
@@ -655,22 +666,25 @@ $(function() {
             collisions = [],
             slugNames = [],
             controller = this;
-        controller.set('selectedScoreTarget', null);
+        //controller.set('selectedScoreTarget', null);
+        //App.selectedScoreTargetController.set('option', null);
         var currentComponent = App.selectedComponentController.get('content');
         if(currentComponent) {
           var collisions = currentComponent.getPath('properties.collisions');
         }
-        console.log('1. ====>>> selectedScoreTarget: ' + controller.selectedScoreTarget);
+        var selectedScoreTarget = this.get('selectedScoreTarget');
+        console.log('1. ====>>> selectedScoreTarget: ' + selectedScoreTarget);
+        //console.log('1. ====>>> selectedScoreTarget: ' + App.selectedScoreTargetController.get('option'));
         _.each(collisions, function(obj) {
           var colTarget = App.gameComponentsController.get('content').filterProperty('slug', obj.target.slug);
-          console.log(colTarget[0]);
           // we don't want duplicates
-          console.log(obj.target.slug);
           if(_.indexOf(slugNames, obj.target.slug) == -1) {
             slugNames.push(obj.target.slug);
-            if(!controller.selectedScoreTarget) {
-              controller.set('selectedScoreTarget', colTarget[0]);
-              console.log('2. ---->>> selectedScoreTarget: ' + controller.selectedScoreTarget);
+            if( _.isNull(selectedScoreTarget) || _.isUndefined(selectedScoreTarget) ) {
+              //controller.set('selectedScoreTarget', colTarget[0]);
+              //App.selectedScoreTargetController.set('option', colTarget[0]);              
+              console.log('2. ---->>> selectedScoreTarget: ' + controller.get('selectedScoreTarget'));
+              //console.log('2. ---->>> selectedScoreTarget: ' + App.selectedScoreTargetController.get('option')); 
             }
             targets.push(
               App.GameComponent.create(colTarget[0])
@@ -683,8 +697,11 @@ $(function() {
       selectedScoreTargetObserver: function() {
         console.log('SELECTED SCORE TARGET CHANGED');
         var selectedScoreTarget = this.get('selectedScoreTarget');
-        this.refreshScoreCollisionEvents();
-
+        //var selectedScoreTarget = App.selectedScoreTargetController.get('option');
+        if(!_.isUndefined(selectedScoreTarget) && !_.isNull(selectedScoreTarget)) {
+          console.log('=> CHANGE SCORE TARGET');
+          this.refreshScoreCollisionEvents();
+        }
       }.observes('selectedScoreTarget'),
 
       refreshScoreCollisionEvents: function() {
@@ -696,15 +713,19 @@ $(function() {
         var colEvents = [],
             collisions = [],
             controller = this;
-        controller.set('selectedScoreEvent', null);
+        //this.set('selectedScoreTarget', null);
         var currentComponent = App.selectedComponentController.get('content');
-        var selectedScoreTarget = controller.get('selectedScoreTarget');
+        var selectedScoreTarget = this.get('selectedScoreTarget');
+        var selectedScoreEvent = this.get('selectedScoreEvent');
         if(currentComponent) {
           var collisions = currentComponent.getPath('properties.collisions');
         }
+        //console.log(collisions);
         _.each(collisions, function(obj) {
-          if(obj.target.slug == selectedScoreTarget.slug) {
-            if(!controller.selectedScoreEvent) controller.set('selectedScoreEvent', obj.event);
+          if(!_.isUndefined(selectedScoreTarget) && obj.target.slug == selectedScoreTarget.slug) {
+            if(_.isNull(selectedScoreEvent) || _.isUndefined(selectedScoreEvent) || selectedScoreEvent.event != obj.event.title) {
+              controller.set('selectedScoreEvent', obj.event);
+            }
             colEvents.push(
               App.GameComponent.create(obj.event)
             );
@@ -1516,10 +1537,34 @@ $(function() {
         var col_event = App.gameComponentsController.get('selectedScoreEvent');
         var col_score = this.get('selectedScoreScore');
         var targetSlug = (col_target) ? col_target.slug : null;
-        console.log(targetSlug);
-        console.log(col_event);
-        console.log(col_score);
-
+        var collisions = App.selectedComponentController.getPath('content.properties.collisions');
+        var hasChanged = false;
+        if(collisions) {
+          _.each(collisions, function(collision) {
+            if(collision.target.slug == targetSlug && collision.event.event == col_event.event) {
+              collision = App.Collision.create({
+                'target' : collision.target,
+                'event' : collision.event,
+                'score' : col_score
+              });
+              //collision.set('score', col_score);
+              console.log('SCORE ADDED FOR COLLISION!');
+              hasChanged = true;
+            }
+          });
+        }
+        if(hasChanged) {
+          var selectedComponent = App.selectedComponentController.get('content');
+          var slugName = App.selectedComponentController.getPath('content.slug');
+          // save game
+          App.dataSource.saveGame(0, function(data) {
+            console.log('save (edit score properties)');
+          });
+          // inform others of property change
+          App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
+            console.log('emit (update game component score properties)');
+          });          
+        }
       },
 
 
@@ -1537,8 +1582,8 @@ $(function() {
         var collision = App.Collision.create({
           'target' : simple_target,
           //'event' : col_event.event
-          'event' : col_event
-          //'score' : col_score
+          'event' : col_event,
+          'score' : null
         });
         if(App.selectedComponentController.getPath('content.properties.collisions') === undefined) {
             // no existing collisions
@@ -1996,7 +2041,7 @@ $(function() {
       stateBinding: Em.Binding.oneWay('App.gameController.content.state'),
       alwaysTrue: true,
       privateState: false,
-      publicState: true // TODO
+      publicState: true  // TODO
     });
 
     App.EmptySettingsView = Em.View.extend({
@@ -2434,12 +2479,6 @@ $(function() {
       removeSceneComponentFromCanvas(component, sceneName);
     });
 
-
-
-
-
-
-
     socket.on('addUser', function(user) {
       // add user if same user does not already exist
       console.log('>>> SOCKET REQUEST: addUser');
@@ -2640,7 +2679,8 @@ $(function() {
 
       $modal.find('button').on('click tap', function(event) {
         $modal.modal('hide');
-        document.getElementById("preview").contentWindow.location.reload(true);
+        // can't do reload, socket disconnects...
+        //document.getElementById("preview").contentWindow.location.reload(true);
       });
 
       $modal.modal();

@@ -1,0 +1,10 @@
+{
+  "name": "magos-editor",
+  "version": "0.0.1",
+  "description": "Magos Editor application",
+  "dependencies": {
+    "jade": "~0.35.0",
+    "express": "~3.4.4",
+    "socket.io": "~0.9.16"
+  }
+}

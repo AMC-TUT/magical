@@ -1,0 +1,15 @@
+{
+  "name": "magos-editor",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Magos Editor application",
+  "scripts": {
+    "start": "supervisor app/server"
+  },
+  "dependencies": {
+    "express": "3.4.4",
+    "socket.io": "0.9.16",
+    "jade": "*",
+    "redis": "0.9.0"
+  }
+}
