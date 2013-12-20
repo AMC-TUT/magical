@@ -5,6 +5,11 @@ body {
     margin:0;
 }
 
+.container {
+  max-width: none !important;
+  width: 970px;
+}
+
 header {
     position: relative;
     width: 960px;
@@ -19,9 +24,9 @@ header {
 #login-info {
     position: absolute;
     z-index: 10;
-    width: 200px;
+    width: 220px;
     padding: 20px;
-    right: 0px;
+    right: 20px;
     top: 24px;
     background: rgba(0,0,0,0.1);
     border-radius: 5px;
@@ -97,8 +102,6 @@ header {
 }
 
 section#content {
-    width: 960px;
-    margin: 0 auto;
     background: #fff;
     color: #333;
     border-radius: 0 15px 15px 15px;
@@ -110,23 +113,6 @@ section#content {
     -webkit-box-shadow: 0px 0px 8px #222;
 }
 
-#main-content-wrap {
-    position: relative;
-    z-index: 100;
-}
-
-#main-content {
-    float:left;
-    width: 540px;
-    padding: 30px;
-    
-}
-
-#sidebar {
-    float:left;
-    width: 300px;
-    padding: 30px;
-}
 
 .bottom-shadow {
     background: transparent url('../img/bottom-shadow.png') top left no-repeat;
@@ -290,14 +276,14 @@ body.explore #main-nav ul li a.explore {
     background-position: -22px 0;
 }
 
-#wide-content {
+.wide-content {
     padding: 30px;
 }
 
 .intro-game {
     padding:30px;
-    height:400px;
-    background: #17779d url('../img/magos-front-splash.png') 0 0 no-repeat;
+    height:450px;
+    background: #17779d url('../img/magos-front-splash.jpg') 0 0 no-repeat;
     box-shadow:inset 0px 0px 40px rgba(0,0,0,.5), 0px 0px 5px rgba(0,0,0,0.3);
     -webkit-box-shadow:inset 0px 0px 30px rgba(0,0,0,0.3), 0px 0px 10px rgba(0,0,0,0.4);
     -moz-box-shadow:inset 0px 0px 40px rgba(0,0,0,0.3), 4px 4px 10px rgba(255,255,255,0.1); 

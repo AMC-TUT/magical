@@ -379,11 +379,12 @@ def available_authors(request, gameslug):
     return render(request, tpl, context)
 
 
-def ajax_list_games(request):
+def ajax_list_games(request, gametype='magos'):
     """
     Get game objects.
     :param request: Http request object.
     """
+    print gametype
     tpl = 'apps/game/ajax_list_games.html'
     context = RequestContext(request)
     user = request.user

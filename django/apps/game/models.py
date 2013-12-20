@@ -7,6 +7,14 @@ import datetime, mimetypes, hashlib, time
 from imagekit.models import ImageSpecField
 from django.conf import settings
 
+
+# Game block sizes (32, 48, 64)
+BLOCK_SIZE_CHOICES = (
+    (32, _(u'32 pixels')),
+    (48, _(u'48 pixels')),
+    (64, _(u'64 pixels')),
+)
+
 CONST_DEFAULT_BLOCK_SIZE = 65536 # 64k
 
 # add AudioField introspection rules for South
@@ -145,7 +153,7 @@ class Disability(models.Model):
     def __unicode__(self):
         return self.name
 
-        
+
 class GameType(models.Model):
     """Game type model"""
     name = models.CharField(max_length=45, null=False, blank=False)
@@ -353,7 +361,7 @@ class Audio(models.Model):
             player_string = '<ul class="playlist"><li style="width:250px;">\
             <a href="%s">%s</a></li></ul>' % (file_url, os.path.basename(self.audio_file.name))
             return player_string
-    
+
     audio_file_player.allow_tags = True
     audio_file_player.short_description = _('Audio file player')
 
@@ -364,15 +372,8 @@ class Audio(models.Model):
     def __unicode__(self):
         return u"%s" % self.name
 
-        
 class Game(models.Model):
     """Game model"""
-    # Game block sizes (32, 48, 64)
-    BLOCK_SIZE_CHOICES = (
-        (32, '32 pixels'),
-        (48, '48 pixels'),
-        (64, '64 pixels'),
-    )
 
     title = models.CharField(max_length=45, null=False, blank=False)
     slug = models.SlugField(max_length=45, null=False, blank=False, unique=True)
@@ -388,8 +389,7 @@ class Game(models.Model):
     rows = models.IntegerField(null=False, blank=False, default=0)
     cols = models.IntegerField(null=False, blank=False, default=0)
     block_size = models.IntegerField(null=False, blank=False, choices=BLOCK_SIZE_CHOICES, default=32)
-    #organization = models.ForeignKey(Organization)
-
+    
     class Meta:
         verbose_name = _('game')
         verbose_name_plural = _('games')

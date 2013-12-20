@@ -8,7 +8,6 @@
     <meta charset=utf-8>
     <title>Magos - Collaborative Game Creation</title>
     <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.min.css" />
     <link rel="stylesheet" href="{{ STATIC_URL }}css/magos.css" />
     <link rel="stylesheet" href="{{ STATIC_URL }}css/rateit.css" />
@@ -22,7 +21,8 @@
   {% load i18n %}
 <body class="{% block bodyclass %}home{% endblock %}">
 
-<div id="header_wrap">
+
+<div class="container">
 
     <header>
         <img src="{{ STATIC_URL }}img/magos-logo.png" id="logo">
@@ -50,9 +50,7 @@
 
     </header>
 
-</div>
 
-<div id="main-content-wrap">
     <section id="content" class="group">
         {% block content %}{% endblock %}
     </section>
@@ -80,7 +78,7 @@
         </nav>
 
         <div class="footer-wide">
-            <p>&copy; Copyright 2012 Magos. <br /><span class="version-info">Version info: {% git_rev_tag %}</span></p>
+            <p>&copy; Copyright 2012-2013 Magical project. <br /><span class="version-info">Version info: {% git_rev_tag %}</span></p>
         </div>
 
     </footer>
@@ -91,6 +89,7 @@
     <script src="{{ STATIC_URL }}js/lib/jquery.blockUI.js"></script>
     <script src="{{ STATIC_URL }}js/lib/bootstrap.min.js"></script>
     <script src="{{ STATIC_URL }}js/jquery.rateit.min.js"></script>
+    <script src="{{ STATIC_URL }}js/magos-public.js"></script>
     <script type="text/javascript">
         $(document)
 	    .ajaxStart(function() {

@@ -6,7 +6,7 @@
 {% block content %}
     
                     
-        <div id="main-content">
+        <div id="main-content" class="col-xs-8">
         {% if game %}
                        
             <h1>{{ game.title }}</h1>
@@ -58,7 +58,7 @@
         {% endif %}
         </div>
     
-        <div id="sidebar">
+        <div id="sidebar" class="col-xs-4">
             <h2>Highscore</h2>
             {% if highscores %}
             <ol class="highscore-list">
@@ -70,21 +70,7 @@
             <p>No highscore yet.</p>
             {% endif %}
 
-            <h2>Get Help</h2>
-            <p>Watch Magos tutorial videos to master the magical skills.</p>
-            <iframe width="300" height="169" src="http://www.youtube.com/embed/I8qkQhTfSJ4" frameborder="0" allowfullscreen></iframe>
-
-		    <h3>Latest Discussion</h3>
-            <ul>
-                <li>Cum sociis natoque penatibus et magnis dis</li>
-                <li>Parturient montes, nascetur ridiculus mus</li>
-                <li>Mauris posuere, lorem sit amet iaculis laoreet</li>
-                <li>Lectus dui faucibus lectus, vitae sagittis velit magna a augue</li>
-            </ul>
-
-            <h3>Lorem Ipsum</h3>
-            <p>Fusce semper pulvinar libero at commodo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
-            <p> Mauris posuere, lorem sit amet iaculis laoreet, lectus dui faucibus lectus, vitae sagittis velit magna a augue. Sed iaculis, nisi sed tincidunt molestie.</p>
+            {% include 'apps/game/sidebar.html' %}
 
         </div>
 

@@ -3,58 +3,65 @@
 
 {% block content %}
     
-        <div id="wide-content">
-            <div class="intro-game">
-                <p class="slogan">
-                    Gather a team and step into the fantasy world of Magos - A game authoring environment designed to foster the learning of critical 21st century skills like creativity, problem solving and collaboration.
-                </p>
-            </div>
-        </div>
-                    
-        <div id="main-content">
-                       
-            <div class="featured-game">
-                <div id="featured-slogan">
-                    <h1>Super-Magos is Out!</h1>
-                    <p>
-                        Experience the hottest new game in the Magos universe.
-                        <button class="btn btn-primary" type="button">Play Now</button>
+        <div class="row wide-content">
+            <div class="col-xs-12">
+                <div class="intro-game">
+                    <p class="slogan">
+                        Gather a team and step into the fantasy world of Magos - A game authoring environment designed to foster the learning of critical 21st century skills like creativity, problem solving and collaboration.
                     </p>
                 </div>
             </div>
-            
-            <ul class="nav nav-tabs">
-                <li class="active">
-                    <a href="#">Featured Games</a>
-                </li>
-                <li>
-                    <a href="#">Top Rated</a>
-                </li>
-                 <li>
-                    <a href="#">Latest Additions</a>
-                </li>
-            </ul>
-        
-            <div id="featured-games" class="front-games"></div>
-            
         </div>
-    
-        <div id="sidebar">
-            <h2>Get Help</h2>
-            <p>Watch Magos tutorial videos to master the magical skills.</p>
-            <iframe width="300" height="169" src="http://www.youtube.com/embed/I8qkQhTfSJ4" frameborder="0" allowfullscreen></iframe>
-            
-		    <h3>Magos Statistics</h3>
-            <ul>
-                <li>324 users / 76 currently online</li>
-                <li>42 games</li>
-                <li>Mauris posuere, lorem sit amet iaculis laoreet</li>
-                <li>Lectus dui faucibus lectus, vitae sagittis velit magna a augue</li>
-            </ul>
 
-            <h3>Lorem Ipsum</h3>
-            <p>Fusce semper pulvinar libero at commodo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
-            <p> Mauris posuere, lorem sit amet iaculis laoreet, lectus dui faucibus lectus, vitae sagittis velit magna a augue. Sed iaculis, nisi sed tincidunt molestie.</p>
+        <div class="row wide-content">
+                    
+            <div id="main-content" class="col-xs-8">
+                           
+                <div class="featured-game">
+                    <div id="featured-slogan">
+                        <h1>Super-Magos is Out!</h1>
+                        <p>
+                            Experience the hottest new game in the Magos universe.
+                            <button class="btn btn-primary" type="button">Play Now</button>
+                        </p>
+                    </div>
+                </div>
+                
+                <ul class="nav nav-tabs" id="gamesList">
+                    <li class="active">
+                        <a href="#magos_games" data-url="magos">Magos games</a>
+                    </li>
+                    <li>
+                        <a href="#magos_lite_games" data-url="magos_lite">Magos-lite games</a>
+                    </li>
+                </ul>
+            
+                <div class="tab-content">
+                    <div class="tab-pane active" id="magos_games">foo</div>
+                    <div class="tab-pane" id="magos_lite_games">Magos lite</div>
+                </div>
+                
+            </div>
+        
+            <div id="sidebar" class="col-xs-4">
+                
+                    <h2>Get Help</h2>
+                    <p>Watch Magos tutorial videos to master the magical skills.</p>
+                    <iframe width="270" height="180" src="http://www.youtube.com/embed/I8qkQhTfSJ4" frameborder="0" allowfullscreen></iframe>
+                    
+        		    <h3>Magos Statistics</h3>
+                    <ul>
+                        <li>324 users / 76 currently online</li>
+                        <li>42 games</li>
+                        <li>Mauris posuere, lorem sit amet iaculis laoreet</li>
+                        <li>Lectus dui faucibus lectus, vitae sagittis velit magna a augue</li>
+                    </ul>
+
+                    <h3>Lorem Ipsum</h3>
+                    <p>Fusce semper pulvinar libero at commodo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                    <p> Mauris posuere, lorem sit amet iaculis laoreet, lectus dui faucibus lectus, vitae sagittis velit magna a augue. Sed iaculis, nisi sed tincidunt molestie.</p>
+
+            </div>
 
         </div>
 
@@ -94,24 +101,8 @@ $(document).ready(function() {
 	             xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
 	         }
 	     }
-	});
-	
-    function listGames() {
-        $.ajax({
-            dataType : 'html',
-            type : 'GET',
-            url : '/game/ajax_list_games/',
-            success : function(data, textStatus, jqXHR) {
-                $('#featured-games').html(data);
-            },
-            error : function(jqXHR, textStatus, errorThrown) {
-                $('#errors').html('Error in XHR request.<br/> ' + errorThrown).show();
-            }
-        });
-    } // getFilters
+	});	
 
-    listGames();
-    
 }); // document ready
 </script>
 {% endblock %}

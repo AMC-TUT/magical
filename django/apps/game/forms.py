@@ -1,6 +1,7 @@
 from django import forms
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
-from apps.game.models import Game
+from .models import Game, GameType, BLOCK_SIZE_CHOICES
 
 # Game canvas pixel resolution
 RESOLUTION_CHOICES = (
@@ -11,13 +12,50 @@ RESOLUTION_CHOICES = (
 )
 
 class GameForm(forms.ModelForm):
-	resolution = forms.ChoiceField(choices=RESOLUTION_CHOICES, initial='14_10')
+    title = forms.CharField(
+    	max_length=100,
+        required=True,
+        label=_(u'Title'),
+        widget=forms.TextInput(attrs={'class':'form-control'}),
+    )
 
-	class Meta:
-		model = Game
-		exclude = ('creator', 'cloned','slug','state','rows','cols',)
+    type = forms.ModelChoiceField(
+        required=True,
+        queryset=GameType.objects.all(),
+        label=_(u'Game Type'),
+        widget=forms.Select(attrs={'class':'form-control'}),        
+    )
 
-	def __init__(self, *args, **kwargs):
+    image = forms.ImageField(
+    	required=False,
+        label=_(u'Image'),
+        widget=forms.ClearableFileInput(attrs={'class':'form-control'}),
+    )
+
+    description = forms.CharField(
+    	required=False,
+        label=_(u'Description'),
+        widget=forms.Textarea(attrs={'class':'form-control'}),
+    )
+
+    block_size = forms.ChoiceField(
+        label=_(u'Block size'),
+        choices=BLOCK_SIZE_CHOICES,
+        widget=forms.Select(attrs={'class':'form-control'}),
+    )
+
+    resolution = forms.ChoiceField(
+        choices=RESOLUTION_CHOICES, 
+        label=_(u'Resolution'),
+        initial='14_10', 
+        widget=forms.Select(attrs={'class':'form-control'}),
+    )
+
+    class Meta:
+        model = Game
+        exclude = ('creator', 'cloned','slug','state','rows','cols',)
+
+    def __init__(self, *args, **kwargs):
 		# only allow creators from user's own organization
 		if kwargs.has_key('organization'):
 			organization = kwargs.pop('organization')
