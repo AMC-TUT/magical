@@ -13,8 +13,12 @@ TEMPLATE_DEBUG = DEBUG
 
 
 ########## EDITOR/PLAY URL CONFIGURATION
-MAGOS_EDITOR_URL = 'http://localhost:8082/editor/'
-MAGOS_PLAY_URL = 'http://localhost:8082/play/'
+MAGOS_EDITOR_URL = 'http://localhost:8080/editor/'
+MAGOS_PLAY_URL = 'http://localhost:8080/play/'
+
+MAGOS_LITE_EDITOR_URL = 'http://localhost:8080/editor-lite/edit/'
+MAGOS_LITE_PLAY_URL = 'http://localhost:8080/editor-lite/play/'
+
 ########## END EDITOR/PLAY URL CONFIGURATION
 
 

@@ -393,6 +393,15 @@ ul.nav {
     color: #f00;
 }
 
+.errorlist {
+    float: right;
+    list-style: none;
+}
+
+.errortext {
+    float: right;
+}
+
 .front-games .pagination {
     float:left;
     margin:0 20px 20px 20px;

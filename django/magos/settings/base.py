@@ -204,6 +204,7 @@ THIRD_PARTY_APPS = (
     'audiofield', #django-audiofield
     'djcelery',
     'imagekit',
+    'polymorphic',
 )
 
 # Apps specific for this project

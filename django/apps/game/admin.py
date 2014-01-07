@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from apps.game.models import UserProfile, Country, Language, \
-    Organization, Role, Disability, \
+    Organization, Role, Disability, MagosAGame, MagosBGame, \
     Achievement, AchievementMembership, Game, GameType, Author, \
     Revision, Image, Audio, Review, Highscore, Gender
 
@@ -28,7 +28,8 @@ admin.site.register(Role)
 
 admin.site.register(Achievement)
 admin.site.register(AchievementMembership)
-admin.site.register(Game)
+admin.site.register(MagosAGame)
+admin.site.register(MagosBGame)
 admin.site.register(GameType)
 admin.site.register(Author)
 admin.site.register(Revision)

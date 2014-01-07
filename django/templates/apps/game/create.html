@@ -1,74 +1,17 @@
-{% extends "apps/game/game_base.html" %}
 {% load i18n %}
-
-{% block bodyclass %}create{% endblock %}
-
-{% block content %}
-    
-                    
-
-        <div class="row wide-content">
-                    
-            <div id="main-content" class="col-xs-8">
-
-            {% if form %}
-                <h1>Create a new game</h1>
-                <p>Here you can define a new Magos game.</p>
-                <hr />
-                <div class="col-xs-9">
-                    <form role="form" action="/game/create/" enctype="multipart/form-data" method="post">
-                        {{ form.non_field_errors }}
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <input type="submit" class="btn btn-default" value="Submit" />
-                    </form>
-                </div>
-            {% endif %}
-            </div>
-        
-            <div id="sidebar" class="col-xs-4">
-                {% include 'apps/game/sidebar.html' %}
-            </div>
-
+{% if form %}
+    <div id="createGameContainer">
+        <h1>Create a new game</h1>
+        <p>Here you can define a new Magos <em>{{ gametype_text }}</em> game.</p>
+        <hr />
+        <div class="col-xs-9">
+            <form role="form" action="/game/create/" id="createGameForm" enctype="multipart/form-data" method="post">
+                {{ form.non_field_errors }}
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" id="cancelCreateGame" class="btn btn-danger">Cancel</button>
+                <button type="submit" id="submitCreateGame" class="btn btn-success">Create</button>
+            </form>
         </div>
-    
-    
-{% endblock %}
-
-{% block extrajs %}
-<script>
-$(document).ready(function() {
-		
-    function redirectToLogin() {
-    	window.location.href = '{{ login_url }}';
-    }
-    
-	// Django Ajax CSRF token setup
-	$.ajaxSetup({
-	     beforeSend: function(xhr, settings) {
-	         function getCookie(name) {
-	             var cookieValue = null;
-	             if (document.cookie && document.cookie != '') {
-	                 var cookies = document.cookie.split(';');
-	                 for (var i = 0; i < cookies.length; i++) {
-	                     var cookie = jQuery.trim(cookies[i]);
-	                     // Does this cookie string begin with the name we want?
-	                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
-	                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-	                     break;
-	                 }
-	             }
-	         }
-	         return cookieValue;
-	         }
-	         if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-	             // Only send the token to relative URLs i.e. locally.
-	             xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-	         }
-	     }
-	});
-
-    
-}); // document ready
-</script>
-{% endblock %}
+    </div>
+{% endif %}

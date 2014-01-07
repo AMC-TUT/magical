@@ -371,9 +371,8 @@ class Audio(models.Model):
 
     def __unicode__(self):
         return u"%s" % self.name
-
+"""
 class Game(models.Model):
-    """Game model"""
 
     title = models.CharField(max_length=45, null=False, blank=False)
     slug = models.SlugField(max_length=45, null=False, blank=False, unique=True)
@@ -386,9 +385,6 @@ class Game(models.Model):
     updated = models.DateTimeField(auto_now=True)
     creator = models.ForeignKey(User, blank = True, null = True)
 
-    rows = models.IntegerField(null=False, blank=False, default=0)
-    cols = models.IntegerField(null=False, blank=False, default=0)
-    block_size = models.IntegerField(null=False, blank=False, choices=BLOCK_SIZE_CHOICES, default=32)
     
     class Meta:
         verbose_name = _('game')
@@ -399,6 +395,60 @@ class Game(models.Model):
     
     def __unicode__(self):
         return u"%s" % self.title
+"""
+
+from polymorphic import PolymorphicModel
+
+class Game(PolymorphicModel):
+    title = models.CharField(max_length=45, null=False, blank=False)
+    slug = models.SlugField(max_length=45, null=False, blank=False, unique=True)
+    state = models.IntegerField(null=False, blank=False, default=0)
+    image = models.ImageField(blank = True, null = True, upload_to='game_images')
+    description = models.CharField(max_length=255, null=True, blank=True)
+    cloned = models.IntegerField(null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True, default=datetime.date.today)
+    updated = models.DateTimeField(auto_now=True)
+    creator = models.ForeignKey(User, blank = True, null = True)
+    
+    class Meta:
+        verbose_name = _('game')
+        verbose_name_plural = _('games')
+
+    def get_latest_revision(self):
+        return Revision.objects.filter(game=self).latest('inserted')
+    
+    def __unicode__(self):
+        return u"%s" % self.title
+
+class MagosAGame(Game):
+    """
+    A-type Game
+    """
+    type = models.ForeignKey(GameType)
+    rows = models.IntegerField(null=False, blank=False, default=0)
+    cols = models.IntegerField(null=False, blank=False, default=0)
+    block_size = models.IntegerField(null=False, blank=False, choices=BLOCK_SIZE_CHOICES, default=32)
+
+    class Meta:
+        verbose_name = _(u'Magos A game')
+        verbose_name_plural = _(u'Magos A games')
+
+    def __unicode__(self):
+        return u'%s' % (self.title)
+
+
+class MagosBGame(Game):
+    """
+    B-type Game
+    """
+
+    class Meta:
+        verbose_name = _(u'Magos B game')
+        verbose_name_plural = _(u'Magos B games')
+
+    def __unicode__(self):
+        return u'%s' % (self.title)
+
 
 class Revision(models.Model):
     """Game revision model"""

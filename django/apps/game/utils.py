@@ -78,7 +78,8 @@ def create_game_for_redis(gameslug):
     if game:
         result_dict['title'] = game.title
         result_dict['id'] = game.id
-        result_dict['type'] = game.type.name
+        if hasattr(game, "type"):
+            result_dict['type'] = game.type.name
         result_dict['state'] = game.state
         result_dict['description'] = game.description
         result_dict['cloned'] = game.cloned

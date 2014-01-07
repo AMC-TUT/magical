@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
-from .models import Game, GameType, BLOCK_SIZE_CHOICES
+from .models import Game, MagosAGame, MagosBGame, GameType, BLOCK_SIZE_CHOICES
 
 # Game canvas pixel resolution
 RESOLUTION_CHOICES = (
@@ -11,19 +11,12 @@ RESOLUTION_CHOICES = (
     ('12_8', '12 cols, 8 rows'),
 )
 
-class GameForm(forms.ModelForm):
+class BaseGameForm(forms.ModelForm):
     title = forms.CharField(
     	max_length=100,
         required=True,
         label=_(u'Title'),
         widget=forms.TextInput(attrs={'class':'form-control'}),
-    )
-
-    type = forms.ModelChoiceField(
-        required=True,
-        queryset=GameType.objects.all(),
-        label=_(u'Game Type'),
-        widget=forms.Select(attrs={'class':'form-control'}),        
     )
 
     image = forms.ImageField(
@@ -36,6 +29,26 @@ class GameForm(forms.ModelForm):
     	required=False,
         label=_(u'Description'),
         widget=forms.Textarea(attrs={'class':'form-control'}),
+    )
+
+
+    class Meta:
+        model = Game
+
+    def __init__(self, *args, **kwargs):
+		# only allow creators from user's own organization
+		if kwargs.has_key('organization'):
+			organization = kwargs.pop('organization')
+		super(BaseGameForm, self).__init__(*args, **kwargs)
+
+
+class MagosAGameForm(BaseGameForm):
+
+    type = forms.ModelChoiceField(
+        required=True,
+        queryset=GameType.objects.all(),
+        label=_(u'Game Type'),
+        widget=forms.Select(attrs={'class':'form-control'}),        
     )
 
     block_size = forms.ChoiceField(
@@ -52,11 +65,14 @@ class GameForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Game
-        exclude = ('creator', 'cloned','slug','state','rows','cols',)
+        model = MagosAGame
+        exclude = ('creator', 'cloned', 'slug', 'state', 'rows', 'cols',)
 
-    def __init__(self, *args, **kwargs):
-		# only allow creators from user's own organization
-		if kwargs.has_key('organization'):
-			organization = kwargs.pop('organization')
-		super(GameForm, self).__init__(*args, **kwargs)
+
+class MagosBGameForm(BaseGameForm):
+
+    class Meta:
+        model = MagosBGame
+        exclude = ('creator', 'cloned', 'slug', 'state', 'rows', 'cols', 'cloned', )
+
+

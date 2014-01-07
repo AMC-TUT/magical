@@ -89,6 +89,7 @@
     <script src="{{ STATIC_URL }}js/lib/jquery.blockUI.js"></script>
     <script src="{{ STATIC_URL }}js/lib/bootstrap.min.js"></script>
     <script src="{{ STATIC_URL }}js/jquery.rateit.min.js"></script>
+    <script src="{{ STATIC_URL }}js/csrf.js"></script>
     <script src="{{ STATIC_URL }}js/magos-public.js"></script>
     <script type="text/javascript">
         $(document)
@@ -102,7 +103,14 @@
 	    .ajaxStop(function() {
 	    	$.unblockUI();
 	        //$(this).hide();
-	    });  
+	    });
+        
+        $(document).ready(function() {
+            function redirectToLogin() {
+                window.location.href = '{{ login_url }}';
+            }
+        });
+        
     </script>
     {% block extrajs %}{% endblock %}
   </body>

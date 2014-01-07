@@ -14,8 +14,9 @@ import json
 
 from django.contrib.auth.forms import AuthenticationForm
 
-from apps.game.models import Game, Revision, Author, Highscore, Review, Image, Thumbnail
-from apps.game.forms import GameForm
+from apps.game.models import Game, MagosAGame, MagosBGame, Revision, Author, \
+        Highscore, Review, Image, Thumbnail
+from apps.game.forms import MagosAGameForm, MagosBGameForm
 from apps.game.decorators import ajax_login_required
 from apps.game.utils import get_redis_game_data, set_redis_game_data, create_game_for_redis
 
@@ -56,8 +57,6 @@ def game_details(request, gameslug):
     organization = None
     if user.is_authenticated():
         organization = user.get_profile().organization
-    editor_url = settings.MAGOS_EDITOR_URL
-    play_url = settings.MAGOS_PLAY_URL
     game = None
     authors = []
     can_edit = False
@@ -68,6 +67,8 @@ def game_details(request, gameslug):
     game_authors = []
     can_review = False
     available_authors = []
+    editor_url = settings.MAGOS_EDITOR_URL
+    play_url = settings.MAGOS_PLAY_URL
     try:
         if not user.is_authenticated():
             game = Game.objects.get(slug=gameslug, state=2)
@@ -100,6 +101,10 @@ def game_details(request, gameslug):
 
     except Game.DoesNotExist:
         pass
+
+    if game.get_real_instance_class() == MagosBGame:        
+        editor_url = settings.MAGOS_LITE_EDITOR_URL
+        play_url = settings.MAGOS_LITE_PLAY_URL
     # set context variables
     context['game'] = game
     context['user'] = user
@@ -146,16 +151,27 @@ def download_image(request, uuid, width, height, ext):
     return response
 
 
+@login_required
+def create_game_base(request):
+    tpl = 'apps/game/create_base.html'
+    context = RequestContext(request)
+    user = request.user
+    organization = user.get_profile().organization
+    return render(request, tpl, context)
+
 
 @login_required
-def create_game(request):
+def create_game_a(request):
     tpl = 'apps/game/create.html'
     context = RequestContext(request)
     user = request.user
     organization = user.get_profile().organization
+    GameForm = MagosAGameForm
+    context['gametype_text'] = 'Classic'
     if request.method == 'POST':
         form = GameForm(request.POST, request.FILES, organization=organization)
         if form.is_valid():
+            #import ipdb; ipdb.set_trace()
             # figure out game resolution
             resolution = form.cleaned_data['resolution']
             resolution = resolution.split('_')
@@ -214,7 +230,126 @@ def create_game(request):
 
             # redirect to newly created game
             url = '/game/details/%s' % game.slug
-            return redirect(url)
+            #return redirect(url)
+            data = {
+                'success': True,
+                'url': url
+            }
+
+        else:
+            data = {
+                'errors': dict([(k, [unicode(e) for e in v]) for k,v in form.errors.items()])
+            }
+
+        json_data = simplejson.dumps(data)
+        return HttpResponse(json_data, mimetype='application/json')
+    else:
+        form = GameForm(organization=organization)
+    context['form'] = form
+    return render(request, tpl, context)
+
+@login_required
+def create_game_b(request):
+    tpl = 'apps/game/create.html'
+    context = RequestContext(request)
+    user = request.user
+    organization = user.get_profile().organization
+    GameForm = MagosBGameForm
+    context['gametype_text'] = 'Lite'
+    if request.method == 'POST':
+        form = GameForm(request.POST, request.FILES, organization=organization)
+        if form.is_valid():
+            game = form.save()
+            game.creator = user
+            game.save()
+            
+            # create initial revision
+            revision_data = {}
+            
+            scroll_data = [
+                {
+                    "item" : None,
+                    "speed" : 5
+                },
+                {
+                    "item" : None,
+                    "speed" : 10
+                },
+                {
+                    "item" : None,
+                    "speed" : 15
+                }
+            ]
+            revision_data['title'] = game.title
+            revision_data['instructions'] = "No instructions are given." 
+            revision_data['platformType'] = "air"
+            revision_data['playerImg'] = "magos-girl" 
+            revision_data['itemInterval'] = 4000
+            revision_data['hazardInterval'] = 4000 
+            revision_data['wordInterval'] = 4000 
+            revision_data['sky'] = None
+            revision_data['scroll'] = scroll_data 
+            revision_data['collectables'] = []
+            revision_data['hazards'] = []
+            revision_data['powerups'] = []
+            revision_data['wordRules'] = []
+            revision_data['answers'] = []
+            revision_data['fractionRules'] = []
+            revision_data['matchRule'] = None
+            revision_data['gameMode'] = "time"
+            revision_data['gameDuration'] = 60
+            revision_data['goalDistance'] = 0
+            revision_data['survivalFactor'] = 0.995
+            revision_data['extraLife'] = False
+            revision_data['turboSpeed'] = False
+            revision_data['bgcolor'] = "#F2F2F2"
+
+            revision_data['star3limit'] = 0
+            revision_data['star2limit'] = 0 
+            revision_data['star1limit'] = 0 
+            revision_data['memoryIncrease'] = 0 
+            revision_data['memoryStart'] = 0
+            revision_data['matchPointsRight'] = 0
+            revision_data['matchPointsWrong'] = 0 
+            revision_data['hazardEffect'] = 0
+            revision_data['sliceAmount'] = 0 
+            revision_data['pieceAmount'] = 0 
+            revision_data['pizzaRules'] = [] 
+            revision_data['jumpPower'] = -24 
+            revision_data['bonustimelimit'] = 220 
+
+            #revision_data = revision_data.strip()
+            print revision_data
+            revision_data = json.dumps(revision_data)
+            print "---------------------"
+            print revision_data
+
+            revision = Revision(game=game, data=revision_data)
+            revision.save()
+            # add user as author
+            author = Author(game=game, user=user)
+            author.save()
+
+            # we have to create and save initial game data to Redis
+            redis_game_data = create_game_for_redis(game.slug)
+            jresult = json.dumps(redis_game_data)
+            set_redis_game_data(game.slug, jresult)
+
+            # redirect to newly created game
+            url = '/game/details/%s' % game.slug
+            #return redirect(url)
+            data = {
+                'success': True,
+                'url': url
+            }
+
+        else:
+            data = {
+                'errors': dict([(k, [unicode(e) for e in v]) for k,v in form.errors.items()])
+            }
+
+        json_data = simplejson.dumps(data)
+        return HttpResponse(json_data, mimetype='application/json')
     else:
         form = GameForm(organization=organization)
     context['form'] = form
@@ -379,18 +514,24 @@ def available_authors(request, gameslug):
     return render(request, tpl, context)
 
 
-def ajax_list_games(request, gametype='magos'):
+def ajax_list_games(request, gametype='A'):
     """
-    Get game objects.
+    Get game objects of type A or B (magos-lite).
     :param request: Http request object.
+    :param gametype: Game type as string 'A' or 'B'.
     """
-    print gametype
+    if not gametype in ['A', 'B']:
+        gametype = 'A'
+    TypedGame = MagosAGame
+    if gametype == 'B':
+        TypedGame = MagosBGame
+
     tpl = 'apps/game/ajax_list_games.html'
     context = RequestContext(request)
     user = request.user
     if user.is_authenticated():
         # authenticated users get list of their own games
-        games = Game.objects.filter(author__user__userprofile__organization=user.userprofile.organization).distinct()
+        games = TypedGame.objects.filter(author__user__userprofile__organization=user.userprofile.organization).distinct()
         # should we add public (state=2) games?
     else:
         # anonymous users get list of public games, state=2

@@ -7,7 +7,11 @@ urlpatterns = patterns('',
     url(r'^ajax_list_games/(?P<gametype>[\w.@+-]+)$', 'apps.game.views.ajax_list_games'),
     
     url(r'^details/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.game_details', name="game_details"),
-    url(r'^create/$', 'apps.game.views.create_game', name="create_game"),
+
+    url(r'^create/$', 'apps.game.views.create_game_base', name="create_game_base"),
+
+    url(r'^create/A/$', 'apps.game.views.create_game_a', name="create_game_a"),
+    url(r'^create/B/$', 'apps.game.views.create_game_b', name="create_game_b"),
 
     url(r'^game-authors/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.game_authors', name="game_authors"),
     url(r'^available-authors/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.available_authors', name="available_authors"),

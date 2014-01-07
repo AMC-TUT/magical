@@ -10,7 +10,7 @@ from django.core import serializers
 from django.utils.decorators import method_decorator
 import json
 
-from apps.game.models import Game, Language, Highscore, Review, Image, Audio, \
+from apps.game.models import Game, MagosAGame, MagosBGame, Language, Highscore, Review, Image, Audio, \
     GameType, Author, Revision
 from django.contrib.auth.models import User
 from django.db import IntegrityError
@@ -74,7 +74,10 @@ class RevisionView(RequestMixin, ResponseMixin, View):
                 json_data = json.loads(revision.data)
             except ValueError:
                 pass
-            revision_dict['revision'] = json_data
+            if game.get_real_instance_class() == MagosBGame:
+                revision_dict['level1'] = json_data
+            else:
+                revision_dict['revision'] = json_data
             revisions_list.append(revision_dict)
         result_dict = {}        
         result_dict['offset'] = rev_offset
@@ -176,7 +179,8 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
         result_dict = {}
         result_dict['title'] = game.title
         result_dict['id'] = game.id
-        result_dict['type'] = game.type.name
+        if hasattr(game, "type"):
+            result_dict['type'] = game.type.name
         result_dict['state'] = game.state
         result_dict['description'] = game.description
         result_dict['cloned'] = game.cloned
@@ -206,12 +210,18 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
             json_data = json.loads(revision.data)
         except ValueError:
             pass
-        result_dict['revision'] = json_data
+        if game.get_real_instance_class() == MagosBGame:
+            result_dict['level1'] = json_data
+        else:
+            result_dict['revision'] = json_data
 
         response = Response(200, result_dict)
         return self.render(response)
 
     def put(self, request, gameslug):
+        """
+        PUT - update revision
+        """
         put_data = self.DATA
         session_user = request.user
         if not session_user.is_authenticated():
@@ -222,7 +232,7 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
         except Game.DoesNotExist:
             response = Response(404, {'statusCode': 404, 'message' : 'Game not found'})
             return self.render(response)
-        
+
         valid_data = False
 
         state_list = put_data.getlist('state', None) # Game state (1=private, 2=public)
@@ -238,26 +248,60 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
         if revision_list and len(revision_list):
             revision_data = revision_list[0]
 
-        #name_list = put_data.getlist('name', None) # Title of the game
-        #type_list = put_data.getlist('type', None) #  Game's type (game_type:slug)
-        #description_list = put_data.getlist('description', None) #  some info
-        #authors_list = put_data.getlist('authors', None) #   usernames of the game creators (array)
-        # game title
-        #title = None
-        #if name_list and len(name_list):
-        #    title = name_list[0]
-        # description
-        #description = None
-        #if description_list and len(description_list):
-        #    description = description_list[0]
-        # game type
-        #type_slug = None
-        #if type_list and len(type_list):
-        #    type_slug = type_list[0]
-        #    try:
-        #        type_slug = GameType.objects.get(slug=type_slug)
-        #    except GameType.DoesNotExist:
-        #        valid_data = False
+        if state and revision_data:
+            valid_data = True
+        
+        if valid_data:
+            try:
+                # set state
+                game.state = state
+                game.save()
+
+                # update revision
+                revision = game.get_latest_revision()
+                revision.game = game
+                revision.data = revision_data
+                revision.save()
+
+                response=Response(200,{'statusCode' : 200 })
+                return self.render(response)
+            except (ValueError, IntegrityError) as e:
+                pass
+
+        response=Response(400,{'message':'Invalid data'})
+        return self.render(response)
+
+
+    def post(self, request, gameslug):
+        """
+        POST - add new revision
+        """
+        post_data = self.DATA
+        session_user = request.user
+        if not session_user.is_authenticated():
+            response = Response(403, {'statusCode': 403, 'message' : 'Not authorized'})
+            return self.render(response)
+        try:
+            game = Game.objects.get(slug=gameslug)
+        except Game.DoesNotExist:
+            response = Response(404, {'statusCode': 404, 'message' : 'Game not found'})
+            return self.render(response)
+        
+        valid_data = False
+
+        state_list = post_data.getlist('state', None) # Game state (1=private, 2=public)
+        revision_list = post_data.getlist('revision', None) #  Game revision as JSON (game_type:slug)
+
+        # state
+        state = None
+        if state_list and len(state_list):
+            state = state_list[0]
+
+        # state
+        revision_data = None
+        if revision_list and len(revision_list):
+            revision_data = revision_list[0]
+
         if state and revision_data:
             valid_data = True
         
@@ -378,7 +422,8 @@ class GameView(RequestMixin, ResponseMixin, View):
             result_dict = {}
             result_dict['title'] = game.title
             result_dict['id'] = game.id
-            result_dict['type'] = game.type.name
+            if hasattr(game, "type"):
+                result_dict['type'] = game.type.name
             result_dict['state'] = game.state
             result_dict['description'] = game.description
             result_dict['cloned'] = game.cloned
@@ -393,7 +438,11 @@ class GameView(RequestMixin, ResponseMixin, View):
                 authors_list.append(author_dict)
 
             result_dict['authors'] = authors_list
-            result_dict['revision'] = game.get_latest_revision().id
+
+            if game.get_real_instance_class() == MagosBGame:
+                result_dict['level1'] = game.get_latest_revision().id
+            else:
+                result_dict['revision'] = game.get_latest_revision().id
             results_list.append(result_dict)
         
         response = Response(200, { \

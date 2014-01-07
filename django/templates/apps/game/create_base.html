@@ -1,0 +1,42 @@
+{% extends "apps/game/game_base.html" %}
+{% load i18n %}
+
+{% block bodyclass %}create{% endblock %}
+
+{% block content %}
+    
+                    
+
+        <div class="row wide-content">
+                    
+            <div id="main-content" class="col-xs-8">
+            	<div id="selectGameType">
+	            	<h1>Select game type</h1>
+    				<button type="button" class="btn btn-primary gameType" id="btn-A">CLASSIC</button>
+    				<button type="button" class="btn btn-info gameType" id="btn-B">LITE</button>
+            	</div>
+
+            	<div id="createGame">
+
+            	</div>
+
+            </div>
+        
+            <div id="sidebar" class="col-xs-4">
+                {% include 'apps/game/sidebar.html' %}
+            </div>
+
+        </div>
+    
+    
+{% endblock %}
+
+{% block extrajs %}
+<script>
+$(document).ready(function() {
+
+	App.games.init_create();
+    
+}); // document ready
+</script>
+{% endblock %}
