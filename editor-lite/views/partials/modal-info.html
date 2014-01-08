@@ -1,0 +1,26 @@
+		<!-- Modal INFO ############### INFO  -->
+		<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+  		<div class="modal-dialog">
+   		<div class="modal-content">
+    		<div class="modal-header">
+        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        		<h4 class="modal-title" id="infoModalLabel">Game instructions</h4>
+      		</div>
+     		 <div class="modal-body">
+        		<div>
+				Give the name of the game:
+				<input name="title" type="text" maxlength="50" id="titleTxt" class="txt"/>
+				</div>
+				<div>
+					Write instructions for the player:
+					<textarea name="instructions" maxlength="500" id="instructionTxt" class="txt" rows="8" cols="50"></textarea>
+				</div>
+      		</div>
+      		<div class="modal-footer">
+        		<a  href="#" class="pop" data-toggle="popover" data-content="You should give an name to your game and write instructions. Try to write clear instructions and emphasize the main aim of the game.">Info</a>
+        		<button type="button" class="btn btn-default" data-dismiss="modal" onclick="editor.getInfo()">Save</button>
+        		<!-- <button type="button" class="btn btn-primary" changeSkyImg()>Save changes</button>-->
+      		</div>
+    	</div><!-- /.modal-content -->
+  		</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->

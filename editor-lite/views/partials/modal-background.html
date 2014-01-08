@@ -1,0 +1,109 @@
+		<!-- Modal BACKGROUND ############### BACKGROUND  -->
+		<div class="modal fade" id="bgModal" tabindex="-1" role="dialog" aria-labelledby="bgModalLabel" aria-hidden="true">
+  		<div class="modal-dialog">
+   		<div class="modal-content">
+    		<div class="modal-header">
+        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        		<h4 class="modal-title" id="bgModalLabel">Background properties</h4>
+      		</div>
+     		<div class="modal-body">
+
+          <div class="form-group clearfix">
+            <form class="form-horizontal" role="form">
+              <label for="colorList" class="col-sm-5 control-label">Background color:</label>
+              <div class="col-sm-7">
+                <select id="colorList" class="form-control">
+  						    <option value="#F2F2F2">light grey</option>
+                  <option value="#999999">grey</option>
+                  <option value="#996600">brown</option>
+                  <option value="#0099FF">blue</option>
+                  <option value="#FF9900">orange</option>
+                  <option value="#66CC00">green</option>
+                </select>
+                <div id="color-drop" class="drop"></div>
+              </div>
+            </form>
+     			</div>
+  
+          <div class="form-group clearfix">
+            <form class="form-horizontal" role="form">
+              <label for="skyList" class="col-sm-5 control-label">Static background element:</label>
+              <div class="col-sm-7">
+      				  <select id="skyList" class="form-control">
+    						  <option></option>
+      						<option value="sky-blue">sky-blue</option>
+      						<option value="sky-grey">sky-grey</option>
+      						<option value="sky-small-clouds">sky-small-clouds</option>
+      						<option value="sky">sky</option>
+      						<option value="space">space</option>
+    				  	</select>
+              </div>
+              <div id="sky-drop" class="drop"></div>
+            </form>
+          </div>
+
+				<div id="p3-drop" class="drop">
+						Scrolling background element 3:
+						<select class="backgroundDropMenu" id="p3List" onchange="editor.changeP3Img()">
+							<option></option>
+  							<option>factory</option>
+  							<option>mountains-big</option>
+						</select>
+				</div>
+
+          <div class="form-group clearfix">
+            <form class="form-horizontal" role="form">
+              <label for="avoidList" class="col-sm-5 control-label">Scrolling background element 3:</label>
+              <div class="col-sm-7">
+                <select id="skyList" class="form-control">
+                  <option></option>
+                  <option value="sky-blue">sky-blue</option>
+                  <option value="sky-grey">sky-grey</option>
+                  <option value="sky-small-clouds">sky-small-clouds</option>
+                  <option value="sky">sky</option>
+                  <option value="space">space</option>
+                </select>
+              </div>
+              <div id="sky-drop" class="drop"></div>
+            </form>
+          </div>
+
+
+        
+				<div id="p2-drop" class="drop">
+						Scrolling background element 2:
+						<select class="backgroundDropMenu" id="p2List" onchange="editor.changeP2Img()">
+							<option></option>
+  							<option>mountains-brown</option>
+  							<option>mountains-snow</option>
+  							<option>mountains-violet</option> 
+  							<option>city-dark</option>
+  							<option>city-dark-blue</option>
+  							<option>factory</option> 
+  							<option>houses2</option>   
+						</select>
+				</div>
+				<div id="p1-drop" class="drop">
+						Scrolling background element 1:
+						<select class="backgroundDropMenu" id="p1List" onchange="editor.changeP1Img()">
+  							<option></option>
+  							<option value="palms">palms</option>
+  							<option value="fence">fence</option>
+  							<option value="desert">desert</option>
+  							<option value="grass-yellow">yellow grass</option>
+  							<option value="grass-green">green grass</option>
+  							<option value="houses1">houses near</option>
+  							<option value="houses3">houses far</option>
+  							<option value="sea">sea</option> 
+  							<option value="forest">forest</option>        
+						</select>
+				</div>
+      		</div>   		
+      		<div class="modal-footer">
+      			<a  href="#" class="pop" data-toggle="popover" data-content="Here you can select color and graphics for the background elements. It is possible to add three elements that scroll towards left. Element 1 is in the foreground and scrolls fastest. Element 3 is farthest and scrolls slowest. You do not have to use all elements.">Info</a>
+        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        		<!-- <button type="button" class="btn btn-primary" changeSkyImg()>Save changes</button>-->
+      		</div>
+    	</div><!-- /.modal-content -->
+  		</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->

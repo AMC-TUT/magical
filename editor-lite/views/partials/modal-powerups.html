@@ -1,0 +1,37 @@
+    
+    <!-- Modal POWERUPS ############### POWERUPS  -->
+    <div class="modal fade" id="powerupsModal" tabindex="-1" role="dialog" aria-labelledby="powerupsModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="powerupModalLabel">Powerups</h4>
+          </div>
+         <div class="modal-body">
+            <div id="powerups">
+              Extra lives
+              <select id="extraList" onchange="editor.addPowerup()">
+              <option value="0">off</option>
+              <option value="1">on</option>
+          </select>
+          Turbo speed
+              <select id="turboList" onchange="editor.addTurbo()">
+              <option value="0">off</option>
+              <option value="1">on</option>
+          </select>
+          <!--<form onchange="editor.addPowerup()">
+            Extra lives<br>
+            <input type="radio" id="el_1" name="extra" value="false" checked>Off<br>
+            <input type="radio" id="el_2" name="extra" value="true">On
+          </form>-->
+        </div>
+          </div>
+          <div class="modal-footer">
+            <a  href="#" class="pop" data-toggle="popover" data-content="Here you can define what powerups the player can collect. Extra lives will appear in 20-30 second intervals if activated.">Info</a>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <!-- <button type="button" class="btn btn-primary" changeSkyImg()>Save changes</button>-->
+          </div>
+      </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    

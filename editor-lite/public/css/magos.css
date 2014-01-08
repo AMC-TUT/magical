@@ -1,0 +1,94 @@
+.slider {
+	width: 400px;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 12px;
+}
+#editor-stage{
+	position:absolute;
+	left:0px;
+	top:0px;
+	z-index:1000;
+}
+#sidebar{
+	width:120px;
+	position:absolute;
+	left:900px;
+	top:2px;
+	z-index:900;
+}
+#preview{
+	margin-top:30px;
+}
+.dropLabel{
+	margin-right:30px;
+}
+.pop{
+	margin-right:50px;
+}
+#fractionline{
+	width:140px;
+}
+#logo{
+	margin-bottom: 10px;
+	z-index:10001;
+}
+.taskLabel{
+	margin-right:20px;
+	float:left;
+	clear:left;
+}
+.taskField{
+	margin-top:5px;
+	margin-right:20px;
+	float:left;
+}
+#wordInterval{
+	float:left;
+	margin-bottom:5px;
+}
+#matching{
+	float:left;
+}
+.warning{
+	margin-right:20px;
+	color:#ff0000;
+}
+.dropMenu{
+	background-color:#FF9900;
+}
+.backgroundDropMenu{
+	background-color:#FF9900;
+	margin-left:20px;
+	width:200px;
+}
+
+.drop {
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+.stars{
+	width:200px;
+	margin-top:5px;
+	margin-bottom:5px;
+	clear:left;
+	float:left;
+	/*display:inline-block;*/
+}
+.starinfo{
+	margin-top:10px;
+	float:left;
+}
+.txt{
+	margin-right:5px;
+	margin-left:5px;
+}
+
+.itemContainer {
+	background: #ccc;
+	margin-bottom: 4px;
+	padding: 3px 10px;
+	margin-left: 2px;
+	margin-right: 2px;
+}
+

@@ -1,0 +1,61 @@
+		<!-- Modal COLLECTIBLES ###############   -->
+		<div class="modal fade" id="collectModal" tabindex="-1" role="dialog" aria-labelledby="collectModalLabel" aria-hidden="true">
+  		<div class="modal-dialog">
+     		<div class="modal-content">
+      		<div class="modal-header">
+          	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          	<h4 class="modal-title" id="collectModalLabel">Collectibles</h4>
+        	</div>
+       		
+          <div class="modal-body">
+
+            <div class="form-group clearfix">
+              <div class="row">
+                <form id="collectibles" class="form-horizontal" role="form">
+                  <label for="collectList" class="col-sm-7 control-label">Elements that player tries to collect:</label>
+                  <div class="col-sm-5">
+                    <select id="collectList" class="form-control">
+              				<option value=""></option>
+              				<option value="earth">earth</option>
+              				<option value="saturnus">saturnus</option>
+              				<option value="hat">hat</option>
+              				<option value="coin">coin</option>
+              				<option value="star">star</option>
+              				<option value="gift">gift</option>
+              			</select>
+                  </div>
+              	</form>
+              </div>
+              <div id="collect-drop" class="drop well clearfix"></div>
+            </div>
+            	 	
+            <div class="form-group clearfix">
+              <form class="form-horizontal" role="form">
+                <label for="collectList" class="col-sm-7 control-label">Appearance interval of collectibles in seconds:</label>
+                <div class="col-sm-2">
+                  <select id="itemIntervalList" class="form-control">
+                  		<option value="4000">4</option>
+                  		<option value="6000">6</option>
+                  		<option value="8000">8</option>
+                  		<option value="10000">10</option>
+                  		<option value="12000">12</option>
+                  		<option value="14000">14</option>
+                  		<option value="16000">16</option>
+                  		<option value="18000">18</option>
+                  		<option value="20000">20</option>
+                  		<option value="30000">30</option>
+                  </select>
+  				      </div>
+              </form>        	
+            </div>
+      		
+          </div><!-- /.modal-body -->
+
+          <div class="modal-footer">
+      			<a  href="#" class="pop" data-toggle="popover" data-content="Collectibles are game elements that player tries to collect. Collectibles approach the player form the right side. You should define the time interval in which collectibles appear. Usually player earns points from collectibles.">Info</a>
+        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      		</div>
+
+      	</div><!-- /.modal-content -->
+  		</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->

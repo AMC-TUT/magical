@@ -1,0 +1,90 @@
+
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/json2.min.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/handlebars-v1.1.2.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/jquery-handlebars.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/noty/jquery.noty.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/noty/layouts/top.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/noty/themes/default.js"></script>
+    <script type="text/javascript" src="/editor-lite/static/js/vendor/jquery.blockUI.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/underscore-min.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/bootstrap-3.0.2.min.js"></script>
+
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/crafty-0.6.0.min.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/greensock/plugins/CSSPlugin.min.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/greensock/TweenMax.min.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/medialoader.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/crafty_utils.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/elements_casual.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/editor.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/game.js"></script>
+
+	<script>
+	$(document).ready(function() {
+      $(document).ajaxStart(function() {
+	    	$.blockUI({ 
+	    		message: '<img id="ajax_loader" style="width:120px;height:15px;vertical-align:middle;margin:30px 8px 10px 8px;" src="/editor-lite/static/img/loading.gif" /><h1 class="ajax-loading">Please wait</h1>',
+	    		baseZ: 20000,
+          css : { border : 'none' }
+	    	}); 
+	    }).ajaxStop(function() {
+	    	$.unblockUI();
+	    });
+
+
+	  	$('[data-toggle="popover"]').popover({
+	    	trigger: 'hover',
+        	'placement': 'bottom'
+		});
+
+	  	// initialize editor
+		editor.gameSlug = '<%= gameSlug %>';
+		editor.djangoUrl = '<%= djangoUrl %>';
+		//editor.user = <%- JSON.stringify(user) %>;
+		editor.init();
+
+		// set noty defaults
+		$.noty.defaults = {
+		    layout: 'top',
+		    theme: 'defaultTheme',
+		    type: 'alert',
+		    text: '',
+		    dismissQueue: true, // If you want to use queue feature set this true
+		    template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
+		    animation: {
+		        open: {height: 'toggle'},
+		        close: {height: 'toggle'},
+		        easing: 'swing',
+		        speed: 500 // opening & closing animation speed
+		    },
+		    timeout: 1000, // delay for closing event. Set false for sticky notifications
+		    force: false, // adds notification to the beginning of queue when set to true
+		    modal: false,
+		    maxVisible: 3, // you can set max visible notification for dismissQueue true option
+		    closeWith: ['click'], // ['click', 'button', 'hover']
+		    callback: {
+		        onShow: function() {},
+		        afterShow: function() {},
+		        onClose: function() {},
+		        afterClose: function() {}
+		    },
+		    buttons: false // an array of buttons
+		};
+
+		// Handlebars helper for debugging templates
+		Handlebars.registerHelper("debug", function(optionalValue) {
+			// usage inside a template {{debug}}
+		  	console.log("Current Context");
+		  	console.log("====================");
+		  	console.log(this);
+		  	if (optionalValue) {
+			    console.log("Value");
+			    console.log("====================");
+			    console.log(optionalValue);
+		  	}
+		});
+
+	});
+	</script>
+</body>
+</html>

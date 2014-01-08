@@ -1,0 +1,18 @@
+<div id="skillsets"></div>
+
+<script id="skillsets-template" type="text/x-handlebars-template">
+<ul id="skillsets-list">
+{{#each skillsets}}
+	<li class="skillset well">
+		<h3 class="sortable-handle">{{ magos }}</h3>
+		<ul class="magos-potions {{ magos }}">
+			{{#each potions}}
+				<li>
+					<img src="/static/img/icons/icon-{{title}}.png" data-potion="{{title}}" class="potion-icon inner-shadow">
+					<span class="potion-title capitalize">{{title}}</span>
+				</li>
+			{{/each}}
+		</ul>
+  	</li>
+{{/each}}
+</script>

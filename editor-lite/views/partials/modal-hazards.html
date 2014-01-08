@@ -1,0 +1,87 @@
+		<!-- Modal HAZARD ############### HAZARD  -->
+		<div class="modal fade" id="hazardModal" tabindex="-1" role="dialog" aria-labelledby="hazardModalLabel" aria-hidden="true">
+  		<div class="modal-dialog">
+   		<div class="modal-content">
+    		<div class="modal-header">
+        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        	<h4 class="modal-title" id="hazardModalLabel">Hazard properties</h4>
+      	</div> <!-- modal-header -->
+     		
+        <div class="modal-body">
+
+
+          <div class="form-group clearfix">
+            <div class="row">
+              <form class="form-horizontal" role="form">
+                <label for="avoidList" class="col-sm-7 control-label">Elements that player should avoid:</label>
+                <div class="col-sm-5">
+                  <select id="avoidList" class="form-control">
+      							<option value="-1"></option>
+      							<option value="dragon">dragon</option>
+      							<option value="storm-cloud">storm cloud</option>
+      							<option value="bird">bird</option>
+      							<option value="asteroid">asteroid</option>
+      							<option value="satellite">satellite</option>
+      							<option value="flammable">flammable</option>
+      							<option value="explosive">explosive</option>
+      							<option value="acid">acid</option>
+      							<option value="toxic">toxic</option>
+      							<option value="radioactive">radioactive</option>
+      						</select>
+                </div>
+				       </form>
+            </div>
+            <div id="avoid-drop" class="drop well clearfix"></div>
+          </div>
+
+				  <div class="form-group clearfix">
+            <div class="row">
+              <form class="form-horizontal" role="form">
+                <label for="hazardIntervalList" class="col-sm-7 control-label">Appearance interval of hazards in seconds:</label>
+                <div class="col-sm-2">
+        					<select id="hazardIntervalList" class="form-control">
+        						<option value="4000">4</option>
+        						<option value="6000">6</option>
+        						<option value="8000">8</option>
+        						<option value="10000">10</option>
+        						<option value="12000">12</option>
+        						<option value="14000">14</option>
+        						<option value="16000">16</option>
+        						<option value="18000">18</option>
+        						<option value="20000">20</option>
+        						<option value="30000">30</option>
+        					</select>
+                </div>
+              </form>
+	    		  </div>
+          </div>
+
+
+
+          <div class="form-group clearfix">
+            <div class="row">
+              <form class="form-horizontal" role="form">
+                <label for="hazardEffectList" class="col-sm-7 control-label">Lose life if player collide with hazard:</label>
+                <div class="col-sm-2">
+                  <select id="hazardEffectList" class="form-control">
+        						<option value="0">no</option>
+        						<option value="1">yes</option>
+  			       		</select>
+                </div>
+              </form>
+            </div>                
+  				</div>
+
+
+
+        </div> <!-- modal-body -->
+
+      	<div class="modal-footer">
+        		<a  href="#" class="pop" data-toggle="popover" data-content="Hazards are game elements that player should avoid. Hazards approach the player form the right side. You should define the time interval in which hazards appear. Player loses a life if it collide with a hazard.">Info</a>
+        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div> <!-- modal-footer -->
+
+    	</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+		

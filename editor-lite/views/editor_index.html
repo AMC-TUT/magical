@@ -1,0 +1,85 @@
+<% include head_editor.html %>
+
+	<div id='cr-stage'></div>
+
+	<div id='editor-stage'>
+		<div id='sidebar'>
+			<div id='logo'>
+				<a href="http://www.flowfactory.fi/magos-lite/"><img src="/editor-lite/static/img/magos-logo-small.png" id="logo"></a>
+			</div>
+			<!-- Button trigger GAME MODE -->
+			<button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#rulesModal" onclick="editor.createModeView()">
+  				Game mode
+			</button>
+			<!-- Button trigger PLAYER -->
+			<button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#playerModal" onclick="editor.test()">
+  				Player
+			</button>  
+			<!-- Button trigger BACKGROUND -->
+			<button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#bgModal" onclick="editor.test()">
+  				Background
+			</button>
+			<!-- Button trigger MATCH -->
+			<button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#matchModal" id="matchBtn" onclick="editor.createMatchView()">
+  				Match
+			</button>
+			<!-- Button trigger COLLECTIBLES -->
+			<button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#collectModal">
+  				Collectibles
+			</button>
+			<!-- Button trigger HAZARDS -->
+			<button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#hazardModal">
+  				Hazards
+			</button>
+			
+			<!-- Button trigger SPEED -->
+			<button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#speedModal" onclick="editor.createSpeedView()">
+  				Speed
+			</button>
+			<!-- Button trigger SCORE -->
+			<button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#scoreModal" onclick="editor.createScoreView()">
+  				Points
+			</button>
+			<!-- Button trigger STARS -->
+			<button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#starModal" onclick="editor.starRules()">
+  				Stars
+			</button>
+			<!-- Button trigger POWERUPS -->
+			<button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#powerupsModal" >
+  				Powerups
+			</button>
+			<!-- Button trigger INFO -->
+			<button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#infoModal" onclick="editor.test()">
+  				Instructions
+			</button>
+			<!-- Button trigger PREVIEW -->
+			<button type="button" class="btn btn-success btn-lg btn-block" id="preview" onclick="editor.openGame()">
+  				Preview
+			</button>
+			
+			<!-- Button trigger Check -->
+			<!--<button class="btn btn-primary btn-lg btn-block" onclick="launchFullScreen(document.documentElement)">-->
+			<button class="btn btn-primary btn-lg btn-block" onclick="toggleFullScreen()">
+  				Full screen  
+			</button>
+		</div>
+
+	</div> <!-- editor-stage -->
+
+<!-- Modal forms -->
+<%- include partials/modal-player.html %>
+<%- include partials/modal-background.html %>
+<%- include partials/modal-info.html %>
+<%- include partials/modal-collectibles.html %>
+<%- include partials/modal-hazards.html %>
+<%- include partials/modal-match.html %>
+<%- include partials/modal-gametype.html %>
+<%- include partials/modal-powerups.html %>		
+<%- include partials/modal-speed.html %>
+<%- include partials/modal-score.html %>
+<%- include partials/modal-stars.html %>
+<%- include partials/modal-playertype.html %>
+<%- include partials/modal-feedback.html %>
+
+<!-- Footer -->
+<% include foot_editor.html %>

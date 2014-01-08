@@ -1,0 +1,18 @@
+<div id="gameComponents"></div>
+
+<script id="gamecomponents-template" type="text/x-handlebars-template">
+<ul id="gameComponents-list" class="chest-container component{{blockSize}} clearfix">
+{{#each gameComponents}}
+	<li id="gameComponent-{{slug}}" class="gameComponent well">
+		<img src="{{../djangoUrl}}game/image/{{properties.file}}_{{../blockSize}}x{{../blockSize}}.{{#if properties.ext}}{{properties.ext}}{{else}}png{{/if}}" data-slug="{{slug}}" data-original-title="{{title}}" data-toggle="tooltip" title="{{title}}" class="game-item" />
+  	</li>
+{{/each}}
+	<li class="add-item well">
+		<img class="action-item" id="addNewItem" src="/static/img/icons/icon-add.png" alt="Add New Item" title="Add New Item" />
+	</li>
+	<li class="remove-item well">
+		<img class="action-item" src="/static/img/icons/icon-trash.png" alt="Remove Item" title="Remove Item" />
+	</li>
+
+</ul>
+</script>

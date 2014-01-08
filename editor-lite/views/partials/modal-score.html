@@ -1,0 +1,54 @@
+		<!-- Modal SCORE DEFINITION ############### SCORE -->
+		<div class="modal fade" id="scoreModal" tabindex="-1" role="dialog" aria-labelledby="scoreModalLabel" aria-hidden="true">
+  		<div class="modal-dialog">
+   		<div class="modal-content">
+    		<div class="modal-header">
+        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        		<h4 class="modal-title" id="scoreModalLabel">Points</h4>
+      		</div>
+     		 <div class="modal-body" id="score">
+				<div id="collectScore"></div>
+				<div id="hazardScore"></div>
+				<div id="matchScore">
+					<div>
+					Points of right matching answers:
+        			<select id="matchRightList" onchange="editor.matchPoints('right')">
+  						<option value="0">0</option>
+  						<option value="100">100</option>
+  						<option value="200">200</option>
+  						<option value="300">300</option>
+  						<option value="400">400</option>
+  						<option value="500">500</option>
+  						<option value="600">600</option>
+  						<option value="700">700</option>
+  						<option value="800">800</option>
+  						<option value="900">900</option>
+  						<option value="1000">1000</option>
+					</select>
+					</div>
+					<div>
+					Points of wrong matching answers:
+        			<select id="matchWrongList" onchange="editor.matchPoints('wrong')">
+  						<option value="0">0</option>
+  						<option value="-100">-100</option>
+  						<option value="-200">-200</option>
+  						<option value="-300">-300</option>
+  						<option value="-400">-400</option>
+  						<option value="-500">-500</option>
+  						<option value="-600">-600</option>
+  						<option value="-700">-700</option>
+  						<option value="-800">-800</option>
+  						<option value="-900">-900</option>
+  						<option value="-1000">-1000</option>
+					</select>
+					</div>
+				</div>
+      		</div>
+      		<div class="modal-footer">
+        		<a  href="#" class="pop" data-toggle="popover" data-content="Here you can define the points that can be earned from collectibles and points lost from hazards.">Info</a>
+        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        		<!-- <button type="button" class="btn btn-primary" changeSkyImg()>Save changes</button>-->
+      		</div>
+    	</div><!-- /.modal-content -->
+  		</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->

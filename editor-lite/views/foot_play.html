@@ -1,0 +1,46 @@
+
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/json2.min.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/handlebars-v1.1.2.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/jquery-handlebars.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/underscore-min.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/bootstrap-3.0.2.min.js"></script>
+
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/crafty-0.6.0.min.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/greensock/plugins/CSSPlugin.min.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/vendor/greensock/TweenMax.min.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/medialoader.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/crafty_utils.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/elements_casual.js"></script>
+	<script type="text/javascript" src="/editor-lite/static/js/game.js"></script>
+
+	<script>
+	$(document).ready(function() {
+
+	  	$('[data-toggle="popover"]').popover({
+	    	trigger: 'hover',
+        	'placement': 'bottom'
+		});
+
+	  	// initialize editor
+		game.gameSlug = '<%= gameSlug %>';
+		game.djangoUrl = '<%= djangoUrl %>';
+		game.init();
+		
+		// Handlebars helper for debugging templates
+		Handlebars.registerHelper("debug", function(optionalValue) {
+			// usage inside a template {{debug}}
+		  	console.log("Current Context");
+		  	console.log("====================");
+		  	console.log(this);
+		  	if (optionalValue) {
+			    console.log("Value");
+			    console.log("====================");
+			    console.log(optionalValue);
+		  	}
+		});
+
+	});
+	</script>
+</body>
+</html>
