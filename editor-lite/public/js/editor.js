@@ -23,7 +23,7 @@ var gameinfo = {
 		gameMode: "time", 
 		gameDuration: 60,
 		goalDistance: 0,
-		survivalFactor: 0.995,
+		survivalFactor: 0.95,
 		extraLife: false,
 		turboSpeed: false,
 		bgcolor: "#F2F2F2",
@@ -62,6 +62,7 @@ function showWarning(warning){
 var editor = {
 	djangoUrl: 'http://localhost:8080',
 	apiUrl: '/api/v1/games/',
+	initial: true,
 	gameSlug: null,
 	mediaLoader: null,
 	fontGame: null,
@@ -143,7 +144,7 @@ var editor = {
 	            url: ajaxUrl
 	        });
 	        ajaxReq.done(function ( data, textStatus, jqXHR ) {
-	        	//callback.call(editor); // have to use call(), otherwise this refers to Window        	
+	        	editor.notify("Game saved", 'success');       	
 	        });
 	        ajaxReq.fail(function (jqXHR, textStatus, errorThrown) {
 	        });
@@ -223,13 +224,45 @@ var editor = {
 			
 			// create predefined UI elements
 			editor.createUIElements();
-			editor.bindUIElementChanges();
 			editor.updateFormValues();
+			if(editor.initial) {
+				editor.bindUiFormSubmits();
+				editor.bindUIElementChanges();
+			}
+			editor.initial = false;
 		});
 		Crafty.scene('preload');
 	},
 
 	updateFormValues: function() {
+		// platform type
+		if(gameinfo.level1.platformType) {
+			$('select#platformList').val(gameinfo.level1.platformType);
+		}
+		if(gameinfo.level1.jumpPower) {
+			$('select#jumpList').val(gameinfo.level1.jumpPower);
+		}
+		// game mode
+		if(gameinfo.level1.gameMode) {
+			$('select#modeList').val(gameinfo.level1.gameMode);
+		}
+		if(gameinfo.level1.gameDuration) {
+			$('select#gameDurationList').val(gameinfo.level1.gameDuration);
+		}
+		if(gameinfo.level1.goalDistance) {
+			$('select#distanceList').val(gameinfo.level1.goalDistance);
+		}
+		if(gameinfo.level1.survivalFactor) {
+			$('select#survivalList').val(gameinfo.level1.survivalFactor);
+		}
+		
+		// match
+		if(gameinfo.level1.matchRule) {
+			$('select#matchList').val(gameinfo.level1.matchRule);
+		} else {
+			$('select#matchList').val('-1');
+		}
+
 		// player
 		if(gameinfo.level1.playerImg) {
 			$('select#playerList').val(gameinfo.level1.playerImg);
@@ -239,9 +272,20 @@ var editor = {
 		if(gameinfo.level1.sky) {
 			$('select#skyList').val(gameinfo.level1.sky);
 		}
+		if(gameinfo.level1.scroll[2]) {
+			$('select#p3List').val(gameinfo.level1.scroll[2].item);
+		}
+		if(gameinfo.level1.scroll[1]) {
+			$('select#p2List').val(gameinfo.level1.scroll[1].item);
+		}
+		if(gameinfo.level1.scroll[0]) {
+			$('select#p1List').val(gameinfo.level1.scroll[0].item);
+		}
+
 		if(gameinfo.level1.bgcolor) {
 			$('select#colorList').val(gameinfo.level1.bgcolor);
 		}
+
 
 		if(gameinfo.level1.itemInterval) {
 			$('select#itemIntervalList').val(gameinfo.level1.itemInterval);
@@ -257,6 +301,15 @@ var editor = {
 	},
 
 	createUIElements: function() {
+		editor.definePlatformType();
+		// game mode
+		if(gameinfo.level1.gameMode) {
+			// open mode related settings
+			editor.getMode(gameinfo.level1.gameMode);
+		}
+		// match type
+		editor.getMatchType(gameinfo.level1.matchRule);
+
 		// player
 		if(gameinfo.level1.playerImg) {
 			editor.changePlayerImg(gameinfo.level1.playerImg);
@@ -268,8 +321,19 @@ var editor = {
 		if(gameinfo.level1.sky) {
     		editor.changeSkyImg();
 		}
+		if(gameinfo.level1.scroll[2]) {
+    		editor.changeP3Img();
+		}
+		if(gameinfo.level1.scroll[1]) {
+    		editor.changeP2Img();
+		}
+		if(gameinfo.level1.scroll[0]) {
+    		editor.changeP1Img();
+		}
+
 		// collectables
 		if(gameinfo.level1.collectables) {
+			$('#collect-drop').empty();
 			_.each(gameinfo.level1.collectables, function(collectable, index, list) {
 				editor.getCollectable(collectable, false);
 			});
@@ -277,14 +341,92 @@ var editor = {
 		}
 		// hazards
 		if(gameinfo.level1.hazards) {
+			$('#avoid-drop').empty();
 			_.each(gameinfo.level1.hazards, function(hazard, index, list) {
 				editor.getHazard(hazard, false);
 			});
 			editor.updateHazardsView();
 		}
+
+		/*
+		if(gameinfo.level1.hazards) {
+			_.each(gameinfo.level1.hazards, function(hazard, index, list) {
+
+				editor.addMatchRule(matchRule, false);
+			});
+			editor.updateHazardsView();
+		}
+		*/
+		
+
+
+	},
+
+	bindUiFormSubmits: function() {
+		// add word match rule
+		$('form#addMatchRule').submit(function(e) {
+			e.preventDefault();
+			$('#matchWarning').empty();
+			var w1 = $("#word1").val(),
+				w2 = $("#word2").val(),
+				w3 = $("#word3").val();
+
+    		if(w1!="" && w2!="" && w1!=" " && w2!=" ") {
+    			var matchRules = {
+    				'w1': w1,
+    				'w2': w2,
+    				'w3': w3    				
+    			}
+    			editor.addMatchRule(matchRules, true);
+				//editor.setGame();
+    		} else {
+				showWarning("Either a task or an answer is missing!");
+    		}
+		});
+
 	},
 
 	bindUIElementChanges: function() {
+		// platform type
+		$('select#platformList').change(function() {
+    		var valueSelected = this.value;
+    		gameinfo.level1.platformType = valueSelected;
+    		editor.definePlatformType(valueSelected, editor.setGame);
+		});
+		$('select#jumpList').change(function() {
+    		var valueSelected = this.value;
+    		gameinfo.level1.jumpPower = parseInt(valueSelected, 10);
+    		editor.setGame();
+		});
+		$('select#modeList').change(function() {
+    		var valueSelected = this.value;
+    		editor.getMode(valueSelected);
+    		editor.setGame();
+		});
+
+		$('select#survivalList').change(function() {
+    		var valueSelected = this.value;
+    		editor.getSurvivalValues(parseFloat(valueSelected));
+    		editor.setGame();
+		});
+		$('select#gameDurationList').change(function() {
+    		var valueSelected = this.value;
+    		editor.getGameDuration(parseInt(valueSelected, 10));
+    		editor.setGame();
+		});
+		$('select#distanceList').change(function() {
+    		var valueSelected = this.value;
+    		editor.getGoalDistance(parseInt(valueSelected, 10));
+    		editor.setGame();
+		});		
+
+		// match
+		$('select#matchList').change(function() {
+    		var valueSelected = this.value;
+    		editor.getMatchType(valueSelected);
+    		editor.setGame();
+		});
+		
 		// player image
 		$('select#playerList').change(function() {
     		var valueSelected = this.value;
@@ -307,6 +449,27 @@ var editor = {
     		gameinfo.level1.sky = valueSelected;
     		editor.setGame();
     		editor.changeSkyImg(valueSelected);
+		});
+		// scrolling background 3
+		$('select#p3List').change(function() {
+    		var valueSelected = this.value;
+    		gameinfo.level1.scroll[2] = {item: valueSelected, speed:editor.p3_speed};
+    		editor.setGame();
+    		editor.changeP3Img(valueSelected);
+		});
+		// scrolling background 2
+		$('select#p2List').change(function() {
+    		var valueSelected = this.value;
+    		gameinfo.level1.scroll[1] = {item: valueSelected, speed:editor.p2_speed};
+    		editor.setGame();
+    		editor.changeP2Img(valueSelected);
+		});
+		// scrolling background 1
+		$('select#p1List').change(function() {
+    		var valueSelected = this.value;
+    		gameinfo.level1.scroll[0] = {item: valueSelected, speed:editor.p1_speed};
+    		editor.setGame();
+    		editor.changeP1Img(valueSelected);
 		});
 
 		// collectables
@@ -354,7 +517,6 @@ var editor = {
     		gameinfo.level1.hazardInterval = valueSelected;
     		editor.setGame();
 		});
-
 		// appearance interval of hazards
 		$('select#hazardEffectList').change(function() {
     		var valueSelected = this.value;
@@ -362,24 +524,23 @@ var editor = {
     		editor.setGame();
 		});
 
-
 	},
 	
-	populateSelect: function(select, optionsData) {
-    	var options = select.options, o, selected;
-   		options.length = 0;
-    	for (var i = 0, len = optionsData.length; i < len; ++i) {
-        	o = optionsData[i];
-        	selected = !!o.selected;
-        	options[i] = new Option(o.text, o.value, selected, selected);
-		}
+	populateSelect: function(selectId, optionsData, selectedVal) {
+		$(selectId).empty();
+		_.each(optionsData, function(option, index, list) {
+			var optionEl = $('<option>');
+			$(optionEl).val(option.value).text(option.text);
+			if(option.value == selectedVal) $(optionEl).attr('selected', 'selected');
+            $(selectId).append(optionEl);
+		});
 	},
 	
 	updateItemsView: function(items, xPos, yStart) {
 		_.each(items, function(item, index, list) {
 			Crafty(item.eref).each(function(i) {
 				this.destroy();
-			});			
+			});
 			Crafty.e("2D, DOM, Image, " + item.type + ", " + item.eref).attr({x: xPos, y: yStart + index * 100, z: 10});
 		});
 	},
@@ -432,27 +593,47 @@ var editor = {
 		this.bonustimelimit = gameinfo["level1"].bonustimelimit;
 	},
 
-	definePlatformType: function(){
-		var selected=document.getElementById("platformList");
-		gameinfo["level1"].platformType = selected.options[selected.selectedIndex].value;
-		if(selected.value == "air"){
-			document.getElementById("jumpPowers").style.display="none";
-			console.log(textureMenu.airPlayers);
-			editor.populateSelect(document.getElementById("playerList"), textureMenu.airPlayers);
-			editor.changePlayerImg(textureMenu.airPlayers[0].value);
-			
-			editor.populateSelect(document.getElementById("p1List"), textureMenu.airGrounds);
-		}else{
-			document.getElementById("jumpPowers").style.display="block";
-			editor.populateSelect(document.getElementById("playerList"), textureMenu.groundPlayers);
-			editor.changePlayerImg(textureMenu.groundPlayers[0].value);
-			
-			editor.populateSelect(document.getElementById("p1List"), textureMenu.grounds);
-			if(this.p1!=null){
-				Crafty("p1_ref").each(function(i) {
-					this.destroy();
-				});
+	/*
+	Can be called with or without parameters.
+	*/
+	definePlatformType: function(platformType, callback) {
+		var playerImg = null,
+			p1Img = null,
+			players = null,
+			grounds = null;
+
+		if(!platformType) {
+			platformType = gameinfo.level1.platformType;
+			playerImg = gameinfo.level1.playerImg;
+			p1Img = gameinfo.level1.scroll[0].item;
+		} else {
+			if(this.p1 != null) {
+				// set background 1 to null
+				gameinfo.level1.scroll[0] = { item:null, speed:5 };
+				editor.changeP1Img();
 			}
+		}
+		gameinfo.level1.platformType = platformType;
+		if(platformType == "air") {
+			// flying game
+			players = textureMenu.airPlayers;
+			grounds = textureMenu.airGrounds;
+
+			document.getElementById("jumpPowers").style.display = "none";
+		} else {
+			// driving or running game
+			players = textureMenu.groundPlayers;
+			grounds = textureMenu.grounds;
+
+			document.getElementById("jumpPowers").style.display = "block";
+		}
+		if(!playerImg) playerImg = players[0].value;
+		editor.populateSelect('#playerList', players, playerImg);
+		editor.populateSelect('#p1List', grounds, p1Img);
+		editor.changePlayerImg(playerImg);
+
+		if(_.isFunction(callback)) {
+			callback.call(editor);
 		}
 	},
 
@@ -467,56 +648,47 @@ var editor = {
 		}
 	},
 
-	changeP1Img: function(){
-			var selected=document.getElementById("p1List");
-			if(this.p1==null){
-				this.p1 = selected.options[selected.selectedIndex].value;
-				gameinfo["level1"].scroll[0]={item:this.p1, speed:this.p1_speed};
-				var item = Crafty.e("2D, DOM, Image,p1_ref,"+this.p1).attr({x: 0, y: this.p1y, z: 10});
-			}else{
-				Crafty("p1_ref").each(function(i) {
+	changeP1Img: function(imgName) {
+		if(_.isUndefined(imgName) || _.isNull(imgName)) {
+			this.p1 = gameinfo.level1.scroll[0].item;
+		} else {
+			this.p1 = imgName;
+			gameinfo.level1.scroll[0] = {item:this.p1, speed:this.p1_speed};
+		}
+		Crafty("p1_ref").each(function(i) {
+			this.destroy();
+		});
+		Crafty.e("2D, DOM, Image, p1_ref," + this.p1).attr({x: 0, y: this.p1y, z: 10});
+	},
+
+	changeP2Img: function(imgName) {
+		if(_.isUndefined(imgName) || _.isNull(imgName)) {
+			this.p2 = gameinfo.level1.scroll[1].item;
+		} else {
+			if(this.p2 != null) {
+				Crafty("p2_ref").each(function(i) {
 					this.destroy();
 				});
-				this.p1 = selected.options[selected.selectedIndex].value;
-				gameinfo["level1"].scroll[0]={item:this.p1, speed:this.p1_speed};
-				var item = Crafty.e("2D, DOM, Image,p1_ref,"+this.p1).attr({x: 0, y: this.p1y, z: 10});
-			}	
-
+			}
+			this.p2 = imgName;
+			gameinfo.level1.scroll[1] = {item:this.p2, speed:this.p2_speed};
+		}
+		Crafty.e("2D, DOM, Image, p2_ref," + this.p2).attr({x: 0, y: this.p2y, z: 9});
 	},
 
-	changeP2Img: function(){
-		var selected=document.getElementById("p2List");
-		var item1;
-		var item2;
-		if(this.p2==null){
-			this.p2 = selected.options[selected.selectedIndex].text;
-			gameinfo["level1"].scroll[1]={item:this.p2, speed:this.p2_speed};
-			item1 = Crafty.e("2D, DOM, Image, p2_ref,"+this.p2).attr({x: 0, y: this.p2y, z: 9});
-		}else{
-			Crafty("p2_ref").each(function(i) {
-				this.destroy();
-			});
-			this.p2 = selected.options[selected.selectedIndex].text;
-			gameinfo["level1"].scroll[1]={item:this.p2, speed:this.p2_speed};
-			item1 = Crafty.e("2D, DOM, Image,p2_ref,"+this.p2).attr({x: 0, y: this.p2y, z: 9});
-		}	
-	},
-
-	changeP3Img: function(){
-		var selected=document.getElementById("p3List");
-		var item1;
-		if(this.p3==null){
-			this.p3 = selected.options[selected.selectedIndex].text;
-			gameinfo["level1"].scroll[2]={item:this.p3, speed:this.p3_speed};
-			item1 = Crafty.e("2D, DOM, Image, p3_ref,"+this.p3).attr({x: 0, y: this.p3y, z: 8});
-		}else{
-			Crafty("p3_ref").each(function(i) {
-				this.destroy();
-			});
-			this.p3 = selected.options[selected.selectedIndex].text;
-			gameinfo["level1"].scroll[2]={item:this.p3, speed:this.p3_speed};
-			item1 = Crafty.e("2D, DOM, Image,p3_ref,"+this.p3).attr({x: 0, y: this.p3y, z: 8});
-		}	
+	changeP3Img: function(imgName) {
+		if(_.isUndefined(imgName) || _.isNull(imgName)) {
+			this.p3 = gameinfo.level1.scroll[2].item;
+		} else {
+			if(this.p3 != null) {
+				Crafty("p3_ref").each(function(i) {
+					this.destroy();
+				});
+			}
+			this.p3 = imgName;
+			gameinfo.level1.scroll[2] = {item:this.p3, speed:this.p3_speed};
+		}
+		Crafty.e("2D, DOM, Image, p3_ref," + this.p3).attr({x: 0, y: this.p3y, z: 8});
 	},
 
 	changePlayerImg: function(imgName) {
@@ -546,9 +718,13 @@ var editor = {
 			this.sky = imgName;
 			gameinfo.level1.sky = this.sky;
 		}
-		Crafty.e("2D, DOM, Image,sky_ref," + this.sky).attr({x: 0, y: 0, z: 0});
+		Crafty.e("2D, DOM, Image, sky_ref," + this.sky).attr({x: 0, y: 0, z: 0});
 	},
 
+	getJumpPower: function(){
+		var selected=document.getElementById("jumpList");
+		gameinfo.level1.jumpPower = parseInt(selected.options[selected.selectedIndex].value);
+	},
 
 	addStarRule: function(){
 		gameinfo["level1"].star3limit = document.getElementById("star3").value;
@@ -614,57 +790,64 @@ var editor = {
 		}
 	},	
 	
-	addMatchRule: function(){
-		document.getElementById("matchWarning").innerHTML="";
-		var w1=document.getElementById("word1").value;
-		var w2=document.getElementById("word2").value;
-		var w3=document.getElementById("word3").value;
-		var ruleTxt = w1+"="+w2;
-		if(w1!="" && w2!="" && w1!=" " && w2!=" "){
-		w3.trim();
-		//gameinfo["level1"].wordRules.push({word1: w1, word2: w2});
-		gameinfo["level1"].wordRules.push(ruleTxt);
-		//var ruleTxt = w1+"="+w2;
-		document.getElementById("word1").text = "";
-		document.getElementById("word2").text = "";
-		document.getElementById("word3").text = "";
-		
-		var newElement=document.createElement("div");
-		newElement.className = "matchRules";
-		var node=document.createTextNode(ruleTxt+" | wrong answers: "+w3 );
-		//var node2=document.createTextNode(w3);
-		node.id = ruleTxt;
-		newElement.appendChild(node);
-		var element=document.getElementById("matching");
-		element.appendChild(newElement);
-		
-		var wAnswers = w3.split(",");
-		var index = wAnswers.length;
-		if(wAnswers[index-1]=="" || wAnswers[index-1]==" "){
-			wAnswers.pop();
-		}
-		gameinfo["level1"].answers.push({right: w2, wrongArr: wAnswers});
-		
-		var btn=document.createElement("BUTTON");
-		btn.setAttribute('item', ruleTxt);
-		btn.classList.add("removeBtn");
-		var t=document.createTextNode("REMOVE RULE");
-		btn.appendChild(t);
-		newElement.appendChild(btn);
-		
-		btn.onclick=function(){
-			var item = btn.getAttribute('item');
-			var index = gameinfo["level1"].wordRules.indexOf(item);
-			if (index > -1) {
-	    		gameinfo["level1"].wordRules.splice(index, 1);
+	addMatchRule: function(matchRules, addNew) {
+		if( !_.isEmpty(matchRules.w1) && !_.isEmpty(matchRules.w2) ) {
+			var ruleTxt = matchRules.w1 + "=" + matchRules.w2;
+			var wrongAnswers = '';
+			if( !_.isEmpty(matchRules.w3) ) {
+				wrongAnswers = matchRules.w3.trim();
 			}
-			var parent = this.parentNode;
-			var d=parent.parentNode;
-			d.removeChild(parent);	
+			$('.words_input').val('');
+
+			var newElement = document.createElement("div");
+			newElement.className = "matchRules";
+			var node = document.createTextNode(ruleTxt+" | wrong answers: " + wrongAnswers );
+			node.id = ruleTxt;
+			newElement.appendChild(node);
+			var element=document.getElementById("matching");
+			element.appendChild(newElement);
+			
+			var wAnswers = wrongAnswers.split(",");
+			var index = wAnswers.length;
+			if(wAnswers[index-1]=="" || wAnswers[index-1]==" "){
+				wAnswers.pop();
+			}
+			
+			var btn=document.createElement("BUTTON");
+			btn.setAttribute('item', ruleTxt);
+			btn.classList.add("removeBtn");
+			var t=document.createTextNode("REMOVE RULE");
+			btn.appendChild(t);
+			newElement.appendChild(btn);
+			
+			btn.onclick=function(){
+				var item = btn.getAttribute('item');
+				var index = gameinfo.level1.wordRules.indexOf(item);
+				if (index > -1) {
+		    		gameinfo.level1.wordRules.splice(index, 1);
+				}
+				var parent = this.parentNode;
+				var d=parent.parentNode;
+				d.removeChild(parent);	
+			}
+
+
+			if(!_.isUndefined(addNew) && addNew == true) {
+				// new element, insert into gameinfo json
+				var wordRule = {
+					'task': ruleTxt,
+					'right': matchRules.w2,
+					'wrongArr': wAnswers
+				};
+				gameinfo.level1.wordRules.push(wordRule);
+				editor.setGame();
+			}
+
+			return true;
+		} else {
+			return false;
 		}
-		}else{
-			showWarning("Either a task or an answer is missing!");
-		}
+
 	},
 
 	addMemoryRule: function() {
@@ -837,10 +1020,7 @@ var editor = {
 		gameinfo["level1"].hazardEffect = selected.options[selected.selectedIndex].value;
 	},
 
-	getJumpPower: function(){
-		var selected=document.getElementById("jumpList");
-		gameinfo["level1"].jumpPower = parseInt(selected.options[selected.selectedIndex].value);
-	},
+
 
 	createSpeedView: function (){
 		//<form id="hazardSpeedForm"></form>
@@ -933,32 +1113,12 @@ var editor = {
 	   	}
 	},
 
-	createModeView: function (){
-		document.getElementById("jumpPowers").style.display="none";
-		document.getElementById("timeMode").style.display="none";
-		document.getElementById("survivalMode").style.display="none";
-		document.getElementById("distanceMode").style.display="none";
-		
-		if(gameinfo["level1"].platformType == "ground"){
-			document.getElementById("jumpPowers").style.display="block";
-		}
-		if(gameinfo["level1"].gameMode == "time"){
-			document.getElementById("timeMode").style.display="block";
-		}
-		if(gameinfo["level1"].gameMode == "survival"){
-			document.getElementById("survivalMode").style.display="block";
-		}
-		if(gameinfo["level1"].gameMode == "distance"){
-			document.getElementById("distanceMode").style.display="block";
-		}
-	},
 
-	createMatchView: function (){
+	createMatchView: function() {
 		document.getElementById("words").style.display="none";
 		document.getElementById("wordInterval").style.display="none";
 		document.getElementById("fractions").style.display="none";
 		document.getElementById("memory").style.display="none";
-		document.getElementById("pizza").style.display="none";
 		
 		if(gameinfo["level1"].matchRule == "word"){
 			document.getElementById("words").style.display="block";
@@ -1036,86 +1196,75 @@ var editor = {
 		gameinfo["level1"].hazards[i].score = score;
 	},
 
-	getMode: function(){
-		console.log("getmode");
-		var selected=document.getElementById("modeList");
-		this.gameMode = selected.options[selected.selectedIndex].text;
-		gameinfo["level1"].gameMode = this.gameMode;
-		if(gameinfo["level1"].gameMode == "time"){
-			document.getElementById("timeMode").style.display="block";
-			document.getElementById("survivalMode").style.display="none";
-			document.getElementById("distanceMode").style.display="none";
-			gameinfo["level1"].gameDuration = 60;
+	getMode: function(gameMode){
+		if(_.isUndefined(gameMode) || _.isNull(gameMode)) {
+			gameMode = gameinfo.level1.gameMode;
 		}
-		if(gameinfo["level1"].gameMode == "survival"){
-			document.getElementById("survivalMode").style.display="block";
-			document.getElementById("timeMode").style.display="none";
-			document.getElementById("distanceMode").style.display="none";
-		}
-		if(gameinfo["level1"].gameMode == "duration"){
-			document.getElementById("survivalMode").style.display="none";
-			document.getElementById("timeMode").style.display="none";
-			document.getElementById("distanceMode").style.display="none";
-		}
-		if(gameinfo["level1"].gameMode == "distance"){
-			document.getElementById("survivalMode").style.display="none";
-			document.getElementById("timeMode").style.display="none";
-			document.getElementById("distanceMode").style.display="block";
-			gameinfo["level1"].goalDistance = 400;
+		this.gameMode = gameMode;
+		gameinfo.level1.gameMode = gameMode;
+		$('.gameMode').hide();
+
+		if(gameMode == "time") {
+			$('#timeMode').fadeIn();
+			if(!gameinfo.level1.gameDuration) {
+				gameinfo.level1.gameDuration = 60;				
+			}
+		} else if(gameMode == "survival") {
+			$('#survivalMode').fadeIn();
+			if(!gameinfo.level1.survivalFactor) {
+				gameinfo.level1.survivalFactor = 0.95;
+			}
+		} else if(gameMode == "distance"){
+			$('#distanceMode').fadeIn();
+			if(gameinfo.level1.goalDistance) {
+				gameinfo.level1.goalDistance = 400;
+			}
 		}
 	},
 
-	getMatchType: function(){
-		console.log("getMatchType");
-		var selected=document.getElementById("matchList");
-		gameinfo["level1"].matchRule = selected.options[selected.selectedIndex].value;
-		document.getElementById("matchWarning").innerHTML="";
-		
-		if(gameinfo["level1"].matchRule == "word"){
-			document.getElementById("words").style.display="block";
-			document.getElementById("wordInterval").style.display="block";
-			document.getElementById("fractions").style.display="none";
-			document.getElementById("memory").style.display="none";
+	getMatchType: function(matchType) {
+		if(_.isUndefined(matchType) || _.isNull(matchType)) {
+			matchType = gameinfo.level1.matchRule;
 		}
-		else if(gameinfo["level1"].matchRule == "memory"){
-			document.getElementById("memory").style.display="block";
-			document.getElementById("words").style.display="none";
-			document.getElementById("wordInterval").style.display="block";
-			document.getElementById("fractions").style.display="none";
-		}
-		else if(gameinfo["level1"].matchRule == "pizza"){
-			document.getElementById("pizza").style.display="block";
-			document.getElementById("memory").style.display="none";
-			document.getElementById("words").style.display="none";
-			document.getElementById("wordInterval").style.display="block";
-			document.getElementById("fractions").style.display="none";
-		}
-		else if(gameinfo["level1"].matchRule == "fraction"){
-			document.getElementById("fractions").style.display="block";
-			document.getElementById("words").style.display="none";
-		}else{
-			document.getElementById("fractions").style.display="none";
-			document.getElementById("words").style.display="none";
-			document.getElementById("wordInterval").style.display="none";
-			gameinfo["level1"].matchRule = null;
+		gameinfo.level1.matchRule = matchType;			
+
+		$("#matchWarning").empty();
+		$('.matchType, .matchInterval').hide();
+
+		if(matchType == "word") {
+			$("#words, #wordInterval").fadeIn();
+		} else if(matchType == "memory"){
+			$("#memory, #wordInterval").fadeIn();
+		} else if(matchType == "fraction"){
+			$("#fractions").fadeIn();
+		} else {
+			// -1 -> set to null
+			gameinfo.level1.matchRule = null;
 		}
 	},
 
-	getGoalDistance: function(){
-		console.log("getGoalDistance");
-		var selected=document.getElementById("distanceList");
-		gameinfo["level1"].goalDistance = selected.options[selected.selectedIndex].value;
+	getGoalDistance: function(goalDistance){
+		if(_.isUndefined(goalDistance) || _.isNull(goalDistance)) {
+			goalDistance = gameinfo.level1.goalDistance;
+		}
+		gameinfo.level1.goalDistance = goalDistance;
+		return gameinfo.level1.goalDistance;
 	},
 
-	getGameDuration: function(){
-		console.log("getGameDuration");
-		var selected=document.getElementById("gameDurationList");
-		gameinfo["level1"].gameDuration = selected.options[selected.selectedIndex].value;
+	getGameDuration: function(gameDuration){
+		if(_.isUndefined(gameDuration) || _.isNull(gameDuration)) {
+			gameDuration = gameinfo.level1.gameDuration;
+		}
+		gameinfo.level1.gameDuration = gameDuration;
+		return gameinfo.level1.gameDuration;
 	},
-	getSurvivalValues: function(){
-		console.log("getSurvivalValues");
-		var selected=document.getElementById("survivalList");
-		gameinfo["level1"].survivalFactor = selected.options[selected.selectedIndex].value;
+
+	getSurvivalValues: function(survivalVal) {
+		if(_.isUndefined(survivalVal) || _.isNull(survivalVal)) {
+			survivalVal = gameinfo.level1.survivalFactor;
+		}
+		gameinfo.level1.survivalFactor = survivalVal;
+		return gameinfo.level1.survivalFactor;
 	},
 
 	getInfo: function(){
@@ -1189,8 +1338,20 @@ var editor = {
 	guid: function() {
 	  return editor.s4() + editor.s4() + '-' + editor.s4() + '-' + editor.s4() + '-' +
 	         editor.s4() + '-' + editor.s4() + editor.s4() + editor.s4();
+	},
+
+	/**
+	 * Display flash notifications
+	 */
+	notify: function(msg, msgType) {
+		// show notification
+		var note = noty({
+			text: msg, 
+			type: msgType || 'alert'
+		});
 	}
-}
+
+} // editor
 
 
 

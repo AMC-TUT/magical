@@ -299,7 +299,7 @@ def create_game_b(request):
             revision_data['gameMode'] = "time"
             revision_data['gameDuration'] = 60
             revision_data['goalDistance'] = 0
-            revision_data['survivalFactor'] = 0.995
+            revision_data['survivalFactor'] = 0.95
             revision_data['extraLife'] = False
             revision_data['turboSpeed'] = False
             revision_data['bgcolor'] = "#F2F2F2"

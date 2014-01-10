@@ -136,8 +136,6 @@ var game = {
 			menubtn.onMouseDown = function(e) {
 				document.getElementById("editor-stage").style.display="block";
 				Crafty.scene('editor');
-				addGraphics();
-				editor.updateEditorView();
 			}
 			Crafty.addEvent(menubtn, menubtn._element, "mousedown", menubtn.onMouseDown);
 			
@@ -248,6 +246,8 @@ var game = {
 			}
 
 			if(gameinfo["level1"].matchRule == "fraction"){
+				Crafty.e("2D, DOM, Image, sign").attr({x: 300, y: 0, z: 1000});
+				var taskLabel = Crafty.e("TaskLabel").taskLabel(320, 50, "task", '#FFFFFF');
 				if(gameinfo["level1"].fractionRules.length>0){
 					createNewTask();
 					game.fractionInterval = setInterval(function(){addFraction()},5000);
@@ -534,10 +534,16 @@ var game = {
 			function addFraction(){
 				var x;
 				var y;
-				var r = Math.floor(Math.random()*gameinfo["level1"].fractionRules.length);
-				var result = gameinfo["level1"].fractionRules[r];
+				var result;
+				
+				var rand = Crafty.math.randomInt(0, 100);
+				if(rand<33){
+					result = game.curTask;
+				}else{
+					var r = Math.floor(Math.random()*gameinfo["level1"].fractionRules.length);
+					result = gameinfo["level1"].fractionRules[r];
+				}
 				var speed = "average";
-				//var cScore = parseInt(game.collectables[r].score);
 				
 				if(speed=="slow"){
 					xSpeed = 2;
@@ -562,6 +568,7 @@ var game = {
 				var w = 100+4+(2*(de-1));
 				var cellWidth = 100/de;
 				var fraction = Crafty.e("2D, DOM, Color, Collision").attr({y:y, x:x, w:w, h:40, result: result}).color('#000000');
+				fraction.attach(Crafty.e("2D, DOM, Image, parachute").attr({y:y-94, x:x+5}));
 				for(var i = 0; i<de; i++){
 					var cellX = x+2+(i*cellWidth)+i*2;
 					if(i<nom){
@@ -570,6 +577,7 @@ var game = {
 						fraction.attach(Crafty.e("2D, DOM, Color").attr({y:y+2, x:cellX, w:cellWidth, h:36}).color('white'));
 					}
 				}
+				
 				fraction.bind('EnterFrame', function () {
 					if (this.x>-200){
 						this.x -= dx;
@@ -578,21 +586,15 @@ var game = {
 					}
 				});
 				fraction.onHit(playerImg, function(){checkFractionAnswer(this)});
-			}	
-				
+			}
+	
 			function checkFractionAnswer(item){
-				console.log("checkAnswer");
-				console.log("item: "+item.result);
-				console.log("cur: "+game.curTask);
 				if(item.result != game.curTask){
-					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, -100); 
-					game.score+=-100; 
-					//game.lives--; 
-					//Crafty.audio.play("sound_dead");
-					//updateLives();}
+					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, gameinfo["level1"].matchPointsWrong); 
+					game.score+=gameinfo["level1"].matchPointsWrong; 
 				}else{
-					game.score+=100; 
-					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, "+"+100);
+					game.score+=gameinfo["level1"].matchPointsRight; 
+					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, "+"+gameinfo["level1"].matchPointsRight);
 					createNewTask(); 
 				}
 				Crafty("Score").text("Score: "+game.score); 
@@ -804,7 +806,6 @@ var game = {
 			function createNewTask(){
 				var r = Crafty.math.randomInt(0, gameinfo["level1"].fractionRules.length-1);
 				game.curTask = gameinfo["level1"].fractionRules[r];
-				console.log("curTask"+game.curTask);
 				taskLabel.changeTask(game.curTask);
 			}
 			
@@ -818,12 +819,13 @@ var game = {
 			function createNewWordTask(){
 				game.curAnswers =[];
 				var r = Crafty.math.randomInt(0, gameinfo["level1"].wordRules.length-1);
-				var task = gameinfo["level1"].wordRules[r];
+				//var task = gameinfo["level1"].wordRules[r];
+				var task = gameinfo.level1.wordRules[r].task;		
 				
-				
-				game.curAnswers.push(gameinfo["level1"].answers[r].right); 
-				for(var i = 0; i<gameinfo["level1"].answers[r].wrongArr.length; i++){
-					game.curAnswers.push(gameinfo["level1"].answers[r].wrongArr[i]);
+				//game.curAnswers.push(gameinfo["level1"].answers[r].right); 
+				game.curAnswers.push(gameinfo.level1.wordRules[r].right); 
+				for(var i = 0; i < gameinfo.level1.wordRules[r].wrongArr.length; i++){
+					game.curAnswers.push(gameinfo.level1.wordRules[r].wrongArr[i]);
 				}
 				var words = task.split("=");
 				var w1 = words[0];

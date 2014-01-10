@@ -32,34 +32,20 @@
 	margin-bottom: 10px;
 	z-index:10001;
 }
-.taskLabel{
-	margin-right:20px;
-	float:left;
-	clear:left;
-}
-.taskField{
-	margin-top:5px;
-	margin-right:20px;
-	float:left;
-}
-#wordInterval{
-	float:left;
-	margin-bottom:5px;
-}
+
+
+
 #matching{
 	float:left;
 }
+
 .warning{
 	margin-right:20px;
 	color:#ff0000;
 }
+
 .dropMenu{
 	background-color:#FF9900;
-}
-.backgroundDropMenu{
-	background-color:#FF9900;
-	margin-left:20px;
-	width:200px;
 }
 
 .drop {
@@ -79,10 +65,7 @@
 	margin-top:10px;
 	float:left;
 }
-.txt{
-	margin-right:5px;
-	margin-left:5px;
-}
+
 
 .itemContainer {
 	background: #ccc;
@@ -92,3 +75,23 @@
 	margin-right: 2px;
 }
 
+.matchType {
+	border: 1px solid #ccc;
+	background: #ececec;
+	padding: 20px;
+}
+
+.matchRules {
+	background: #ccc;
+	margin-bottom: 4px;
+	padding: 3px 10px;
+	margin-left: 2px;
+	margin-right: 2px;
+}
+
+.formRow {
+	clear: both;
+	margin-bottom: 5px;
+	float: left;
+	width: 100%;
+}

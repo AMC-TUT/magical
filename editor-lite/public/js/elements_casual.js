@@ -79,15 +79,14 @@ var sounds = {
 var textureMenu =  {
 	groundPlayers:[
 		{text:"monster truck", value:"monster-truck"},
-		{text:"car", value:"car"},
-		{text:"running man", value:"runner"}
+		{text:"car", value:"car"}
 	],
 	airPlayers:[
 		{text:"magos-girl", value:"magos-girl"},
 		{text:"witch", value:"witch"},
 		{text:"santa claus", value:"santa"},
 		{text:"rocket", value:"rocket"},
-		{text:"aeroplane", value:"aeroplane"}	
+		{text:"aeroplane", value:"aeroplane"}
 	],
 	grounds:[
 		{text:"", value:""},

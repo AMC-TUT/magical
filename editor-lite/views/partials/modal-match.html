@@ -1,40 +1,93 @@
-		<!-- Modal MATCH ############### MATCH  -->
-		<div class="modal fade" id="matchModal" tabindex="-1" role="dialog" aria-labelledby="matchModalLabel" aria-hidden="true">
-  		<div class="modal-dialog">
-   		<div class="modal-content">
-    		<div class="modal-header">
-        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        		<h4 class="modal-title" id="hazardModalLabel">Matching rules</h4>
-      		</div>
-     		 <div class="modal-body">
-     		 		Select matching rule type: 
-					<select id="matchList" onchange="editor.getMatchType()">
-  						<option value ="-1"></option>
-  						<option value="word">word</option>
-  						<option value="memory">memory</option>
-  						<option value="pizza">pizza</option>
-  						<!--<option value="fraction">fraction</option>-->
-					</select>
-     		 	<div id="words">
-     		 		<label class="taskLabel">Write a task</label>
-					<input name="word1" type="text" maxlength="20" id="word1" class="txt taskField"/>
-					<label class="taskLabel">Write an answer</label>
-					<input name="word2" type="text" maxlength="20" id="word2" class="txt taskField"/>
-					<label class="taskLabel">Write wrong answers</label>
-					<input name="word3" type="text" maxlength="50" id="word3" class="txt taskField"/>
-					<button type="button" class="btn btn-primary taskField" onclick="editor.addMatchRule()">Add task</button>
-					<div id="matching"></div>
+<!-- Modal MATCH ############### MATCH  -->
+<div class="modal fade" id="matchModal" tabindex="-1" role="dialog" aria-labelledby="matchModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+ 		<div class="modal-content">
+  		<div class="modal-header">
+    		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    		<h4 class="modal-title" id="hazardModalLabel">Matching rules</h4>
+  		</div>
+   		<div class="modal-body">
+
+				<div id="matchType" class="form-group clearfix">
+					<form class="form-horizontal" role="form">
+						<label for="matchList" class="col-sm-5 control-label">Select matching rule type:</label>
+						<div class="col-sm-7">
+							<select id="matchList" class="form-control">
+								<option value ="-1"></option>
+								<option value="word">word</option>
+								<option value="memory">memory</option>
+								<option value="fraction">fraction</option>
+							</select>
+						</div>
+					</form>
 				</div>
-				<div id="memory">
-					<p>In memory match game the player has to calculate, remember and catch a target number. First target number is calculated by adding the increment to the starting number. After each right answer a new target number is formed by adding the defined increment to the current target number.</p>
-     		 		<label class="taskLabel">Starting number:</label>
-					<input name="memoryStart" type="number" maxlength="5" id="memoryStart" class="txt taskField"/>
-					<label class="taskLabel">Increment:</label>
-					<input name="memoryIncrease" type="text" maxlength="5" id="memoryIncrease" class="txt taskField"/>
-					<button type="button" class="btn btn-primary taskField" onclick="editor.addMemoryRule()">Save rule</button>
+
+
+   		 	<div id="words" class="form-group clearfix matchType">
+					
+					<form id="addMatchRule" class="form-horizontal" role="form">
+	          
+	          <div class="form-group">
+							<label for="word1" class="col-sm-5 control-label">Write a task:</label>
+		          <div class="col-sm-5">
+								<input name="word1" type="text" value="" maxlength="20" id="word1" class="form-control taskField words_input" />
+							</div>
+						</div>
+	          
+	          <div class="form-group">
+							<label for="word2" class="col-sm-5 control-label">Write an answer:</label>
+		          <div class="col-sm-5">
+								<input name="word2" type="text" value="" maxlength="20" id="word2" class="form-control taskField words_input" />
+							</div>
+						</div>
+
+	          <div class="form-group">
+							<label for="word3" class="col-sm-5 control-label">Write wrong answers:</label>
+		          <div class="col-sm-7">
+								<input name="word3" type="text" value="" maxlength="50" id="word3" class="form-control taskField words_input" />
+							</div>
+	          </div>
+
+          	<div class="col-sm-12 text-center">
+							<button type="submit" class="btn btn-primary taskField">Add task</button>
+						</div>
+
+					</form>
+
 					<div id="matching"></div>
+				
 				</div>
-				<div id="fractions">
+
+
+   		 	<div id="memory" class="form-group clearfix matchType">
+					
+					<form class="form-horizontal" role="form">
+	          <div class="formRow">
+							<p>In memory match game the player has to calculate, remember and catch a target number. First target number is calculated by adding the increment to the starting number. After each right answer a new target number is formed by adding the defined increment to the current target number.</p>
+						</div>
+
+						<div class="form-group">
+							<label for="memoryStart" class="col-sm-5 control-label">Starting number:</label>
+							<div class="col-sm-7">
+								<input name="memoryStart" type="number" value="" maxlength="5" id="memoryStart" class="form-control taskField words_input" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="memoryIncrease" class="col-sm-5 control-label">Increment:</label>
+							<div class="col-sm-7">
+								<input name="memoryIncrease" type="number" value="" maxlength="5" id="memoryIncrease" class="form-control taskField words_input" />
+							</div>
+						</div>
+
+          	<div class="col-sm-12 text-center">
+							<button type="button" class="btn btn-primary taskField" onclick="editor.addMemoryRule()">Save rule</button>
+						</div>
+
+					</form>
+				</div>
+
+				<div id="fractions" class="matchType">
 					<input type="checkbox" id="numerator_0" class="fractioncheck">
 					<input type="checkbox" id="numerator_1" class="fractioncheck">
 					<input type="checkbox" id="numerator_2" class="fractioncheck">
@@ -49,49 +102,39 @@
 					<input type="checkbox" id="denominator_4" class="fractioncheck">
 					<input type="checkbox" id="denominator_5" class="fractioncheck">
 					<button type="button" class="btn btn-primary" onclick="editor.addFractionTask()">Add task</button>
+	
+					<div id="fractionTasks"></div>
+
 				</div>
-				<div id="fractionTasks">
-				</div>
-				<div id="pizza">
-					Divide pizza to 
-					<select id="pieceList" onchange="editor.getPieceAmount()">
-  						<option value="2">2 slices</option>
-  						<option value="6">6 slices</option>
-					</select>
-					How many slices are visible 
-					<select id="sliceList" onchange="editor.getSliceAmount()">
-						<option value="6">6 slices</option>
-						<option value="5">5 slices</option>
-						<option value="4">4 slices</option>
-						<option value="3">3 slices</option>
-  						<option value="2">2 slice</option>
-  						<option value="1">1 slice</option>
-					</select>
-					<button type="button" class="btn btn-primary" onclick="editor.addPizzaTask()">Add task</button>
-				</div>
-				<div id="pizzaTasks"></div>
+
 				
-				<div id="wordInterval" style="clear:left">
-					Appearance interval of answers in seconds:
-					<select id="wordIntervalList" onchange="editor.getWordInterval()">
-  						<option value="4000">4</option>
-  						<option value="6000">6</option>
-  						<option value="8000">8</option>
-  						<option value="10000">10</option>
-  						<option value="12000">12</option>
-  						<option value="14000">14</option>
-  						<option value="16000">16</option>
-  						<option value="18000">18</option>
-  						<option value="20000">20</option>
-  						<option value="30000">30</option>
-					</select>
+				<div id="wordInterval" class="form-group clearfix matchInterval">
+					<form class="form-horizontal" role="form">
+						<label for="wordIntervalList" class="col-sm-9 control-label">Appearance interval of answers in seconds:</label>
+	          <div class="col-sm-3">
+							<select id="wordIntervalList" class="form-control" onchange="editor.getWordInterval()">
+		  						<option value="4000">4</option>
+		  						<option value="6000">6</option>
+		  						<option value="8000">8</option>
+		  						<option value="10000">10</option>
+		  						<option value="12000">12</option>
+		  						<option value="14000">14</option>
+		  						<option value="16000">16</option>
+		  						<option value="18000">18</option>
+		  						<option value="20000">20</option>
+		  						<option value="30000">30</option>
+							</select>
+						</div>
+					</form>
 				</div>
-     		 </div>	
-      		<div class="modal-footer" style="clear:left;">
-      			<div class="warning" id="matchWarning"></div>
-        		<a  href="#" class="pop" data-toggle="popover" data-content="The first word is shown in the task area on top of the screen and the second word in a cloud that approach the player form the right side. The aim of the player is to catch a cloud with a word that matches the task">Info</a>
-        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      		</div>
-    	</div><!-- /.modal-content -->
-  		</div><!-- /.modal-dialog -->
-		</div><!-- /.modal -->
+
+     	</div>	
+      	
+  		<div class="modal-footer" style="clear:left;">
+  			<div class="warning" id="matchWarning"></div>
+    		<a  href="#" class="pop" data-toggle="popover" data-content="The first word is shown in the task area on top of the screen and the second word in a cloud that approach the player form the right side. The aim of the player is to catch a cloud with a word that matches the task">Info</a>
+    		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+  		</div>
+  	</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

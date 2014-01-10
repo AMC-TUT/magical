@@ -2,7 +2,7 @@ var config = module.exports;
 var PRODUCTION = process.env.NODE_ENV === "production";
 
 config.express = {
-  port: process.env.EXPRESS_PORT || 8083,
+  port: process.env.EXPRESS_PORT || 9002,
   ip: process.env.EXPRESS_HOST || '127.0.0.1',
   djangoUrl: 'http://localhost:8080'
 };
