@@ -5,8 +5,8 @@ from base import *
 MAGOS_EDITOR_URL = 'http://magos.pori.tut.fi/editor/'
 MAGOS_PLAY_URL = 'http://magos.pori.tut.fi/play/'
 
-MAGOS_LITE_EDITOR_URL = 'http://magos.pori.tut.fi/editor-lite/'
-MAGOS_LITE_PLAY_URL = 'http://magos.pori.tut.fi/play-lite/'
+MAGOS_LITE_EDITOR_URL = 'http://magos.pori.tut.fi/editor-lite/edit/'
+MAGOS_LITE_PLAY_URL = 'http://magos.pori.tut.fi/editor-lite/play/'
 
 ########## END EDITOR/PLAY URL CONFIGURATION
 
