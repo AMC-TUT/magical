@@ -95,3 +95,7 @@
 	float: left;
 	width: 100%;
 }
+
+#cr-stage canvas {
+	z-index: 10;
+}

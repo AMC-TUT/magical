@@ -122,7 +122,8 @@ var game = {
 
 		// ######## INTRO SCENE ######################
 		Crafty.scene('intro', function() {
-			console.log("introa");
+			console.log("intro scene");
+			game.clearIntervals();
 			Crafty.background(gameinfo["level1"].bgcolor);
 			Crafty.e("2D, DOM, Image, Mouse, magos-logo").attr({x: 20, y: 20, z:1000});
 			var playBtn = Crafty.e("2D, DOM, Image, Mouse, playBtn").attr({x: 300, y: 450, z:1000});
@@ -156,6 +157,7 @@ var game = {
 
 		// ########### GAME SCENE #######################
 		Crafty.scene('game', function() {
+			Crafty.canvas.init();
 			var matchMode = true;
 			Crafty.background(gameinfo["level1"].bgcolor);
 			game.startTime = new Date();
@@ -199,7 +201,10 @@ var game = {
 			game.score=0;
 			game.coinAmount=0;
 			
-			exit.bind('Click', function() {Crafty.scene('intro');});
+			exit.bind('Click', function() {
+				Crafty.canvas._canvas.remove();
+				Crafty.scene('intro');
+			});
 			/*exit.onMouseDown = function(e) {
 				Crafty.scene('intro');
 			}
@@ -235,16 +240,6 @@ var game = {
 				game.wordInterval = setInterval(function(){addMemory()},gameinfo["level1"].wordInterval);
 			}
 
-			if(gameinfo["level1"].matchRule == "pizza"){
-				Crafty.e("2D, DOM, Image, sign").attr({x: 300, y: 0, z: 1000});
-				var taskLabel = Crafty.e("TaskLabel").taskLabel(320, 50, "task", '#FFFFFF');
-				
-				if(gameinfo["level1"].pizzaRules.length>0){
-					createNewPizzaTask();
-					game.wordInterval = setInterval(function(){addPizza()},gameinfo["level1"].wordInterval);
-				}
-			}
-
 			if(gameinfo["level1"].matchRule == "fraction"){
 				Crafty.e("2D, DOM, Image, sign").attr({x: 300, y: 0, z: 1000});
 				var taskLabel = Crafty.e("TaskLabel").taskLabel(320, 50, "task", '#FFFFFF');
@@ -255,7 +250,7 @@ var game = {
 			}
 
 			if(gameinfo["level1"].platformType == "air"){
-				player = Crafty.e("2D, DOM, Multiway,"+playerImg).attr({x: 110, y: 100, z: 1000}).multiway(8, { UP_ARROW: -90});
+				player = Crafty.e("2D, Canvas, Multiway,"+playerImg).attr({x: 110, y: 100, z: 1000}).multiway(8, { UP_ARROW: -90});
 			
 				player.bind("EnterFrame", function(frame) {
 					player.y+=game.ymov;
@@ -302,7 +297,7 @@ var game = {
 				Crafty.addEvent(Crafty.stage.elem, Crafty.stage.elem, "mousedown", Crafty.stage.elem.onMouseDown);
 			} else {
 				document.onkeydown = handleKeyDown;	
-				player = Crafty.e("2D, DOM, Physics, Player, Gravity, Twoway, Collision,"+playerImg)
+				player = Crafty.e("2D, Canvas, Physics, Player, Gravity, Twoway, Collision,"+playerImg)
 		       .attr({x:110, y:100, z: 1001});
 		       
 		       Crafty.stage.elem.onMouseDown = function(e) {
@@ -402,7 +397,7 @@ var game = {
 		   	function completeMountain2() {p2tween2.restart();}
 		   	function completeSky() {p3tween1.restart();}
 		   	function completeSky2() {p3tween2.restart();}
-		   		
+		   	
 			Crafty.e("Score, DOM, 2D, Text")
 			.attr({ x: 770, y: 15, z: 9002, w: 200, h: 20, score: 0 })
 			.text("Score: " + game.score)
@@ -443,9 +438,8 @@ var game = {
 				y = Math.floor((Math.random()*400)+50);
 				var dx = xSpeed;//Crafty.math.randomInt(3, 5);
 				var dy = 0;
-				var item = Crafty.e("2D, DOM, Image, Collision,"+type).attr({x: x, y: y, z: 100});
+				var item = Crafty.e("2D, Canvas, Image, Collision,"+type).attr({x: x, y: y, z: 100});
 				
-						
 				item.bind('EnterFrame', function () {
 					if (this.x>-200){
 						this.x -= dx;
@@ -510,7 +504,7 @@ var game = {
 				y = Math.floor((Math.random()*400)+50);
 				var dx = xSpeed;//Crafty.math.randomInt(3, 5);
 				var dy = 0;
-				var item = Crafty.e("2D, DOM, Image, Collision,"+type).attr({x: x, y: y, z: 100});
+				var item = Crafty.e("2D, Canvas, Image, Collision,"+type).attr({x: x, y: y, z: 100});
 				
 						
 				item.bind('EnterFrame', function () {
@@ -567,14 +561,14 @@ var game = {
 				var de = factors[1];
 				var w = 100+4+(2*(de-1));
 				var cellWidth = 100/de;
-				var fraction = Crafty.e("2D, DOM, Color, Collision").attr({y:y, x:x, w:w, h:40, result: result}).color('#000000');
-				fraction.attach(Crafty.e("2D, DOM, Image, parachute").attr({y:y-94, x:x+5}));
+				var fraction = Crafty.e("2D, Canvas, Color, Collision").attr({y:y, x:x, w:w, h:40, result: result}).color('#000000');
+				fraction.attach(Crafty.e("2D, Canvas, Image, parachute").attr({y:y-94, x:x+5}));
 				for(var i = 0; i<de; i++){
 					var cellX = x+2+(i*cellWidth)+i*2;
 					if(i<nom){
-						fraction.attach(Crafty.e("2D, DOM, Color").attr({y:y+2, x:cellX, w:cellWidth, h:36}).color('green'));
+						fraction.attach(Crafty.e("2D, Canvas, Color").attr({y:y+2, x:cellX, w:cellWidth, h:36}).color('green'));
 					}else{
-						fraction.attach(Crafty.e("2D, DOM, Color").attr({y:y+2, x:cellX, w:cellWidth, h:36}).color('white'));
+						fraction.attach(Crafty.e("2D, Canvas, Color").attr({y:y+2, x:cellX, w:cellWidth, h:36}).color('white'));
 					}
 				}
 				
@@ -651,9 +645,14 @@ var game = {
 				}
 				
 				//var word = Crafty.e("2D, DOM, cloud, Collision").attr({y:y, x:x, z:1000, result: w1});
-				var word = Crafty.e("2D, DOM, cloud, Collision").attr({y:y, x:x, z:1000, result: task});
-				word.attach(Crafty.e("2D, DOM, Text").attr({y:y+50, x:x+20, w:200, h:40, z:1000}).textFont({ size: '30px', weight: 'bold' }).textColor('#000000').css("textAlign", "center").text(task));
-					
+				/*
+				var word = Crafty.e("2D, Canvas, cloud, Collision").attr({y:y, x:x, result: task});
+				word.attach(Crafty.e("2D, DOM, Text").attr({y:y+50, x:x+20, w:200, h:40, z:1001}).textFont({ size: '30px', weight: 'bold' }).textColor('#000000').css("textAlign", "center").text(task));
+				*/
+
+				var word = Crafty.e("2D, DOM, Text, Collision").attr({y:y, x:x, result: task, w:200, h:40, z:1001}).textFont({ size: '30px', weight: 'bold' }).textColor('#000000').css("textAlign", "center").text(task);
+
+
 				word.bind('EnterFrame', function () {
 					if (this.x>-200){
 						this.x -= dx;
@@ -663,47 +662,7 @@ var game = {
 				});
 				word.onHit(playerImg, function(){checkWordAnswer(this)});
 			}
-			function addPizza(){
-				var x;
-				var y;
-				var r = Math.floor(Math.random()*gameinfo["level1"].pizzaRules.length);
-				var result = gameinfo["level1"].pizzaRules[r];
-				var speed = "average";
-				
-				if(speed=="slow"){
-					xSpeed = 2;
-				}else if(speed == "average"){
-					xSpeed = 4;
-				}else{
-					xSpeed = 7;
-				}
-				
-				if(game.turbo){
-					xSpeed=xSpeed*game.turboMultiplier;
-				}
-				
-				x = Math.floor((Math.random()*200)+1050);
-				y = Math.floor((Math.random()*400)+50);
-				
-				var dx = xSpeed;//Crafty.math.randomInt(3, 5);
-				var dy = 0;
-				
-				var factors = result.split("/");
-				var nom = factors[0];
-				var de = factors[1];
-			
-				var pizza = Crafty.e("2D, DOM, Image, Collision, "+"p_"+nom+"_"+de).attr({y:y, x:x, result: result});
-				
-				pizza.bind('EnterFrame', function () {
-					if (this.x>-200){
-						this.x -= dx;
-					}else{
-						this.destroy();
-					}
-				});
-				pizza.onHit(playerImg, function(){checkPizzaAnswer(this)});
-			}		
-			
+
 			function addMemory(){
 				var x;
 				var y;
@@ -744,10 +703,12 @@ var game = {
 				y = Math.floor((Math.random()*400)+50);
 				var dx = xSpeed;
 				var dy = 0;
-				
-				var brain = Crafty.e("2D, DOM, cloud, Collision").attr({y:y, x:x, z:1000, result: task});
+				/*
+				var brain = Crafty.e("2D, Canvas, cloud, Collision").attr({y:y, x:x, z:1000, result: task});
 				brain.attach(Crafty.e("2D, DOM, Text").attr({y:y+50, x:x+20, w:200, h:40, z:1000}).textFont({ size: '30px', weight: 'bold' }).textColor('#000000').css("textAlign", "center").text(task));
-					
+				*/
+				var brain = Crafty.e("2D, DOM, Text, Collision").attr({y:y, x:x, result: task, w:200, h:40, z:1000}).textFont({ size: '30px', weight: 'bold' }).textColor('#000000').css("textAlign", "center").text(task);
+
 				brain.bind('EnterFrame', function () {
 					if (this.x>-200){
 						this.x -= dx;
@@ -1038,6 +999,7 @@ var game = {
 	},
 
 	clearIntervals: function(){
+		console.log(game.avoidInterval);
 		clearInterval(game.avoidInterval);
 		clearInterval(game.collectableInterval);
 		if(gameinfo["level1"].extraLife == true){

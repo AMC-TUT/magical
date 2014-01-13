@@ -215,7 +215,7 @@ var editor = {
 		Crafty.scene('editor', function() {
 			Crafty.background(gameinfo["level1"].bgcolor);
 			editor.getGameData();
-			Crafty.e("2D, DOM, Image,itemhelp").attr({x: 420, y: 30, z: 1000});
+			Crafty.e("2D, DOM, Image, itemhelp").attr({x: 420, y: 30, z: 1000});
 			Crafty.e("2D, DOM, Image, playerhelp").attr({x: 100, y: 150, z: 1000});
 			Crafty.e("2D, DOM, Image, scroll1").attr({y: editor.p1y, z: 1});
 			Crafty.e("2D, DOM, Image, scroll2").attr({y: editor.p2y, z: 1});
