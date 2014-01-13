@@ -68,7 +68,8 @@ var textures =  {
 	"monster-truck": "/editor-lite/static/img/monster-truck.png",
 	"ground": "/editor-lite/static/img/ground.png",
 	"exit": "/editor-lite/static/img/exit.png",
-	"playBtn": "/editor-lite/static/img/play.png"
+	"playBtn": "/editor-lite/static/img/play.png",
+	"parachute": "/editor-lite/static/img/parachute.png"
 };
 
 var sounds = {
