@@ -249,9 +249,10 @@ var editor = {
 		if(gameinfo.level1.gameDuration) {
 			$('select#gameDurationList').val(gameinfo.level1.gameDuration);
 		}
-		if(gameinfo.level1.goalDistance) {
-			$('select#distanceList').val(gameinfo.level1.goalDistance);
-		}
+
+		if(gameinfo.level1.goalDistance == 0) gameinfo.level1.goalDistance = 400;
+		$('select#distanceList').val(gameinfo.level1.goalDistance);
+
 		if(gameinfo.level1.survivalFactor) {
 			$('select#survivalList').val(gameinfo.level1.survivalFactor);
 		}
