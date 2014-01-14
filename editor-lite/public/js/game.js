@@ -123,14 +123,15 @@ var game = {
 		// ######## INTRO SCENE ######################
 		Crafty.scene('intro', function() {
 			console.log("intro scene");
+			//Crafty.canvas._canvas.
 			game.clearIntervals();
 			Crafty.background(gameinfo["level1"].bgcolor);
 			Crafty.e("2D, DOM, Image, Mouse, magos-logo").attr({x: 20, y: 20, z:1000});
-			var playBtn = Crafty.e("2D, DOM, Image, Mouse, playBtn").attr({x: 300, y: 450, z:1000});
-			playBtn.onMouseDown = function(e) {
+			var playb = Crafty.e("2D, DOM, Image, Mouse, playBtn").attr({x: 300, y: 450, z:1000});
+			playb.onMouseDown = function(e) {
 				Crafty.scene('game');
 			}
-			Crafty.addEvent(playBtn, playBtn._element, "mousedown", playBtn.onMouseDown);
+			Crafty.addEvent(playb, playb._element, "mousedown", playb.onMouseDown);
 			
 			var menubtn = Crafty.e("2D, DOM, Image, Mouse, editorbtn").attr({x: 550, y: 450, z:1000});
 			console.log("menux"+menubtn.x);
@@ -989,7 +990,10 @@ var game = {
 				Crafty.e("2D, DOM, Image, newhighscore").attr({x: 550, y: 500});
 			}
 			
-			menubtn.bind('Click', function() {Crafty.scene('intro');});
+			menubtn.bind('Click', function() {
+				Crafty.canvas._canvas.remove();
+				Crafty.scene('intro');
+			});
 			
 			
 		});
@@ -998,8 +1002,7 @@ var game = {
 
 	},
 
-	clearIntervals: function(){
-		console.log(game.avoidInterval);
+	clearIntervals: function() {
 		clearInterval(game.avoidInterval);
 		clearInterval(game.collectableInterval);
 		if(gameinfo["level1"].extraLife == true){
@@ -1127,7 +1130,6 @@ var game = {
 			game.avoidables.push(gameinfo["level1"].hazards[j]);
 		}
 		game.bonustimelimit = gameinfo["level1"].bonustimelimit;
-		
 		Crafty.scene('intro');
 	}
 } // game

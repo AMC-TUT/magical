@@ -22,7 +22,7 @@ var gameinfo = {
 		matchRule:null,
 		gameMode: "time", 
 		gameDuration: 60,
-		goalDistance: 0,
+		goalDistance: 400,
 		survivalFactor: 0.95,
 		extraLife: false,
 		turboSpeed: false,
