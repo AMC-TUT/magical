@@ -30,7 +30,6 @@
 	    	$.unblockUI();
 	    });
 
-
 	  	$('[data-toggle="popover"]').popover({
 	    	trigger: 'hover',
         	'placement': 'bottom'
@@ -39,7 +38,7 @@
 	  	// initialize editor
 		editor.gameSlug = '<%= gameSlug %>';
 		editor.djangoUrl = '<%= djangoUrl %>';
-		//editor.user = <%- JSON.stringify(user) %>;
+		editor.user = <%- JSON.stringify(user) %>;
 		editor.init();
 
 		// set noty defaults

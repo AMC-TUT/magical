@@ -62,6 +62,7 @@ function showWarning(warning){
 var editor = {
 	djangoUrl: 'http://localhost:8080',
 	apiUrl: '/api/v1/games/',
+	user: null,
 	initial: true,
 	gameSlug: null,
 	mediaLoader: null,
@@ -122,6 +123,11 @@ var editor = {
 	        ajaxReq.done(function ( data, textStatus, jqXHR ) {
 	        	if(data.level1) {
 	        		gameinfo['level1'] = data.level1;
+	        		var msg = '<p><img src="/editor-lite/static/img/magos-logo-small.png" id="logo" /></p>';
+	        		msg += '<h3>Welcome ' + editor.user.userName + '!</h3>';
+	        		msg += '<p>You are editing game <b>' + data.level1.title + '</b></p>';
+	        		msg += '<p>&nbsp;</p>';
+	        		editor.notify(msg, 'success', 1800);
 		            callback.call(editor); // have to use call(), otherwise this refers to Window
 	        	}
 	        });
@@ -222,12 +228,15 @@ var editor = {
 			Crafty.e("2D, DOM, Image, scroll3").attr({y: editor.p3y, z: 1});
 			Crafty.e("2D, DOM, Image, heart").attr({x: 30, y: 10, z: 1100});
 			
+			editor.createMissingErefs(gameinfo.level1.wordRules);			
+
 			// create predefined UI elements
 			editor.createUIElements();
 			editor.updateFormValues();
 			if(editor.initial) {
 				editor.bindUiFormSubmits();
 				editor.bindUIElementChanges();
+				editor.bindUIClicks();
 			}
 			editor.initial = false;
 		});
@@ -263,6 +272,19 @@ var editor = {
 		} else {
 			$('select#matchList').val('-1');
 		}
+
+		// matching rule memory start
+		
+		if(gameinfo["level1"].memoryStart) {
+			$('input#memoryStart').val( parseInt(gameinfo["level1"].memoryStart) );
+		}
+		// matching rule memory increment
+		if(gameinfo["level1"].memoryIncrease) {
+			$('input#memoryIncrease').val( parseInt(gameinfo["level1"].memoryIncrease) );
+		}
+
+		//gameinfo["level1"].memoryIncrease = parseInt(increment);
+
 
 		// player
 		if(gameinfo.level1.playerImg) {
@@ -348,18 +370,13 @@ var editor = {
 			});
 			editor.updateHazardsView();
 		}
-
-		/*
-		if(gameinfo.level1.hazards) {
-			_.each(gameinfo.level1.hazards, function(hazard, index, list) {
-
-				editor.addMatchRule(matchRule, false);
+		// word rules
+		if(gameinfo.level1.wordRules) {
+			_.each(gameinfo.level1.wordRules, function(wordRule, index, list) {
+				editor.addMatchRule(wordRule, false);
 			});
 			editor.updateHazardsView();
 		}
-		*/
-		
-
 
 	},
 
@@ -372,19 +389,32 @@ var editor = {
 				w2 = $("#word2").val(),
 				w3 = $("#word3").val();
 
+			var wAnswers = w3.split(",");
+			var index = w3.length;
+			if(wAnswers[index-1] == "" || wAnswers[index-1] == " "){
+				w3.pop();
+			}
+
     		if(w1!="" && w2!="" && w1!=" " && w2!=" ") {
     			var matchRules = {
-    				'w1': w1,
-    				'w2': w2,
-    				'w3': w3    				
+    				'task': w1,
+    				'right': w2,
+    				'wrongArr': wAnswers,
+	 				'eref': editor.guid(), // uuid
     			}
     			editor.addMatchRule(matchRules, true);
-				//editor.setGame();
+				editor.setGame();
     		} else {
 				showWarning("Either a task or an answer is missing!");
     		}
 		});
 
+	},
+
+
+	bindUIClicks: function() {
+		// remove match rule
+		editor.bindRemoveMatchRule();
 	},
 
 	bindUIElementChanges: function() {
@@ -789,58 +819,57 @@ var editor = {
 			var d=parent.parentNode;
 			d.removeChild(parent);
 		}
-	},	
-	
-	addMatchRule: function(matchRules, addNew) {
-		if( !_.isEmpty(matchRules.w1) && !_.isEmpty(matchRules.w2) ) {
-			var ruleTxt = matchRules.w1 + "=" + matchRules.w2;
+	},
+
+	// if there is missing eref-property in array object, create one 
+	createMissingErefs: function(erefArray) {
+		_.each(erefArray, function(item, index, list) {
+			if(_.isNull(item.eref) || _.isUndefined(item.eref) ) {
+				item.eref = editor.guid();				
+			}
+		});
+	},
+
+	bindRemoveMatchRule: function() {
+		$('#matching').on('click', '.removeMatchRule', function(e) {
+			var itemRef = $(this).data('uuid');
+			if(itemRef) {
+				var wordRules = _.reject(gameinfo.level1.wordRules, function(obj){ return obj.eref == itemRef; });
+				gameinfo.level1.wordRules = wordRules;
+				$(this).parentsUntil('.drop').remove();
+				editor.setGame();
+			}
+		});
+	},
+
+	addMatchRule: function(matchRule, addNew) {
+		if( !_.isEmpty(matchRule.task) && !_.isEmpty(matchRule.right) ) {
+			var ruleTxt = matchRule.task + " = " + matchRule.right;
 			var wrongAnswers = '';
-			if( !_.isEmpty(matchRules.w3) ) {
-				wrongAnswers = matchRules.w3.trim();
+			if( !_.isEmpty(matchRule.wrongArr) ) {
+				wrongAnswers = matchRule.wrongArr.join(', ');
 			}
 			$('.words_input').val('');
 
-			var newElement = document.createElement("div");
-			newElement.className = "matchRules";
-			var node = document.createTextNode(ruleTxt+" | wrong answers: " + wrongAnswers );
-			node.id = ruleTxt;
-			newElement.appendChild(node);
-			var element=document.getElementById("matching");
-			element.appendChild(newElement);
-			
-			var wAnswers = wrongAnswers.split(",");
-			var index = wAnswers.length;
-			if(wAnswers[index-1]=="" || wAnswers[index-1]==" "){
-				wAnswers.pop();
-			}
-			
-			var btn=document.createElement("BUTTON");
-			btn.setAttribute('item', ruleTxt);
-			btn.classList.add("removeBtn");
-			var t=document.createTextNode("REMOVE RULE");
-			btn.appendChild(t);
-			newElement.appendChild(btn);
-			
-			btn.onclick=function(){
-				var item = btn.getAttribute('item');
-				var index = gameinfo.level1.wordRules.indexOf(item);
-				if (index > -1) {
-		    		gameinfo.level1.wordRules.splice(index, 1);
-				}
-				var parent = this.parentNode;
-				var d=parent.parentNode;
-				d.removeChild(parent);	
-			}
+			// show matching rule
+			var container = $("<div>").addClass('itemContainer row');
+			var activeElement = $("<div>").addClass('activeItem col-sm-9');
+			var txtNode = $('<span>').html('<b>' + ruleTxt + "</b><br>wrong answers: " + wrongAnswers);
+			activeElement.append(txtNode);
+			container.append(activeElement);
 
+			// add remove button
+			var btn = $('<button>').addClass('btn btn-danger removeBtn removeMatchRule');
+			btn.data('uuid', matchRule.eref);
+			btn.text('REMOVE');
+			var btnContainer = $('<div>').addClass('col-sm-3');
+			btnContainer.append(btn);
+			container.append(btnContainer);
+			$('#matching').append(container);
 
 			if(!_.isUndefined(addNew) && addNew == true) {
 				// new element, insert into gameinfo json
-				var wordRule = {
-					'task': ruleTxt,
-					'right': matchRules.w2,
-					'wrongArr': wAnswers
-				};
-				gameinfo.level1.wordRules.push(wordRule);
+				gameinfo.level1.wordRules.push(matchRule);
 				editor.setGame();
 			}
 
@@ -858,6 +887,7 @@ var editor = {
 		if(start!="" && increment!="" && start!=" " && increment!=" "){
 			gameinfo["level1"].memoryStart = parseInt(start);
 			gameinfo["level1"].memoryIncrease = parseInt(increment);
+			editor.setGame();
 		}
 		else{
 			showWarning("Either a starting number or an increment is missing!");
@@ -865,7 +895,7 @@ var editor = {
 	},
 
 	bindRemoveCollectible: function(btn) {
-		btn.onclick=function() {
+		btn.onclick = function() {
 			var item = btn.getAttribute('item');
 			var itemref = btn.getAttribute('data-eref');
 			Crafty(itemref).each(function(i) {
@@ -1344,11 +1374,13 @@ var editor = {
 	/**
 	 * Display flash notifications
 	 */
-	notify: function(msg, msgType) {
+	notify: function(msg, msgType, msgTimeout) {
+		if(_.isUndefined(msgTimeout)) msgTimeout = 600;
 		// show notification
 		var note = noty({
 			text: msg, 
-			type: msgType || 'alert'
+			type: msgType || 'alert',
+			timeout: msgTimeout
 		});
 	}
 

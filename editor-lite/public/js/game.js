@@ -477,7 +477,7 @@ var game = {
 			// ############## HAZARDS & AVOIDABLES #################	
 			function addAvoidable(){
 				//console.log("moodi: "+gameinfo["level1"].gameMode);
-				if(gameinfo["level1"].gameMode=="survival" && game.hazardInterval>1){
+				if(gameinfo["level1"].gameMode=="survival" && game.hazardInterval>1500){
 					clearInterval(game.avoidInterval);
 					game.hazardInterval = game.hazardInterval * gameinfo["level1"].survivalFactor;
 					game.avoidInterval = setInterval(function(){addAvoidable()}, game.hazardInterval);
