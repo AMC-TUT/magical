@@ -321,6 +321,13 @@ var editor = {
 			$('select#hazardEffectList').val(gameinfo.level1.hazardEffect);
 		}
 
+		// points
+		if(gameinfo.level1.matchPointsRight) {
+			$('select#matchRightList').val(gameinfo.level1.matchPointsRight);
+		}
+		if(gameinfo.level1.matchPointsWrong) {
+			$('select#matchWrongList').val(gameinfo.level1.matchPointsWrong);
+		}
 
 	},
 
@@ -373,6 +380,7 @@ var editor = {
 		}
 		// word rules
 		if(gameinfo.level1.wordRules) {
+			$('#matching').empty();
 			_.each(gameinfo.level1.wordRules, function(wordRule, index, list) {
 				editor.addMatchRule(wordRule, false);
 			});
@@ -380,6 +388,7 @@ var editor = {
 
 		// fraction rules
 		if(gameinfo.level1.fractionRules) {
+			$('#fractionTasks').empty();
 			_.each(gameinfo.level1.fractionRules, function(fractionRule, index, list) {
 				editor.addFractionTask(fractionRule, false);
 			});
@@ -912,49 +921,6 @@ var editor = {
 			return false;
 		}
 
-
-
-
-		/*
-		var numerator = 0;
-		var denominator = 0;
-		for(var i = 0; i<6; i++){
-			if(document.getElementById("numerator_"+i).checked){
-				numerator++;
-			}
-			if(document.getElementById("denominator_"+i).checked){
-				denominator++;
-			}
-		}
-		var fraction = numerator+"/"+denominator;	
-		gameinfo["level1"].fractionRules.push(fraction);
-		var newElement=document.createElement("div");
-		newElement.className = "fractionTask";
-		
-		var node=document.createTextNode(fraction);
-		newElement.appendChild(node);
-		var element=document.getElementById("fractionTasks");
-		element.appendChild(newElement);
-		
-		var btn=document.createElement("BUTTON");
-		btn.setAttribute('item', fraction);
-		btn.classList.add("removeBtn");
-		var t=document.createTextNode("REMOVE TASK");
-		btn.appendChild(t);
-		newElement.appendChild(btn);
-		
-		btn.onclick=function(){
-			var item = btn.getAttribute('item');
-			var index = gameinfo["level1"].fractionRules.indexOf(item);
-			if (index > -1) {
-	    		gameinfo["level1"].fractionRules.splice(index, 1);
-			}
-			var parent = this.parentNode;
-			var d=parent.parentNode;
-			d.removeChild(parent);
-		}
-		*/
-
 	},
 
 	// if there is missing eref-property in array object, create one 
@@ -1053,6 +1019,7 @@ var editor = {
 		if(!_.isUndefined(addNew) && addNew == true) {
 			// new element, insert into gameinfo json
 			gameinfo.level1.collectables.push(collectable);
+			$('select#collectList').val('');
 			editor.setGame();
 		}
 		var container = document.createElement("div");
@@ -1144,6 +1111,7 @@ var editor = {
 		if(!_.isUndefined(addNew) && addNew == true) {
 			// new element, insert into gameinfo json
 			gameinfo["level1"].hazards.push(hazard);
+			$('select#avoidList').val('');
 			editor.setGame();
 		}
 

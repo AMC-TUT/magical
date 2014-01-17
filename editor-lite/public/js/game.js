@@ -487,7 +487,6 @@ var game = {
 				var r = Math.floor(Math.random()*game.avoidables.length);
 				var type = game.avoidables[r].type;
 				var aScore = parseInt(game.avoidables[r].score);
-				console.log(aScore);
 				var speed = game.avoidables[r].speed;
 				
 				if(speed=="slow"){
@@ -588,7 +587,8 @@ var game = {
 			}
 	
 			function checkFractionAnswer(item){
-				if(item.result != game.curTask){
+				//if(item.result != game.curTask){
+				if( (item.result.denominator != game.curTask.denominator) && (item.result.numerator != game.curTask.numerator) ) {
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, gameinfo["level1"].matchPointsWrong); 
 					game.score+=gameinfo["level1"].matchPointsWrong; 
 				}else{
@@ -772,7 +772,7 @@ var game = {
 			function createNewTask(){
 				var r = Crafty.math.randomInt(0, gameinfo["level1"].fractionRules.length-1);
 				game.curTask = gameinfo["level1"].fractionRules[r];
-				taskLabel.changeTask(game.curTask);
+				taskLabel.changeTask(game.curTask.numerator + "/" + game.curTask.denominator);
 			}
 			
 			function createNewPizzaTask(){
@@ -785,17 +785,13 @@ var game = {
 			function createNewWordTask(){
 				game.curAnswers =[];
 				var r = Crafty.math.randomInt(0, gameinfo["level1"].wordRules.length-1);
-				//var task = gameinfo["level1"].wordRules[r];
-				var task = gameinfo.level1.wordRules[r].task;		
-				
-				//game.curAnswers.push(gameinfo["level1"].answers[r].right); 
+				var task = gameinfo.level1.wordRules[r];				
 				game.curAnswers.push(gameinfo.level1.wordRules[r].right); 
 				for(var i = 0; i < gameinfo.level1.wordRules[r].wrongArr.length; i++){
 					game.curAnswers.push(gameinfo.level1.wordRules[r].wrongArr[i]);
 				}
-				var words = task.split("=");
-				var w1 = words[0];
-				game.curAnswer = words[1];
+				var w1 = task.task;
+				game.curAnswer = task.right;
 				game.curTask = w1;
 				taskLabel.changeTask(game.curTask);
 			}
