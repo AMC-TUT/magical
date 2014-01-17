@@ -109,7 +109,8 @@ var editor = {
 	hazards: null,
 	powerUps: null,
 	gameMode: "normal",
-	
+	maxFractionNumber: 5,
+
 	/* Get latest game revision */
 	getGame: function(gameSlug, callback) {
 		var self = this;
@@ -375,7 +376,13 @@ var editor = {
 			_.each(gameinfo.level1.wordRules, function(wordRule, index, list) {
 				editor.addMatchRule(wordRule, false);
 			});
-			editor.updateHazardsView();
+		}
+
+		// fraction rules
+		if(gameinfo.level1.fractionRules) {
+			_.each(gameinfo.level1.fractionRules, function(fractionRule, index, list) {
+				editor.addFractionTask(fractionRule, false);
+			});
 		}
 
 	},
@@ -400,7 +407,7 @@ var editor = {
     				'task': w1,
     				'right': w2,
     				'wrongArr': wAnswers,
-	 				'eref': editor.guid(), // uuid
+	 				'eref': editor.guid() // uuid
     			}
     			editor.addMatchRule(matchRules, true);
 				editor.setGame();
@@ -409,12 +416,47 @@ var editor = {
     		}
 		});
 
-	},
+		$('#fractionTaskForm').submit(function(e) {
+			e.preventDefault();
+			$('#matchWarning').empty();
+			var denominator = parseInt($("input#fractionDenominatorVal").val(), 10),
+				numerator = parseInt($("input#fractionNumeratorVal").val(), 10);
+			if (denominator == 0) {
+				showWarning("Denominator can not be null!");
+			} else {
+	    		if(denominator >= numerator) {
+	    			var fractionRule = {
+	    				'denominator': denominator,
+	    				'numerator': numerator,
+		 				'eref': editor.guid() // uuid
+	    			}
+	    			editor.addFractionTask(fractionRule, true);
+	    		} else {
+					showWarning("Denominator has to be equal or greater than numerator!");
+	    		}
+			}
 
+
+		});
+	},
 
 	bindUIClicks: function() {
 		// remove match rule
 		editor.bindRemoveMatchRule();
+		// remove fraction task
+		editor.bindRemoveFractionTask();
+
+		// fraction change numerator
+		$('.changeNumerator').click(function(e) {
+			var action = $(this).val();
+			editor.changeNumerator(action);
+		});
+		// fraction change denominator
+		$('.changeDenominator').click(function(e) {
+			var action = $(this).val();
+			editor.changeDenominator(action);
+		});
+
 	},
 
 	bindUIElementChanges: function() {
@@ -781,7 +823,99 @@ var editor = {
 		}
 	},
 
-	addFractionTask: function(){
+	changeDenominator: function(action) {
+		var numVal = ($('#fractionDenominatorVal').val()) ? $('#fractionDenominatorVal').val() : 0;
+		numVal = parseInt(numVal, 10);
+		if(action == 'increase') {
+			if(numVal < editor.maxFractionNumber) numVal++;
+			$('#fractionDenominatorVal').val(numVal);
+			$('#fractionDenominator').text(numVal);
+		} else if (action == 'decrease') {
+			if(numVal > 0) numVal--;
+			$('#fractionDenominatorVal').val(numVal);
+			$('#fractionDenominator').text(numVal);
+
+		}
+	},
+
+	changeNumerator: function(action) {
+		var numVal = ($('#fractionNumeratorVal').val()) ? $('#fractionNumeratorVal').val() : 0;
+		numVal = parseInt(numVal, 10);
+		if(action == 'increase') {
+			if(numVal < editor.maxFractionNumber) numVal++;
+			$('#fractionNumeratorVal').val(numVal);
+			$('#fractionNumerator').text(numVal);
+		} else if (action == 'decrease') {
+			if(numVal > 0) numVal--;
+			$('#fractionNumeratorVal').val(numVal);
+			$('#fractionNumerator').text(numVal);
+
+		}
+	},
+
+
+	bindRemoveFractionTask: function() {
+		$('#fractionTasks').on('click', '.removeFractionTask', function(e) {
+			var itemRef = $(this).data('uuid');
+			if(itemRef) {
+				var fractionTasks = _.reject(gameinfo.level1.fractionRules, function(obj){ return obj.eref == itemRef; });
+				gameinfo.level1.fractionRules = fractionTasks;
+				$(this).parentsUntil('.drop').remove();
+				editor.setGame();
+			}
+		});
+	},
+
+
+
+	/*
+		fractionRule = {
+			'denominator': 2,
+			'numerator': 3,
+			'eref': editor.guid() // uuid
+		}
+	*/
+	addFractionTask: function(fractionRule, addNew) {
+		if( _.isNumber(fractionRule.denominator) && _.isNumber(fractionRule.numerator) ) {
+			if(fractionRule.denominator >= fractionRule.numerator) {
+				if(addNew) {
+					// reset form values to default
+					$('#fractionNumerator').text(0);
+					$('input#fractionNumeratorVal').val(0);
+					$('#fractionDenominator').text(1);
+					$('input#fractionDenominatorVal').val(1);
+					// add to gameinfo
+					gameinfo.level1.fractionRules.push(fractionRule);
+					editor.setGame();
+				}
+
+				// show fraction task
+				var container = $("<div>").addClass('itemContainer row');
+				var activeElement = $("<div>").addClass('activeItem col-sm-9');
+				var txtNode = $('<span>').html('<b>' + fractionRule.numerator + "/"+ fractionRule.denominator +"</b>");
+				activeElement.append(txtNode);
+				container.append(activeElement);
+
+				// add remove button
+				var btn = $('<button>').addClass('btn btn-danger removeBtn removeFractionTask');
+				btn.data('uuid', fractionRule.eref);
+				btn.text('REMOVE');
+				var btnContainer = $('<div>').addClass('col-sm-3');
+				btnContainer.append(btn);
+				container.append(btnContainer);
+				$('#fractionTasks').append(container);
+
+			}
+
+			return true;
+		} else {
+			return false;
+		}
+
+
+
+
+		/*
 		var numerator = 0;
 		var denominator = 0;
 		for(var i = 0; i<6; i++){
@@ -819,6 +953,8 @@ var editor = {
 			var d=parent.parentNode;
 			d.removeChild(parent);
 		}
+		*/
+
 	},
 
 	// if there is missing eref-property in array object, create one 

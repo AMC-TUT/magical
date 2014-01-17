@@ -89,23 +89,41 @@
 					</form>
 				</div>
 
-				<div id="fractions" class="matchType">
-					<input type="checkbox" id="numerator_0" class="fractioncheck">
-					<input type="checkbox" id="numerator_1" class="fractioncheck">
-					<input type="checkbox" id="numerator_2" class="fractioncheck">
-					<input type="checkbox" id="numerator_3" class="fractioncheck">
-					<input type="checkbox" id="numerator_4" class="fractioncheck">
-					<input type="checkbox" id="numerator_5" class="fractioncheck">
-					<hr id="fractionline">
-					<input type="checkbox" id="denominator_0" class="fractioncheck">
-					<input type="checkbox" id="denominator_1" class="fractioncheck">
-					<input type="checkbox" id="denominator_2" class="fractioncheck">
-					<input type="checkbox" id="denominator_3" class="fractioncheck">
-					<input type="checkbox" id="denominator_4" class="fractioncheck">
-					<input type="checkbox" id="denominator_5" class="fractioncheck">
-					<button type="button" class="btn btn-primary" onclick="editor.addFractionTask()">Add task</button>
-	
-					<div id="fractionTasks"></div>
+				<div id="fractions" class="form-group clearfix matchType">
+					<form id="fractionTaskForm" class="form-horizontal" role="form">
+						<div id="fractionWrapper">
+							<div class="col-sm-4 text-center vcentered">
+								<h3>
+									<button type="button" class="btn btn-warning changeNumerator" value="decrease">
+										<span class="glyphicon glyphicon-minus"></span>
+									</button>
+									<span id="fractionNumerator" class="fractionNumber numerator">0</span>
+									<input type="hidden" name="fractionNumeratorVal" id="fractionNumeratorVal" value="0"/>
+									<button type="button" class="btn btn-success changeNumerator" value="increase">
+										<span class="glyphicon glyphicon-plus"></span>
+									</button>
+								</h3>
+								<hr class="fractionLine">
+								<h3>
+									<button type="button" class="btn btn-warning changeDenominator" value="decrease">
+										<span class="glyphicon glyphicon-minus"></span>
+									</button>
+									<span id="fractionDenominator" class="fractionNumber denominator">1</span>
+									<input type="hidden" name="fractionDenominatorVal" id="fractionDenominatorVal" value="1"/>
+ 									<button type="button" class="btn btn-success changeDenominator" value="increase">
+										<span class="glyphicon glyphicon-plus"></span>
+									</button>
+								</h3>
+							</div>
+
+							<div class="col-sm-3 text-center vcentered">
+								<button type="submit" class="btn btn-primary">Add task</button>
+							</div>
+						
+						</div>
+					</form>
+
+					<div id="fractionTasks" class="drop clearfix"></div>
 
 				</div>
 

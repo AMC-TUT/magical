@@ -25,17 +25,17 @@
 .pop{
 	margin-right:50px;
 }
-#fractionline{
-	width:140px;
-}
+
 #logo{
 	margin-bottom: 10px;
 	z-index:10001;
 }
 
-#matching{
+#matching,
+#fractionTasks {
 	overflow-y: auto;
 	max-height: 120px;
+	-webkit-overflow-scrolling: touch;
 }
 
 .warning{
@@ -65,7 +65,6 @@
 	float:left;
 }
 
-
 .itemContainer {
 	background: #ccc;
 	margin-bottom: 4px;
@@ -94,6 +93,27 @@
 	float: left;
 	width: 100%;
 }
+
+.vcentered {
+	vertical-align: middle;
+	display: table-cell;
+	float: none !important;
+}
+
+#fractionWrapper {
+	display: table;
+	width: 100%;
+}
+
+.fractionNumber {
+	margin-left: 30px;
+	margin-right: 30px;
+}
+
+.fractionLine {
+	border-top: 2px solid #757575;
+}
+
 
 #cr-stage canvas {
 	z-index: 10;

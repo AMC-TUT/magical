@@ -556,10 +556,14 @@ var game = {
 				y = Math.floor((Math.random()*400)+50);
 				var dx = xSpeed;//Crafty.math.randomInt(3, 5);
 				var dy = 0;
-				
+				/*				
 				var factors = result.split("/");
 				var nom = factors[0];
 				var de = factors[1];
+				*/
+				var nom = result.numerator;
+				var de = result.denominator;
+
 				var w = 100+4+(2*(de-1));
 				var cellWidth = 100/de;
 				var fraction = Crafty.e("2D, Canvas, Color, Collision").attr({y:y, x:x, w:w, h:40, result: result}).color('#000000');
