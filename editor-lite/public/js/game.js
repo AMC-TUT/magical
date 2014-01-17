@@ -203,7 +203,7 @@ var game = {
 			game.coinAmount=0;
 			
 			exit.bind('Click', function() {
-				Crafty.canvas._canvas.remove();
+				$(Crafty.canvas._canvas).remove();
 				Crafty.scene('intro');
 			});
 			/*exit.onMouseDown = function(e) {
@@ -991,7 +991,7 @@ var game = {
 			}
 			
 			menubtn.bind('Click', function() {
-				Crafty.canvas._canvas.remove();
+				$(Crafty.canvas._canvas).remove();
 				Crafty.scene('intro');
 			});
 			
