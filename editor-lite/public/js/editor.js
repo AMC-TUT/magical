@@ -238,11 +238,10 @@ var editor = {
 				editor.bindUiFormSubmits();
 				editor.bindUIElementChanges();
 				editor.bindUIClicks();
-
+				// fix modal background scroll issue on iOS
 				$('.modal').on('hidden.bs.modal', function () {
 					$('body').scrollTop(0);
 				});
-
 			}
 			editor.initial = false;
 		});
@@ -466,6 +465,7 @@ var editor = {
 		// instructions form
 		$('#gameInstructions').submit(function(e) {
 			e.preventDefault();
+			$('body').scrollTop(0);
 			var instructions = $('textarea#instructionTxt').val();
 			gameinfo.level1.instructions = instructions;
 			editor.setGame();
