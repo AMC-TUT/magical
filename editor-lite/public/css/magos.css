@@ -8,6 +8,15 @@ and (max-device-width : 1024px)  {
 	}
 }
 
+.modal-body {
+	padding-top: 10px !important;
+	padding-bottom: 10px !important;
+}
+
+legend {
+	margin-bottom: 10px !important;
+}
+
 .slider {
 	width: 400px;
 	font-family: Helvetica, Arial, sans-serif;

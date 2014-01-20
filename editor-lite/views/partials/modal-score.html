@@ -9,12 +9,16 @@
   		</div>
 
       <div class="modal-body" id="score">
-				<div id="collectScore"></div>
-				<div id="hazardScore"></div>
-
-        <form id="matchScore" role="form">
+				<div class="clearfix">
+          <div id="collectScore"></div>
+  				<div id="hazardScore"></div>
+        </div>
+        
+        <form id="matchScore" class="clearfix" role="form">
           <fieldset>
-            <legend>Match points</legend>
+            <div class="col-sm-12">
+              <legend>Match points</legend>
+            </div>
 
             <div class="col-sm-6">
               <label for="matchRightList" class="control-label">Points for right answers:</label>
@@ -49,7 +53,7 @@
                 <option value="-1000">-1000</option>
               </select>              
             </div>
-            
+
           </fieldset>
         </form>
       	

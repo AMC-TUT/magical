@@ -681,10 +681,20 @@ var editor = {
 
 	updateCollectiblesView: function() {
 		editor.updateItemsView(gameinfo.level1.collectables, 450, 100);
+		if(gameinfo.level1.collectables.length) {
+			$('#collectiblesInterval').fadeIn();
+		} else {
+			$('#collectiblesInterval').fadeOut();
+		}
 	},
 
 	updateHazardsView: function() {
 		editor.updateItemsView(gameinfo.level1.hazards, 600, 100);
+		if(gameinfo.level1.hazards.length) {
+			$('#hazardsExtraInfo').fadeIn();
+		} else {
+			$('#hazardsExtraInfo').fadeOut();
+		}		
 	},
 
 
@@ -1211,34 +1221,61 @@ var editor = {
 		var colContainer = $('#collectSpeed').empty();
 		// Collectables
 		if(gameinfo.level1.collectables.length) {
-			var colForm = $('<form>').addClass('form-horizontal clearfix').attr('id', 'collectableSpeeds');
-			var colTitle = $('<div>').addClass('col-sm-5').html('<h5>Collectable speeds</h5>');
-			var colElements = $('<div>').addClass('col-sm-7');
+
+
+			var colForm = $('<form>').addClass('form-horizontal clearfix col-sm-6').attr('id', 'collectableSpeeds');
+			var colFormset = $('<formset>');
+			var colLegend = $('<legend>').text('Speeds for collectibles');
+			colFormset.append(colLegend);
 			// create form group for collectible
 			_.each(gameinfo.level1.collectables, function(collectable, index, list) {
 				// form-group
 		    	var $formRow = $('<div>').addClass("form-group clearfix");
 		    	// label
-				var $p = $("<label>").addClass('col-sm-5');
+				var $p = $("<label>").addClass('col-sm-6');
 				$p.text(collectable.name);
 		    	$formRow.append($p);
 		    	// select
 		    	var $dd = editor.getDropDown(speedArr, index, editor.getSpeed, collectable.speed, "speedList_");
 		    	// select container
-		    	var $ddContainer = $('<div>').addClass("col-sm-7");
+		    	var $ddContainer = $('<div>').addClass("col-sm-6");
 		    	$ddContainer.append($dd);
 		    	$formRow.append($ddContainer);
-
-		    	colElements.append($formRow);
+				colFormset.append($formRow);
 			});
-			colForm.append(colTitle);
-			colForm.append(colElements);
+			colForm.append(colFormset);
 			// add form to dom
 			colContainer.append(colForm);
-			colContainer.append($('<hr>'));
 		}
 		// Hazards
 		if(gameinfo.level1.hazards.length) {
+
+			var hazForm = $('<form>').addClass('form-horizontal clearfix col-sm-6').attr('id', 'hazardsSpeeds');
+			var hazFormset = $('<formset>');
+			var hazLegend = $('<legend>').text('Speeds for hazards');
+			hazFormset.append(hazLegend);
+			// create form group for hazards
+			_.each(gameinfo.level1.hazards, function(hazard, index, list) {
+				// form-group
+		    	var $formRow = $('<div>').addClass("form-group clearfix");
+		    	// label
+				var $p = $("<label>").addClass('col-sm-6');
+				$p.text(hazard.name);
+		    	$formRow.append($p);
+		    	// select
+		    	var $dd = editor.getDropDown(speedArr, index, editor.getHSpeed, hazard.speed, "speedListH_");
+		    	// select container
+		    	var $ddContainer = $('<div>').addClass("col-sm-6");
+		    	$ddContainer.append($dd);
+		    	$formRow.append($ddContainer);
+				hazFormset.append($formRow);
+			});
+			hazForm.append(hazFormset);
+			// add form to dom
+			colContainer.append(hazForm);
+
+/*
+
 			var colForm = $('<form>').addClass('form-horizontal clearfix').attr('id', 'hazardsSpeeds');
 			var colTitle = $('<div>').addClass('col-sm-5').html('<h5>Hazard speeds</h5>');
 			var colElements = $('<div>').addClass('col-sm-7');
@@ -1263,94 +1300,72 @@ var editor = {
 			colForm.append(colElements);
 			// add form to dom
 			colContainer.append(colForm);
+*/			
 		}
 
 	},
 
 	createScoreView: function() {
-		/*
 		var scoreArr = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 
 		var colContainer = $('#collectScore').empty();
 		// Collectables
 		if(gameinfo.level1.collectables.length) {
-			var colForm = $('<form>').addClass('form-horizontal clearfix').attr('id', 'collectablePoints');
-			var colTitle = $('<div>').addClass('col-sm-5').html('<h5>Scores for collectables</h5>');
-			var colElements = $('<div>').addClass('col-sm-7');
+			var colForm = $('<form>').addClass('form-horizontal clearfix col-sm-6').attr('id', 'collectablePoints');
+			var colFormset = $('<formset>');
+			var colLegend = $('<legend>').text('Scores for collectibles');
+			colFormset.append(colLegend);
 			// create form group for collectible
 			_.each(gameinfo.level1.collectables, function(collectable, index, list) {
 				// form-group
 		    	var $formRow = $('<div>').addClass("form-group clearfix");
 		    	// label
-				var $p = $("<label>").addClass('col-sm-5');
+				var $p = $("<label>").addClass('col-sm-7');
 				$p.text(collectable.name);
 		    	$formRow.append($p);
 		    	// select
-		    	var $dd = editor.getDropDown(speedArr, index, editor.getSpeed, collectable.speed, "scoreList_");
+		    	var $dd = editor.getDropDown(scoreArr, index, editor.getScore, collectable.score, "scoreList_");
 		    	// select container
-		    	var $ddContainer = $('<div>').addClass("col-sm-7");
+		    	var $ddContainer = $('<div>').addClass("col-sm-5");
 		    	$ddContainer.append($dd);
 		    	$formRow.append($ddContainer);
-
-		    	colElements.append($formRow);
+				colFormset.append($formRow);
 			});
-			colForm.append(colTitle);
-			colForm.append(colElements);
+			colForm.append(colFormset);
 			// add form to dom
 			colContainer.append(colForm);
-			colContainer.append($('<hr>'));
 		}
 
-*/
+		var hazContainer = $('#hazardScore').empty();
+		var hazScoreArr = [0, -100, -200, -300, -400, -500, -600, -700, -800, -900, -1000];
 
-		var scoreArr = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
-		var parent = document.getElementById("collectScore");
-		$("#collectScore").empty();
-		var cDiv = document.getElementById("collectScore");
-		
-		var cTitle = document.createElement("p");
-		var ct = document.createTextNode("Scores of collectibles:");
-		cTitle.appendChild(ct);
-		cDiv.appendChild(cTitle);
-		
-		for(var i = 0; i < gameinfo["level1"].collectables.length; i++) {
-			//var itemText = gameinfo["level1"].collectables[i].type;
-			var itemText = gameinfo["level1"].collectables[i].name;
-	    	var itemScore = gameinfo["level1"].collectables[i].score;
-	    	var p = document.createElement("label");
-	    	p.classList.add("dropLabel");
-			var pt = document.createTextNode(itemText);
-			var h = document.createElement("hr");
-	    	p.appendChild(pt);
-			cDiv.appendChild(p);
-	    	editor.createDropDown(scoreArr, cDiv, i, editor.getScore, itemScore, "scoreList_");
-	    	cDiv.appendChild(h);	
-	   	}
-	   	
-	   	var scoreArr2 = [0, -100, -200, -300, -400, -500, -600, -700, -800, -900, -1000];
-	   	var parent = document.getElementById("hazardScore");
-		$("#hazardScore").empty();
-		var hDiv = document.getElementById("hazardScore");
-		console.log(hDiv);
-		
-		var hTitle = document.createElement("p");
-		var ht = document.createTextNode("Scores of hazards:");
-		hTitle.appendChild(ht);
-		hDiv.appendChild(hTitle);
-		
-		for(var h = 0; h<gameinfo["level1"].hazards.length; h++) {
-			var itemTextH = gameinfo["level1"].hazards[h].type;
-			var itemTextH = gameinfo["level1"].hazards[h].name;
-	    	var itemScoreH = gameinfo["level1"].hazards[h].score;
-	    	var ph = document.createElement("label");
-	    	ph.classList.add("dropLabel");
-			var pth = document.createTextNode(itemTextH);
-			var hh = document.createElement("hr");
-	    	ph.appendChild(pth);
-			hDiv.appendChild(ph);
-	    	editor.createDropDown(scoreArr2, hDiv, h, editor.getHScore, itemScoreH, "scoreListH_");
-	    	hDiv.appendChild(hh);	
-	   	}
+		// Hazards
+		if(gameinfo.level1.hazards.length) {
+			var hazForm = $('<form>').addClass('form-horizontal clearfix col-sm-6').attr('id', 'hazardPoints');
+			var hazFormset = $('<formset>');
+			var hazLegend = $('<legend>').text('Scores for hazards');
+			hazFormset.append(hazLegend);
+			// create form group for hazards
+			_.each(gameinfo.level1.hazards, function(hazard, index, list) {
+				// form-group
+		    	var $formRow = $('<div>').addClass("form-group clearfix");
+		    	// label
+				var $p = $("<label>").addClass('col-sm-7');
+				$p.text(hazard.name);
+		    	$formRow.append($p);
+		    	// select
+		    	var $dd = editor.getDropDown(hazScoreArr, index, editor.getHScore, hazard.score, "scoreListH_");
+		    	// select container
+		    	var $ddContainer = $('<div>').addClass("col-sm-5");
+		    	$ddContainer.append($dd);
+		    	$formRow.append($ddContainer);
+				hazFormset.append($formRow);
+			});
+			hazForm.append(hazFormset);
+			// add form to dom
+			hazContainer.append(hazForm);
+		}
+
 	},
 
 
@@ -1368,12 +1383,9 @@ var editor = {
 			document.getElementById("memory").style.display="block";
 			document.getElementById("wordInterval").style.display="block";
 		}
-		if(gameinfo["level1"].matchRule == "pizza"){
-			document.getElementById("pizza").style.display="block";
-			document.getElementById("wordInterval").style.display="block";
-		}
 		if(gameinfo["level1"].gameMode == "fraction"){
 			document.getElementById("fractions").style.display="block";
+			document.getElementById("wordInterval").style.display="block";			
 		}
 	},
 		
@@ -1420,17 +1432,16 @@ var editor = {
 		editor.setGame();
 	},
 
-	getScore: function(i){
-		console.log("getScore");
-		var selected=document.getElementById("scoreList_"+i);
-		var score = selected.options[selected.selectedIndex].text;
-		gameinfo["level1"].collectables[i].score = score;
+	getScore: function(i) {
+		var score = $('#scoreList_' + i).val();
+		gameinfo.level1.collectables[i].score = score;
+		editor.setGame();
 	},
+
 	getHScore: function(i){
-		console.log("getHScore");
-		var selected=document.getElementById("scoreListH_"+i);
-		var score = selected.options[selected.selectedIndex].text;
-		gameinfo["level1"].hazards[i].score = score;
+		var score = $('#scoreListH_' + i).val();
+		gameinfo.level1.hazards[i].score = score;
+		editor.setGame();
 	},
 
 	getMode: function(gameMode){
@@ -1473,7 +1484,7 @@ var editor = {
 		} else if(matchType == "memory"){
 			$("#memory, #wordInterval").fadeIn();
 		} else if(matchType == "fraction"){
-			$("#fractions").fadeIn();
+			$("#fractions, #wordInterval").fadeIn();
 		} else {
 			// -1 -> set to null
 			gameinfo.level1.matchRule = null;
