@@ -412,14 +412,13 @@ var game = {
 			.textFont({ size: '30px', weight: 'bold' })
 			.textColor('#FFFFFF');
 				
+
 			// ############## Collectable #################	
-			function addCollectable(){
+			function addCollectable() {
 				var x;
 				var y;
 				var r = Math.floor(Math.random()*game.collectables.length);
 				var type = game.collectables[r].type;
-				//console.log("c: "+game.collectables);
-				//console.log("type: "+type);
 				var speed = game.collectables[r].speed;
 				var cScore = parseInt(game.collectables[r].score);
 				
@@ -439,44 +438,28 @@ var game = {
 				y = Math.floor((Math.random()*400)+50);
 				var dx = xSpeed;//Crafty.math.randomInt(3, 5);
 				var dy = 0;
-				var item = Crafty.e("2D, Canvas, Image, Collision,"+type).attr({x: x, y: y, z: 100});
+				
+				var multiplyer = Crafty.math.randomInt(1, 2);
+				var vertical = Crafty.math.randomInt(20, 30);
+				
+				var item = Crafty.e("2D, Canvas, Image, Collision,"+type).attr({x: x, y: y, z: 100, counter: 0, multiplyer: multiplyer, vertical: vertical});
 				
 				item.bind('EnterFrame', function () {
+					this.counter++;
 					if (this.x>-200){
 						this.x -= dx;
 					}else{
 						this.destroy();
 					}
+
+					var sinY= Math.sin(this.counter/this.vertical);
+					this.y += sinY*this.multiplyer;
 				});
 				item.onHit(playerImg, function(){ Crafty.e('ScoreAnimation').scoreanimation(this.x, this.y, "+"+cScore); this.destroy();game.score+=cScore; Crafty("Score").text("Score: "+game.score);});	
-				
-				/*var nom = 5;
-				var de = 5;
-				var w = 100+4+(2*(de-1));
-				var cellWidth = 100/de;
-				var fraction = Crafty.e("2D, DOM, Color").attr({y:y, x:900, w:w, h:40}).color('#000000');
-				for(var i = 0; i<nom; i++){
-					var cellX = 900+2+(i*cellWidth)+i*2;
-					
-					console.log("i: "+i+"x: "+cellX);
-					fraction.attach(Crafty.e("2D, DOM, Color").attr({y:y+2, x:cellX, w:cellWidth, h:36}).color('red'));
-					//Crafty.e("2D, DOM, Color").attr({y:y+1, x:924, w:20, h:38}).color('red');
-					//fraction.attach(p1);
-					//fraction.attach(p2);
-				}
-				fraction.bind('EnterFrame', function () {
-					if (this.x>-200){
-						this.x -= dx;
-					}else{
-						this.destroy();
-					}
-				});*/
-				
 			}
 			
 			// ############## HAZARDS & AVOIDABLES #################	
-			function addAvoidable(){
-				//console.log("moodi: "+gameinfo["level1"].gameMode);
+			function addAvoidable() {
 				if(gameinfo["level1"].gameMode=="survival" && game.hazardInterval>1500){
 					clearInterval(game.avoidInterval);
 					game.hazardInterval = game.hazardInterval * gameinfo["level1"].survivalFactor;
@@ -504,15 +487,21 @@ var game = {
 				y = Math.floor((Math.random()*400)+50);
 				var dx = xSpeed;//Crafty.math.randomInt(3, 5);
 				var dy = 0;
-				var item = Crafty.e("2D, Canvas, Image, Collision,"+type).attr({x: x, y: y, z: 100});
 				
-						
+				var multiplyer = Crafty.math.randomInt(0, 3);
+				var vertical = Crafty.math.randomInt(20, 50);
+				var item = Crafty.e("2D, Canvas, Image, Collision,"+type).attr({x: x, y: y, z: 100, counter: 0, multiplyer: multiplyer, vertical: vertical});
+			
 				item.bind('EnterFrame', function () {
+					this.counter++;
 					if (this.x>-200){
 						this.x -= dx;
 					}else{
 						this.destroy();
 					}
+					
+					var sinY= Math.sin(this.counter/this.vertical);
+					this.y += sinY*this.multiplyer;
 				});
 				item.onHit(playerImg, function(){Crafty.e('ScoreAnimation').scoreanimation(this.x, this.y, aScore); this.destroy();game.score+=aScore; Crafty("Score").text("Score: "+game.score); hitWithHazard()});	
 			}
