@@ -238,6 +238,11 @@ var editor = {
 				editor.bindUiFormSubmits();
 				editor.bindUIElementChanges();
 				editor.bindUIClicks();
+
+				$('.modal').on('hidden.bs.modal', function () {
+					$('body').scrollTop(0);
+				});
+
 			}
 			editor.initial = false;
 		});
@@ -1262,7 +1267,42 @@ var editor = {
 
 	},
 
-	createScoreView: function (){
+	createScoreView: function() {
+		/*
+		var scoreArr = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
+
+		var colContainer = $('#collectScore').empty();
+		// Collectables
+		if(gameinfo.level1.collectables.length) {
+			var colForm = $('<form>').addClass('form-horizontal clearfix').attr('id', 'collectablePoints');
+			var colTitle = $('<div>').addClass('col-sm-5').html('<h5>Scores for collectables</h5>');
+			var colElements = $('<div>').addClass('col-sm-7');
+			// create form group for collectible
+			_.each(gameinfo.level1.collectables, function(collectable, index, list) {
+				// form-group
+		    	var $formRow = $('<div>').addClass("form-group clearfix");
+		    	// label
+				var $p = $("<label>").addClass('col-sm-5');
+				$p.text(collectable.name);
+		    	$formRow.append($p);
+		    	// select
+		    	var $dd = editor.getDropDown(speedArr, index, editor.getSpeed, collectable.speed, "scoreList_");
+		    	// select container
+		    	var $ddContainer = $('<div>').addClass("col-sm-7");
+		    	$ddContainer.append($dd);
+		    	$formRow.append($ddContainer);
+
+		    	colElements.append($formRow);
+			});
+			colForm.append(colTitle);
+			colForm.append(colElements);
+			// add form to dom
+			colContainer.append(colForm);
+			colContainer.append($('<hr>'));
+		}
+
+*/
+
 		var scoreArr = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 		var parent = document.getElementById("collectScore");
 		$("#collectScore").empty();
