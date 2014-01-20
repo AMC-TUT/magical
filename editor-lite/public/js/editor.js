@@ -124,7 +124,7 @@ var editor = {
 	        ajaxReq.done(function ( data, textStatus, jqXHR ) {
 	        	if(data.level1) {
 	        		gameinfo['level1'] = data.level1;
-	        		var msg = '<p><img src="/editor-lite/static/img/magos-logo-small.png" id="logo" /></p>';
+	        		var msg = '<p><img src="/editor-lite/static/img/magos-lite-logo-small.png" id="logo" /></p>';
 	        		msg += '<h3>Welcome ' + editor.user.userName + '!</h3>';
 	        		msg += '<p>You are editing game <b>' + data.level1.title + '</b></p>';
 	        		msg += '<p>&nbsp;</p>';
@@ -166,6 +166,10 @@ var editor = {
 
 	initEditor: function() {
 		Crafty.init(1024, 748);
+		
+		$('body').css('overflow','hidden');
+		$('body').css('position','fixed');
+
 		this.mediaLoader = new MediaLoader();
 		this.fontGame = {font: 'Arial', size: 24, color: '#FF0000'};
 		this.playerDead = false;
@@ -639,6 +643,19 @@ var editor = {
 			editor.setGame();
 		});
 
+		// match right points
+		$('select#matchRightList').change(function() {
+    		var valueSelected = this.value;
+    		gameinfo.level1.matchPointsRight = parseInt(valueSelected);
+    		editor.setGame();
+		});
+
+		// match wrong points
+		$('select#matchWrongList').change(function() {
+    		var valueSelected = this.value;
+    		gameinfo.level1.matchPointsWrong = parseInt(valueSelected);
+    		editor.setGame();
+		});
 
 	},
 	
@@ -676,10 +693,6 @@ var editor = {
 		editor.changePlayerImg();
 	},
 	
-	test: function() {
-	
-	},
-
 	localToEditor: function(obj) {
 		// Retrieve the object from storage
 		var retrievedObject = localStorage.getItem(obj);
@@ -1345,14 +1358,14 @@ var editor = {
 		parentElem.appendChild(select);
 	}, 	
 
-	matchPoints: function(state){
+	matchPoints: function(state) {
 		var points;
 		var selected;
-		if(state == "right"){
+		if(state == "right") {
 			selected=document.getElementById("matchRightList");
 			points = selected.options[selected.selectedIndex].value;
 			gameinfo["level1"].matchPointsRight = parseInt(points);
-		}else{
+		} else {
 			selected=document.getElementById("matchWrongList");
 			points = selected.options[selected.selectedIndex].value;
 			gameinfo["level1"].matchPointsWrong = parseInt(points);
