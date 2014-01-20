@@ -166,10 +166,6 @@ var editor = {
 
 	initEditor: function() {
 		Crafty.init(1024, 748);
-		
-		$('body').css('overflow','hidden');
-		$('body').css('position','fixed');
-
 		this.mediaLoader = new MediaLoader();
 		this.fontGame = {font: 'Arial', size: 24, color: '#FF0000'};
 		this.playerDead = false;
