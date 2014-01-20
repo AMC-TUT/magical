@@ -281,14 +281,14 @@ def create_game_b(request):
                 }
             ]
             revision_data['title'] = game.title
-            revision_data['instructions'] = "No instructions are given." 
+            revision_data['instructions'] = ""
             revision_data['platformType'] = "air"
             revision_data['playerImg'] = "magos-girl" 
             revision_data['itemInterval'] = 4000
-            revision_data['hazardInterval'] = 4000 
-            revision_data['wordInterval'] = 4000 
+            revision_data['hazardInterval'] = 5000
+            revision_data['wordInterval'] = 4000
             revision_data['sky'] = None
-            revision_data['scroll'] = scroll_data 
+            revision_data['scroll'] = scroll_data
             revision_data['collectables'] = []
             revision_data['hazards'] = []
             revision_data['powerups'] = []
@@ -304,9 +304,9 @@ def create_game_b(request):
             revision_data['turboSpeed'] = False
             revision_data['bgcolor'] = "#F2F2F2"
 
-            revision_data['star3limit'] = 0
-            revision_data['star2limit'] = 0 
-            revision_data['star1limit'] = 0 
+            revision_data['star3limit'] = 2000
+            revision_data['star2limit'] = 1000 
+            revision_data['star1limit'] = 500
             revision_data['memoryIncrease'] = 0 
             revision_data['memoryStart'] = 0
             revision_data['matchPointsRight'] = 0

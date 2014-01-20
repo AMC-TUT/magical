@@ -245,6 +245,11 @@ var editor = {
 	},
 
 	updateFormValues: function() {
+		// game title
+		$('#gameTitle').text(gameinfo.level1.title);
+		// game instructions
+		$('textarea#instructionTxt').val(gameinfo.level1.instructions);
+
 		// platform type
 		if(gameinfo.level1.platformType) {
 			$('select#platformList').val(gameinfo.level1.platformType);
@@ -328,6 +333,12 @@ var editor = {
 		if(gameinfo.level1.matchPointsWrong) {
 			$('select#matchWrongList').val(gameinfo.level1.matchPointsWrong);
 		}
+		// extra life
+		var hasExtraLife = (gameinfo.level1.extraLife) ? "1" : "0";  
+		$('select#extraList').val(hasExtraLife);
+		// turbo speed
+		var hasTurboSpeed = (gameinfo.level1.turboSpeed) ? "1" : "0";  
+		$('select#turboList').val(hasTurboSpeed);
 
 	},
 
@@ -397,7 +408,7 @@ var editor = {
 	},
 
 	bindUiFormSubmits: function() {
-		// add word match rule
+		// match add word rule
 		$('form#addMatchRule').submit(function(e) {
 			e.preventDefault();
 			$('#matchWarning').empty();
@@ -425,6 +436,7 @@ var editor = {
     		}
 		});
 
+		// match fraction form 
 		$('#fractionTaskForm').submit(function(e) {
 			e.preventDefault();
 			$('#matchWarning').empty();
@@ -444,9 +456,16 @@ var editor = {
 					showWarning("Denominator has to be equal or greater than numerator!");
 	    		}
 			}
-
-
 		});
+
+		// instructions form
+		$('#gameInstructions').submit(function(e) {
+			e.preventDefault();
+			var instructions = $('textarea#instructionTxt').val();
+			gameinfo.level1.instructions = instructions;
+			editor.setGame();
+		});
+
 	},
 
 	bindUIClicks: function() {
@@ -605,6 +624,21 @@ var editor = {
     		gameinfo.level1.hazardEffect = valueSelected;
     		editor.setGame();
 		});
+
+		// extra lives
+		$('select#extraList').change(function() {
+    		var valueSelected = this.value;
+			gameinfo.level1.extraLife = (valueSelected == "1") ? true : false; 		
+			editor.setGame();    		
+		});
+
+		// extra lives
+		$('select#turboList').change(function() {
+    		var valueSelected = this.value;
+			gameinfo.level1.turboSpeed = (valueSelected == "1") ? true : false; 		
+			editor.setGame();
+		});
+
 
 	},
 	
@@ -803,33 +837,15 @@ var editor = {
 		Crafty.e("2D, DOM, Image, sky_ref," + this.sky).attr({x: 0, y: 0, z: 0});
 	},
 
-	getJumpPower: function(){
+	getJumpPower: function() {
 		var selected=document.getElementById("jumpList");
 		gameinfo.level1.jumpPower = parseInt(selected.options[selected.selectedIndex].value);
 	},
 
-	addStarRule: function(){
+	addStarRule: function() {
 		gameinfo["level1"].star3limit = document.getElementById("star3").value;
 		gameinfo["level1"].star2limit = document.getElementById("star2").value;
 		gameinfo["level1"].star1limit = document.getElementById("star1").value;
-	},
-
-	addPowerup: function(){
-		var selected=document.getElementById("extraList");
-		if(selected.options[selected.selectedIndex].value == "0"){
-			gameinfo["level1"].extraLife = false;
-		}else{
-			gameinfo["level1"].extraLife = true;
-		}
-	},
-
-	addTurbo: function(){
-		var selected=document.getElementById("turboList");
-		if(selected.options[selected.selectedIndex].value == "0"){
-			gameinfo["level1"].turboSpeed = false;
-		}else{
-			gameinfo["level1"].turboSpeed = true;
-		}
 	},
 
 	changeDenominator: function(action) {
@@ -1157,44 +1173,84 @@ var editor = {
 
 
 
-	createSpeedView: function (){
-		//<form id="hazardSpeedForm"></form>
+	getDropDown: function (values, index, changeFunction, atr, listId){
+		$dd = $('<select>').addClass('form-control');
+		$dd.attr('id', listId + index);
+
+		$dd.bind( 'change', function() {
+			changeFunction(index);
+		});
+
+		_.each(values, function(value, index, list) {
+	    	var opt = value;
+    		var $el = $("<option>").text(opt).val(opt);
+	   		$dd.append($el);
+		});
+
+		$dd.val(atr);
+		return $dd;
+	},
+
+
+	createSpeedView: function () {
 		var speedArr = ["average", "slow", "fast"];
-		var parent = document.getElementById("collectSpeed");
-		$("#collectSpeed").empty();
-		var cDiv = document.getElementById("collectSpeed");
-		
-		for(var i = 0; i < gameinfo["level1"].collectables.length; i++) {
-			//var itemText = gameinfo["level1"].collectables[i].type;// {type: selected.options[selected.selectedIndex].text, xspeed: 0, yspeed: 0} 
-	    	var itemText = gameinfo["level1"].collectables[i].name;
-	    	var itemSpeed = gameinfo["level1"].collectables[i].speed;
-	    	var p = document.createElement("label");
-	    	p.classList.add("dropLabel");
-			var pt = document.createTextNode(itemText);
-			var h = document.createElement("hr");
-	    	p.appendChild(pt);
-			cDiv.appendChild(p);
-	    	editor.createDropDown(speedArr, cDiv, i, editor.getSpeed, itemSpeed, "speedList_");
-	    	cDiv.appendChild(h);	
-	   	}
-	   	
-	   	var hParent = document.getElementById("hazardSpeed");
-		$("#hazardSpeed").empty();
-		var hDiv = document.getElementById("hazardSpeed");
-		
-		for(var j = 0; j < gameinfo["level1"].hazards.length; j++) {
-			//var itemTextH = gameinfo["level1"].hazards[j].type;// {type: selected.options[selected.selectedIndex].text, xspeed: 0, yspeed: 0} 
-	    	var itemTextH = gameinfo["level1"].hazards[j].name;
-	    	var itemSpeedH = gameinfo["level1"].hazards[j].speed;
-	    	var ph = document.createElement("label");
-	    	ph.classList.add("dropLabel");
-			var pth = document.createTextNode(itemTextH);
-			var hh = document.createElement("hr");
-	    	ph.appendChild(pth);
-			hDiv.appendChild(ph);
-	    	editor.createDropDown(speedArr, hDiv, j, editor.getHSpeed, itemSpeedH, "speedListH_");
-	    	hDiv.appendChild(hh);	
-	   	}
+		var colContainer = $('#collectSpeed').empty();
+		// Collectables
+		if(gameinfo.level1.collectables.length) {
+			var colForm = $('<form>').addClass('form-horizontal clearfix').attr('id', 'collectableSpeeds');
+			var colTitle = $('<div>').addClass('col-sm-5').html('<h5>Collectable speeds</h5>');
+			var colElements = $('<div>').addClass('col-sm-7');
+			// create form group for collectible
+			_.each(gameinfo.level1.collectables, function(collectable, index, list) {
+				// form-group
+		    	var $formRow = $('<div>').addClass("form-group clearfix");
+		    	// label
+				var $p = $("<label>").addClass('col-sm-5');
+				$p.text(collectable.name);
+		    	$formRow.append($p);
+		    	// select
+		    	var $dd = editor.getDropDown(speedArr, index, editor.getSpeed, collectable.speed, "speedList_");
+		    	// select container
+		    	var $ddContainer = $('<div>').addClass("col-sm-7");
+		    	$ddContainer.append($dd);
+		    	$formRow.append($ddContainer);
+
+		    	colElements.append($formRow);
+			});
+			colForm.append(colTitle);
+			colForm.append(colElements);
+			// add form to dom
+			colContainer.append(colForm);
+			colContainer.append($('<hr>'));
+		}
+		// Hazards
+		if(gameinfo.level1.hazards.length) {
+			var colForm = $('<form>').addClass('form-horizontal clearfix').attr('id', 'hazardsSpeeds');
+			var colTitle = $('<div>').addClass('col-sm-5').html('<h5>Hazard speeds</h5>');
+			var colElements = $('<div>').addClass('col-sm-7');
+			// create form group for hazard
+			_.each(gameinfo.level1.hazards, function(hazard, index, list) {
+				// form-group
+		    	var $formRow = $('<div>').addClass("form-group clearfix");
+		    	// label
+				var $p = $("<label>").addClass('col-sm-5');
+				$p.text(hazard.name);
+		    	$formRow.append($p);
+		    	// select
+		    	var $dd = editor.getDropDown(speedArr, index, editor.getHSpeed, hazard.speed, "speedListH_");
+		    	// select container
+		    	var $ddContainer = $('<div>').addClass("col-sm-7");
+		    	$ddContainer.append($dd);
+		    	$formRow.append($ddContainer);
+
+		    	colElements.append($formRow);
+			});
+			colForm.append(colTitle);
+			colForm.append(colElements);
+			// add form to dom
+			colContainer.append(colForm);
+		}
+
 	},
 
 	createScoreView: function (){
@@ -1303,19 +1359,16 @@ var editor = {
 		}	
 	},
 
-	getSpeed: function(i){
-		console.log("getSpeed");
-		var selected=document.getElementById("speedList_"+i);
-		var speed = selected.options[selected.selectedIndex].text;
-		gameinfo["level1"].collectables[i].speed = speed;
-		console.log(gameinfo);
+	getSpeed: function(i) {
+		var speed = $('#speedList_' + i).val();
+		gameinfo.level1.collectables[i].speed = speed;
+		editor.setGame();
 	},
 
-	getHSpeed: function(i){
-		console.log("getSpeed");
-		var selected=document.getElementById("speedListH_"+i);
-		var speed = selected.options[selected.selectedIndex].text;
-		gameinfo["level1"].hazards[i].speed = speed;
+	getHSpeed: function(i) {
+		var speed = $('#speedListH_' + i).val();
+		gameinfo.level1.hazards[i].speed = speed;
+		editor.setGame();
 	},
 
 	getScore: function(i){

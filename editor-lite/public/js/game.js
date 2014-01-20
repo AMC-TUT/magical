@@ -797,7 +797,7 @@ var game = {
 			
 			Crafty.c('TurboSpeed', {
 				turbospeed: function() {
-					this.requires("2D, DOM, Image, Collision, speedmeter");
+					this.requires("2D, Canvas, Image, Collision, speedmeter");
 			      	this.x = Math.floor((Math.random()*200)+1050);
 			      	this.y = Math.floor((Math.random()*400)+50);
 			        this.z = 1000;
@@ -1232,7 +1232,7 @@ Crafty.c('DistanceMeter', {
 
 Crafty.c('ExtraLife', {
 	extralife: function() {
-		this.requires("2D, DOM, Image, Collision, heart");
+		this.requires("2D, Canvas, Image, Collision, heart");
       	this.x = Math.floor((Math.random()*200)+1050);
       	this.y = Math.floor((Math.random()*400)+50);
         this.z = 1000;

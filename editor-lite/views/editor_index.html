@@ -5,7 +5,7 @@
 	<div id='editor-stage'>
 		<div id='sidebar'>
 			<div id='logo'>
-				<a href="<%=djangoUrl%>"><img src="/editor-lite/static/img/magos-logo-small.png" id="logo"></a>
+				<a href="<%=djangoUrl%>"><img src="/editor-lite/static/img/magos-lite-logo-small.png" id="logo"></a>
 			</div>
 			<!-- Button trigger GAME MODE -->
 			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#rulesModal">
@@ -40,13 +40,13 @@
 			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#scoreModal" onclick="editor.createScoreView()">
   				Points
 			</button>
-			<!-- Button trigger STARS -->
-			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#starModal" onclick="editor.starRules()">
-  				Stars
-			</button>
 			<!-- Button trigger POWERUPS -->
 			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#powerupsModal" >
   				Powerups
+			</button>
+			<!-- Button trigger STARS -->
+			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#starModal" onclick="editor.starRules()">
+  				Stars
 			</button>
 			<!-- Button trigger INFO -->
 			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#infoModal" onclick="editor.test()">
