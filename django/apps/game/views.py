@@ -318,11 +318,7 @@ def create_game_b(request):
             revision_data['jumpPower'] = -24 
             revision_data['bonustimelimit'] = 220 
 
-            #revision_data = revision_data.strip()
-            print revision_data
             revision_data = json.dumps(revision_data)
-            print "---------------------"
-            print revision_data
 
             revision = Revision(game=game, data=revision_data)
             revision.save()
