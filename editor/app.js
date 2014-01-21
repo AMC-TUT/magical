@@ -4,6 +4,7 @@ var fs = require('fs'),
   express = require('express'),
   params = require('express-params'),
   request = require('request'),
+  path = require('path'),
   querystring = require('querystring'),
   _ = require('underscore')._,
   util = require('util');
@@ -14,7 +15,7 @@ var redis = require("redis"),
 var app = express(),
   http = require('http'),
   server = http.createServer(app),
-  io = require('socket.io').listen(server,  { resource: '/editor/socket.io' });
+  io = require('socket.io').listen(server,  { resource: '/socket.io' });
 
 var globalSessionObj = null;
 
@@ -37,8 +38,9 @@ client.on("error", function(err) {
 });
 
 params.extend(app);
+app.use('/static', express.static(path.join(__dirname, 'static')));
 
-app.use('/editor/static', express.static(__dirname + '/static'));
+//app.use('/editor/static', express.static(__dirname + '/static'));
 app.use('/editor/user-media', express.static(__dirname + '/user-media'));
 
 app.use(express.cookieParser());
@@ -74,7 +76,7 @@ io.configure(function() {
 
 app.param('slug', /[a-zA-Z0-9-]+$/);
 
-app.get('/editor/:slug', function(req, res) {
+app.get('/edit/:slug', function(req, res) {
   var slug = req.params.slug;
   //var slug = req.url.replace(/^\//, ''); // remove slash, orig: "/super-magos"
   
@@ -86,22 +88,22 @@ app.get('/editor/:slug', function(req, res) {
   // if sessionid or csrftoken equals undefined redirect to login page
   if(_.isUndefined(req.cookies) || _.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
     // if no session exists
-    res.redirect(app.get('djangoUrl') + 'game/login?next=/editor/' + slug);
+    res.redirect(app.get('djangoUrl') + 'game/login?next=/editor/edit/' + slug);
     return false;
   }
   // query django session data from Redis
   client.get('django_session:' + req.cookies.sessionid, function(err, data) {
     if(_.isNull(data)) {
       // if no session info in redis
-      res.redirect(app.get('djangoUrl') + 'game/login?next=/editor/' + slug);
+      res.redirect(app.get('djangoUrl') + 'game/login?next=/editor/edit/' + slug);
       return false;
     }
 
     var sessionObj = myMagos.parseSessionObject(data);
-
+    console.log(sessionObj);
     // if no valid logged in user
     if(_.isUndefined(sessionObj.userName)) {
-      res.redirect(app.get('djangoUrl') + 'game/login?next=/editor/' + slug);
+      res.redirect(app.get('djangoUrl') + 'game/login?next=/editor/edit/' + slug);
       return false;
     }
 
