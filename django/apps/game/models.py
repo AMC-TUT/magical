@@ -212,12 +212,12 @@ class Achievement(models.Model):
     def __unicode__(self):
         return self.name
 
-        
+
 class AchievementMembership(models.Model):
     user = models.ForeignKey(User)
     achievement = models.ForeignKey(Achievement)
     created = models.DateTimeField(auto_now_add=True, editable=False)
-    
+
     class Meta:
         unique_together = (('user','achievement'),)
         verbose_name = _('user has achievement')
@@ -235,7 +235,7 @@ class Gender(models.Model):
     class Meta:
         verbose_name = _('gender')
         verbose_name_plural = _('genders')
-    
+
     @classmethod
     def get_default_gender(cls):
         default_gender, created = Gender.objects.get_or_create(name='male', abbr='M')

@@ -6,7 +6,7 @@ App.games = {
     init_list: function() {
         console.log('Init games');
         // load magos games as default tab content
-        this.listGames('A', $('.active a')[0].hash , $('.active a'));
+        this.listGames('B', $('.active a')[0].hash , $('.active a'));
         this.bindGames();
     },
     bindGames: function() {
