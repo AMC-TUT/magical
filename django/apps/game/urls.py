@@ -26,8 +26,14 @@ urlpatterns = patterns('',
     url(r'^watch/$', TemplateView.as_view(template_name='apps/game/watch.html'), name='watch'),
     url(r'^invent/$', TemplateView.as_view(template_name='apps/game/invent.html'), name='invent'),
 
-    url(r'^login$', 'django.contrib.auth.views.login', {'template_name': 'apps/game/login.html'}),
-    #url(r'^login$', 'apps.game.views.login'),
-    url(r'^logout/$', 'apps.game.views.logout_view'),
+    #url(r'^login$', 'django.contrib.auth.views.login', {'template_name': 'apps/game/login.html'}),
     
+    url(r'^login$', 'apps.game.views.login_user', name='login_user'),
+    
+    url(r'^logout/$', 'apps.game.views.logout_user', name="logout_user"),
+  
+    url(r'^register/$', 'apps.game.views.register_user', name="register_user"),
+
+    url(r'^register_success/$', 'apps.game.views.register_success', name='register_success'),
+
 )

@@ -1,6 +1,5 @@
 {% load url from future %}
 {% load i18n %}
-{% load login_form %}
 <!DOCTYPE html>
 <html lang="fi">
 <head>
@@ -26,7 +25,7 @@
 
         <section id="login-info">
                   {% if not user.is_authenticated %}
-                      {% login_form %}
+                    {% include "apps/game/login_form.html" %}
                   {% else %}
                     <p>Welcome to Magos {{ user.username }}</p>
                     <p><a id="logout" class="navbar-link" href="/game/logout/">{% trans "Logout" %}</a></p>

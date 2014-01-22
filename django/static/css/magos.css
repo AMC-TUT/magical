@@ -61,6 +61,12 @@ header {
     display:block;
 }
 
+.inPageLogin #loginForm label {
+    color: #222;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.2), -1px -1px 2px rgba(0,0,0,0.1);
+}
+
+
 #loginForm label {
     color: #bbb;
     font-size: 14px;
@@ -91,6 +97,11 @@ header {
 .standalone #loginForm input[type="password"] {
     width: 300px;
 }
+
+.form-control.small {
+    width: 70%;
+}
+
 
 .navbar-link {
     color: #f5992a;
@@ -208,14 +219,14 @@ body.explore footer a.explore {
 
 #main-nav ul li a {
     display: block;
-    font-size: 15pt;
+    font-size: 13pt;
     line-height: 1.6em;
     letter-spacing: 2px;
     text-transform: uppercase;
     text-decoration: none;
     color: #222;
     text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.2);
-    padding: 25px 25px 10px 25px;
+    padding: 20px 20px 10px 20px;
     border-radius: 15px 15px 0 0;
     -moz-border-radius: 15px 15px 0 0;
     -webkit-border-radius: 15px 15px 0 0;
@@ -238,7 +249,7 @@ body.explore footer a.explore {
 	text-decoration: none;
     text-shadow: 1px 1px 2px rgba(255,255,255,0.6);
 	background: #f5992a;
-	padding: 25px 25px 15px 25px;
+	padding: 20px 20px 15px 20px;
     margin-top: 0;
     background-image: -webkit-linear-gradient(bottom, transparent 70%, rgba(0, 0, 0, 0.1));
     background-image: -moz-linear-gradient(bottom, transparent 70%, rgba(0, 0, 0, 0.53));
@@ -251,11 +262,12 @@ body.home #main-nav ul li a.home,
 body.create #main-nav ul li a.create,
 body.invent #main-nav ul li a.invent,
 body.watch #main-nav ul li a.watch,
-body.explore #main-nav ul li a.explore {
+body.explore #main-nav ul li a.explore,
+body.register #main-nav ul li a.register {
 	color: #17779d;
     background: #fff;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-    padding: 25px 25px 15px 25px;
+    padding: 20px 20px 15px 20px;
     margin-top: 0;
     background-image: -webkit-linear-gradient(bottom, transparent 70%, rgba(0, 0, 0, 0.1));
     background-image: -moz-linear-gradient(bottom, transparent 70%, rgba(0, 0, 0, 0.53));
@@ -398,6 +410,10 @@ ul.nav {
     list-style: none;
 }
 
+#registerForm .errorlist {
+    float: none;    
+}
+
 .errortext {
     float: right;
 }
@@ -453,3 +469,4 @@ h1.ajax-loading {
 .version-info {
     color: #777;    
 }
+

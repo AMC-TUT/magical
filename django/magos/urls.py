@@ -44,7 +44,8 @@ urlpatterns = patterns('',
     
     #(r'^crystal/', 'django.views.generic.simple.direct_to_template', {'template': 'crystal/index.html'}),
     
-    # Uncomment the next line to enable the admin:
+    # admin urls
+    url(r'^admin/auth/user/import/$', 'apps.game.views.import_users', name='import_users'),
     url(r'^admin/', include(admin.site.urls)),
 
     #url(r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/static/favicon.ico'}),

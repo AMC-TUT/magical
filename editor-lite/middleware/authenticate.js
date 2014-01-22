@@ -45,7 +45,7 @@ module.exports = function(req, res, next) {
 	var sessionUser = null;
 	if(_.isUndefined(req.cookies) || _.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
 	    // if no session exists
-	    res.redirect(config.express.djangoUrl + 'game/login?next=' + req.url);
+	    res.redirect(config.express.djangoUrl + '/game/login?next=/editor-lite' + req.url);
 	    return false;
 	}
 	// query django session data from Redis
@@ -54,17 +54,18 @@ module.exports = function(req, res, next) {
 			sessionUser = parseSessionObject(data);
 			if(_.has(sessionUser, 'userName')) {
 				if(sessionUser.role != 'player' && sessionUser.userName != 'anonymous') {
-					// anonymous players can not use Magos editor
+					// anonymous players can not use Magos editor, only play games
+					// has to be student or teacher to edit
 					isAuthenticated = true;
 					req.session.user = sessionUser;
 					req.session.isAuthenticated = true;
-					next();					
+					next();
 				}
 			}
 		}
 		// if not authenticated user, redirect to login
 		if(!isAuthenticated) {
-		    res.redirect(config.express.djangoUrl + 'game/login?next=' + req.url);
+		    res.redirect(config.express.djangoUrl + '/game/login?next=/editor-lite' + req.url);
 		    return false;
 		}
 	});

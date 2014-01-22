@@ -34,17 +34,20 @@
                 <li><a href="/game/invent/" class="invent">Invent</a></li>
                 <li><a href="/game/watch/" class="watch">Watch</a></li>
                 <li><a href="#" class="explore">Explore</a></li>
+                {% if not user.is_authenticated %}
+                <li><a href="/game/register/" class="register">Register</a></li>
+                {% endif %}
             </ul> 
         </nav>
         
         <section id="login-info">
                   {% if not user.is_authenticated %}
-                      {% login_form %}
+                      {% include "apps/game/login_form.html" %}
                   {% else %}
                     <h2>Welcome to Magos</h2>
                     <p>{{ user.first_name }} {{ user.last_name }}<br>[{{ user.username }}]</p>
                     <p>Organisation: {{ user.userprofile.organization }}</p>
-                    <p><a id="logout" class="navbar-link" href="/game/logout/">{% trans "Logout" %}</a></p>
+                    <p><a id="logout" class="navbar-link" href="{% url 'logout_user'%}">{% trans "Logout" %}</a></p>
                   {% endif %}
         </section>
 

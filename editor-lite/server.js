@@ -38,6 +38,7 @@ app.use('/media/user-media', express.static(path.join(__dirname, 'user-media')))
 app.use(require('./middleware/authenticate'));
 app.use(app.router);
 
+
 // authorization is used only on selected routes
 var authorize = require('./middleware/authorize');
 

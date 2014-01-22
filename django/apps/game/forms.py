@@ -1,7 +1,10 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
-from .models import Game, MagosAGame, MagosBGame, GameType, BLOCK_SIZE_CHOICES
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate
+from .models import Game, MagosAGame, MagosBGame, GameType, BLOCK_SIZE_CHOICES, \
+    Organization
 
 # Game canvas pixel resolution
 RESOLUTION_CHOICES = (
@@ -75,4 +78,127 @@ class MagosBGameForm(BaseGameForm):
         model = MagosBGame
         exclude = ('creator', 'cloned', 'slug', 'state', 'rows', 'cols', 'cloned', )
 
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=255, required=True)
+    password = forms.CharField(widget=forms.PasswordInput, required=True)
+
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+        if not user or not user.is_active:
+            raise forms.ValidationError(_(u"Login was invalid. Please try again."))
+        return self.cleaned_data
+
+    def login(self, request):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+        return user
+
+class UserRegistrationForm(UserCreationForm):
+
+    username = forms.CharField(
+        required = True, 
+        widget=forms.TextInput(attrs={'class':'form-control small'})
+    )
+
+    email = forms.EmailField(
+        required = False, 
+        widget=forms.TextInput(attrs={'class':'form-control'})
+    )
+
+    first_name = forms.CharField(
+        required = False, 
+        widget=forms.TextInput(attrs={'class':'form-control small'})
+    )
+
+    last_name = forms.CharField(
+        required = False, 
+        widget=forms.TextInput(attrs={'class':'form-control small'})
+    )
+
+    password1 = forms.CharField(
+        label=_(u'Password'),
+        widget=forms.PasswordInput(attrs={'class':'form-control small'})
+    )
+
+    password2 = forms.CharField(
+        label=_(u'Password again'),
+        widget=forms.PasswordInput(attrs={'class':'form-control small'})
+    )
+
+    special_code = forms.CharField(
+        required = False, 
+        label = _(u'I have a special code'),
+        max_length = 8,
+        widget=forms.TextInput(attrs={'class':'form-control small'})
+    )
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2')  
+
+    def clean(self):
+        special_code = self.cleaned_data.get('special_code' or None)
+        organization = self.get_organization(special_code)
+        # if no organization 
+        if not organization:
+            raise forms.ValidationError(_(u"Can not create public users at this time. Please contact Magos support."))
+
+        return self.cleaned_data
+
+    def get_organization(self, special_code=None):
+        organization = None
+        if special_code:
+            try:
+                organization = Organization.objects.get(org_uuid=special_code)
+            except Organization.DoesNotExist:
+                # no organization matching special code exists
+                pass
+        # try to use general organization if no special code is set
+        try:
+            organization = Organization.objects.get(public_org=True)
+        except Organization.DoesNotExist:
+            # no public organization exists
+            pass
+        return organization
+
+    def save(self, commit = True):
+        user = super(UserRegistrationForm, self).save(commit = False)
+        #user.email = self.cleaned_data['email']
+        user.first_name = self.cleaned_data.get('first_name' or None)
+        user.last_name = self.cleaned_data.get('last_name' or None)
+
+        user.save()
+        
+        special_code = self.cleaned_data.get('special_code' or None)
+        organization = self.get_organization(special_code)
+        user_profile = user.get_profile()
+        user_profile.organization = organization
+        user_profile.save()
+        return user
+
+import csv
+
+class BatchCreateUsersForm(forms.Form):
+    file = forms.FileField()
+    #place = forms.ModelChoiceField(queryset=Place.objects.all())
+
+    def save(self):
+        records = csv.reader(self.cleaned_data["file"])
+
+        for line in records:
+            user_data = User()
+            print line
+            """
+            input_data = Data()
+            input_data.place = self.cleaned_data["place"]
+            input_data.time = datetime.strptime(line[1], "%m/%d/%y %H:%M:%S")
+            input_data.data_1 = line[2]
+            input_data.data_2 = line[3]
+            input_data.data_3 = line[4]
+            """
+            #user_data.save()
 

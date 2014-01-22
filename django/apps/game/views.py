@@ -1,10 +1,11 @@
 ﻿from django.shortcuts import render_to_response, render
 from django.template import RequestContext
-from django.http import HttpResponse, Http404, HttpResponseNotAllowed
+from django.http import HttpResponse, Http404, HttpResponseNotAllowed, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
 from django.utils import simplejson
-from django.contrib.auth import logout
+from django.contrib.auth import login, logout
 from django.shortcuts import redirect
 from django.core import serializers
 from django.core.exceptions import MultipleObjectsReturned
@@ -14,11 +15,12 @@ import json
 
 from django.contrib.auth.forms import AuthenticationForm
 
-from apps.game.models import Game, MagosAGame, MagosBGame, Revision, Author, \
+from .models import Game, MagosAGame, MagosBGame, Revision, Author, \
         Highscore, Review, Image, Thumbnail
-from apps.game.forms import MagosAGameForm, MagosBGameForm
-from apps.game.decorators import ajax_login_required
-from apps.game.utils import get_redis_game_data, set_redis_game_data, create_game_for_redis
+from .forms import MagosAGameForm, MagosBGameForm, LoginForm, UserRegistrationForm, \
+    BatchCreateUsersForm
+from .decorators import ajax_login_required
+from .utils import get_redis_game_data, set_redis_game_data, create_game_for_redis
 
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -352,11 +354,6 @@ def create_game_b(request):
     return render(request, tpl, context)
 
 
-def logout_view(request):
-    logout(request)
-    # redirect to home
-    return redirect(home)
-    
 @ajax_login_required    
 def rate_game(request, game_pk, stars):
     """
@@ -534,3 +531,71 @@ def ajax_list_games(request, gametype='A'):
         games = Game.objects.filter(state=2)
     context['games'] = games
     return render(request, tpl, context)
+
+
+def login_user(request):
+    logout(request)
+    tpl = 'apps/game/login.html'
+    context = RequestContext(request)
+    form = LoginForm(request.POST or None)
+    next = None
+    if request.GET:  
+        next = request.GET.get('next' or None)
+    if request.POST:  
+        next = request.POST.get('next' or None)
+    if next:
+        context['next'] = next
+    context['login_form'] = form
+    if request.POST and form.is_valid():
+        user = form.login(request)
+        if user:
+            if user.is_active:
+                login(request, user)
+                success_redirect = next or '/'
+                return HttpResponseRedirect(success_redirect)
+    return render(request, tpl, context)
+
+
+def logout_user(request):
+    logout(request)
+    # redirect to home
+    return redirect(home)
+    
+
+def register_user(request):
+    tpl = 'apps/game/register_user.html'
+    context = RequestContext(request)
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        context['register_form'] = form
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/game/register_success')
+    else:
+        context['register_form'] = UserRegistrationForm()
+
+    return render(request, tpl, context)
+
+def register_success(request):
+    tpl = 'apps/game/register_success.html'
+    context = RequestContext(request)
+    return render(request, tpl, context)
+
+
+@staff_member_required
+def import_users(request):
+    context = RequestContext(request)
+    context['current_app'] = 'user'
+    if request.method == "POST":
+        form = BatchCreateUsersForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            success = True
+            context["form"] = form
+            context["success"] = success
+            return HttpResponseRedirect("../")
+    else:
+        form = BatchCreateUsersForm()
+        context["form"] = form
+        #return HttpResponseRedirect("../")
+    return render(request, "admin/auth/user/import_form.html", context)

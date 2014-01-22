@@ -2,7 +2,9 @@
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-from apps.game.models import UserProfile, Country, Language, \
+from django.conf.urls import patterns, include, url
+from .views import import_users
+from .models import UserProfile, Country, Language, \
     Organization, Role, Disability, MagosAGame, MagosBGame, \
     Achievement, AchievementMembership, Game, GameType, Author, \
     Revision, Image, Audio, Review, Highscore, Gender
@@ -16,6 +18,14 @@ class UserProfileInline(admin.StackedInline):
 
 class UserProfileAdmin(UserAdmin):
     inlines = [ UserProfileInline, ]
+
+    def get_urls(self):
+        urls = super(UserProfileAdmin, self).get_urls()
+        my_urls = patterns('',
+            (r'^import/$', self.admin_site.admin_view(import_users))
+        )
+        return my_urls + urls
+    pass
 
 admin.site.register(User, UserProfileAdmin)
 admin.site.register(Gender)

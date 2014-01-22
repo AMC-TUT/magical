@@ -60,7 +60,7 @@ def get_thumb_path(instance, filename):
     filename = image_name + '_' + str(instance.width) + 'x' + str(instance.height) + '.' + ext
 
     return os.path.join(settings.USER_MEDIA_PREFIX + 'thumbs/', filename)
-
+    
 
 def timestamp():
    now = time.time()
@@ -125,6 +125,14 @@ class Country(models.Model):
     def __unicode__(self):
         return self.name
 
+from django.core.exceptions import ValidationError
+
+def validate_only_one_public(obj):
+    # limit public organizations to one
+    model = obj.__class__
+    if (model.objects.filter(public_org=True).count() > 0 and obj.id != model.objects.get(public_org=True).id):
+        raise ValidationError("Only one %s can be public" % model.__name__)
+
 class Organization(models.Model):
     """Organization model"""
     name = models.CharField(max_length=100, null=False, blank=False)
@@ -134,9 +142,30 @@ class Organization(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True)
 
+    public_org = models.BooleanField(null=False, blank=False, default=False) # only one organization can be public
+
+    org_uuid = models.CharField(max_length=36, null=True, blank=True, unique=True)
+
+    def save(self, *args, **kwargs):
+        if not self.org_uuid:
+            # generate uuid if one does not exist
+            self.org_uuid = self.get_org_uuid()
+        super(Organization, self).save(*args, **kwargs)
+
+    def get_org_uuid(self):
+        """
+        Generate semirangom 8 alphanumeric hash beginning with 
+        first two letters from organization slug name.
+        """
+        return self.slug[:2] + str(uuid.uuid4())[:6]
+
     class Meta:
         verbose_name = _('organization')
         verbose_name_plural = _('organizations')
+
+    def clean(self):
+        if(self.public_org):
+            validate_only_one_public(self)
 
     def __unicode__(self):
         return self.name
@@ -299,9 +328,6 @@ class Image(models.Model):
             # this is an image, set meta information
             set_image_metas(filename, self)
         """
-
-
-
         super(Image, self).save(*args, **kwargs)
 
 

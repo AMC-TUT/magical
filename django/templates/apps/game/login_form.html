@@ -1,14 +1,21 @@
-<form id="loginForm" method="post" action="{% url "django.contrib.auth.views.login" %}">
+<form id="loginForm" method="post" action="{% url "login_user" %}">
     {% csrf_token %}
-	{% if form.errors %}
+	{% if login_form.errors %}
 	<div class="errors">
 		<p>Your username and password didn't match. Please try again.</p>
 	</div>
 	{% endif %}
-    <label for="username">{{ form.username.label_tag }}</label> <input type="text" name="username" maxlength="30" id="username" />
-    <label for="password">{{ form.password.label_tag }}</label> <input type="password" name="password" id="password" /></p>
-    <input type="submit" value="Log in" />
-    <input type="hidden" name="next" value="/" />
+    <label for="username">{{ login_form.username.label_tag }}</label>
+    <input type="text" name="username" maxlength="30" id="username" />
+    <label for="password">{{ login_form.password.label_tag }}</label>
+    <input type="password" name="password" id="password" /></p>
+
+    <input type="submit" name="log_in" value="Log in" />
+
+    {% if next %}
+		<input type="hidden" name="next" value="{{ next }}" />
+	{% endif %}
+
 </form>
 
   
