@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
 from .models import Game, MagosAGame, MagosBGame, GameType, BLOCK_SIZE_CHOICES, \
-    Organization
+    Organization, Gender
 
 # Game canvas pixel resolution
 RESOLUTION_CHOICES = (
@@ -129,6 +129,13 @@ class UserRegistrationForm(UserCreationForm):
         widget=forms.PasswordInput(attrs={'class':'form-control small'})
     )
 
+    gender = forms.ModelChoiceField(
+        required=False,
+        queryset=Gender.objects.all(),
+        empty_label=_(u'Select gender'),
+        widget=forms.Select(attrs={'class':'form-control small'})
+    )
+
     special_code = forms.CharField(
         required = False, 
         label = _(u'I have a special code'),
@@ -140,13 +147,21 @@ class UserRegistrationForm(UserCreationForm):
         model = User
         fields = ('username', 'email', 'password1', 'password2')  
 
-    def clean(self):
+    def clean_special_code(self):
         special_code = self.cleaned_data.get('special_code' or None)
-        organization = self.get_organization(special_code)
+        if special_code:
+            organization = self.get_special_organization(special_code)
+            # wrong special code
+            if not organization:
+                raise forms.ValidationError(_(u"Code is not valid."))
+        return special_code
+
+
+    def clean(self):
+        organization = self.get_public_organization()
         # if no organization 
         if not organization:
             raise forms.ValidationError(_(u"Can not create public users at this time. Please contact Magos support."))
-
         return self.cleaned_data
 
     def get_organization(self, special_code=None):
@@ -158,6 +173,27 @@ class UserRegistrationForm(UserCreationForm):
                 # no organization matching special code exists
                 pass
         # try to use general organization if no special code is set
+        else:
+            try:
+                organization = Organization.objects.get(public_org=True)
+            except Organization.DoesNotExist:
+                # no public organization exists
+                pass
+        return organization
+
+    def get_special_organization(self, special_code=None):
+        organization = None
+        if special_code:
+            try:
+                organization = Organization.objects.get(org_uuid=special_code)
+            except Organization.DoesNotExist:
+                # no organization matching special code exists
+                pass
+        return organization
+
+
+    def get_public_organization(self):
+        organization = None
         try:
             organization = Organization.objects.get(public_org=True)
         except Organization.DoesNotExist:
@@ -165,18 +201,21 @@ class UserRegistrationForm(UserCreationForm):
             pass
         return organization
 
+
     def save(self, commit = True):
         user = super(UserRegistrationForm, self).save(commit = False)
-        #user.email = self.cleaned_data['email']
         user.first_name = self.cleaned_data.get('first_name' or None)
         user.last_name = self.cleaned_data.get('last_name' or None)
-
         user.save()
-        
+
         special_code = self.cleaned_data.get('special_code' or None)
         organization = self.get_organization(special_code)
         user_profile = user.get_profile()
         user_profile.organization = organization
+
+        gender = self.cleaned_data.get('gender' or None)
+        user_profile.gender = gender
+
         user_profile.save()
         return user
 

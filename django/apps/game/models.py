@@ -258,8 +258,8 @@ class UserProfile(models.Model):
     disability = models.ForeignKey(Disability, null=True, blank=True)
     country = models.ForeignKey(Country, null=True, blank=True)
     updated = models.DateTimeField(auto_now=True)
-    gender = models.ForeignKey(Gender, default=Gender.get_default_gender)
-    #gender = models.ForeignKey(Gender, null=True, blank=True)
+    #gender = models.ForeignKey(Gender, default=Gender.get_default_gender)
+    gender = models.ForeignKey(Gender, null=True, blank=True)
 
     class Meta:
         verbose_name = _('user profile')
