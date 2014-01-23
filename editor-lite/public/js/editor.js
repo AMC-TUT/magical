@@ -111,6 +111,8 @@ var editor = {
 	gameMode: "normal",
 	maxFractionNumber: 5,
 
+	isMobile: false,
+
 	/* Get latest game revision */
 	getGame: function(gameSlug, callback) {
 		var self = this;
@@ -159,9 +161,36 @@ var editor = {
 	},
 
 	init: function() {
+		this.checkIfMobile();
+
 		if(this.gameSlug) {
 			this.getGame(this.gameSlug, this.initEditor);
 		}
+	},
+
+	checkIfMobile: function() {
+		var isMobile = {
+		   Android: function() {
+		       return navigator.userAgent.match(/Android/i);
+		   },
+		   BlackBerry: function() {
+		       return navigator.userAgent.match(/BlackBerry/i);
+		   },
+		   iOS: function() {
+		       return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+		   },
+		   Opera: function() {
+		       return navigator.userAgent.match(/Opera Mini/i);
+		   },
+		   Windows: function() {
+		       return navigator.userAgent.match(/IEMobile/i);
+		   },
+		   any: function() {
+		       return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+		   }
+		};
+		this.isMobile = isMobile.any();
+		return isMobile;
 	},
 
 	initEditor: function() {
