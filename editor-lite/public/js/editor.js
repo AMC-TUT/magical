@@ -234,6 +234,8 @@ var editor = {
 		this.gameMode = "normal";
 		
 		
+		if(this.isMobile) $('#fullScreenBtn').hide();
+
 		// ###### PRELOAD ############## Preload all media used by the game and the selected level
 		Crafty.scene('preload', function() {
 			Crafty.e('Text2').setStyle(editor.fontGame).text('Loading...');
