@@ -1498,7 +1498,7 @@ var editor = {
 			}
 		} else if(gameMode == "distance"){
 			$('#distanceMode').fadeIn();
-			if(gameinfo.level1.goalDistance) {
+			if(!gameinfo.level1.goalDistance) {
 				gameinfo.level1.goalDistance = 400;
 			}
 		}
