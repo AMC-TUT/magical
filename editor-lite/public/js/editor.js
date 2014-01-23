@@ -186,7 +186,10 @@ var editor = {
 		       return navigator.userAgent.match(/IEMobile/i);
 		   },
 		   any: function() {
-		       return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+		    	if (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows()) {
+		    		return true;
+		   		}
+		   		return false;
 		   }
 		};
 		this.isMobile = isMobile.any();
