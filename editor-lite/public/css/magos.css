@@ -50,6 +50,16 @@ legend {
 	z-index:10001;
 }
 
+.helpTxt {
+	color: #666;
+	font-style: italic;
+	font-weight: normal;
+}
+
+.spaceTop {
+	margin-top: 10px;
+}
+
 #matching,
 #fractionTasks {
 	overflow-y: auto;
