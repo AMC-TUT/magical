@@ -1,50 +1,3 @@
-/*
-var gameinfo = {
-	"level1":{
-		title: "Game is not named.", 
-		instructions:"No instructions are given.", 
-		platformType: "air",
-		playerImg: "magos-girl",
-		itemInterval:4000,
-		hazardInterval:4000,
-		wordInterval: 4000,
-		sky: null, 
-		scroll:[ 
-			{item:null, speed:5}, 
-			{item:null, speed:10},
-			{item:null, speed:15}
-		],
-		collectables:[], 
-		hazards:[], 
-		powerups:[],
-		wordRules:[],
-		answers:[],
-		fractionRules:[],
-		matchRule:null,
-		gameMode: "time", 
-		gameDuration: 60,
-		goalDistance: 400,
-		survivalFactor: 0.95,
-		extraLife: false,
-		turboSpeed: false,
-		bgcolor: "#F2F2F2",
-		star3limit: 0,
-		star2limit: 0,
-		star1limit: 0,
-		memoryIncrease: 0,
-		memoryStart: 0,
-		matchPointsRight: 0,
-		matchPointsWrong: 0,
-		hazardEffect: 0,
-		sliceAmount: 0,
-		pieceAmount: 0,
-		pizzaRules:[],
-		jumpPower: -24,
-		bonustimelimit: 220
-	}
-}
-*/
-
 var designFeedback = "";
 var elementCouter = 0;
 var taskLabel;
@@ -296,17 +249,17 @@ var editor = {
 		}
 
 		// matching rule memory start
-		
-		if(gameinfo["level1"].memoryStart) {
-			$('input#memoryStart').val( parseInt(gameinfo["level1"].memoryStart) );
+		if(gameinfo.level1.memoryStart) {
+			$('input#memoryStart').val( parseInt(gameinfo.level1.memoryStart) );
 		}
 		// matching rule memory increment
-		if(gameinfo["level1"].memoryIncrease) {
-			$('input#memoryIncrease').val( parseInt(gameinfo["level1"].memoryIncrease) );
+		if(gameinfo.level1.memoryIncrease) {
+			$('input#memoryIncrease').val( parseInt(gameinfo.level1.memoryIncrease) );
 		}
 
-		//gameinfo["level1"].memoryIncrease = parseInt(increment);
-
+		if(gameinfo.level1.wordInterval) {
+			$('select#wordIntervalList').val(gameinfo.level1.wordInterval);	
+		}
 
 		// player
 		if(gameinfo.level1.playerImg) {
@@ -667,6 +620,13 @@ var editor = {
 		$('select#matchWrongList').change(function() {
     		var valueSelected = this.value;
     		gameinfo.level1.matchPointsWrong = parseInt(valueSelected);
+    		editor.setGame();
+		});
+
+		// match appearance interval
+		$('select#wordIntervalList').change(function() {
+    		var valueSelected = this.value;
+    		gameinfo.level1.wordInterval = parseInt(valueSelected);
     		editor.setGame();
 		});
 
@@ -1109,10 +1069,10 @@ var editor = {
 		editor.bindRemoveCollectible(btn);
 	},
 
-	getWordInterval: function(){
+	/*getWordInterval: function(){
 		var selected=document.getElementById("wordIntervalList");
 		gameinfo["level1"].wordInterval = selected.options[selected.selectedIndex].value;
-	},
+	},*/
 
 	getPieceAmount: function(){
 		var selected=document.getElementById("pieceList");

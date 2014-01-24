@@ -6,6 +6,7 @@ from audiofield.fields import AudioField
 import datetime, mimetypes, hashlib, time
 from imagekit.models import ImageSpecField
 from django.conf import settings
+from polymorphic import PolymorphicModel
 
 
 # Game block sizes (32, 48, 64)
@@ -397,33 +398,7 @@ class Audio(models.Model):
 
     def __unicode__(self):
         return u"%s" % self.name
-"""
-class Game(models.Model):
 
-    title = models.CharField(max_length=45, null=False, blank=False)
-    slug = models.SlugField(max_length=45, null=False, blank=False, unique=True)
-    type = models.ForeignKey(GameType)
-    state = models.IntegerField(null=False, blank=False, default=0)
-    image = models.ImageField(blank = True, null = True, upload_to='game_images')
-    description = models.CharField(max_length=255, null=True, blank=True)
-    cloned = models.IntegerField(null=True, blank=True)
-    created = models.DateTimeField(auto_now_add=True, default=datetime.date.today)
-    updated = models.DateTimeField(auto_now=True)
-    creator = models.ForeignKey(User, blank = True, null = True)
-
-    
-    class Meta:
-        verbose_name = _('game')
-        verbose_name_plural = _('games')
-
-    def get_latest_revision(self):
-        return Revision.objects.filter(game=self).latest('inserted')
-    
-    def __unicode__(self):
-        return u"%s" % self.title
-"""
-
-from polymorphic import PolymorphicModel
 
 class Game(PolymorphicModel):
     title = models.CharField(max_length=45, null=False, blank=False)
@@ -445,6 +420,7 @@ class Game(PolymorphicModel):
     
     def __unicode__(self):
         return u"%s" % self.title
+
 
 class MagosAGame(Game):
     """

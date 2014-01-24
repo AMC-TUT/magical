@@ -789,12 +789,13 @@ var game = {
 				taskLabel.changeTask(game.curTask);
 			}
 			
-			function createNewWordTask(){
-				game.curAnswers =[];
+			function createNewWordTask() {
+				// TODO: store last task eref -> if same again, take some other, if only one, take that
+				game.curAnswers = [];
 				var r = Crafty.math.randomInt(0, gameinfo["level1"].wordRules.length-1);
-				var task = gameinfo.level1.wordRules[r];				
-				game.curAnswers.push(gameinfo.level1.wordRules[r].right); 
-				for(var i = 0; i < gameinfo.level1.wordRules[r].wrongArr.length; i++){
+				var task = gameinfo.level1.wordRules[r];
+				game.curAnswers.push(gameinfo.level1.wordRules[r].right);
+				for(var i = 0; i < gameinfo.level1.wordRules[r].wrongArr.length; i++) {
 					game.curAnswers.push(gameinfo.level1.wordRules[r].wrongArr[i]);
 				}
 				var w1 = task.task;
@@ -803,7 +804,7 @@ var game = {
 				taskLabel.changeTask(game.curTask);
 			}
 			
-			function createNewMemoryTask(first){
+			function createNewMemoryTask(first) {
 				if(first) {
 					game.curTask = gameinfo["level1"].memoryStart+gameinfo["level1"].memoryIncrease;
 					taskLabel.changeTask(gameinfo["level1"].memoryStart+"+"+gameinfo["level1"].memoryIncrease);

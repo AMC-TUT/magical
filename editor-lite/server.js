@@ -34,10 +34,10 @@ app.use(express.session());
 // serve static resources from public dir
 app.use('/static', express.static(path.join(__dirname, 'public')));
 app.use('/media/user-media', express.static(path.join(__dirname, 'user-media')));
-// authentication is used on all routes
-app.use(require('./middleware/authenticate'));
 app.use(app.router);
 
+// authentication
+var authenticate = require('./middleware/authenticate');
 
 // authorization is used only on selected routes
 var authorize = require('./middleware/authorize');
@@ -47,7 +47,7 @@ var pageRoutes = require('./routes/page'),
   	editorRoutes = require('./routes/editor'),
   	playRoutes = require('./routes/play');
 app.get('/', pageRoutes.index);
-app.get('/edit/:slug', authorize, editorRoutes.index);
+app.get('/edit/:slug', authenticate, authorize, editorRoutes.index);
 app.get('/play/:slug', playRoutes.index);
 
 // redirect other requests to index

@@ -165,17 +165,19 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
     parsers = DEFAULT_PARSERS
  
     def get(self, request, gameslug):
-        session_user = request.user
-        if not session_user.is_authenticated():
-            response = Response(403, {'statusCode': 403, 'message' : 'Not authorized'})
-            return self.render(response)
-        organization = session_user.get_profile().organization
+        game = None
         try:
             game = Game.objects.get(slug=gameslug)
         except Game.DoesNotExist:
             response = Response(404, {'statusCode': 404, 'message' : 'Game not found'})
             return self.render(response)
-        
+        if game:
+            if not game.state == 2:
+                # public games can be accessed even by anonymous users
+                session_user = request.user
+                if not session_user.is_authenticated():
+                    response = Response(403, {'statusCode': 403, 'message' : 'Not authorized'})
+                    return self.render(response)
         result_dict = {}
         result_dict['title'] = game.title
         result_dict['id'] = game.id

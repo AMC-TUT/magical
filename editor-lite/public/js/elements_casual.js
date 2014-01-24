@@ -57,7 +57,7 @@ var textures =  {
 	"toxic": "/editor-lite/static/img/toxic.png",
 	"radioactive": "/editor-lite/static/img/radioactive.png",
 	"flammable": "/editor-lite/static/img/flammable.png",
-	"magos-logo": "/editor-lite/static/img/magos-logo.png",
+	"magos-logo": "/editor-lite/static/img/magos-lite-logo.png",
 	"p_1_6": "/editor-lite/static/img/pizza/p_1_6.png",
 	"p_2_6": "/editor-lite/static/img/pizza/p_2_6.png",
 	"p_3_6": "/editor-lite/static/img/pizza/p_3_6.png",

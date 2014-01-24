@@ -38,8 +38,20 @@ def home(request):
     redis_ses_key = ses.get_real_stored_key(sess_id)
     print redis_ses_key
     """
+    latest_revision = None
+    revisions = None
+    if not user.is_authenticated():
+        magos_b_games = MagosBGame.objects.filter(state=2)
+        revisions = Revision.objects.filter(game__in=magos_b_games).order_by('-updated')
+    else:
+        organization = user.get_profile().organization
+        magos_b_games = MagosBGame.objects.filter(author__user__userprofile__organization=organization)
+        revisions = Revision.objects.filter(game__in=magos_b_games, game__author__user__userprofile__organization=organization).order_by('-updated')
+    if revisions:
+        latest_revision = revisions[0]  # get latest revision
+    context['latest_revision'] = latest_revision
+    context['play_url'] = settings.MAGOS_LITE_PLAY_URL
     if user.is_anonymous():
-        #print "CREATE ANONYMOUS SESSION"
         ses['username'] = 'anonymous'
         ses['role'] = 'player'
         ses['lang'] = 'english'

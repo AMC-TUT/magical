@@ -16,17 +16,17 @@
         <div class="row wide-content">
                     
             <div id="main-content" class="col-xs-8">
-                           
+                {% if latest_revision %}                           
                 <div class="featured-game">
                     <div id="featured-slogan">
-                        <h1>Super-Magos is Out!</h1>
+                        <h1>{{ latest_revision.game.title }} is Out!</h1>
                         <p>
-                            Experience the hottest new game in the Magos universe.
-                            <button class="btn btn-primary" type="button">Play Now</button>
+                            Experience the latest game in your Magos universe.
+                            <a class="btn btn-primary" type="button" href="{{ play_url }}{{ latest_revision.game.slug }}" target="_blank">Play now</a>
                         </p>
                     </div>
                 </div>
-                
+                {% endif %}
                 <ul class="nav nav-tabs" id="gamesList">
                 <!--
                     <li class="active">
