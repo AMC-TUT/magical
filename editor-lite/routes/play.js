@@ -1,7 +1,8 @@
 /**
-* Editor routes
+* Play routes
 */
-var config = require("../config");
+var _ = require('underscore')._,
+	config = require("../config");
 
 module.exports.index = function(req, res) {
 	var gameSlug = req.params.slug;
@@ -9,8 +10,7 @@ module.exports.index = function(req, res) {
 	res.render('play_index.html', {
 		title: 'Magos Lite',
 		djangoUrl: config.express.djangoUrl,
+		//user: user,
 		gameSlug: gameSlug
 	});
 };
-
-

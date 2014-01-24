@@ -1,5 +1,9 @@
 
 var game = {
+	djangoUrl: 'http://localhost:8080',
+	apiUrl: '/api/v1/games/',
+	preview: true,
+	gameSlug: null,
 	mediaLoader: null,
 	fontGame: null,
 	playerDead: null,
@@ -50,7 +54,19 @@ var game = {
 	groundGravity: null,
 	isJumping: null,
 	characterGround: null,
+
+	/* PLAY game */
+	initPlay: function() {
+		this.preview = false;
+		if(this.gameSlug) {
+			utils.djangoUrl = this.djangoUrl; 
+			utils.apiUrl = this.apiUrl;
+			Crafty.init(1024, 748);
+			utils.getGameToPlay(this.gameSlug, this.initGame, game);
+		}
+	},
 	
+	/* PREVIEW game */
 	initGame: function() {
 		this.mediaLoader = new MediaLoader();
 		this.fontGame = {font: 'Arial', size: 24, color: '#FF0000'};
@@ -133,14 +149,16 @@ var game = {
 			}
 			Crafty.addEvent(playb, playb._element, "mousedown", playb.onMouseDown);
 			
-			var menubtn = Crafty.e("2D, DOM, Image, Mouse, editorbtn").attr({x: 550, y: 450, z:1000});
-			console.log("menux"+menubtn.x);
-			menubtn.onMouseDown = function(e) {
-				document.getElementById("editor-stage").style.display="block";
-				Crafty.scene('editor');
+			if(game.preview) {
+				// show editor button only when previewing game
+				var menubtn = Crafty.e("2D, DOM, Image, Mouse, editorbtn").attr({x: 550, y: 450, z:1000});
+				console.log("menux"+menubtn.x);
+				menubtn.onMouseDown = function(e) {
+					document.getElementById("editor-stage").style.display="block";
+					Crafty.scene('editor');
+				}
+				Crafty.addEvent(menubtn, menubtn._element, "mousedown", menubtn.onMouseDown);
 			}
-			Crafty.addEvent(menubtn, menubtn._element, "mousedown", menubtn.onMouseDown);
-			
 			Crafty.e("TitleText, DOM, 2D, Text")
 			.attr({ x: 200, y: 170, w: 600, h: 300 })
 			.text(game.title)

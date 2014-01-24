@@ -28,7 +28,7 @@
                 <div id="response"></div>
             {% endif %}
             <p>
-                <a class="btn btn-primary" id="play-game" href="{{ play_url }}{{ game.slug }}" target="_blank">Play game</a>
+                <a class="btn btn-primary" href="{{ play_url }}{{ game.slug }}" target="_blank">Play game</a> 
                 {% if can_edit %}
                 <a class="btn btn-warning" href="{{ editor_url }}{{ game.slug }}" target="_blank">Launch game editor</a> {% endif %}
             </p>

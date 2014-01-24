@@ -1,4 +1,4 @@
-﻿from django.shortcuts import render_to_response, render
+from django.shortcuts import render_to_response, render
 from django.template import RequestContext
 from django.http import HttpResponse, Http404, HttpResponseNotAllowed, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -585,7 +585,7 @@ def register_success(request):
 @staff_member_required
 def import_users(request):
     context = RequestContext(request)
-    context['current_app'] = 'user'
+    #context['current_app'] = 'user'
     if request.method == "POST":
         form = BatchCreateUsersForm(request.POST, request.FILES)
         if form.is_valid():
