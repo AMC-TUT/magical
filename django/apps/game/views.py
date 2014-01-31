@@ -7,10 +7,12 @@ from django.conf import settings
 from django.utils import simplejson
 from django.contrib.auth import login, logout
 from django.shortcuts import redirect
+from django.core.urlresolvers import reverse
 from django.core import serializers
 from django.core.exceptions import MultipleObjectsReturned
 from django.core.servers.basehttp import FileWrapper
 from django.db.models import Q
+from django.contrib import messages
 import json
 
 from django.contrib.auth.forms import AuthenticationForm
@@ -61,6 +63,29 @@ def home(request):
 
     context['user'] = user
     return render(request, tpl, context)
+
+
+def delete_game(request, gameslug):
+    """Delete game"""
+    context = RequestContext(request)
+    user = request.user
+    organization = None
+    if user.is_authenticated():
+        organization = user.get_profile().organization
+    else:
+        return HttpResponseRedirect(reverse('home'))
+    try:
+        game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)            
+        game_title = game.title
+        isAuthor = game.author_set.filter(user=user)
+        if isAuthor or user == game.creator:
+            game.delete()
+            messages.success(request, 'Game %s was deleted.' % game_title)
+    except Game.DoesNotExist:
+        return HttpResponseRedirect(reverse('home'))
+
+    return HttpResponseRedirect(reverse('home'))
+
 
 def game_details(request, gameslug):
     """Game details"""

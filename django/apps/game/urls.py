@@ -13,6 +13,8 @@ urlpatterns = patterns('',
     url(r'^create/A/$', 'apps.game.views.create_game_a', name="create_game_a"),
     url(r'^create/B/$', 'apps.game.views.create_game_b', name="create_game_b"),
 
+    url(r'^delete/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.delete_game', name="delete_game"),
+
     url(r'^game-authors/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.game_authors', name="game_authors"),
     url(r'^available-authors/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.available_authors', name="available_authors"),
     url(r'^add-author/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.add_author', name="add_author"),

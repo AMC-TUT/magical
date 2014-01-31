@@ -119,6 +119,19 @@ App.games = {
             self.loadCreateForm(curFormType);
             $('#selectGameType').slideUp();
         });
-    }
+    },
+
+    /**
+     * Display flash notifications
+     */
+    notify: function(msg, msgType, msgTimeout) {
+        if(_.isUndefined(msgTimeout)) msgTimeout = 600;
+        // show notification
+        var note = noty({
+            text: msg, 
+            type: msgType || 'alert',
+            timeout: msgTimeout
+        });
+    }    
 }
 

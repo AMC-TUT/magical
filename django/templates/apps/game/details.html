@@ -1,76 +1,82 @@
 {% extends "apps/game/game_base.html" %}
 {% load i18n %}
 
-{% block bodyclass %}home{% endblock %}
+{% block bodyclass %}create{% endblock %}
 
 {% block content %}
-    
+<div class="row wide-content">
                     
-        <div id="main-content" class="col-xs-8">
-        {% if game %}
-                       
-            <h1>{{ game.title }}</h1>
-            {% if game.image %}
-            <img src="{{ MEDIA_URL }}{{ game.image }}" class="game-image embedded">
-            {% else %}
-            <img src="{{ STATIC_URL }}img/default-game-image.png" class="game-image embedded">
-            {% endif %}
-
-            {% if game.creator %}
-            <p>Created by {{ game.creator.username }}</p>
-            {% endif %}
-        
-            {% if can_review %}
-                <input type="range" value="{{ avg_stars }}" step="1" id="ratingSettings">
-                <div class="rateit" data-gameid="{{ game.id }}" data-rateit-backingfld="#ratingSettings" data-rateit-min="0" data-rateit-max="5">
-                </div>
-                <div class="reviewInfo">({{ avg_stars }} average, {{ num_reviews }} votes)</div>
-                <div id="response"></div>
-            {% endif %}
-            <p>
-                <a class="btn btn-primary" href="{{ play_url }}{{ game.slug }}" target="_blank">Play game</a> 
-                {% if can_edit %}
-                <a class="btn btn-warning" href="{{ editor_url }}{{ game.slug }}" target="_blank">Launch game editor</a> {% endif %}
-            </p>
-
-            <hr />
-
-            <p>{{ game.description }}</p>
-            
-            <hr />
-            
-            <div id="game-authors"></div>
-            
-            <div id="available-authors"></div>
-
-            <hr />
-
-            <p>Game created on {{ game.created }}</p>
-            <p>Played 0 times</p>
-
-            <hr />
-
-            <h2>Comments</h2>
-            <p><i>No comments yet.</i></p>
-                    
+    <div id="main-content" class="col-xs-8">
+    {% if game %}
+                   
+        <h1>{{ game.title }}</h1>
+        {% if game.image %}
+        <img src="{{ MEDIA_URL }}{{ game.image }}" class="game-image embedded">
+        {% else %}
+        <img src="{{ STATIC_URL }}img/default-game-image.png" class="game-image embedded">
         {% endif %}
-        </div>
-    
-        <div id="sidebar" class="col-xs-4">
-            <h2>Highscore</h2>
-            {% if highscores %}
-            <ol class="highscore-list">
-            {% for highscore in highscores %}
-                <li><span class="highscore_name">{{ highscore.user.first_name }} {{ highscore.user.last_name }}</span><span class="highscore_score">{{ highscore.score }}</span></li>
-            {% endfor %}
-            </ol>
-            {% else %}
-            <p>No highscore yet.</p>
-            {% endif %}
 
-            {% include 'apps/game/sidebar.html' %}
+        {% if game.creator %}
+        <p>Created by {{ game.creator.username }}</p>
+        {% endif %}
 
-        </div>
+        {% if can_review %}
+            <input type="range" value="{{ avg_stars }}" step="1" id="ratingSettings">
+            <div class="rateit" data-gameid="{{ game.id }}" data-rateit-backingfld="#ratingSettings" data-rateit-min="0" data-rateit-max="5">
+            </div>
+            <div class="reviewInfo">({{ avg_stars }} average, {{ num_reviews }} votes)</div>
+            <div id="response"></div>
+        {% endif %}
+        <p>
+            <a class="btn btn-primary" href="{{ play_url }}{{ game.slug }}" target="_blank">Play game</a> 
+            {% if can_edit %}
+            <a class="btn btn-warning" href="{{ editor_url }}{{ game.slug }}" target="_blank">Launch game editor</a> {% endif %}
+        </p>
+
+        <hr />
+
+        <p>{{ game.description }}</p>
+        
+        <hr />
+        
+        <div id="game-authors"></div>
+        
+        <div id="available-authors"></div>
+
+        <hr />
+
+        <p>Game created on {{ game.created }}</p>
+        <p>Played 0 times</p>
+
+        <hr />
+
+        <h2>Comments</h2>
+        <p><i>No comments yet.</i></p>
+                
+        <hr />
+        {% if can_edit %}
+            <button class="btn btn-danger" id="deleteGame" href="{% url 'delete_game' game.slug%}">Delete game</button>
+        {% endif %}
+
+    {% endif %}
+    </div>
+        
+    <div id="sidebar" class="col-xs-4">
+        <h2>Highscore</h2>
+        {% if highscores %}
+        <ol class="highscore-list">
+        {% for highscore in highscores %}
+            <li><span class="highscore_name">{{ highscore.user.first_name }} {{ highscore.user.last_name }}</span><span class="highscore_score">{{ highscore.score }}</span></li>
+        {% endfor %}
+        </ol>
+        {% else %}
+        <p>No highscore yet.</p>
+        {% endif %}
+
+        {% include 'apps/game/sidebar.html' %}
+    </div>
+
+</div>
 
 {% endblock %}
 
@@ -201,16 +207,22 @@ $(document).ready(function() {
     }
 
 
-    function bindPlayGame() {
-        $('#play-game').on('click', function(e) {
+    function bindDeleteGame() {
+        $('#deleteGame').on('click', function(e) {
             e.preventDefault();
             var url = $(this).attr('href');
-            console.log(url);
+            return bootbox.confirm("Are you sure?", function(result) {
+                if (result) {
+                  window.location = url;
+                } else {
+                    bootbox.hideAll();
+                }                
+            });
         });
     }
 
     getGameAuthors();
-    bindPlayGame();
+    bindDeleteGame();
 
 }); // document ready
 </script>
