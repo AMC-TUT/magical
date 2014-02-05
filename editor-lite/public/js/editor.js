@@ -224,7 +224,7 @@ var editor = {
 			$('select#platformList').val(gameinfo.level1.platformType);
 		}
 		if(gameinfo.level1.jumpPower) {
-			$('select#jumpList').val(gameinfo.level1.jumpPower);
+			//$('select#jumpList').val(gameinfo.level1.jumpPower);
 		}
 		// game mode
 		if(gameinfo.level1.gameMode) {
@@ -309,6 +309,18 @@ var editor = {
 		var hasTurboSpeed = (gameinfo.level1.turboSpeed) ? "1" : "0";  
 		$('select#turboList').val(hasTurboSpeed);
 
+		// sensitivity
+		if(gameinfo.level1.hasOwnProperty('sensitivity')) {
+			$('select#jumpSensitivityList').val(gameinfo.level1.sensitivity.jump);
+			$('select#motionSensitivityList').val(gameinfo.level1.sensitivity.motion);			
+		} else {
+			// add default sensitivity property for game
+			gameinfo.level1['sensitivity'] = {
+				jump: 18000,
+				motion: 10000
+			};
+		}
+
 	},
 
 	createUIElements: function() {
@@ -390,7 +402,6 @@ var editor = {
 			if(wAnswers[index-1] == "" || wAnswers[index-1] == " "){
 				w3.pop();
 			}
-
     		if(w1!="" && w2!="" && w1!=" " && w2!=" ") {
     			var matchRules = {
     				'task': w1,
@@ -400,9 +411,9 @@ var editor = {
     			}
     			editor.addMatchRule(matchRules, true);
 				editor.setGame();
-    		} else {
+			} else {
 				showWarning("Either a task or an answer is missing!");
-    		}
+			}
 		});
 
 		// match fraction form 
@@ -469,6 +480,21 @@ var editor = {
     		gameinfo.level1.jumpPower = parseInt(valueSelected, 10);
     		editor.setGame();
 		});
+
+		// jump sensitivity
+		$('select#jumpSensitivityList').change(function() {
+    		var valueSelected = this.value;
+    		gameinfo.level1.sensitivity.jump = parseInt(valueSelected);
+    		editor.setGame();
+		});
+
+		// motion sensitivity
+		$('select#motionSensitivityList').change(function() {
+    		var valueSelected = this.value;
+    		gameinfo.level1.sensitivity.motion = parseInt(valueSelected);
+    		editor.setGame();
+		});
+
 		$('select#modeList').change(function() {
     		var valueSelected = this.value;
     		editor.getMode(valueSelected);
@@ -726,18 +752,19 @@ var editor = {
 			}
 		}
 		gameinfo.level1.platformType = platformType;
+		$('.gameType').hide();
 		if(platformType == "air") {
 			// flying game
 			players = textureMenu.airPlayers;
 			grounds = textureMenu.airGrounds;
-
-			document.getElementById("jumpPowers").style.display = "none";
+			//$("#jumpPowers").hide();
+			$("#motionSensitivity").show();
 		} else {
 			// driving or running game
 			players = textureMenu.groundPlayers;
 			grounds = textureMenu.grounds;
-
-			document.getElementById("jumpPowers").style.display = "block";
+			//$("#jumpPowers").show();
+			$("#jumpSensitivity").show();
 		}
 		if(!playerImg) playerImg = players[0].value;
 		editor.populateSelect('#playerList', players, playerImg);
@@ -1416,7 +1443,7 @@ var editor = {
 		editor.setGame();
 	},
 
-	getMode: function(gameMode){
+	getMode: function(gameMode) {
 		if(_.isUndefined(gameMode) || _.isNull(gameMode)) {
 			gameMode = gameinfo.level1.gameMode;
 		}
@@ -1427,7 +1454,7 @@ var editor = {
 		if(gameMode == "time") {
 			$('#timeMode').fadeIn();
 			if(!gameinfo.level1.gameDuration) {
-				gameinfo.level1.gameDuration = 60;				
+				gameinfo.level1.gameDuration = 60;			
 			}
 		} else if(gameMode == "survival") {
 			$('#survivalMode').fadeIn();

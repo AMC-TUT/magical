@@ -332,6 +332,10 @@ def create_game_b(request):
                     "speed" : 15
                 }
             ]
+            sensitivity_data = {
+                "jump": 18000,
+                "motion": 10000
+            }
             revision_data['title'] = game.title
             revision_data['instructions'] = ""
             revision_data['platformType'] = "air"
@@ -369,6 +373,7 @@ def create_game_b(request):
             revision_data['pizzaRules'] = [] 
             revision_data['jumpPower'] = -24 
             revision_data['bonustimelimit'] = 220 
+            revision_data['sensitivity'] = sensitivity_data 
 
             revision_data = json.dumps(revision_data)
 

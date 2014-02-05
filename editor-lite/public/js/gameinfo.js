@@ -39,6 +39,10 @@ var gameinfo = {
 		pieceAmount: 0,
 		pizzaRules:[],
 		jumpPower: -24,
+		sensitivity: {
+			jump: 18000,
+			motion: 10000
+		},
 		bonustimelimit: 220
 	}
 }

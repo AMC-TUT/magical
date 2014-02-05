@@ -351,7 +351,8 @@ var game = {
 			function jump() {
 				//console.log("jump should start & isJumping = "+game.isJumping);
 			    if (game.isJumping == false) {
-			        game.yVel = gameinfo["level1"].jumpPower;
+			        //game.yVel = gameinfo["level1"].jumpPower;
+			        game.yVel = -40; // this is set in stone for now
 			        game.isJumping = true;
 			    }
 			}
@@ -836,49 +837,50 @@ var game = {
 			// ##### MOTION STUFF #######
 			if (window.DeviceMotionEvent==undefined) {
 			} else {
+				var motionSensitivity = (gameinfo.level1.hasOwnProperty('sensitivity')) ? parseInt(gameinfo.level1.sensitivity.motion, 10) : 10000;
+				var jumpSensitivity = (gameinfo.level1.hasOwnProperty('sensitivity')) ? parseInt(gameinfo.level1.sensitivity.jump, 10) : 18000;
+
 				window.ondevicemotion = function(event) {
 					ax = Math.round(event.accelerationIncludingGravity.x*1000);
 					ay = Math.round(event.accelerationIncludingGravity.y*1000);
 					az = Math.round(event.accelerationIncludingGravity.z*1000);
 				}
-
 				setInterval(function() {
-					if(!activated){
-						
-						var xx = (ax-oldx)*(ax-oldx);
-						var yy = (ay - oldy)*(ay-oldy);
-						var zz = (az - oldz)*(az-oldz);
-						var sum = xx+yy+zz;
+					if(!activated) {						
+						var xx = (ax - oldx) * (ax - oldx);
+						var yy = (ay - oldy) * (ay - oldy);
+						var zz = (az - oldz) * (az - oldz);
+						var sum = xx + yy + zz;
 						var pituus = Math.abs(Math.sqrt(sum));
-						if(gameinfo["level1"].platformType == "air"){
-							if (pituus>10000){
-								if(game.ymov>4){
+						if(gameinfo["level1"].platformType == "air") {
+							if (pituus > motionSensitivity) {
+								if(game.ymov>4) {
 									game.ymov-=3;
 								}
-								if(game.ymov<=4 && game.ymov>1){
+								if(game.ymov<=4 && game.ymov>1) {
 									game.ymov-=2;
 								}
-								if(game.ymov<=1){
+								if(game.ymov<=1) {
 									game.ymov-=1;
 								}
-								if(game.ymov<-5){
+								if(game.ymov<-5) {
 									game.ymov=-5;
 								}
 								oldx = ax;
 								oldy = ay;
 								oldz = az;
-							}else{
+							} else {
 								oldx = ax;
 								oldy = ay;
 								oldz = az;
 							}
-						}else{
-							if (pituus>18000){
+						} else {
+							if (pituus > jumpSensitivity) {
 								jump();
 								oldx = ax;
 								oldy = ay;
 								oldz = az;	
-							}else{	
+							} else {	
 								oldx = ax;
 								oldy = ay;
 								oldz = az;
@@ -1075,8 +1077,7 @@ var game = {
 	    	}else{
 	    		return highscore;
 	    	}
-		}
-		else {
+		} else {
 	    	localStorage['Highscore_l'+lev]=newscore;
 	    	return newscore;
 		}
