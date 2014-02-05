@@ -1,15 +1,23 @@
+{% load magos_tags %}
+
 <h2>Attention</h2>
 <p>Magos Lite is still in development. Some parts of the system do not work yet. Nevertheless, you can start creating games with Magos Lite. We'll fix existing problems as soon as possible. Have fun!</p>
 
-<!--
-<iframe width="270" height="180" src="http://www.youtube.com/embed/I8qkQhTfSJ4" frameborder="0" allowfullscreen></iframe>
+<h3>Magos News</h3>
+<ul class="list-group">
+    <li class="list-group-item">
+    	<h5 class="list-group-item-heading">5.2.2014</h5>
+    	<ul class="list-group-item-text news-items">
+    		<li>Games can be accessed also via their ID</li>
+    	</ul>
+    </li>
+    <li class="list-group-item">
+    	<h5 class="list-group-item-heading">31.1.2014</h5>
+    	<ul class="list-group-item-text news-items">
+    		<li>Own games can be deleted</li>
+    	</ul>
+    </li>
 
-<h3>Magos Statistics</h3>
-<ul>
-    <li>324 users / 76 currently online</li>
-    <li>42 games</li>
-    <li>Mauris posuere, lorem sit amet iaculis laoreet</li>
-    <li>Lectus dui faucibus lectus, vitae sagittis velit magna a augue</li>
 </ul>
 
--->
+{% magos_statistics %}

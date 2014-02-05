@@ -473,3 +473,8 @@ h1.ajax-loading {
 .modal-content {
     color: #222;
 }
+
+ul.news-items {
+    padding-left: 20px;
+    list-style: disc;
+}

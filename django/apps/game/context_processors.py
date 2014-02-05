@@ -1,4 +1,4 @@
-from apps.game.forms import LoginForm
+from .forms import LoginForm
 
 def include_login_form(request):
     form = LoginForm()
