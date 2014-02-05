@@ -1,14 +1,16 @@
 """Production settings and globals."""
 from base import *
 
-########## EDITOR/PLAY URL CONFIGURATION
+########## URL CONFIGURATION
+BASE_URL = 'http://magos.pori.tut.fi/'
+
 MAGOS_EDITOR_URL = 'http://magos.pori.tut.fi/editor/edit/'
 MAGOS_PLAY_URL = 'http://magos.pori.tut.fi/editor/play/'
 
 MAGOS_LITE_EDITOR_URL = 'http://magos.pori.tut.fi/editor-lite/edit/'
 MAGOS_LITE_PLAY_URL = 'http://magos.pori.tut.fi/editor-lite/play/'
 
-########## END EDITOR/PLAY URL CONFIGURATION
+########## END URL CONFIGURATION
 
 
 ########## DATABASE CONFIGURATION

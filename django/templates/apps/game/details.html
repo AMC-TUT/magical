@@ -10,6 +10,7 @@
     {% if game %}
                    
         <h1>{{ game.title }}</h1>
+        <p>Game permalink: <a href="{{base_url}}game/id/{{ game.id }}">{{base_url}}game/id/{{ game.id }}</p>
         {% if game.image %}
         <img src="{{ MEDIA_URL }}{{ game.image }}" class="game-image embedded">
         {% else %}

@@ -12,14 +12,16 @@ TEMPLATE_DEBUG = DEBUG
 ########## END EMAIL CONFIGURATION
 
 
-########## EDITOR/PLAY URL CONFIGURATION
+########## URL CONFIGURATION
+BASE_URL = 'http://localhost:8080/'
+
 MAGOS_EDITOR_URL = 'http://localhost:8080/editor/edit/'
 MAGOS_PLAY_URL = 'http://localhost:8080/editor/play/'
 
 MAGOS_LITE_EDITOR_URL = 'http://localhost:8080/editor-lite/edit/'
 MAGOS_LITE_PLAY_URL = 'http://localhost:8080/editor-lite/play/'
 
-########## END EDITOR/PLAY URL CONFIGURATION
+########## END URL CONFIGURATION
 
 
 ########## DATABASE CONFIGURATION

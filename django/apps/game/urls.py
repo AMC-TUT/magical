@@ -7,6 +7,7 @@ urlpatterns = patterns('',
     url(r'^ajax_list_games/(?P<gametype>[\w.@+-]+)$', 'apps.game.views.ajax_list_games'),
     
     url(r'^details/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.game_details', name="game_details"),
+    url(r'^id/(?P<gameid>\d+)/$', 'apps.game.views.game_details_id', name="game_details_id"),
 
     url(r'^create/$', 'apps.game.views.create_game_base', name="create_game_base"),
 

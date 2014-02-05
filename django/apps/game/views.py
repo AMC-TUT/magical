@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render_to_response, render, redirect
 from django.template import RequestContext
 from django.http import HttpResponse, Http404, HttpResponseNotAllowed, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -86,6 +86,17 @@ def delete_game(request, gameslug):
 
     return HttpResponseRedirect(reverse('home'))
 
+def game_details_id(slug, gameid):
+    """
+    Redirect to game details via game ID.
+    """
+    try:
+        game = Game.objects.get(id=gameid)
+        gameslug = game.slug
+    except Game.DoesNotExist:
+        return HttpResponseRedirect(reverse('home'))
+    return redirect('game_details', gameslug=gameslug)
+
 
 def game_details(request, gameslug):
     """Game details"""
@@ -106,6 +117,8 @@ def game_details(request, gameslug):
     game_authors = []
     can_review = False
     available_authors = []
+    base_url = settings.BASE_URL
+    context['base_url'] = base_url
     editor_url = settings.MAGOS_EDITOR_URL
     play_url = settings.MAGOS_PLAY_URL
     try:
