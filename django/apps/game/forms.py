@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
+from django.template.defaultfilters import slugify
 from .models import Game, MagosAGame, MagosBGame, GameType, BLOCK_SIZE_CHOICES, \
     Organization, Gender
 
@@ -43,6 +44,17 @@ class BaseGameForm(forms.ModelForm):
 		if kwargs.has_key('organization'):
 			organization = kwargs.pop('organization')
 		super(BaseGameForm, self).__init__(*args, **kwargs)
+
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        slug = slugify(title)
+        try:
+            Game.objects.get(slug=slug)
+            raise forms.ValidationError(_(u"Game with the same title exists. Try another title."))
+
+        except Game.DoesNotExist:
+            pass
+        return title
 
 
 class MagosAGameForm(BaseGameForm):

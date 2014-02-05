@@ -8,6 +8,9 @@ from imagekit.models import ImageSpecField
 from django.conf import settings
 from polymorphic import PolymorphicModel
 
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+from django.template.defaultfilters import slugify
 
 # Game block sizes (32, 48, 64)
 BLOCK_SIZE_CHOICES = (
@@ -593,10 +596,6 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 # Automagically create a profile when user is created
 post_save.connect(create_user_profile, sender=User)
-
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
-from django.template.defaultfilters import slugify
 
 @receiver(pre_save)
 def slugify_title_callback(sender, instance, *args, **kwargs):
