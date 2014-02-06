@@ -21,7 +21,7 @@ config.mongodb = {
 
 if (PRODUCTION) {
   	//use different mongodb in production here, for example
-	config.express.djangoUrl = 'http://magos.pori.tut.fi/';
+	config.express.djangoUrl = 'http://magos.pori.tut.fi';
 }
 
 //config.db same deal
