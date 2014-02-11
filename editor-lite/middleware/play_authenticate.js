@@ -53,22 +53,13 @@ module.exports = function(req, res, next) {
 		if(!_.isNull(data)) {
 			sessionUser = parseSessionObject(data);
 			if(_.has(sessionUser, 'userName')) {
-				if(sessionUser.role != 'player' && sessionUser.userName != 'anonymous') {
-					// anonymous players can not use Magos editor, only play games
-					// has to be student or teacher to edit
-					isAuthenticated = true;
-					req.session.user = sessionUser;
-					req.session.isAuthenticated = true;
-					i18next.setLng(sessionUser.lang_code, function(t) {
-						next();
-					});
-				}
+				// anonymous can only play games
+				req.session.user = sessionUser;
+				req.session.isAuthenticated = true;
+				i18next.setLng(sessionUser.lang_code, function(t) {
+					next();
+				});
 			}
-		}
-		// if not authenticated user, redirect to login
-		if(!isAuthenticated) {
-		    res.redirect(config.express.djangoUrl + '/game/login?next=/editor-lite' + req.url);
-		    return false;
 		}
 	});
 };

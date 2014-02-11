@@ -2,6 +2,7 @@
 var game = {
 	djangoUrl: 'http://localhost:8080',
 	apiUrl: '/api/v1/games/',
+	user: null,	
 	preview: true,
 	gameSlug: null,
 	mediaLoader: null,
@@ -55,9 +56,8 @@ var game = {
 	isJumping: null,
 	characterGround: null,
 
-	/* PLAY game */
-	initPlay: function() {
-		this.preview = false;
+
+	getGameToPlay: function() {
 		if(this.gameSlug) {
 			utils.djangoUrl = this.djangoUrl; 
 			utils.apiUrl = this.apiUrl;
@@ -65,6 +65,17 @@ var game = {
 			utils.getGameToPlay(this.gameSlug, this.initGame, game);
 		}
 	},
+
+	/* PLAY game */
+	initPlay: function() {
+		this.preview = false;
+		var lang_code = 'en'; 
+		if(this.user) {
+			lang_code = this.user.lang_code;
+		}
+		utils.i18nInit(lang_code, this.getGameToPlay, game);
+	},
+
 	
 	/* PREVIEW game */
 	initGame: function() {
@@ -89,8 +100,8 @@ var game = {
 		this.playerImg = null;
 		this.gravity = 0.05;
 		this.ymov = 0;
-		this.instructions="Write instructions.";
-		this.title="Give a name to the game.";
+		this.instructions= "Write instructions.";
+		this.title= "Give a name to the game.";
 		this.p1y = 578;
 		this.p2y = 478;
 		this.p3y = 378;
@@ -122,14 +133,11 @@ var game = {
 
 		// ###### PRELOAD ############## Preload all media used by the game and the selected level
 		Crafty.scene('preloadgame', function() {
-			console.log("preload code starts");
 			Crafty.e('Text2').setStyle(game.fontGame).text('Loading...');
 			game.mediaLoader.addImages(textures);
 			game.mediaLoader.addSounds(sounds);
-			//mediaLoader.addSprites(sprites);
 			game.mediaLoader.load(function(success) {
 				if(success) {
-					console.log("success");
 					game.getGameData();
 				}
 			});
@@ -138,27 +146,34 @@ var game = {
 
 		// ######## INTRO SCENE ######################
 		Crafty.scene('intro', function() {
-			console.log("intro scene");
-			//Crafty.canvas._canvas.
 			game.clearIntervals();
 			Crafty.background(gameinfo["level1"].bgcolor);
 			Crafty.e("2D, DOM, Image, Mouse, magos-logo").attr({x: 20, y: 20, z:1000});
-			var playb = Crafty.e("2D, DOM, Image, Mouse, playBtn").attr({x: 300, y: 450, z:1000});
-			playb.onMouseDown = function(e) {
+			var stage = $('#cr-stage');
+
+			var playBtn = $('<button>');
+			playBtn.attr('id', 'playBtn');
+			playBtn.addClass('btn btn-primary magosLiteBtn');
+			playBtn.text(i18n.t('Play'));
+			stage.append(playBtn);
+			playBtn.click(function() {
+				$('#playBtn, #editBtn').remove();
 				Crafty.scene('game');
-			}
-			Crafty.addEvent(playb, playb._element, "mousedown", playb.onMouseDown);
-			
+			});
+
 			if(game.preview) {
-				// show editor button only when previewing game
-				var menubtn = Crafty.e("2D, DOM, Image, Mouse, editorbtn").attr({x: 550, y: 450, z:1000});
-				console.log("menux"+menubtn.x);
-				menubtn.onMouseDown = function(e) {
-					document.getElementById("editor-stage").style.display="block";
+				var editBtn = $('<button>');
+				editBtn.attr('id', 'editBtn');
+				editBtn.addClass('btn btn-success magosLiteBtn');
+				editBtn.text(i18n.t('Edit'));
+				stage.append(editBtn);
+				editBtn.click(function() {
+					$('#playBtn, #editBtn').remove();
+					$("#editor-stage").show();
 					Crafty.scene('editor');
-				}
-				Crafty.addEvent(menubtn, menubtn._element, "mousedown", menubtn.onMouseDown);
+				});
 			}
+	
 			Crafty.e("TitleText, DOM, 2D, Text")
 			.attr({ x: 200, y: 170, w: 600, h: 300 })
 			.text(game.title)
@@ -166,7 +181,7 @@ var game = {
 			.textColor('#000000');
 			
 			Crafty.e("IntroText, DOM, 2D, Text")
-			.attr({ x: 200, y: 250, w: 600, h: 300 })
+			.attr({ x: 200, y: 280, w: 600, h: 300 })
 			.text(game.instructions)
 			.textFont({ size: '25px', weight: 'bold' })
 			.textColor('#000000');
@@ -243,7 +258,7 @@ var game = {
 			
 			if(gameinfo["level1"].matchRule == "word"){
 				Crafty.e("2D, DOM, Image, sign").attr({x: 300, y: 0, z: 1000});
-				var taskLabel = Crafty.e("TaskLabel").taskLabel(320, 50, "task", '#FFFFFF');
+				var taskLabel = Crafty.e("TaskLabel").taskLabel(320, 50, i18n.t("task"), '#FFFFFF');
 				
 				if(gameinfo["level1"].wordRules.length>0){
 					createNewWordTask();
@@ -420,7 +435,7 @@ var game = {
 		   	
 			Crafty.e("Score, DOM, 2D, Text")
 			.attr({ x: 770, y: 15, z: 9002, w: 200, h: 20, score: 0 })
-			.text("Score: " + game.score)
+			.text(i18n.t('Score') + ": " + game.score)
 			.textFont({ size: '30px', weight: 'bold' })
 			.css("textShadow", "2px 2px #ffffff")
 			.textColor('#000000');
@@ -474,7 +489,7 @@ var game = {
 					var sinY= Math.sin(this.counter/this.vertical);
 					this.y += sinY*this.multiplyer;
 				});
-				item.onHit(playerImg, function(){ Crafty.e('ScoreAnimation').scoreanimation(this.x, this.y, "+"+cScore); this.destroy();game.score+=cScore; Crafty("Score").text("Score: "+game.score);});	
+				item.onHit(playerImg, function(){ Crafty.e('ScoreAnimation').scoreanimation(this.x, this.y, "+"+cScore); this.destroy();game.score+=cScore; Crafty("Score").text(i18n.t('Score') + ": "+game.score);});	
 			}
 			
 			// ############## HAZARDS & AVOIDABLES #################	
@@ -522,7 +537,7 @@ var game = {
 					var sinY= Math.sin(this.counter/this.vertical);
 					this.y += sinY*this.multiplyer;
 				});
-				item.onHit(playerImg, function(){Crafty.e('ScoreAnimation').scoreanimation(this.x, this.y, aScore); this.destroy();game.score+=aScore; Crafty("Score").text("Score: "+game.score); hitWithHazard()});	
+				item.onHit(playerImg, function(){Crafty.e('ScoreAnimation').scoreanimation(this.x, this.y, aScore); this.destroy();game.score+=aScore; Crafty("Score").text(i18n.t('Score') + ": "+game.score); hitWithHazard()});	
 			}
 			
 			function hitWithHazard(){
@@ -604,7 +619,7 @@ var game = {
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, "+"+gameinfo["level1"].matchPointsRight);
 					createNewTask(); 
 				}
-				Crafty("Score").text("Score: "+game.score); 
+				Crafty("Score").text(i18n.t('Score') + ": "+game.score); 
 				item.destroy();
 			}
 			
@@ -617,7 +632,7 @@ var game = {
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, "+"+gameinfo["level1"].matchPointsRight);
 					createNewPizzaTask();
 				}
-				Crafty("Score").text("Score: "+game.score); 
+				Crafty("Score").text(i18n.t('Score') + ": "+game.score); 
 				item.destroy();
 			}
 			
@@ -745,7 +760,7 @@ var game = {
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, "+"+gameinfo["level1"].matchPointsRight);
 					createNewWordTask(); 
 				}
-				Crafty("Score").text("Score: "+game.score); 
+				Crafty("Score").text(i18n.t('Score') + ": "+game.score); 
 				item.destroy();
 			}
 			
@@ -760,7 +775,7 @@ var game = {
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, "+"+gameinfo["level1"].matchPointsRight);
 					createNewMemoryTask(false); 
 				}
-				Crafty("Score").text("Score: "+game.score); 
+				Crafty("Score").text(i18n.t('Score') + ": "+game.score); 
 				item.destroy();
 			}
 			
@@ -928,21 +943,21 @@ var game = {
 			
 			var feedbackText;
 			if(playerDead){
-				feedbackText = "Game over! ";
+				feedbackText = i18n.t('Game over') + "! ";
 				if(game.gameMode == "time"){
-					feedbackText += "You did not stay alive long enough. Try again.";
+					feedbackText += i18n.t("time_feedback_success");
 				}
-				if(game.gameMode == "distance"){
-					feedbackText += "You managed to travel "+game.reached+" meters. Try again.";
+				if(game.gameMode == "distance") {
+					feedbackText += i18n.t("distance_feedback_fail", { postProcess: 'sprintf', sprintf: [game.reached] });
 				}
-			}else{
-				feedbackText = "Well done! ";
+			} else {
+				feedbackText = i18n.t('Well done') + "! ";
 				if(game.gameMode == "distance"){
-					feedbackText += "You reached the "+game.meters+" meters landmark.";
+					feedbackText += i18n.t("distance_feedback_success", { postProcess: 'sprintf', sprintf: [game.reached] });
 				}
 			}
-			if(game.gameMode == "survival"){
-				feedbackText += "You survived "+game.reached+ " seconds. Maybe you can survive even longer. Try again.";
+			if(game.gameMode == "survival"){				
+				feedbackText += i18n.t("survival_feedback_text", { postProcess: 'sprintf', sprintf: [game.reached] });
 			} 
 			
 			var hscore = game.updateHighscore (game.level, game.score);
@@ -951,6 +966,7 @@ var game = {
 			var scorebg = Crafty.e("2D, DOM, Image, Mouse, scorebg").attr({x: 112, y: 130});
 			var menubtn = Crafty.e("2D, DOM, Image, Mouse, menubtn").attr({x: 700, y: 567, z:1000});
 			
+			/*
 			if(game.score>=hscore){
 				Crafty.e("2D, DOM, Image, newhighscore").attr({x: 600, y: 400});
 			}
@@ -959,10 +975,10 @@ var game = {
 			.text("Highscore: "+hscore)
 			.textFont({ size: '30px', weight: 'bold' })
 			.textColor('#FFFFFF');
-			
+			*/
 			Crafty.e("LevelText, DOM, 2D, Text")
 			.attr({ x: 180, y: 165, w: 400, h: 50 })
-			.text("LEVEL "+game.level)
+			.text(i18n.t('LEVEL') + " " + game.level)
 			.textFont({ size: '50px', weight: 'bold' })
 			.textColor('#FFFFFF');
 			
@@ -974,7 +990,7 @@ var game = {
 			
 			Crafty.e("CurScoreText, DOM, 2D, Text")
 			.attr({ x: 200, y: 470, w: 400, h: 30 })
-			.text("Score: "+game.score)
+			.text(i18n.t('Score') + ": "+game.score)
 			.textFont({ size: '30px', weight: 'bold' })
 			.textColor('#FFFFFF');
 			
@@ -985,20 +1001,21 @@ var game = {
 			.textColor('#FFFFFF');
 			
 			for(var j=0; j<3; j++){
-				Crafty.e("2D, DOM, Image, star-dark").attr({x: 550+(j*70), y: 185});
+				//Crafty.e("2D, DOM, Image, star-dark").attr({x: 550+(j*70), y: 185});
 				Crafty.e("2D, DOM, Image, star-dark").attr({x: 200+(j*70), y: 520});
 			}
 			
 			for(var i=0; i<game.stars; i++){
 				var star = Crafty.e("2D, DOM, Image, star").attr({x: 200+(i*70), y: 520});
 			}
+			/*
 			for(var s=0; s<hstars; s++){
 				Crafty.e("2D, DOM, Image, star").attr({x: 550+(s*70), y: 185});
 			}
-			
 			if(game.score>hscore){
 				Crafty.e("2D, DOM, Image, newhighscore").attr({x: 550, y: 500});
 			}
+			*/
 			
 			menubtn.bind('Click', function() {
 				$(Crafty.canvas._canvas).remove();
@@ -1105,15 +1122,12 @@ var game = {
 	localToEditor: function(obj){
 		// Retrieve the object from storage
 		var retrievedObject = localStorage.getItem(obj);
-		var parsittu=JSON.parse(retrievedObject);
-		game.gameinfo = parsittu;
-		console.log(game.gameinfo);
+		var parsedGame = JSON.parse(retrievedObject);
+		game.gameinfo = parsedGame;
 		game.getGameData();
-		//return parsittu;
 	},
 
 	getGameData: function(){
-		console.log("getGameData");
 		game.title = gameinfo["level1"].title;
 		game.instructions = gameinfo["level1"].instructions;
 		playerImg = gameinfo["level1"].playerImg;
@@ -1170,7 +1184,7 @@ Crafty.c('GameTimer', {
 		this.css("textShadow", "2px 2px #ffffff");
 		this.textColor('#000000');
         this.interval = setInterval('Crafty.trigger("Tick")', 1000);
-        this.text("Time: " + this.timeLeft);
+        this.text(i18n.t('Time') + ": " + this.timeLeft);
         this.bind("StopTimer", function() {
             clearInterval(this.interval);
         })
@@ -1190,7 +1204,7 @@ Crafty.c('GameTimer', {
                             }
                         }
                 	}
-                	this.text("Time: " + this.timeLeft);
+                	this.text(i18n.t('Time') + ": " + this.timeLeft);
                 }
                 this.timeWas = this.timeNow;
         });
@@ -1210,14 +1224,14 @@ Crafty.c('GameClock', {
 		this.textColor('#000000');
 		this.css("textShadow", "2px 2px #ffffff");
         this.interval = setInterval('Crafty.trigger("Tick")', 1000);
-        this.text("Time: " + this.duration);
+        this.text(i18n.t('Score') + ": " + this.duration);
         this.bind("StopTimer", function() {
             clearInterval(this.interval);
         })
         .bind("Tick", function() {
             var kello = new Date();
         	this.duration = (Math.floor(kello.getTime()/1000))-this.timeStart;
-            this.text("Time: " + this.duration);
+            this.text(i18n.t('Score') + ": " + this.duration);
             game.reached = this.duration;
         });
     }

@@ -5,22 +5,22 @@
 
       		<div class="modal-header">
           		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          		<h4 class="modal-title" id="bgModalLabel">Background properties</h4>
+          		<h4 class="modal-title" id="bgModalLabel"><%= t('Background properties') %></h4>
       		</div>
 
        		<div class="modal-body">
 
             <div class="form-group clearfix">
               <form class="form-horizontal" role="form">
-                <label for="colorList" class="col-sm-5 control-label">Background color:</label>
+                <label for="colorList" class="col-sm-5 control-label"><%= t('Background color') %>:</label>
                 <div class="col-sm-7">
                   <select id="colorList" class="form-control">
-    						    <option value="#F2F2F2">light grey</option>
-                    <option value="#999999">grey</option>
-                    <option value="#996600">brown</option>
-                    <option value="#0099FF">blue</option>
-                    <option value="#FF9900">orange</option>
-                    <option value="#66CC00">green</option>
+    						    <option value="#F2F2F2"><%= t('light grey') %></option>
+                    <option value="#999999"><%= t('grey') %></option>
+                    <option value="#996600"><%= t('brown') %></option>
+                    <option value="#0099FF"><%= t('blue') %></option>
+                    <option value="#FF9900"><%= t('orange') %></option>
+                    <option value="#66CC00"><%= t('green') %></option>
                   </select>
                   <div id="color-drop" class="drop"></div>
                 </div>
@@ -29,15 +29,15 @@
     
             <div class="form-group clearfix">
               <form class="form-horizontal" role="form">
-                <label for="skyList" class="col-sm-5 control-label">Static background element:</label>
+                <label for="skyList" class="col-sm-5 control-label"><%= t('Static background element') %>:</label>
                 <div class="col-sm-7">
         				  <select id="skyList" class="form-control">
       						  <option></option>
-        						<option value="sky-blue">sky-blue</option>
-        						<option value="sky-grey">sky-grey</option>
-        						<option value="sky-small-clouds">sky-small-clouds</option>
-        						<option value="sky">sky</option>
-        						<option value="space">space</option>
+        						<option value="sky-blue"><%= t('sky-blue') %></option>
+        						<option value="sky-grey"><%= t('sky-grey') %></option>
+        						<option value="sky-small-clouds"><%= t('sky-small-clouds') %></option>
+        						<option value="sky"><%= t('sky') %></option>
+        						<option value="space"><%= t('space') %></option>
       				  	</select>
                 </div>
                 <div id="sky-drop" class="drop"></div>
@@ -46,12 +46,12 @@
 
             <div class="form-group clearfix">
               <form class="form-horizontal" role="form">
-                <label for="p3List" class="col-sm-5 control-label">Scrolling background element 3:</label>
+                <label for="p3List" class="col-sm-5 control-label"><%= t('Scrolling background element 3') %>:</label>
                 <div class="col-sm-7">
                   <select id="p3List" class="form-control">
                     <option></option>
-                    <option value="factory">factory</option>
-                    <option value="mountains-big">mountains-big</option>
+                    <option value="factory"><%= t('factory') %></option>
+                    <option value="mountains-big"><%= t('mountains-big') %></option>
                   </select>
                 </div>
               </form>
@@ -59,17 +59,17 @@
 
             <div class="form-group clearfix">
               <form class="form-horizontal" role="form">
-                <label for="p2List" class="col-sm-5 control-label">Scrolling background element 2:</label>
+                <label for="p2List" class="col-sm-5 control-label"><%= t('Scrolling background element 2') %>:</label>
                 <div class="col-sm-7">
                   <select id="p2List" class="form-control">
                     <option></option>
-                    <option value="mountains-brown">mountains-brown</option>
-                    <option value="mountains-snow">mountains-snow</option>
-                    <option value="mountains-violet">mountains-violet</option> 
-                    <option value="city-dark">city-dark</option>
-                    <option value="city-dark-blue">city-dark-blue</option>
-                    <option value="factory">factory</option>
-                    <option value="houses2">houses2</option>
+                    <option value="mountains-brown"><%= t('mountains-brown') %></option>
+                    <option value="mountains-snow"><%= t('mountains-snow') %></option>
+                    <option value="mountains-violet"><%= t('mountains-violet') %></option> 
+                    <option value="city-dark"><%= t('city-dark') %></option>
+                    <option value="city-dark-blue"><%= t('city-dark-blue') %></option>
+                    <option value="factory"><%= t('factory') %></option>
+                    <option value="houses2"><%= t('houses2') %></option>
                   </select>
                 </div>
               </form>
@@ -77,19 +77,20 @@
 
             <div class="form-group clearfix">
               <form class="form-horizontal" role="form">
-                <label for="p1List" class="col-sm-5 control-label">Scrolling background element 1:</label>
+                <label for="p1List" class="col-sm-5 control-label"><%= t('Scrolling background element 1') %>:</label>
                 <div class="col-sm-7">
                   <select id="p1List" class="form-control">
                     <option></option>
-                    <option value="palms">palms</option>
-                    <option value="fence">fence</option>
-                    <option value="desert">desert</option>
-                    <option value="grass-yellow">yellow grass</option>
-                    <option value="grass-green">green grass</option>
-                    <option value="houses1">houses near</option>
-                    <option value="houses3">houses far</option>
-                    <option value="sea">sea</option>
-                    <option value="forest">forest</option>
+                    <option value="palms"><%= t('palms') %></option>
+                    <option value="fence"><%= t('fence') %></option>
+                    <option value="desert"><%= t('desert') %></option>
+                    <option value="grass-yellow"><%= t('yellow grass') %></option>
+                    <option value="grass-green"><%= t('green grass') %></option>
+                    <option value="houses1"><%= t('houses near') %></option>
+                    <option value="houses3"><%= t('houses far') %></option>
+                    <option value="sea"><%= t('sea') %></option>
+                    <option value="forest"><%= t('forest') %></option>
+                    <option value="flappy"><%= t('flappy') %></option>
                   </select>
                 </div>
               </form>
@@ -98,8 +99,8 @@
       		</div> <!-- /.modal-body -->
       		
           <div class="modal-footer">
-        			<a  href="#" class="pop" data-toggle="popover" data-content="Here you can select color and graphics for the background elements. It is possible to add three elements that scroll towards left. Element 1 is in the foreground and scrolls fastest. Element 3 is farthest and scrolls slowest. You do not have to use all elements.">Info</a>
-          		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        			<a  href="#" class="pop" data-toggle="popover" data-content="<%= t('background_info') %>"><%= t('Info') %></a>
+          		<button type="button" class="btn btn-default" data-dismiss="modal"><%= t('Close') %></button>
         	</div><!-- /.modal-footer -->
     	 </div><!-- /.modal-content -->
   		</div><!-- /.modal-dialog -->

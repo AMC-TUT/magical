@@ -26,6 +26,7 @@ var textures =  {
 	"city-dark": "/editor-lite/static/img/parallax/city-dark.png",
 	"sky-blue": "/editor-lite/static/img/parallax/sky-blue.png",
 	"sky-grey": "/editor-lite/static/img/parallax/sky-grey.png",
+	"flappy": "/editor-lite/static/img/parallax/flappy-bg.png",
 	"space": "/editor-lite/static/img/space.png",
 	"asteroid": "/editor-lite/static/img/asteroid.png",
 	"sky": "/editor-lite/static/img/sky.png",
@@ -93,7 +94,8 @@ var textureMenu =  {
 		{text:"", value:""},
 		{text:"palms", value:"palms"},
 		{text:"houses far", value:"houses3"},
-		{text:"fence", value:"fence"}
+		{text:"fence", value:"fence"},
+		{text:"flappy", value:"flappy"}
 	],
 	airGrounds:[
 		{text:"", value:""},
@@ -105,6 +107,7 @@ var textureMenu =  {
 		{text:"houses near", value:"houses1"},
 		{text:"houses far", value:"houses3"},
 		{text:"sea", value:"sea"},
-		{text:"forest", value:"forest"}
+		{text:"forest", value:"forest"},
+		{text:"flappy", value:"flappy"}
 	],
 };

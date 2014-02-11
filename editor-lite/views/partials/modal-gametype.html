@@ -4,18 +4,18 @@
  		<div class="modal-content">
   		<div class="modal-header">
     		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    		<h4 class="modal-title" id="rulesModalLabel">Game type and game mode</h4>
+    		<h4 class="modal-title" id="rulesModalLabel"><%= t('Game type and game mode') %></h4>
   		</div>
           
       <div class="modal-body">
 
         <div class="form-group clearfix">
           <form class="form-horizontal" role="form">
-            <label for="platformList" class="col-sm-5 control-label">Select platform game type:</label>
+            <label for="platformList" class="col-sm-5 control-label"><%= t('Select platform game type') %>:</label>
             <div class="col-sm-7">
               <select id="platformList" class="form-control">
-                  <option value="air">flying game</option>
-                  <option value="ground">driving or running game</option>
+                  <option value="air"><%= t('flying game') %></option>
+                  <option value="ground"><%= t('driving or running game') %></option>
               </select>
             </div>
           </form>
@@ -37,12 +37,12 @@
 -->
         <div id="jumpSensitivity" class="gameType form-group clearfix">
           <form class="form-horizontal" role="form">
-            <label for="jumpSensitivityList" class="col-sm-5 control-label">Define jump sensitivity:</label>
+            <label for="jumpSensitivityList" class="col-sm-5 control-label"><%= t('Define jump sensitivity') %>:</label>
             <div class="col-sm-4">
               <select id="jumpSensitivityList" class="form-control">
-                <option value="13000">easy</option>
-                <option value="18000">average</option>
-                <option value="23000">hard</option>
+                <option value="13000"><%= t('easy') %></option>
+                <option value="18000"><%= t('average') %></option>
+                <option value="23000"><%= t('hard') %></option>
               </select>
             </div>
           </form>
@@ -50,12 +50,12 @@
 
         <div id="motionSensitivity" class="gameType form-group clearfix">
           <form class="form-horizontal" role="form">
-            <label for="motionSensitivityList" class="col-sm-5 control-label">Define motion sensitivity:</label>
+            <label for="motionSensitivityList" class="col-sm-5 control-label"><%= t('Define motion sensitivity') %>:</label>
             <div class="col-sm-4">
               <select id="motionSensitivityList" class="form-control">
-                <option value="5000">easy</option>
-                <option value="10000">average</option>
-                <option value="15000">hard</option>
+                <option value="5000"><%= t('easy') %></option>
+                <option value="10000"><%= t('average') %></option>
+                <option value="15000"><%= t('hard') %></option>
               </select>
             </div>
           </form>
@@ -64,12 +64,12 @@
   					
         <div id="gameMode" class="form-group clearfix">
           <form class="form-horizontal" role="form">
-            <label for="modeList" class="col-sm-5 control-label">Select game mode:</label>
+            <label for="modeList" class="col-sm-5 control-label"><%= t('Select game mode') %>:</label>
             <div class="col-sm-4">
               <select id="modeList" class="form-control">
-    							<option value="time">time</option>
-    							<option value="survival">survival</option>
-    							<option value="distance">distance</option>
+    							<option value="time"><%= t('time') %></option>
+    							<option value="survival"><%= t('survival') %></option>
+    							<option value="distance"><%= t('distance') %></option>
               </select>
             </div>
           </form>
@@ -79,45 +79,40 @@
         <div id="timeMode" class="gameMode form-group clearfix">
           <form class="form-horizontal" role="form">
             <label for="gameDurationList" class="col-sm-5 control-label">
-              Game time:
+              <%= t('Game time') %>:
             </label>
             <div class="col-sm-4">
               <select id="gameDurationList" class="form-control">
-    							<option value="60">1 minutes</option>
-    							<option value="120">2 minutes</option>
-    							<option value="180">3 minutes</option>
-    							<option value="240">4 minutes</option>
-    							<option value="300">5 minutes</option>
+    							<option value="60">1 <%= t('minutes') %></option>
+    							<option value="120">2 <%= t('minutes') %></option>
+    							<option value="180">3 <%= t('minutes') %></option>
+    							<option value="240">4 <%= t('minutes') %></option>
+    							<option value="300">5 <%= t('minutes') %></option>
   						</select>
   					</div>
           </form>
         </div>
 
-
         <div id="survivalMode" class="gameMode form-group clearfix">
           <form class="form-horizontal" role="form">
-            <label for="survivalList" class="col-sm-8 control-label">
-              In survival mode the player must survive alive as long as possible while the game gets continuously harder.<br>
-              Define how fast the interval between hazards speeds up:
+            <label for="survivalList" class="col-sm-5 control-label">
+              <%= t('Speeding up of hazards') %>:
             </label>
             <div class="col-sm-4">
               <select id="survivalList" class="form-control">
-                  <option value="0.99">very slow</option>
-                  <option value="0.95">slow</option>
-                  <option value="0.91">fast</option>
-                  <option value="0.87">very fast</option>
+                  <option value="0.99"><%= t('very slow') %></option>
+                  <option value="0.95"><%= t('slow') %></option>
+                  <option value="0.91"><%= t('fast') %></option>
+                  <option value="0.87"><%= t('very fast') %></option>
               </select>
             </div>
           </form>
         </div>
 
-
-
         <div id="distanceMode" class="gameMode form-group clearfix">
           <form class="form-horizontal" role="form">
-            <label for="distanceList" class="col-sm-8 control-label">
-              In distance mode the player have to achieve a certain distance.<br>
-              Define the target distance:
+            <label for="distanceList" class="col-sm-5 control-label">
+              <%= t("Target distance") %>:
             </label>
             <div class="col-sm-4">
               <select id="distanceList" class="form-control">
@@ -134,8 +129,8 @@
       </div><!-- /.modal-body -->
 
   		<div class="modal-footer">
-  			<a  href="#" class="pop" data-toggle="popover" data-content="There is too possible platform game types that you can create. 1) A game in which the player character is flying in air. 2) A game in which the player character is moving on ground and can jump into air. Additionally, you can select one of three possible game modes. 1) In time mode you should define how long the game lasts. 2) In survival mode define how rapidly the game gets harder (speeds up the interval between hazards). 3) In distance mode you should define how far the player should be able to travel. If the player achieves enough meters he wins the game.">Info</a>
-    		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+  			<a  href="#" class="pop" data-toggle="popover" data-content="<%= t('game_mode_info') %>"><%= t('Info') %></a>
+    		<button type="button" class="btn btn-default" data-dismiss="modal"><%= t('Close') %></button>
     		<!-- <button type="button" class="btn btn-primary" changeSkyImg()>Save changes</button>-->
   		</div><!-- /.modal-footer -->
 

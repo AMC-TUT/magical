@@ -57,6 +57,7 @@ def home(request):
         ses['username'] = 'anonymous'
         ses['role'] = 'player'
         ses['lang'] = 'english'
+        ses['lang_code'] = 'en'
         ses['organization'] = 'magos'
         ses['firstname'] = 'Magos'
         ses['lastname'] = 'Player'

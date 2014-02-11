@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="/editor-lite/static/js/vendor/crafty-0.5.4.js"></script>
 	<script type="text/javascript" src="/editor-lite/static/js/vendor/greensock/plugins/CSSPlugin.min.js"></script>
 	<script type="text/javascript" src="/editor-lite/static/js/vendor/greensock/TweenMax.min.js"></script>
+	<script type="text/javascript" src="/editor-lite/i18next/i18next.js"></script>
 	<script type="text/javascript" src="/editor-lite/static/js/medialoader.js"></script>
 	<script type="text/javascript" src="/editor-lite/static/js/crafty_utils.js"></script>
 	<script type="text/javascript" src="/editor-lite/static/js/elements_casual.js"></script>
@@ -24,7 +25,7 @@
 	$(document).ready(function() {
       $(document).ajaxStart(function() {
 	    	$.blockUI({ 
-	    		message: '<img id="ajax_loader" style="width:120px;height:15px;vertical-align:middle;margin:30px 8px 10px 8px;" src="/editor-lite/static/img/loading.gif" /><h1 class="ajax-loading">Please wait</h1>',
+	    		message: '<img id="ajax_loader" style="width:120px;height:15px;vertical-align:middle;margin:30px 8px 10px 8px;" src="/editor-lite/static/img/loading.gif" />',
 	    		baseZ: 20000,
           css : { border : 'none' }
 	    	}); 

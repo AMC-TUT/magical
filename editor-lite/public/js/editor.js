@@ -82,7 +82,7 @@ var editor = {
 	            url: ajaxUrl
 	        });
 	        ajaxReq.done(function ( data, textStatus, jqXHR ) {
-	        	utils.notify("Game saved", 'success');       	
+	        	utils.notify(i18n.t("Game saved"), 'success');       	
 	        });
 	        ajaxReq.fail(function (jqXHR, textStatus, errorThrown) {
 	        });
@@ -91,11 +91,14 @@ var editor = {
 
 	init: function() {
 		this.checkIfMobile();
+		utils.i18nInit(this.user.lang_code, this.getGame, editor);
+	},
 
+	getGame: function() {
 		if(this.gameSlug) {
 			utils.djangoUrl = this.djangoUrl; 
 			utils.apiUrl = this.apiUrl;
-			utils.getGameToEdit(this.gameSlug, this.initEditor, editor);
+			utils.getGameToEdit(this.gameSlug, this.initEditor);
 		}
 	},
 
@@ -187,15 +190,13 @@ var editor = {
 		Crafty.scene('editor', function() {
 			Crafty.background(gameinfo["level1"].bgcolor);
 			editor.getGameData();
-			Crafty.e("2D, DOM, Image, itemhelp").attr({x: 420, y: 30, z: 1000});
-			Crafty.e("2D, DOM, Image, playerhelp").attr({x: 100, y: 150, z: 1000});
-			Crafty.e("2D, DOM, Image, scroll1").attr({y: editor.p1y, z: 1});
-			Crafty.e("2D, DOM, Image, scroll2").attr({y: editor.p2y, z: 1});
-			Crafty.e("2D, DOM, Image, scroll3").attr({y: editor.p3y, z: 1});
+
 			Crafty.e("2D, DOM, Image, heart").attr({x: 30, y: 10, z: 1100});
 			
 			editor.createMissingErefs(gameinfo.level1.wordRules);			
-
+			
+			editor.createHelpTexts();
+			
 			// create predefined UI elements
 			editor.createUIElements();
 			editor.updateFormValues();
@@ -211,6 +212,50 @@ var editor = {
 			editor.initial = false;
 		});
 		Crafty.scene('preload');
+	},
+
+	createHelpTexts: function() {
+		var stage = $('#editor-stage');
+		$('.stageHelp, .scrollHelp').remove();
+		
+		var playerHelp = $('<div/>');
+		playerHelp.addClass('stageHelp playerHelp');
+		playerHelp.text(i18n.t('Player'));
+		playerHelp.append('<i class="fa fa-long-arrow-down"></i>');
+
+		var collectiblesHelp = $('<div/>');
+		collectiblesHelp.addClass('stageHelp collectiblesHelp');
+		collectiblesHelp.text(i18n.t('Collectibles'));
+		collectiblesHelp.append('<i class="fa fa-long-arrow-down"></i>');
+
+		var hazardsHelp = $('<div/>');
+		hazardsHelp.addClass('stageHelp hazardsHelp');
+		hazardsHelp.text(i18n.t('Hazards'));
+		hazardsHelp.append('<i class="fa fa-long-arrow-down"></i>');
+
+		stage.append(playerHelp, collectiblesHelp, hazardsHelp);
+
+		if(!gameinfo.level1.scroll[0].hasOwnProperty('item') || !gameinfo.level1.scroll[0].item) {
+			var scroll1Help = $('<div/>');
+			scroll1Help.addClass('scrollHelp scroll1Help');
+			scroll1Help.text(i18n.t('Scrolling element 1'));
+			stage.append(scroll1Help);
+		}
+
+		if(!gameinfo.level1.scroll[1].hasOwnProperty('item') || !gameinfo.level1.scroll[1].item) {
+			var scroll2Help = $('<div/>');
+			scroll2Help.addClass('scrollHelp scroll2Help');
+			scroll2Help.text(i18n.t('Scrolling element 2'));
+			stage.append(scroll2Help);
+		}
+
+		if(!gameinfo.level1.scroll[2].hasOwnProperty('item') || !gameinfo.level1.scroll[2].item) {
+			var scroll3Help = $('<div/>');
+			scroll3Help.addClass('scrollHelp scroll3Help');
+			scroll3Help.text(i18n.t('Scrolling element 3'));
+			stage.append(scroll3Help);
+		}
+
 	},
 
 	updateFormValues: function() {
@@ -412,7 +457,7 @@ var editor = {
     			editor.addMatchRule(matchRules, true);
 				editor.setGame();
 			} else {
-				showWarning("Either a task or an answer is missing!");
+				showWarning(i18n.t("Either a task or an answer is missing!"));
 			}
 		});
 
@@ -423,7 +468,7 @@ var editor = {
 			var denominator = parseInt($("input#fractionDenominatorVal").val(), 10),
 				numerator = parseInt($("input#fractionNumeratorVal").val(), 10);
 			if (denominator == 0) {
-				showWarning("Denominator can not be null!");
+				showWarning(i18n.t("Denominator can not be null!"));
 			} else {
 	    		if(denominator >= numerator) {
 	    			var fractionRule = {
@@ -433,7 +478,7 @@ var editor = {
 	    			}
 	    			editor.addFractionTask(fractionRule, true);
 	    		} else {
-					showWarning("Denominator has to be equal or greater than numerator!");
+					showWarning(i18n.t("Denominator has to be equal or greater than numerator!"));
 	    		}
 			}
 		});
@@ -552,6 +597,7 @@ var editor = {
     		var valueSelected = this.value;
     		gameinfo.level1.scroll[2] = {item: valueSelected, speed:editor.p3_speed};
     		editor.setGame();
+    		editor.createHelpTexts();
     		editor.changeP3Img(valueSelected);
 		});
 		// scrolling background 2
@@ -559,6 +605,7 @@ var editor = {
     		var valueSelected = this.value;
     		gameinfo.level1.scroll[1] = {item: valueSelected, speed:editor.p2_speed};
     		editor.setGame();
+    		editor.createHelpTexts();
     		editor.changeP2Img(valueSelected);
 		});
 		// scrolling background 1
@@ -566,6 +613,7 @@ var editor = {
     		var valueSelected = this.value;
     		gameinfo.level1.scroll[0] = {item: valueSelected, speed:editor.p1_speed};
     		editor.setGame();
+    		editor.createHelpTexts();
     		editor.changeP1Img(valueSelected);
 		});
 
@@ -662,7 +710,11 @@ var editor = {
 		$(selectId).empty();
 		_.each(optionsData, function(option, index, list) {
 			var optionEl = $('<option>');
-			$(optionEl).val(option.value).text(option.text);
+			var optionText = '';
+			if(option.text) {
+				optionText = i18n.t(option.text);				
+			}
+			$(optionEl).val(option.value).text(optionText);
 			if(option.value == selectedVal) $(optionEl).attr('selected', 'selected');
             $(selectId).append(optionEl);
 		});
@@ -947,7 +999,7 @@ var editor = {
 				// add remove button
 				var btn = $('<button>').addClass('btn btn-danger removeBtn removeFractionTask');
 				btn.data('uuid', fractionRule.eref);
-				btn.text('REMOVE');
+				btn.text(i18n.t("REMOVE"));
 				var btnContainer = $('<div>').addClass('col-sm-3');
 				btnContainer.append(btn);
 				container.append(btnContainer);
@@ -995,14 +1047,17 @@ var editor = {
 			// show matching rule
 			var container = $("<div>").addClass('itemContainer row');
 			var activeElement = $("<div>").addClass('activeItem col-sm-9');
-			var txtNode = $('<span>').html('<b>' + ruleTxt + "</b><br>wrong answers: " + wrongAnswers);
+			
+			i18n.t("wrong answers")
+			
+			var txtNode = $('<span>').html('<b>' + ruleTxt + '</b><br>' + i18n.t("wrong answers") + ': ' + wrongAnswers);
 			activeElement.append(txtNode);
 			container.append(activeElement);
 
 			// add remove button
 			var btn = $('<button>').addClass('btn btn-danger removeBtn removeMatchRule');
 			btn.data('uuid', matchRule.eref);
-			btn.text('REMOVE');
+			btn.text(i18n.t("REMOVE"));
 			var btnContainer = $('<div>').addClass('col-sm-3');
 			btnContainer.append(btn);
 			container.append(btnContainer);
@@ -1068,7 +1123,7 @@ var editor = {
 		var newElement = document.createElement("div");
 		newElement.className = "activeItem";
 		newElement.classList.add("col-sm-9");
-		var node = document.createTextNode(collectable.name);
+		var node = document.createTextNode(i18n.t(collectable.name));
 		node.id = collectable.type;
 		newElement.appendChild(node);
 
@@ -1081,7 +1136,7 @@ var editor = {
 		btn.classList.add("btn");
 		btn.classList.add("btn-danger");
 		btn.classList.add("removeBtn");
-		var t = document.createTextNode("REMOVE");
+		var t = document.createTextNode(i18n.t("REMOVE"));
 		btn.appendChild(t);
 
 		var btnContainer = document.createElement("div");
@@ -1161,7 +1216,7 @@ var editor = {
 		var newElement = document.createElement("div");
 		newElement.className = "activeItem";
 		newElement.classList.add("col-sm-9");
-		var node = document.createTextNode(hazard.name);
+		var node = document.createTextNode(i18n.t(hazard.name));
 		node.id = hazard.type;
 		newElement.appendChild(node);
 
@@ -1174,7 +1229,7 @@ var editor = {
 		btn.classList.add("btn");
 		btn.classList.add("btn-danger");
 		btn.classList.add("removeBtn");
-		var t = document.createTextNode("REMOVE");
+		var t = document.createTextNode(i18n.t("REMOVE"));
 		btn.appendChild(t);
 
 		var btnContainer = document.createElement("div");
@@ -1196,7 +1251,7 @@ var editor = {
 
 
 
-	getDropDown: function (values, index, changeFunction, atr, listId){
+	getDropDown: function (values, index, changeFunction, atr, listId, translate){
 		$dd = $('<select>').addClass('form-control');
 		$dd.attr('id', listId + index);
 
@@ -1206,7 +1261,11 @@ var editor = {
 
 		_.each(values, function(value, index, list) {
 	    	var opt = value;
-    		var $el = $("<option>").text(opt).val(opt);
+	    	var optText = opt;
+			if(translate) {
+				optText = i18n.t(opt);
+			}
+    		var $el = $("<option>").text(optText).val(opt);
 	   		$dd.append($el);
 		});
 
@@ -1224,7 +1283,7 @@ var editor = {
 
 			var colForm = $('<form>').addClass('form-horizontal clearfix col-sm-6').attr('id', 'collectableSpeeds');
 			var colFormset = $('<formset>');
-			var colLegend = $('<legend>').text('Speeds for collectibles');
+			var colLegend = $('<legend>').text(i18n.t("Speeds for collectibles"));
 			colFormset.append(colLegend);
 			// create form group for collectible
 			_.each(gameinfo.level1.collectables, function(collectable, index, list) {
@@ -1232,10 +1291,11 @@ var editor = {
 		    	var $formRow = $('<div>').addClass("form-group clearfix");
 		    	// label
 				var $p = $("<label>").addClass('col-sm-6');
-				$p.text(collectable.name);
+				var itemName = i18n.t(collectable.name);
+				$p.text(itemName);
 		    	$formRow.append($p);
 		    	// select
-		    	var $dd = editor.getDropDown(speedArr, index, editor.getSpeed, collectable.speed, "speedList_");
+		    	var $dd = editor.getDropDown(speedArr, index, editor.getSpeed, collectable.speed, "speedList_", true);
 		    	// select container
 		    	var $ddContainer = $('<div>').addClass("col-sm-6");
 		    	$ddContainer.append($dd);
@@ -1251,7 +1311,7 @@ var editor = {
 
 			var hazForm = $('<form>').addClass('form-horizontal clearfix col-sm-6').attr('id', 'hazardsSpeeds');
 			var hazFormset = $('<formset>');
-			var hazLegend = $('<legend>').text('Speeds for hazards');
+			var hazLegend = $('<legend>').text(i18n.t("Speeds for hazards"));
 			hazFormset.append(hazLegend);
 			// create form group for hazards
 			_.each(gameinfo.level1.hazards, function(hazard, index, list) {
@@ -1259,10 +1319,11 @@ var editor = {
 		    	var $formRow = $('<div>').addClass("form-group clearfix");
 		    	// label
 				var $p = $("<label>").addClass('col-sm-6');
-				$p.text(hazard.name);
+				var itemName = i18n.t(hazard.name);
+				$p.text(itemName);
 		    	$formRow.append($p);
 		    	// select
-		    	var $dd = editor.getDropDown(speedArr, index, editor.getHSpeed, hazard.speed, "speedListH_");
+		    	var $dd = editor.getDropDown(speedArr, index, editor.getHSpeed, hazard.speed, "speedListH_", true);
 		    	// select container
 		    	var $ddContainer = $('<div>').addClass("col-sm-6");
 		    	$ddContainer.append($dd);
@@ -1271,35 +1332,7 @@ var editor = {
 			});
 			hazForm.append(hazFormset);
 			// add form to dom
-			colContainer.append(hazForm);
-
-/*
-
-			var colForm = $('<form>').addClass('form-horizontal clearfix').attr('id', 'hazardsSpeeds');
-			var colTitle = $('<div>').addClass('col-sm-5').html('<h5>Hazard speeds</h5>');
-			var colElements = $('<div>').addClass('col-sm-7');
-			// create form group for hazard
-			_.each(gameinfo.level1.hazards, function(hazard, index, list) {
-				// form-group
-		    	var $formRow = $('<div>').addClass("form-group clearfix");
-		    	// label
-				var $p = $("<label>").addClass('col-sm-5');
-				$p.text(hazard.name);
-		    	$formRow.append($p);
-		    	// select
-		    	var $dd = editor.getDropDown(speedArr, index, editor.getHSpeed, hazard.speed, "speedListH_");
-		    	// select container
-		    	var $ddContainer = $('<div>').addClass("col-sm-7");
-		    	$ddContainer.append($dd);
-		    	$formRow.append($ddContainer);
-
-		    	colElements.append($formRow);
-			});
-			colForm.append(colTitle);
-			colForm.append(colElements);
-			// add form to dom
-			colContainer.append(colForm);
-*/			
+			colContainer.append(hazForm);		
 		}
 
 	},
@@ -1312,7 +1345,7 @@ var editor = {
 		if(gameinfo.level1.collectables.length) {
 			var colForm = $('<form>').addClass('form-horizontal clearfix col-sm-6').attr('id', 'collectablePoints');
 			var colFormset = $('<formset>');
-			var colLegend = $('<legend>').text('Scores for collectibles');
+			var colLegend = $('<legend>').text(i18n.t('Scores for collectibles'));
 			colFormset.append(colLegend);
 			// create form group for collectible
 			_.each(gameinfo.level1.collectables, function(collectable, index, list) {
@@ -1320,7 +1353,7 @@ var editor = {
 		    	var $formRow = $('<div>').addClass("form-group clearfix");
 		    	// label
 				var $p = $("<label>").addClass('col-sm-7');
-				$p.text(collectable.name);
+				$p.text(i18n.t(collectable.name));
 		    	$formRow.append($p);
 		    	// select
 		    	var $dd = editor.getDropDown(scoreArr, index, editor.getScore, collectable.score, "scoreList_");
@@ -1342,7 +1375,7 @@ var editor = {
 		if(gameinfo.level1.hazards.length) {
 			var hazForm = $('<form>').addClass('form-horizontal clearfix col-sm-6').attr('id', 'hazardPoints');
 			var hazFormset = $('<formset>');
-			var hazLegend = $('<legend>').text('Scores for hazards');
+			var hazLegend = $('<legend>').text(i18n.t('Scores for hazards'));
 			hazFormset.append(hazLegend);
 			// create form group for hazards
 			_.each(gameinfo.level1.hazards, function(hazard, index, list) {
@@ -1350,7 +1383,7 @@ var editor = {
 		    	var $formRow = $('<div>').addClass("form-group clearfix");
 		    	// label
 				var $p = $("<label>").addClass('col-sm-7');
-				$p.text(hazard.name);
+				$p.text(i18n.t(hazard.name));
 		    	$formRow.append($p);
 		    	// select
 		    	var $dd = editor.getDropDown(hazScoreArr, index, editor.getHScore, hazard.score, "scoreListH_");

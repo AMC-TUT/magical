@@ -1,0 +1,14 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2014-02-10 11:14+0000\n"
+"Content-Type: text/plain;\n"
+
+#: /Users/mkoskela/work/tut/projects/magos/code/magical/editor-lite/routes/editor.js:19
+msgid "Magos Lite editor"
+msgstr ""

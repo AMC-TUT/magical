@@ -4,21 +4,21 @@
  		<div class="modal-content">
   		<div class="modal-header">
         		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        		<h4 class="modal-title" id="infoModalLabel">Game instructions</h4>
+        		<h4 class="modal-title" id="infoModalLabel"><%= t('Game instructions') %></h4>
   		</div>
 
       <div class="modal-body">
 
             <form id="gameInstructions" class="form-horizontal" role="form">
               <div class="form-group">
-                <label class="col-sm-4 control-label">Game name</label>
+                <label class="col-sm-4 control-label"><%= t('Game name') %></label>
                 <div class="col-sm-8">
                   <p class="form-control-static" id="gameTitle"></p>
                 </div>
               </div>
 
               <div class="form-group">
-                <label for="instructionTxt" class="col-sm-4 control-label">Write instructions for the player:</label>
+                <label for="instructionTxt" class="col-sm-4 control-label"><%= t('Write instructions for the player') %>:</label>
                 <div class="col-sm-8">
                   <textarea name="instructions" maxlength="500" id="instructionTxt" class="form-control" rows="8"></textarea>
                 </div>
@@ -26,7 +26,7 @@
 
               <div class="form-group">
                 <div class="col-sm-12 text-center">
-                  <button type="submit" class="btn btn-primary">Save instructions</button>
+                  <button type="submit" class="btn btn-primary"><%= t('Save instructions') %></button>
                 </div>
               </div>
 
@@ -35,8 +35,8 @@
       </div><!-- /.modal-body -->
 
   		<div class="modal-footer">
-    		<a  href="#" class="pop" data-toggle="popover" data-content="You should give an name to your game and write instructions. Try to write clear instructions and emphasize the main aim of the game.">Info</a>
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    		<a  href="#" class="pop" data-toggle="popover" data-content="<%= t('instructions_info') %>"><%= t('Info') %></a>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('Close') %></button>
   		</div>
 
   	</div><!-- /.modal-content -->

@@ -9,46 +9,46 @@
 			</div>
 
 			<!-- Button trigger GAME MODE -->
-			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#rulesModal">Game mode</button>
+			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#rulesModal"><%= t('Game mode') %></button>
 
 			<!-- Button trigger PLAYER -->
-			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#playerModal">Player</button>
+			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#playerModal"><%= t('Player') %></button>
 
 			<!-- Button trigger BACKGROUND -->
-			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#bgModal">Background</button>
+			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#bgModal"><%= t('Background') %></button>
 
 			<!-- Button trigger MATCH -->
-			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#matchModal" id="matchBtn">Match</button>
+			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#matchModal" id="matchBtn"><%= t('Match') %></button>
 
 			<!-- Button trigger COLLECTIBLES -->
-			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#collectModal">Collectibles</button>
+			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#collectModal"><%= t('Collectibles') %></button>
 
 			<!-- Button trigger HAZARDS -->
-			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#hazardModal">Hazards</button>
+			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#hazardModal"><%= t('Hazards') %></button>
 			
 			<!-- Button trigger SPEED -->
-			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#speedModal" id="speedBtn" onclick="editor.createSpeedView()">Speed</button>
+			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#speedModal" id="speedBtn" onclick="editor.createSpeedView()"><%= t('Speed') %></button>
 
 			<!-- Button trigger SCORE -->
-			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#scoreModal" onclick="editor.createScoreView()">Points</button>
+			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#scoreModal" onclick="editor.createScoreView()"><%= t('Points') %></button>
 			
 			<!-- Button trigger POWERUPS -->
-			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#powerupsModal" >Powerups</button>
+			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#powerupsModal" ><%= t('Powerups') %></button>
 
 			<!-- Button trigger STARS -->
-			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#starModal" onclick="editor.starRules()">Stars</button>
+			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#starModal"><%= t('Stars') %></button>
 
 			<!-- Button trigger INFO -->
-			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#infoModal" onclick="editor.test()">Instructions</button>
+			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#infoModal"><%= t('Instructions') %></button>
 
 			<!-- Button trigger PREVIEW -->
-			<button type="button" class="btn btn-success btn-block" id="preview" onclick="editor.openGame()">Preview</button>
+			<button type="button" class="btn btn-success btn-block" id="preview" onclick="editor.openGame()"><%= t('Preview') %></button>
 			
 			<!-- Button trigger FULL SCREEN -->
-			<button id="fullScreenBtn" class="btn btn-primary btn-warning btn-block" onclick="toggleFullScreen()">Full screen</button>
+			<button id="fullScreenBtn" class="btn btn-primary btn-warning btn-block" onclick="toggleFullScreen()"><%= t('Full screen') %></button>
 
 			<!-- Button trigger PUBLISH GAME -->
-			<button type="button" class="btn btn-success btn-block" onclick="editor.publishGame()">Publish</button>
+			<button type="button" class="btn btn-success btn-block" onclick="editor.publishGame()"><%= t('Publish') %></button>
 
 		</div>
 

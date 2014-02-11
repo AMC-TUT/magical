@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="/editor-lite/static/js/vendor/crafty-0.5.4.js"></script>
 	<script type="text/javascript" src="/editor-lite/static/js/vendor/greensock/plugins/CSSPlugin.min.js"></script>
 	<script type="text/javascript" src="/editor-lite/static/js/vendor/greensock/TweenMax.min.js"></script>
+	<script type="text/javascript" src="/editor-lite/i18next/i18next.js"></script>
 	<script type="text/javascript" src="/editor-lite/static/js/medialoader.js"></script>
 	<script type="text/javascript" src="/editor-lite/static/js/crafty_utils.js"></script>
 	<script type="text/javascript" src="/editor-lite/static/js/elements_casual.js"></script>
@@ -39,6 +40,7 @@
 	  	// initialize game
 		game.gameSlug = '<%= gameSlug %>';
 		game.djangoUrl = '<%= djangoUrl %>';
+		game.user = <%- JSON.stringify(user) %>;
 		game.initPlay();
 
 		// set noty defaults

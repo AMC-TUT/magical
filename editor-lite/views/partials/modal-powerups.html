@@ -5,7 +5,7 @@
 
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="powerupModalLabel">Powerups</h4>
+        <h4 class="modal-title" id="powerupModalLabel"><%= t('Powerups') %></h4>
       </div><!-- /.modal-header -->
 
       <div class="modal-body">
@@ -15,18 +15,18 @@
             <form id="powerups" class="form-horizontal" role="form">
 
               <div class="col-sm-4">
-                <label for="extraList" class="control-label">Extra lives:</label>
+                <label for="extraList" class="control-label"><%= t('Extra lives') %>:</label>
                 <select id="extraList" class="form-control">
-                  <option value="0">off</option>
-                  <option value="1">on</option>
+                  <option value="0"><%= t('off') %></option>
+                  <option value="1"><%= t('on') %></option>
                 </select>
               </div>
 
               <div class="col-sm-4">
-                <label for="turboList" class="control-label">Turbo speed:</label>
+                <label for="turboList" class="control-label"><%= t('Turbo speed') %>:</label>
                 <select id="turboList" class="form-control">
-                  <option value="0">off</option>
-                  <option value="1">on</option>
+                  <option value="0"><%= t('off') %></option>
+                  <option value="1"><%= t('on') %></option>
                 </select>
               </div>
 
@@ -37,8 +37,8 @@
       </div><!-- /.modal-body -->
 
       <div class="modal-footer">
-        <a  href="#" class="pop" data-toggle="popover" data-content="Here you can define what powerups the player can collect. Extra lives will appear in 20-30 second intervals if activated.">Info</a>
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <a  href="#" class="pop" data-toggle="popover" data-content="<%= t('powerups_info') %>"><%= t('Info') %></a>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('Close') %></button>
       </div><!-- /.modal-footer -->
 
     </div><!-- /.modal-content -->

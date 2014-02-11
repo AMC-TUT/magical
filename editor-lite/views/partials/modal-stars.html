@@ -5,40 +5,62 @@
         
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="starModalLabel">Star rules</h4>
+        <h4 class="modal-title" id="starModalLabel"><%= t('Star rules') %></h4>
       </div>
 
       <div class="modal-body">
      		 	
         <div id="stars">
-     		 		
-          <div>
-   		 			<div class="stars">
-   		 				<img src="/editor-lite/static/img/star-big.png"><img src="/editor-lite/static/img/star-big.png"><img src="/editor-lite/static/img/star-big.png">
-   		 			</div>
-   		 			<div class="starinfo">
-   		 				<span>Over</span><input name="star3" type="number" maxlength="6" id="star3" class="txt"/><span>points</span>
-   		 			</div>
-   		 		</div>
-     		 		
-          <div>
-   		 			<div class="stars">
-   		 				<img src="/editor-lite/static/img/star-big.png"><img src="/editor-lite/static/img/star-big.png">
-   		 			</div>
-   		 			<div class="starinfo">
-   		 				<span>Over</span><input name="star2" type="number" maxlength="6" id="star2" class="txt"/><span>points</span>
-   		 			</div>
-   		 		</div>
-     		 		
-          <div>
-            <div class="stars">
-   		 				<img src="/editor-lite/static/img/star-big.png">
-   		 			</div>
-   		 			
-            <div class="starinfo">
-   		 				<span>Over</span><input name="star1" type="number" maxlength="6" id="star1" class="txt"/><span>points</span>
-   		 			</div>   		 		
+
+          <div class="row">
+            <div class="col-sm-5">
+                <img src="/editor-lite/static/img/star-big.png">
+                <img src="/editor-lite/static/img/star-big.png">
+                <img src="/editor-lite/static/img/star-big.png">
+            </div>
+            <div class="col-sm-1 starsText">
+              <span><%= t('Over') %></span>
+            </div>
+            <div class="col-sm-4 starsInput">
+            <input name="star3" type="number" maxlength="6" id="star3" class="form-control"/>
+            </div>
+            <div class="col-sm-2 starsText">
+              <span><%= t('points') %></span>
+            </div>
           </div>
+
+          <div class="row">
+            <div class="col-sm-5">
+                <img src="/editor-lite/static/img/star-big.png">
+                <img src="/editor-lite/static/img/star-big.png">
+            </div>
+            <div class="col-sm-1 starsText">
+              <span><%= t('Over') %></span>
+            </div>
+            <div class="col-sm-4 starsInput">
+            <input name="star2" type="number" maxlength="6" id="star2" class="form-control"/>
+            </div>
+            <div class="col-sm-2 starsText">
+              <span><%= t('points') %></span>
+            </div>
+          </div>
+
+       		 		
+          <div class="row">
+            <div class="col-sm-5">
+                <img src="/editor-lite/static/img/star-big.png">
+            </div>
+            <div class="col-sm-1 starsText">
+              <span><%= t('Over') %></span>
+            </div>
+            <div class="col-sm-4 starsInput">
+            <input name="star1" type="number" maxlength="6" id="star1" class="form-control"/>
+            </div>
+            <div class="col-sm-2 starsText">
+              <span><%= t('points') %></span>
+            </div>
+          </div>
+
 
 			  </div>
 
@@ -46,8 +68,8 @@
 
   		<div class="modal-footer" style="clear:left;">
   			<div class="warning" id="starWarning"></div>
-    		<a  href="#" class="pop" data-toggle="popover" data-content="Here you can define how many points are needed for achieving stars. In time and distance mode player has to clear the level (e.g. travel required distance) to achieve stars.">Info</a>
-    		<button type="button" class="btn btn-default" data-dismiss="modal" onclick="editor.addStarRule()">Save</button>
+    		<a  href="#" class="pop" data-toggle="popover" data-content="<%= t('stars_info') %>"><%= t('Info') %></a>
+    		<button type="button" class="btn btn-default" data-dismiss="modal" onclick="editor.addStarRule()"><%= t('Save') %></button>
   		</div>
 
   	</div><!-- /.modal-content -->

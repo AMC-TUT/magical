@@ -4,7 +4,7 @@
 		<div class="modal-content">
   		<div class="modal-header">
     		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    		<h4 class="modal-title" id="speedModalLabel">Speed of game elements</h4>
+    		<h4 class="modal-title" id="speedModalLabel"><%= t('Speed of game elements') %></h4>
   		</div>
 
       <div class="modal-body" id="speed"> 
@@ -16,8 +16,8 @@
   		</div>
 
   		<div class="modal-footer">
-    		<a  href="#" class="pop" data-toggle="popover" data-content="Here you can define the speed of collectibles and hazards.">Info</a>
-    		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    		<a  href="#" class="pop" data-toggle="popover" data-content="<%= t('speed_info') %>"><%= t('Info') %></a>
+    		<button type="button" class="btn btn-default" data-dismiss="modal"><%= t('Close') %></button>
   		</div>
 
   	</div><!-- /.modal-content -->

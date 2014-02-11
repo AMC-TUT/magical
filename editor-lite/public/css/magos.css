@@ -22,12 +22,17 @@ legend {
 	font-family: Helvetica, Arial, sans-serif;
 	font-size: 12px;
 }
+
 #editor-stage{
 	position:absolute;
 	left:0px;
 	top:0px;
 	z-index:1000;
+	width: 1024px;
+	height: 748px;
+	overflow: hidden;
 }
+
 #sidebar{
 	width:120px;
 	position:absolute;
@@ -146,4 +151,103 @@ legend {
 
 #cr-stage canvas {
 	z-index: 10;
+}
+
+.stageHelp {
+	position: absolute;
+	font-family: 'Architects Daughter', cursive;
+	font-size: 20px;
+	font-weight: 400;
+	color: #000;
+	text-align: center;
+}
+.stageHelp i.fa {
+	display: block;
+}
+
+.playerHelp {
+	top: 140px;
+	left: 110px;
+}
+
+.collectiblesHelp {
+	top: 25px;
+	left: 420px;
+}
+
+.hazardsHelp {
+	top: 25px;
+	left: 635px;
+}
+
+.scrollHelp {
+	width: 100%;
+	position: absolute;
+	font-family: 'Architects Daughter', cursive;
+	font-size: 20px;
+	font-weight: 400;
+	color: #000;
+	text-align: center;
+	line-height: 100px;
+	border-top: 2px #999 dashed;
+}
+
+.scroll1Help {
+	top: 578px;
+	left: 0px;
+	background: rgba(150,0,0,0.1);
+	height: 170px;
+	z-index: 52;
+}
+
+.scroll2Help {
+	top: 480px;
+	left: 0px;
+	background: rgba(0,150,0,0.1);
+	height: 267px;
+	z-index: 51;
+}
+
+.scroll3Help {
+	top: 380px;
+	left: 0px;
+	background: rgba(0,0,150,0.1);
+	height: 368px;
+	z-index: 50;
+}
+
+#collectableSpeeds legend,
+#hazardsSpeeds legend {
+	font-size: 18px;
+}
+
+
+button.magosLiteBtn {
+	position: absolute;
+	min-width: 140px;
+	font-family: 'Architects Daughter', cursive;
+	font-size: 30px;
+	font-weight: 400;
+	color: #fff;
+	text-align: center;
+	z-index: 10;
+}
+
+#playBtn {
+	top: 450px;
+	left: 290px;
+}
+
+#editBtn {
+	top: 450px;
+	left: 490px;
+}
+
+.starsText {
+	line-height: 50px;
+}
+
+.starsInput {
+	padding-top: 8px;
+	padding-right: 0;
 }

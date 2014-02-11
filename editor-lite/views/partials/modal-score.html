@@ -5,7 +5,7 @@
 
   		<div class="modal-header">
     		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    		<h4 class="modal-title" id="scoreModalLabel">Points</h4>
+    		<h4 class="modal-title" id="scoreModalLabel"><%= t('Points') %></h4>
   		</div>
 
       <div class="modal-body" id="score">
@@ -17,11 +17,11 @@
         <form id="matchScore" class="clearfix" role="form">
           <fieldset>
             <div class="col-sm-12">
-              <legend>Match points</legend>
+              <legend><%= t('Match points') %></legend>
             </div>
 
             <div class="col-sm-6">
-              <label for="matchRightList" class="control-label">Points for right answers:</label>
+              <label for="matchRightList" class="control-label"><%= t('Points for right answers') %>:</label>
               <select id="matchRightList" class="form-control" onchange="editor.matchPoints('right')">
                 <option value="0">0</option>
                 <option value="100">100</option>
@@ -38,7 +38,7 @@
             </div>
 
             <div class="col-sm-6">
-              <label for="matchWrongList" class="control-label">Points for wrong answers:</label>
+              <label for="matchWrongList" class="control-label"><%= t('Points for wrong answers') %>:</label>
               <select id="matchWrongList" class="form-control" onchange="editor.matchPoints('wrong')">
                 <option value="0">0</option>
                 <option value="-100">-100</option>
@@ -60,8 +60,8 @@
     	</div>
 
   		<div class="modal-footer">
-    		<a  href="#" class="pop" data-toggle="popover" data-content="Here you can define the points that can be earned from collectibles and points lost from hazards.">Info</a>
-    		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    		<a  href="#" class="pop" data-toggle="popover" data-content="<%= t('points_info') %>"><%= t('Info') %></a>
+    		<button type="button" class="btn btn-default" data-dismiss="modal"><%= t('Close') %></button>
   		</div>
 
   	</div><!-- /.modal-content -->

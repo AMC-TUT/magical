@@ -4,22 +4,22 @@
      		<div class="modal-content">
       		<div class="modal-header">
           	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          	<h4 class="modal-title" id="collectModalLabel">Collectibles</h4>
+          	<h4 class="modal-title" id="collectModalLabel"><%= t('Collectibles') %></h4>
         	</div>
        		
           <div class="modal-body">
 
             <div class="form-group clearfix">
                 <form id="collectibles" class="form-horizontal" role="form">
-                  <label for="collectList" class="col-sm-7 control-label">Elements that player tries to collect:</label>
+                  <label for="collectList" class="col-sm-7 control-label"><%= t('Elements that player tries to collect') %>:</label>
                   <div class="col-sm-5">
                     <select id="collectList" class="form-control">
               				<option value=""></option>
-              				<option value="earth">earth</option>
-              				<option value="saturnus">saturnus</option>
-              				<option value="coin">coin</option>
-              				<option value="star">star</option>
-              				<option value="gift">gift</option>
+              				<option value="earth"><%= t('earth') %></option>
+              				<option value="saturnus"><%= t('saturnus') %></option>
+              				<option value="coin"><%= t('coin') %></option>
+              				<option value="star"><%= t('star') %></option>
+              				<option value="gift"><%= t('gift') %></option>
               			</select>
                   </div>
               	</form>
@@ -29,19 +29,19 @@
             	 	
             <div id="collectiblesInterval" class="form-group clearfix">
               <form class="form-horizontal" role="form">
-                <label for="collectList" class="col-sm-7 control-label">Appearance interval:</label>
+                <label for="collectList" class="col-sm-7 control-label"><%= t('Appearance interval') %>:</label>
                 <div class="col-sm-5">
                   <select id="itemIntervalList" class="form-control">
-                  		<option value="4000">4 seconds</option>
-                  		<option value="6000">6 seconds</option>
-                  		<option value="8000">8 seconds</option>
-                  		<option value="10000">10 seconds</option>
-                  		<option value="12000">12 seconds</option>
-                  		<option value="14000">14 seconds</option>
-                  		<option value="16000">16 seconds</option>
-                  		<option value="18000">18 seconds</option>
-                  		<option value="20000">20 seconds</option>
-                  		<option value="30000">30 seconds</option>
+                  		<option value="4000">4 <%= t('seconds') %></option>
+                  		<option value="6000">6 <%= t('seconds') %></option>
+                  		<option value="8000">8 <%= t('seconds') %></option>
+                  		<option value="10000">10 <%= t('seconds') %></option>
+                  		<option value="12000">12 <%= t('seconds') %></option>
+                  		<option value="14000">14 <%= t('seconds') %></option>
+                  		<option value="16000">16 <%= t('seconds') %></option>
+                  		<option value="18000">18 <%= t('seconds') %></option>
+                  		<option value="20000">20 <%= t('seconds') %></option>
+                  		<option value="30000">30 <%= t('seconds') %></option>
                   </select>
   				      </div>
               </form>        	
@@ -50,8 +50,8 @@
           </div><!-- /.modal-body -->
 
           <div class="modal-footer">
-      			<a  href="#" class="pop" data-toggle="popover" data-content="Collectibles are game elements that player tries to collect. Collectibles approach the player form the right side. You should define the time interval in which collectibles appear. Usually player earns points from collectibles.">Info</a>
-        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      			<a  href="#" class="pop" data-toggle="popover" data-content="<%= t('collectibles_info') %>"><%= t('Info') %></a>
+        		<button type="button" class="btn btn-default" data-dismiss="modal"><%= t('Close') %></button>
       		</div>
 
       	</div><!-- /.modal-content -->
