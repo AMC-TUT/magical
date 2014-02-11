@@ -22,8 +22,8 @@ if ('development' == app.get('env')) {
 i18next.init({
 	ns: { namespaces: ['magos.lite'], defaultNs: 'magos.lite'},
 	fallbackLng: 'en',
-    resSetPath: 'locale/__lng__/messages.__ns__.json',
-  	resGetPath: 'public/i18n/__lng__/messages.__ns__.json',
+    resSetPath: path.join(__dirname, 'locale/__lng__/messages.__ns__.json'),
+  	resGetPath: path.join(__dirname, 'public/i18n/__lng__/messages.__ns__.json'),
   	detectLngFromPath: 0,
   	returnObjectTrees: true,
   	saveMissing: false,
