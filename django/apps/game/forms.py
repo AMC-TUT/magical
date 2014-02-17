@@ -15,6 +15,21 @@ RESOLUTION_CHOICES = (
     ('12_8', '12 cols, 8 rows'),
 )
 
+class GameImageForm(forms.Form):
+    image = forms.ImageField(
+        required=True,
+        label=_(u'Game image'),
+        widget=forms.ClearableFileInput(attrs={'class':'form-control'}),
+    )
+    game_slug = forms.CharField(required=True, widget=forms.HiddenInput())
+
+    def __init__(self, *args, **kwargs):
+        game_slug = kwargs.pop('game_slug', None)
+        super(GameImageForm, self).__init__(*args, **kwargs)
+        if game_slug:
+            self.fields['game_slug'].initial = game_slug
+
+
 class BaseGameForm(forms.ModelForm):
     title = forms.CharField(
     	max_length=100,
@@ -23,11 +38,13 @@ class BaseGameForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class':'form-control'}),
     )
 
+    """
     image = forms.ImageField(
     	required=False,
         label=_(u'Image'),
         widget=forms.ClearableFileInput(attrs={'class':'form-control'}),
     )
+    """
 
     description = forms.CharField(
     	required=False,
@@ -38,6 +55,7 @@ class BaseGameForm(forms.ModelForm):
 
     class Meta:
         model = Game
+        include = ['title' , 'description', ]     
 
     def __init__(self, *args, **kwargs):
 		# only allow creators from user's own organization
@@ -81,14 +99,14 @@ class MagosAGameForm(BaseGameForm):
 
     class Meta:
         model = MagosAGame
-        exclude = ('creator', 'cloned', 'slug', 'state', 'rows', 'cols',)
+        exclude = ('image', 'creator', 'cloned', 'slug', 'state', 'rows', 'cols',)
 
 
 class MagosBGameForm(BaseGameForm):
 
     class Meta:
         model = MagosBGame
-        exclude = ('creator', 'cloned', 'slug', 'state', 'rows', 'cols', 'cloned', )
+        exclude = ('image', 'creator', 'cloned', 'slug', 'state', 'rows', 'cols', 'cloned', )
 
 
 class LoginForm(forms.Form):

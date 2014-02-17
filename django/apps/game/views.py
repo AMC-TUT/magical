@@ -20,7 +20,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from .models import Game, MagosAGame, MagosBGame, Revision, Author, \
         Highscore, Review, Image, Thumbnail
 from .forms import MagosAGameForm, MagosBGameForm, LoginForm, UserRegistrationForm, \
-    BatchCreateUsersForm
+    BatchCreateUsersForm, GameImageForm
 from .decorators import ajax_login_required
 from .utils import get_redis_game_data, set_redis_game_data, create_game_for_redis
 
@@ -99,6 +99,25 @@ def game_details_id(slug, gameid):
     return redirect('game_details', gameslug=gameslug)
 
 
+def delete_game_image(request, gameslug):
+    user = request.user
+    organization = None
+    if user.is_authenticated():
+        organization = user.get_profile().organization
+    else:
+        return HttpResponseRedirect(reverse('home'))
+    try:
+        game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)            
+        game_title = game.title
+        isAuthor = game.author_set.filter(user=user)
+        if isAuthor or user == game.creator:
+            game.image.delete(save=True)
+            messages.success(request, 'Game image was deleted.')
+        return redirect('game_details', gameslug=game.slug)
+    except Game.DoesNotExist:
+        return HttpResponseRedirect(reverse('home'))
+
+
 def game_details(request, gameslug):
     """Game details"""
     tpl = 'apps/game/details.html'
@@ -154,6 +173,25 @@ def game_details(request, gameslug):
 
     except Game.DoesNotExist:
         pass
+    if not game.image:
+        image_form = GameImageForm(
+            None,
+            initial={
+                'game_slug': game.slug,
+            } 
+        )
+        context['image_form'] = image_form
+    
+    if request.POST:
+        image_form = GameImageForm(
+            request.POST,
+            request.FILES,
+        )
+        context['image_form'] = image_form
+        if image_form.is_valid():
+            game.image = image_form.cleaned_data['image']
+            game.save()
+            return redirect('game_details', gameslug=game.slug)
 
     if game.get_real_instance_class() == MagosBGame:        
         editor_url = settings.MAGOS_LITE_EDITOR_URL

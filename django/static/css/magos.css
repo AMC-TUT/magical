@@ -478,3 +478,8 @@ ul.news-items {
     padding-left: 20px;
     list-style: disc;
 }
+
+.row.add_game_image {
+    margin-left:0;
+}
+
