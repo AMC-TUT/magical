@@ -240,7 +240,6 @@ $(document).ready(function() {
     }
 
     function bindDeleteGameImage() {
-        console.log('DELLAA');
         $('#deleteGameImage').on('click', function(e) {
             e.preventDefault();
             var url = $(this).attr('href');
@@ -253,7 +252,6 @@ $(document).ready(function() {
             });
         });
     }
-
 
     getGameAuthors();
     bindDeleteGame();
