@@ -10,6 +10,7 @@
     <title>Magos - Collaborative Game Creation</title>
     <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico" />
     <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.min.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/font-awesome.min.css" />
     <link rel="stylesheet" href="{{ STATIC_URL }}css/magos.css" />
     <link rel="stylesheet" href="{{ STATIC_URL }}css/rateit.css" />
 
@@ -20,7 +21,6 @@
     
     {% block extrastyle %}{% endblock %}
 </head>
-  {% load i18n %}
 <body class="{% block bodyclass %}home{% endblock %}">
 
 
@@ -31,24 +31,27 @@
 
         <nav id="main-nav" class="group">
             <ul id="main-nav-items">
-                <li><a href="/game" class="home">Play</a></li>
-                <li><a href="/game/create/" class="create">Create</a></li>
-                <li><a href="/game/watch/" class="watch">Watch</a></li>
+                <li><a href="/game" class="home">{% trans 'Play' %}</a></li>
+                <li><a href="/game/create/" class="create">{% trans 'Create' %}</a></li>
+                <li><a href="/game/watch/" class="watch">{% trans 'Watch' %}</a></li>
                 {% if not user.is_authenticated %}
-                <li><a href="/game/register/" class="register">Register</a></li>
+                <li><a href="/game/register/" class="register">{% trans 'Register' %}</a></li>
                 {% endif %}
             </ul> 
         </nav>
         
         <section id="login-info">
-                  {% if not user.is_authenticated %}
-                      {% include "apps/game/login_form.html" %}
-                  {% else %}
-                    <h2>Welcome to Magos</h2>
-                    <p>{{ user.first_name }} {{ user.last_name }}<br>[{{ user.username }}]</p>
-                    <p>Organisation: {{ user.userprofile.organization }}</p>
-                    <p><a id="logout" class="navbar-link" href="{% url 'logout_user'%}">{% trans "Logout" %}</a></p>
-                  {% endif %}
+          {% if not user.is_authenticated %}
+              {% include "apps/game/login_form.html" %}
+          {% else %}
+            <h2>{% trans 'Welcome to Magos' %}</h2>
+            <p>{{ user.first_name }} {{ user.last_name }}<br>[{{ user.username }}]</p>
+            <p>{% trans 'Organization' %}: {{ user.userprofile.organization }}</p>
+            <p><a id="logout" class="navbar-link" href="{% url 'logout_user'%}">{% trans "Logout" %}</a> | <a class="navbar-link" href="#" title="User settings"><i class="fa fa-gear"></i></a></p>
+            
+            {% magos_languages user=user %}
+
+          {% endif %}
         </section>
 
     </header>
@@ -72,16 +75,17 @@
         
         <nav id="footer-nav">
             <ul id="footer-nav-items">
-                <li><a href="/game" class="home">Play</a></li>
-                <li><a href="/game/create/" class="create">Create</a></li>
-                <li><a href="/game/invent/" class="invent">Invent</a></li>
-                <li><a href="/game/watch/" class="watch">Watch</a></li>
-                <li><a href="#" class="explore">Explore</a></li>
+                <li><a href="/game" class="home">{% trans 'Play' %}</a></li>
+                <li><a href="/game/create/" class="create">{% trans 'Create' %}</a></li>
+                <li><a href="/game/watch/" class="watch">{% trans 'Watch' %}</a></li>
+                {% if not user.is_authenticated %}
+                <li><a href="/game/register/" class="register">{% trans 'Register' %}</a></li>
+                {% endif %}
             </ul>
         </nav>
 
         <div class="footer-wide">
-            <p>&copy; Copyright 2012-2013 Magical project. <br /><span class="version-info">Version info: {% git_rev_tag %}</span></p>
+            <p>&copy; Copyright 2012-2013 Magical project. <br /><span class="version-info">{% trans 'Version info' %}: {% git_rev_tag %}</span></p>
         </div>
 
     </footer>
@@ -101,7 +105,8 @@
     <script type="text/javascript">
         $(document)
 	    .ajaxStart(function() {
-	    	$.blockUI({ 
+	    	var loading_msg = "{% trans 'Loading...' %}";
+            $.blockUI({ 
 	    		message: '<img id="ajax_loader" style="width:120px;height:15px;vertical-align:middle;margin:30px 8px 10px 8px;" src="{{ STATIC_URL }}img/ajax-loader.gif" /><h1 class="ajax-loading">Loading...</h1>',
 	    		css : { border : 'none' }
 	    	}); 
@@ -122,6 +127,8 @@
             function redirectToLogin() {
                 window.location.href = '{{ login_url }}';
             }
+
+            App.language.bindChangeLanguage();
         });
         
     </script>

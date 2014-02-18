@@ -5,6 +5,7 @@ import os
 from sys import path
 
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.translation import ugettext_lazy as _
 
 def get_env_variable(var_name):
     try:
@@ -53,12 +54,20 @@ DATABASES = {
 ########## GENERAL CONFIGURATION
 
 TIME_ZONE = 'Europe/Helsinki'
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 SITE_ID = 1
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-
+gettext = lambda s: s
+LANGUAGES = (
+    ('en', _('English')),
+    ('fi', _('Finnish')),
+    ('it', _('Italian')),
+)
+LOCALE_PATHS = (
+    os.path.normpath(os.path.join(SITE_ROOT, 'locale')),
+)
 ########## END GENERAL CONFIGURATION
 
 
@@ -155,9 +164,9 @@ TEMPLATE_DIRS = (
 
 ########## MIDDLEWARE
 MIDDLEWARE_CLASSES = (
-    # Default Django middleware.
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',

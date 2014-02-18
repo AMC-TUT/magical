@@ -18,7 +18,7 @@ import json
 from django.contrib.auth.forms import AuthenticationForm
 
 from .models import Game, MagosAGame, MagosBGame, Revision, Author, \
-        Highscore, Review, Image, Thumbnail
+        Highscore, Review, Image, Thumbnail, Language
 from .forms import MagosAGameForm, MagosBGameForm, LoginForm, UserRegistrationForm, \
     BatchCreateUsersForm, GameImageForm
 from .decorators import ajax_login_required
@@ -97,6 +97,32 @@ def game_details_id(slug, gameid):
     except Game.DoesNotExist:
         return HttpResponseRedirect(reverse('home'))
     return redirect('game_details', gameslug=gameslug)
+
+
+def set_game_language(request):
+    user = request.user
+    lang_id = request.POST.get('magos_lang_id' or None)
+    url = request.POST.get('next' or None)
+    if user.is_authenticated() and lang_id:
+        try:
+            lang = Language.objects.get(id=lang_id)
+            user_profile = user.get_profile()
+            if lang and user_profile:
+                user_profile.language = lang
+                user_profile.save()
+                request.session['lang'] = lang.title
+                request.session['lang_code'] = lang.code
+                request.session['django_language'] = lang.code
+                from django.utils import translation
+                translation.activate(lang.code)
+                request.session.modified = True
+                return redirect(url)
+        except Language.DoesNotExist:
+            pass
+    else:
+        return HttpResponseRedirect(reverse('home'))
+
+    return HttpResponseRedirect(reverse('home'))
 
 
 def delete_game_image(request, gameslug):

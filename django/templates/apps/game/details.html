@@ -10,12 +10,12 @@
     {% if game %}
                    
         <h1>{{ game.title }}</h1>
-        <p>Game permalink: <a href="{{base_url}}game/id/{{ game.id }}">{{base_url}}game/id/{{ game.id }}</a></p>
+        <p>{% trans 'Game permalink' %}: <a href="{{base_url}}game/id/{{ game.id }}">{{base_url}}game/id/{{ game.id }}</a></p>
         {% if game.image %}
             <img src="{{ MEDIA_URL }}{{ game.image }}" class="game-image embedded">
             {% if can_edit %}
                 <div class="row add_game_image">
-                    <button class="btn btn-danger" id="deleteGameImage" href="{% url 'delete_game_image' game.slug %}">Delete image</button>
+                    <button class="btn btn-danger" id="deleteGameImage" href="{% url 'delete_game_image' game.slug %}">{% trans 'Delete image' %}</button>
                 </div>
             {% endif %}
         {% else %}
@@ -25,7 +25,7 @@
                     <form role="form" action="{% url 'game_details' gameslug=game.slug %}" id="addGameImageForm" class="form-horizontal" enctype="multipart/form-data" method="post">
                         {% csrf_token %}
                         {{ image_form.as_p }}
-                        <button type="submit" id="addGameImage" class="btn btn-success">Add game image</button>
+                        <button type="submit" id="addGameImage" class="btn btn-success">{% trans 'Add game image' %}</button>
                     </form>
                 </div>
             </div>
@@ -35,7 +35,7 @@
         {% endif %}
 
         {% if game.creator %}
-        <p>Created by {{ game.creator.username }}</p>
+            <p>{% blocktrans with game_creator=game.creator.username %}Game created by {{ game_creator }}.{% endblocktrans %}</p>
         {% endif %}
 
         {% if can_review %}
@@ -46,9 +46,9 @@
             <div id="response"></div>
         {% endif %}
         <p>
-            <a class="btn btn-primary" href="{{ play_url }}{{ game.slug }}" target="_blank">Play game</a> 
+            <a class="btn btn-primary" href="{{ play_url }}{{ game.slug }}" target="_blank">{% trans 'Play game' %}</a> 
             {% if can_edit %}
-            <a class="btn btn-warning" href="{{ editor_url }}{{ game.slug }}" target="_blank">Launch game editor</a> {% endif %}
+            <a class="btn btn-warning" href="{{ editor_url }}{{ game.slug }}" target="_blank">{% trans 'Launch game editor' %}</a> {% endif %}
         </p>
 
         <hr />
@@ -63,17 +63,16 @@
 
         <hr />
 
-        <p>Game created on {{ game.created }}</p>
-        <p>Played 0 times</p>
+        <p>{% blocktrans with game_created=game.created %}Game created on {{ game_created }}.{% endblocktrans %}</p>
 
         <hr />
 
-        <h2>Comments</h2>
-        <p><i>No comments yet.</i></p>
+        <h2>{% trans 'Comments' %}</h2>
+        <p><i>{% trans 'No comments yet.' %}</i></p>
                 
         <hr />
         {% if can_edit %}
-            <button class="btn btn-danger" id="deleteGame" href="{% url 'delete_game' game.slug%}">Delete game</button>
+            <button class="btn btn-danger" id="deleteGame" href="{% url 'delete_game' game.slug%}">{% trans 'Delete game' %}</button>
         {% endif %}
 
     {% endif %}

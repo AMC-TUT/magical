@@ -27,6 +27,8 @@ urlpatterns = patterns('',
     
 	url(r'^rate/(?P<game_pk>\d*)/(?P<stars>0|1|2|3|4|5)$', 'apps.game.views.rate_game', name="rate_game"),
 
+    url(r'^language/set/$', 'apps.game.views.set_game_language', name="set_game_language"),
+
     #url(r'^watch/$', direct_to_template, {'template': 'apps/game/watch.html'}, name="watch"),
     url(r'^watch/$', TemplateView.as_view(template_name='apps/game/watch.html'), name='watch'),
     url(r'^invent/$', TemplateView.as_view(template_name='apps/game/invent.html'), name='invent'),

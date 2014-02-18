@@ -24,12 +24,12 @@
         <img src="{{ STATIC_URL }}img/magos-logo.png" id="logo">
 
         <section id="login-info">
-                  {% if not user.is_authenticated %}
-                    {% include "apps/game/login_form.html" %}
-                  {% else %}
-                    <p>Welcome to Magos {{ user.username }}</p>
-                    <p><a id="logout" class="navbar-link" href="/game/logout/">{% trans "Logout" %}</a></p>
-                  {% endif %}
+              {% if not user.is_authenticated %}
+                {% include "apps/game/login_form.html" %}
+              {% else %}
+                <p>Welcome to Magos {{ user.username }}</p>
+                <p><a id="logout" class="navbar-link" href="/game/logout/">{% trans "Logout" %}</a></p>
+              {% endif %}
         </section>
 
     </header>

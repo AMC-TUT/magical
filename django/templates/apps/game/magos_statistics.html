@@ -1,5 +1,6 @@
-<h3>Magos Statistics</h3>
+{% load i18n %}
+<h3>{% trans 'Magos Statistics' %}</h3>
 <ul>
-    <li>{{total_magos_users}} users</li>
-    <li>{{total_magos_games}} games</li>
+    <li>{{total_magos_users}} {% trans 'users' %}</li>
+    <li>{{total_magos_games}} {% trans 'games' %}</li>
 </ul>

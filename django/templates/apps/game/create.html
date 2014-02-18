@@ -1,16 +1,16 @@
 {% load i18n %}
 {% if form %}
     <div id="createGameContainer">
-        <h1>Create a new game</h1>
-        <p>Here you can define a new Magos <em>{{ gametype_text }}</em> game.</p>
+        <h1>{% trans 'Create a new game' %}</h1>
+        <p>{% blocktrans %}Here you can define a new Magos <em>{{ gametype_text }}</em> game.{% endblocktrans %}</p>
         <hr />
         <div class="col-xs-9">
             <form role="form" action="/game/create/" id="createGameForm" enctype="multipart/form-data" method="post">
                 {{ form.non_field_errors }}
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit" id="cancelCreateGame" class="btn btn-danger">Cancel</button>
-                <button type="submit" id="submitCreateGame" class="btn btn-success">Create</button>
+                <button type="submit" id="cancelCreateGame" class="btn btn-danger">{% trans 'Cancel' %}</button>
+                <button type="submit" id="submitCreateGame" class="btn btn-success">{% trans 'Create' %}</button>
             </form>
         </div>
     </div>

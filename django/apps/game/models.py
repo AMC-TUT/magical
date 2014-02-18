@@ -608,13 +608,20 @@ def slugify_title_callback(sender, instance, *args, **kwargs):
 from django.contrib.auth.signals import user_logged_in
 
 def store_info_to_session(sender, user, request, **kwargs):
-    print request.user.userprofile.language.code
+    #print request.user.userprofile.language.code
+    lang_code = request.user.userprofile.language.code
     request.session['username'] = request.user.username
     request.session['role'] = request.user.userprofile.role.name
     request.session['lang'] = request.user.userprofile.language.slug
-    request.session['lang_code'] = request.user.userprofile.language.code
+    request.session['lang_code'] = lang_code
     request.session['organization'] = request.user.userprofile.organization.slug
     request.session['firstname'] = request.user.first_name
     request.session['lastname'] = request.user.last_name
+
+    request.session['django_language'] = lang_code
+    from django.utils import translation
+    translation.activate(lang_code)
+
+
     
 user_logged_in.connect(store_info_to_session)

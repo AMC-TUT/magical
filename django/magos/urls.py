@@ -43,7 +43,7 @@ urlpatterns = patterns('',
     url(r'^api/v1/', include('apps.api.urls')),
     
     #(r'^crystal/', 'django.views.generic.simple.direct_to_template', {'template': 'crystal/index.html'}),
-    
+
     # admin urls
     url(r'^admin/auth/user/import/$', 'apps.game.views.import_users', name='import_users'),
     url(r'^admin/', include(admin.site.urls)),

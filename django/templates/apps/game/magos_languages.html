@@ -1,0 +1,9 @@
+<form action="{% url 'set_game_language' %}" method="post"  role="form">
+	{% csrf_token %}
+	<select name="magos_lang_id" id="magosLanguage" class="form-control">
+		{% for magos_language in magos_languages %}
+	    	<option value="{{ magos_language.id }}"{% if magos_language == user_language %} selected{% endif %}>{{ magos_language.title }}</option>
+	    {% endfor %}
+	</select>
+	<input type="hidden" name="next" value="{{ request_path }}" />
+</form>

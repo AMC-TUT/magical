@@ -1,10 +1,19 @@
+{% load i18n %}
 {% load magos_tags %}
 
-<h2>Attention</h2>
-<p>Magos Lite is still in development. Some parts of the system do not work yet. Nevertheless, you can start creating games with Magos Lite. We'll fix existing problems as soon as possible. Have fun!</p>
+<h2>{% trans 'Attention' %}</h2>
 
-<h3>Magos News</h3>
+<p>{% blocktrans %}Magos Lite is still in development. Some parts of the system do not work yet. Nevertheless, you can start creating games with Magos Lite. We'll fix existing problems as soon as possible. Have fun!{% endblocktrans %}</p>
+
+<h3>{% trans 'Magos News' %}</h3>
+
 <ul class="list-group">
+    <li class="list-group-item">
+        <h5 class="list-group-item-heading">18.2.2014</h5>
+        <ul class="list-group-item-text news-items">
+            <li>Language support</li>
+        </ul>
+    </li>
     <li class="list-group-item">
     	<h5 class="list-group-item-heading">5.2.2014</h5>
     	<ul class="list-group-item-text news-items">

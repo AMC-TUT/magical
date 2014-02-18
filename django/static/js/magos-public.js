@@ -121,6 +121,8 @@ App.games = {
         });
     },
 
+
+
     /**
      * Display flash notifications
      */
@@ -133,5 +135,14 @@ App.games = {
             timeout: msgTimeout
         });
     }    
-}
+};
 
+
+App.language = {
+    bindChangeLanguage: function() {
+        $('#magosLanguage').on('change', function() {
+            this.form.submit();
+        });
+    }
+    
+};

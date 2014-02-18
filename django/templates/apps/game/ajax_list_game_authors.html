@@ -1,5 +1,5 @@
-<h2>Authors</h2>
-
+{% load i18n %}
+<h2>{% trans 'Authors' %}</h2>
 {% if authors %}
     <ul class="authors-list">
     {% for author in authors %}
@@ -7,5 +7,5 @@
     {% endfor %}
     </ul>
 {% else %}
-    <h1 class="not-found">No authors found</h1>
+    <h1 class="not-found">{% trans 'No authors found' %}</h1>
 {% endif %}

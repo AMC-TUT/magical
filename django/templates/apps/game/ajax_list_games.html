@@ -1,3 +1,4 @@
+{% load i18n %}
 {% if games %}
 	<ul class="games-list">
 	{% for game in games %}
@@ -9,5 +10,5 @@
     {% endfor %}
     </ul>
 {% else %}
-    <h1 class="not-found">No games found</h1>
+    <h1 class="not-found">{% trans 'No games found' %}</h1>
 {% endif %}

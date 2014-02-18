@@ -6,9 +6,7 @@
         <div class="row wide-content">
             <div class="col-xs-12">
                 <div class="intro-game">
-                    <p class="slogan">
-                        Gather a team and step into the fantasy world of Magos - A game authoring environment designed to foster the learning of critical 21st century skills like creativity, problem solving and collaboration.
-                    </p>
+                    <p class="slogan">{% blocktrans %}Gather a team and step into the fantasy world of Magos - A game authoring environment designed to foster the learning of critical 21st century skills like creativity, problem solving and collaboration.{% endblocktrans %}</p>
                 </div>
             </div>
         </div>
@@ -19,10 +17,10 @@
                 {% if latest_revision %}                           
                 <div class="featured-game">
                     <div id="featured-slogan">
-                        <h1>{{ latest_revision.game.title }} is Out!</h1>
+                        <h1>{% blocktrans with game_title=latest_revision.game.title %}{{ game_title }} is Out!{% endblocktrans %}</h1>
                         <p>
-                            Experience the latest game in your Magos universe.
-                            <a class="btn btn-primary" type="button" href="{{ play_url }}{{ latest_revision.game.slug }}" target="_blank">Play now</a>
+                            {% trans 'Experience the latest game in your Magos universe.' %}
+                            <a class="btn btn-primary" type="button" href="{{ play_url }}{{ latest_revision.game.slug }}" target="_blank">{% trans 'Play now' %}</a>
                         </p>
                     </div>
                 </div>
@@ -30,11 +28,11 @@
                 <ul class="nav nav-tabs" id="gamesList">
                 <!--
                     <li class="active">
-                        <a href="#magos_games" data-url="A">Magos games</a>
+                        <a href="#magos_games" data-url="A">{% trans 'Magos games' %}</a>
                     </li>
                 -->
                     <li class="active">
-                        <a href="#magos_lite_games" data-url="B">Magos-lite games</a>
+                        <a href="#magos_lite_games" data-url="B">{% trans 'Magos-lite games' %}</a>
                     </li>
                 </ul>
             
