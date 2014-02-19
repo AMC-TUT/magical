@@ -26,6 +26,7 @@ function parseSessionObject(data) {
 	        'userName': json_data.username,
 	        'lang': json_data.lang,
 	        'lang_code': json_data.lang_code,
+	        'use_uppercase_text': json_data.use_uppercase_text,
 	        'role': json_data.role,
 	        'org': json_data.organization,
 	        'firstName': json_data.firstname,

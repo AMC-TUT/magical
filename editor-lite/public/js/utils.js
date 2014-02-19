@@ -61,6 +61,10 @@ utils = {
 		}
 	},
 
+	uppercaseAll: function() {
+		$('body, button, select, input').css({ 'text-transform': 'uppercase'});
+	},
+
 	/**
 	 * Display flash notifications
 	 */

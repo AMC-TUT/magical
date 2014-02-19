@@ -7,7 +7,7 @@ from .views import import_users
 from .models import UserProfile, Country, Language, \
     Organization, Role, Disability, MagosAGame, MagosBGame, \
     Achievement, AchievementMembership, Game, GameType, Author, \
-    Revision, Image, Audio, Review, Highscore, Gender
+    Revision, Image, Audio, Review, Highscore, Gender, UserSettings
 
 # remove unnecessary stuff from admin
 admin.site.unregister(Site)
@@ -46,6 +46,8 @@ admin.site.register(Revision)
 #admin.site.register(Image)
 admin.site.register(Review)
 admin.site.register(Highscore)
+
+admin.site.register(UserSettings)
 
 import pprint
 from django.contrib.sessions.models import Session

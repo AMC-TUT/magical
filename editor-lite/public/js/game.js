@@ -128,8 +128,6 @@ var game = {
 		this.groundGravity = 1.2;
 		this.isJumping = true;
 		this.characterGround = 620;
-		//this.distanceCom;
-
 
 		// ###### PRELOAD ############## Preload all media used by the game and the selected level
 		Crafty.scene('preloadgame', function() {
@@ -185,6 +183,9 @@ var game = {
 			.text(game.instructions)
 			.textFont({ size: '25px', weight: 'bold' })
 			.textColor('#000000');
+
+			console.log(game.user);
+			if(game.user.use_uppercase_text) utils.uppercaseAll();
 
 		});
 

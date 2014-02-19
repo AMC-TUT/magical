@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}css/font-awesome.min.css" />
     <link rel="stylesheet" href="{{ STATIC_URL }}css/magos.css" />
     <link rel="stylesheet" href="{{ STATIC_URL }}css/rateit.css" />
-
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -23,75 +22,79 @@
 </head>
 <body class="{% block bodyclass %}home{% endblock %}">
 
+    <div class="container">
 
-<div class="container">
+        <header>
+            <img src="{{ STATIC_URL }}img/magos-logo.png" id="logo">
 
-    <header>
-        <img src="{{ STATIC_URL }}img/magos-logo.png" id="logo">
-
-        <nav id="main-nav" class="group">
-            <ul id="main-nav-items">
-                <li><a href="/game" class="home">{% trans 'Play' %}</a></li>
-                <li><a href="/game/create/" class="create">{% trans 'Create' %}</a></li>
-                <li><a href="/game/watch/" class="watch">{% trans 'Watch' %}</a></li>
-                {% if not user.is_authenticated %}
-                <li><a href="/game/register/" class="register">{% trans 'Register' %}</a></li>
-                {% endif %}
-            </ul> 
-        </nav>
-        
-        <section id="login-info">
-          {% if not user.is_authenticated %}
-              {% include "apps/game/login_form.html" %}
-          {% else %}
-            <h2>{% trans 'Welcome to Magos' %}</h2>
-            <p>{{ user.first_name }} {{ user.last_name }}<br>[{{ user.username }}]</p>
-            <p>{% trans 'Organization' %}: {{ user.userprofile.organization }}</p>
-            <p><a id="logout" class="navbar-link" href="{% url 'logout_user'%}">{% trans "Logout" %}</a> | <a class="navbar-link" href="#" title="User settings"><i class="fa fa-gear"></i></a></p>
+            <nav id="main-nav" class="group">
+                <ul id="main-nav-items">
+                    <li><a href="/game" class="home">{% trans 'Play' %}</a></li>
+                    <li><a href="/game/create/" class="create">{% trans 'Create' %}</a></li>
+                    <li><a href="/game/watch/" class="watch">{% trans 'Watch' %}</a></li>
+                    {% if not user.is_authenticated %}
+                    <li><a href="/game/register/" class="register">{% trans 'Register' %}</a></li>
+                    {% endif %}
+                </ul> 
+            </nav>
             
-            {% magos_languages user=user %}
+            <section id="login-info">
+              {% if not user.is_authenticated %}
+                  {% include "apps/game/login_form.html" %}
+              {% else %}
+                <h2>{% trans 'Welcome to Magos' %}</h2>
+                <p>{{ user.first_name }} {{ user.last_name }}<br>[{{ user.username }}]</p>
+                <p>{% trans 'Organization' %}: {{ user.userprofile.organization }}</p>
+                <p><a id="logout" class="navbar-link" href="{% url 'logout_user' %}">{% trans "Logout" %}</a></p>
+                
+                {% magos_languages user=user %}
 
-          {% endif %}
+                <p class="space_top"><a class="navbar-link" href="{% url 'user_settings' %}" id="toggleSettings" title="User settings"><i class="fa fa-gear"></i> {% trans "settings" %}</a></p>
+
+              {% endif %}
+            </section>
+
+        </header>
+
+
+        <section id="content" class="group">
+            {% block content %}{% endblock %}
         </section>
-
-    </header>
-
-
-    <section id="content" class="group">
-        {% block content %}{% endblock %}
-    </section>
-</div>
+    </div>
 
 
-<div class="bottom-shadow"></div>
+    <div class="bottom-shadow"></div>
 
-<div id="footer_wrapper">
-    <footer>
-        <img src="{{ STATIC_URL }}img/magos-wiz-bottom.png" id="bottom-wiz">
+    <div id="footer_wrapper">
+        <footer>
+            <img src="{{ STATIC_URL }}img/magos-wiz-bottom.png" id="bottom-wiz">
 
-        <section id="footer-left">
-            <img id="magos-logo-footer" src="{{ STATIC_URL }}img/magos-logo-footer.png">
-        </section>
-        
-        <nav id="footer-nav">
-            <ul id="footer-nav-items">
-                <li><a href="/game" class="home">{% trans 'Play' %}</a></li>
-                <li><a href="/game/create/" class="create">{% trans 'Create' %}</a></li>
-                <li><a href="/game/watch/" class="watch">{% trans 'Watch' %}</a></li>
-                {% if not user.is_authenticated %}
-                <li><a href="/game/register/" class="register">{% trans 'Register' %}</a></li>
-                {% endif %}
-            </ul>
-        </nav>
+            <section id="footer-left">
+                <img id="magos-logo-footer" src="{{ STATIC_URL }}img/magos-logo-footer.png">
+            </section>
+            
+            <nav id="footer-nav">
+                <ul id="footer-nav-items">
+                    <li><a href="/game" class="home">{% trans 'Play' %}</a></li>
+                    <li><a href="/game/create/" class="create">{% trans 'Create' %}</a></li>
+                    <li><a href="/game/watch/" class="watch">{% trans 'Watch' %}</a></li>
+                    {% if not user.is_authenticated %}
+                    <li><a href="/game/register/" class="register">{% trans 'Register' %}</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
 
-        <div class="footer-wide">
-            <p>&copy; Copyright 2012-2013 Magical project. <br /><span class="version-info">{% trans 'Version info' %}: {% git_rev_tag %}</span></p>
-        </div>
+            <div class="footer-wide">
+                <p>&copy; Copyright 2012-2013 Magical project. <br /><span class="version-info">{% trans 'Version info' %}: {% git_rev_tag %}</span></p>
+            </div>
 
-    </footer>
-</div>
+        </footer>
+    </div>
+
+    <div class="modal fade" id="modalTargetSettings" role="dialog"></div>
 
     <script src="{{ STATIC_URL }}js/lib/jquery-1.7.1.min.js"></script>
+    <script src="{{ STATIC_URL }}js/lib/jquery.form.min.js"></script>
     <script src="{{ STATIC_URL }}js/lib/underscore-min.js"></script>
     <script src="{{ STATIC_URL }}js/lib/jquery.blockUI.js"></script>
     <script src="{{ STATIC_URL }}js/lib/noty/jquery.noty.js"></script>
@@ -128,7 +131,15 @@
                 window.location.href = '{{ login_url }}';
             }
 
-            App.language.bindChangeLanguage();
+            {% if user_settings %}
+                var use_uppercase_text = {{ user_settings.use_uppercase_text|yesno:"true,false" }};
+            {% else %}
+                var use_uppercase_text = false;
+            {% endif %}
+
+            App.language.init();
+            App.accessibility.init(use_uppercase_text);
+            App.settings.init();
         });
         
     </script>

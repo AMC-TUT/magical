@@ -206,6 +206,7 @@ $(document).ready(function() {
         xhr.done(function(data) {
             $('#available-authors').html(data);
             bindAddAuthorSubmit();
+            App.accessibility.refresh();
         });
     }
 

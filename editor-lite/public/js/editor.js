@@ -131,6 +131,7 @@ var editor = {
 	},
 
 	initEditor: function() {
+		if(this.user.use_uppercase_text) utils.uppercaseAll();
 		Crafty.init(1024, 748);
 		this.mediaLoader = new MediaLoader();
 		this.fontGame = {font: 'Arial', size: 24, color: '#FF0000'};

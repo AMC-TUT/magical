@@ -18,9 +18,9 @@ import json
 from django.contrib.auth.forms import AuthenticationForm
 
 from .models import Game, MagosAGame, MagosBGame, Revision, Author, \
-        Highscore, Review, Image, Thumbnail, Language
+        Highscore, Review, Image, Thumbnail, Language, UserSettings
 from .forms import MagosAGameForm, MagosBGameForm, LoginForm, UserRegistrationForm, \
-    BatchCreateUsersForm, GameImageForm
+    BatchCreateUsersForm, GameImageForm, UserSettingsForm
 from .decorators import ajax_login_required
 from .utils import get_redis_game_data, set_redis_game_data, create_game_for_redis
 
@@ -65,7 +65,35 @@ def home(request):
     context['user'] = user
     return render(request, tpl, context)
 
+@login_required
+def user_settings(request):
+    tpl = 'apps/game/user_settings.html'
+    context = RequestContext(request)
+    user = request.user
+    ses = request.session
+    base_url = settings.BASE_URL
+    user_settings, created = UserSettings.objects.get_or_create(user=user)
+    form = UserSettingsForm(
+        request.POST or None,
+        instance=user_settings
+    )
+    context['settings_form'] = form
+    if request.is_ajax():
+        if request.method == 'POST':
+            if form.is_valid():
+                form.save()
+                use_uppercase_text = form.cleaned_data['use_uppercase_text']
+                request.session['use_uppercase_text'] = use_uppercase_text
+                request.session.modified = True
+                response = {'success' : True, 'base_url': base_url}
+            else:
+                response = form.errors_as_json()
+            return HttpResponse(json.dumps(response, ensure_ascii=False),
+                    content_type='application/json')
 
+    return render(request, tpl, context)
+
+@login_required
 def delete_game(request, gameslug):
     """Delete game"""
     context = RequestContext(request)
@@ -87,6 +115,7 @@ def delete_game(request, gameslug):
 
     return HttpResponseRedirect(reverse('home'))
 
+
 def game_details_id(slug, gameid):
     """
     Redirect to game details via game ID.
@@ -99,7 +128,7 @@ def game_details_id(slug, gameid):
     return redirect('game_details', gameslug=gameslug)
 
 
-def set_game_language(request):
+def set_language(request):
     user = request.user
     lang_id = request.POST.get('magos_lang_id' or None)
     url = request.POST.get('next' or None)
@@ -124,7 +153,7 @@ def set_game_language(request):
 
     return HttpResponseRedirect(reverse('home'))
 
-
+@login_required
 def delete_game_image(request, gameslug):
     user = request.user
     organization = None
@@ -512,7 +541,7 @@ def rate_game(request, game_pk, stars):
     json = simplejson.dumps({ 'success': True })
     return HttpResponse(json, mimetype='application/json')
 
-
+@login_required
 def add_author(request, gameslug):
     """
     Add author to game
@@ -554,7 +583,7 @@ def add_author(request, gameslug):
     # redirect to game details page
     return redirect(game_details, gameslug=gameslug)
 
-
+@login_required
 def remove_author(request, gameslug, username):
     user = request.user
     authors = []

@@ -48,7 +48,7 @@
 	  	// initialize editor
 		editor.gameSlug = '<%= gameSlug %>';
 		editor.djangoUrl = '<%= djangoUrl %>';
-		editor.user = <%- JSON.stringify(user) %>;
+		editor.user = game.user = <%- JSON.stringify(user) %>;
 		editor.init();
 
 		// set noty defaults

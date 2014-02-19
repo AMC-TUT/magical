@@ -569,6 +569,23 @@ class Thumbnail(models.Model):
         image_name, ext = self.original.image_file.name.split('.')
         return '%s_%sx%s.%s' % (image_name, self.width, self.height, ext)
 
+
+class UserSettings(models.Model):
+    """Model to store user settings"""
+    user = models.OneToOneField(User)
+    use_uppercase_text = models.BooleanField(default=False)
+
+    created = models.DateTimeField(auto_now_add=True,default=datetime.date.today)
+    updated = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = _('user settings')
+        verbose_name_plural = _('user settings')
+
+    def __unicode__(self):
+        return u"settings of %s" % (self.user)
+
+
 """
 Signals functions
 """
@@ -610,6 +627,11 @@ from django.contrib.auth.signals import user_logged_in
 def store_info_to_session(sender, user, request, **kwargs):
     #print request.user.userprofile.language.code
     lang_code = request.user.userprofile.language.code
+    try:
+        user_settings = UserSettings.objects.get(user=request.user)
+        use_uppercase_text = user_settings.use_uppercase_text 
+    except UserSettings.DoesNotExist:
+        use_uppercase_text = False
     request.session['username'] = request.user.username
     request.session['role'] = request.user.userprofile.role.name
     request.session['lang'] = request.user.userprofile.language.slug
@@ -617,6 +639,7 @@ def store_info_to_session(sender, user, request, **kwargs):
     request.session['organization'] = request.user.userprofile.organization.slug
     request.session['firstname'] = request.user.first_name
     request.session['lastname'] = request.user.last_name
+    request.session['use_uppercase_text'] = use_uppercase_text
 
     request.session['django_language'] = lang_code
     from django.utils import translation
