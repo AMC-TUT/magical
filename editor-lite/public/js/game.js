@@ -245,40 +245,42 @@ var game = {
 			}
 			Crafty.addEvent(exit, exit._element, "mousedown", exit.onMouseDown);*/
 			
-			if(game.gameMode == "time"){
+			if(game.gameMode == "time") {
 				Crafty.e('GameTimer').gametimer(gameinfo["level1"].gameDuration);
 			}
 			
-			if(game.gameMode == "survival"){
+			if(game.gameMode == "survival") {
 				Crafty.e('GameClock').gameclock();
 			}
 			
-			if(game.gameMode == "distance"){
+			if(game.gameMode == "distance") {
 				distanceCom = Crafty.e('DistanceMeter').distancemeter();
 			}
 			
-			if(gameinfo["level1"].matchRule == "word"){
-				Crafty.e("2D, DOM, Image, sign").attr({x: 300, y: 0, z: 1000});
-				var taskLabel = Crafty.e("TaskLabel").taskLabel(320, 50, i18n.t("task"), '#FFFFFF');
+			if(gameinfo["level1"].matchRule == "word") {
+				Crafty.e("2D, DOM, Image, sign").attr({x: 190, y: 5, z: 1000});
+				var taskLabel = Crafty.e("TaskLabel").taskLabel(250, 25, i18n.t("task"), '#FFFFFF');
 				
-				if(gameinfo["level1"].wordRules.length>0){
+				if(gameinfo["level1"].wordRules.length>0) {
 					createNewWordTask();
-					game.wordInterval = setInterval(function(){addWord()},gameinfo["level1"].wordInterval);
+					game.wordInterval = setInterval(function() {
+						addWord();
+					},gameinfo["level1"].wordInterval);
 				}
 			}
 
-			if(gameinfo["level1"].matchRule == "memory"){
+			if(gameinfo["level1"].matchRule == "memory") {
 				console.log("memory");
-				Crafty.e("2D, DOM, Image, sign").attr({x: 300, y: 0, z: 1000});
-				var taskLabel = Crafty.e("TaskLabel").taskLabel(320, 30, gameinfo["level1"].memoryStart, '#FFFFFF');
+				Crafty.e("2D, DOM, Image, sign").attr({x: 190, y: 5, z: 1000});
+				var taskLabel = Crafty.e("TaskLabel").taskLabel(250, 25, gameinfo["level1"].memoryStart, '#FFFFFF');
 				createNewMemoryTask(true);
 				game.wordInterval = setInterval(function(){addMemory()},gameinfo["level1"].wordInterval);
 			}
 
-			if(gameinfo["level1"].matchRule == "fraction"){
-				Crafty.e("2D, DOM, Image, sign").attr({x: 300, y: 0, z: 1000});
-				var taskLabel = Crafty.e("TaskLabel").taskLabel(320, 50, "task", '#FFFFFF');
-				if(gameinfo["level1"].fractionRules.length>0){
+			if(gameinfo["level1"].matchRule == "fraction") {
+				Crafty.e("2D, DOM, Image, sign").attr({x: 190, y: 5, z: 1000});
+				var taskLabel = Crafty.e("TaskLabel").taskLabel(250, 25, "task", '#FFFFFF');
+				if(gameinfo["level1"].fractionRules.length>0) {
 					createNewTask();
 					game.fractionInterval = setInterval(function(){addFraction()},5000);
 				}
@@ -332,14 +334,13 @@ var game = {
 				Crafty.addEvent(Crafty.stage.elem, Crafty.stage.elem, "mousedown", Crafty.stage.elem.onMouseDown);
 			} else {
 				document.onkeydown = handleKeyDown;	
-				player = Crafty.e("2D, Canvas, Physics, Player, Gravity, Twoway, Collision,"+playerImg)
-		       .attr({x:110, y:100, z: 1001});
+				player = Crafty.e("2D, Canvas, Physics, Player, Gravity, Twoway, Collision,"+playerImg).attr({x:110, y:100, z: 1001});
 		       
-		       Crafty.stage.elem.onMouseDown = function(e) {
+		        Crafty.stage.elem.onMouseDown = function(e) {
 					jump();
-				}
+				};
 				Crafty.addEvent(Crafty.stage.elem, Crafty.stage.elem, "mousedown", Crafty.stage.elem.onMouseDown);
-		       
+
 				player.bind("EnterFrame", function(frame) {
 					if (game.isJumping) {
 		       			game.yVel += game.groundGravity;
@@ -435,7 +436,7 @@ var game = {
 		   	function completeSky2() {p3tween2.restart();}
 		   	
 			Crafty.e("Score, DOM, 2D, Text")
-			.attr({ x: 770, y: 15, z: 9002, w: 200, h: 20, score: 0 })
+			.attr({ x: 730, y: 15, z: 9002, w: 200, h: 20, score: 0 })
 			.text(i18n.t('Score') + ": " + game.score)
 			.textFont({ size: '30px', weight: 'bold' })
 			.css("textShadow", "2px 2px #ffffff")
@@ -1174,7 +1175,7 @@ function addGraphics(){
 Crafty.c('GameTimer', {
 	gametimer: function(seconds) {
 		this.requires("2D, DOM, Text");
-      	this.x = 620;
+      	this.x = 540;
       	this.y = 15;
         this.timeWas = 0;
         this.timeNow = 0;
@@ -1214,7 +1215,7 @@ Crafty.c('GameTimer', {
 Crafty.c('GameClock', {
 	gameclock: function() {
 		this.requires("2D, DOM, Text");
-      	this.x = 620;
+      	this.x = 540;
       	this.y = 15;
         this.clock = new Date();
         this.timeStart= Math.floor(this.clock.getTime()/1000);
@@ -1225,14 +1226,14 @@ Crafty.c('GameClock', {
 		this.textColor('#000000');
 		this.css("textShadow", "2px 2px #ffffff");
         this.interval = setInterval('Crafty.trigger("Tick")', 1000);
-        this.text(i18n.t('Score') + ": " + this.duration);
+        this.text(i18n.t('Time') + ": " + this.duration);
         this.bind("StopTimer", function() {
             clearInterval(this.interval);
         })
         .bind("Tick", function() {
             var kello = new Date();
         	this.duration = (Math.floor(kello.getTime()/1000))-this.timeStart;
-            this.text(i18n.t('Score') + ": " + this.duration);
+            this.text(i18n.t('Time') + ": " + this.duration);
             game.reached = this.duration;
         });
     }
@@ -1240,7 +1241,7 @@ Crafty.c('GameClock', {
 Crafty.c('DistanceMeter', {
 	distancemeter: function() {
 		this.requires("2D, DOM, Text");
-      	this.x = 480;
+      	this.x = 500;
       	this.y = 15;
         this.meter = 0;
         this.goal = gameinfo["level1"].goalDistance;
@@ -1249,7 +1250,7 @@ Crafty.c('DistanceMeter', {
 		this.textFont({ size: '30px', weight: 'bold' });
 		this.textColor('#000000');
 		this.css("textShadow", "2px 2px #ffffff");
-        this.text(this.meter+" m / " + this.goal+ " m");
+        this.text(this.meter + " m / " + this.goal + " m");
         this.counter = 0;
         this.bind("EnterFrame", function(frame) {
         	this.counter++;
