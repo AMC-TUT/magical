@@ -486,3 +486,7 @@ ul.news-items {
 p.space_top {
     margin: 10px 0 0 0;
 }
+
+.rateit-range {
+    overflow: hidden;
+}
