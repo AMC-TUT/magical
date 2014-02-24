@@ -11,7 +11,7 @@
     "Game mode": "Pelimuoto",
     "Player": "Pelaaja",
     "Background": "Tausta",
-    "Match": "Vastaavuudet",
+    "Tasks": "Tehtävät",
     "Collectibles": "Keräilykohteet",
     "Hazards": "Vaarat",
     "Speed": "Nopeus",
@@ -100,8 +100,7 @@
     "forest": "metsä",
     "background_info": "Voit valita pelin taustavärin ja -grafiikat. Voit lisätä kolme vasemmalle liikkuvaa taustaelementtiä. Elementti 1 on etummaisena ja liikkuu nopeimmin. Elementti 3 on kauimpana ja liikkuu hitaimmin. Kaikkia elementtejä ei ole pakko käyttää.",
 	
-    "Matching rules": "Vastaavuudet",
-    "Select matching rule type": "Valitse vastaavuustyyppi",
+    "Select task type": "Valitse tehtävätyyppi",
     "word": "sana",
     "memory": "muisti",
     "fraction": "murtoluku",

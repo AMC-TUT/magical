@@ -38,7 +38,25 @@
             <p>{% blocktrans with game_creator=game.creator.username %}Game created by {{ game_creator }}.{% endblocktrans %}</p>
         {% endif %}
 
+
+        <div id="gameTags">
+            <h5>{% trans 'Tags' %}</h5>
+            {% if game.tags.all %}
+                {% for tag in game.tags.all %}
+                    {% if can_edit %}
+                        <span class="tag label label-primary"><a href="#"><a class="removeTag" href="#">&times;</button></a> {{ tag }}</span>
+                    {% else %}
+                        <span class="label label-primary">{{ tag }}</span>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <p>-</p>
+            {% endif %}
+
+        </div>
+
         {% if can_review %}
+            <h5>{% trans 'Reviews' %}</h5>
             <input type="range" value="{{ avg_stars }}" step="1" id="ratingSettings">
             <div class="rateit" data-gameid="{{ game.id }}" data-rateit-backingfld="#ratingSettings" data-rateit-min="0" data-rateit-max="5">
             </div>

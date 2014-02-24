@@ -10,7 +10,7 @@
     "Game mode": "Game mode",
     "Player": "Player",
     "Background": "Background",
-    "Match": "Match",
+    "Tasks": "Tasks",
     "Collectibles": "Collezionismo",
     "Hazards": "Hazards",
     "Speed": "Speed",
@@ -99,8 +99,7 @@
     "forest": "forest",
     "background_info": "Here you can select color and graphics for the background elements. It is possible to add three elements that scroll towards left. Element 1 is in the foreground and scrolls fastest. Element 3 is farthest and scrolls slowest. You do not have to use all elements.",
 
-    "Matching rules": "Matching rules",
-    "Select matching rule type": "Select matching rule type",
+    "Select task type": "Select task type",
     "word": "word",
     "memory": "memory",
     "fraction": "fraction",

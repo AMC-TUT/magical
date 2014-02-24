@@ -8,6 +8,9 @@
 				<a href="<%=djangoUrl%>"><img src="/editor-lite/static/img/magos-lite-logo-small.png" id="logo"></a>
 			</div>
 
+			<!-- Button trigger TASKS -->
+			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#matchModal" id="matchBtn"><%= t('Tasks') %></button>
+
 			<!-- Button trigger GAME MODE -->
 			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#rulesModal"><%= t('Game mode') %></button>
 
@@ -16,9 +19,6 @@
 
 			<!-- Button trigger BACKGROUND -->
 			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#bgModal"><%= t('Background') %></button>
-
-			<!-- Button trigger MATCH -->
-			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#matchModal" id="matchBtn"><%= t('Match') %></button>
 
 			<!-- Button trigger COLLECTIBLES -->
 			<button class="btn btn-primary btn-block" data-toggle="modal" data-target="#collectModal"><%= t('Collectibles') %></button>

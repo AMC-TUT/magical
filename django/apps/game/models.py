@@ -11,6 +11,7 @@ from polymorphic import PolymorphicModel
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.template.defaultfilters import slugify
+from taggit.managers import TaggableManager
 
 # Game block sizes (32, 48, 64)
 BLOCK_SIZE_CHOICES = (
@@ -404,16 +405,59 @@ class Audio(models.Model):
 
 
 class Game(PolymorphicModel):
-    title = models.CharField(max_length=45, null=False, blank=False)
-    slug = models.SlugField(max_length=45, null=False, blank=False, unique=True)
-    state = models.IntegerField(null=False, blank=False, default=0)
-    image = models.ImageField(blank = True, null = True, upload_to='game_images')
-    description = models.CharField(max_length=255, null=True, blank=True)
-    cloned = models.IntegerField(null=True, blank=True)
-    created = models.DateTimeField(auto_now_add=True, default=datetime.date.today)
-    updated = models.DateTimeField(auto_now=True)
-    creator = models.ForeignKey(User, blank = True, null = True)
-    
+    title = models.CharField(
+        max_length=45, 
+        verbose_name=_(u'title'),
+        null=False, 
+        blank=False
+    )
+    slug = models.SlugField(
+        max_length=45, 
+        verbose_name=_(u'slug'),
+        null=False, 
+        blank=False, 
+        unique=True
+    )
+    state = models.IntegerField(
+        verbose_name=_(u'state'),
+        null=False, 
+        blank=False, 
+        default=0
+    )
+    image = models.ImageField(
+        verbose_name=_(u'image'),
+        blank = True, 
+        null = True, 
+        upload_to='game_images'
+    )
+    description = models.CharField(
+        verbose_name=_(u'description'),
+        max_length=255, 
+        null=True, 
+        blank=True
+    )
+    cloned = models.IntegerField(
+        verbose_name=_(u'cloned'),
+        null=True, 
+        blank=True
+    )
+    created = models.DateTimeField(
+        verbose_name=_(u'created'),
+        auto_now_add=True, 
+        default=datetime.date.today
+    )
+    updated = models.DateTimeField(
+        verbose_name=_(u'updated'),
+        auto_now=True
+    )
+    creator = models.ForeignKey(
+        User, 
+        verbose_name=_(u'creator'),
+        blank = True, 
+        null = True
+    )
+    tags = TaggableManager()
+
     class Meta:
         verbose_name = _('game')
         verbose_name_plural = _('games')

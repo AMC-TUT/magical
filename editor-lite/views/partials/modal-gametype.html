@@ -68,8 +68,8 @@
             <div class="col-sm-4">
               <select id="modeList" class="form-control">
     							<option value="time"><%= t('time') %></option>
-    							<option value="survival"><%= t('survival') %></option>
     							<option value="distance"><%= t('distance') %></option>
+                  <option value="survival"><%= t('survival') %></option>
               </select>
             </div>
           </form>
@@ -129,7 +129,7 @@
       </div><!-- /.modal-body -->
 
   		<div class="modal-footer">
-  			<a  href="#" class="pop" data-toggle="popover" data-content="<%= t('game_mode_info') %>"><%= t('Info') %></a>
+        <i data-toggle="popover" data-content="<%= t('game_mode_info') %>" class="pop fa fa-question-circle"></i>
     		<button type="button" class="btn btn-default" data-dismiss="modal"><%= t('Close') %></button>
     		<!-- <button type="button" class="btn btn-primary" changeSkyImg()>Save changes</button>-->
   		</div><!-- /.modal-footer -->

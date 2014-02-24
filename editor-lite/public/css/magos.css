@@ -46,8 +46,14 @@ legend {
 .dropLabel{
 	margin-right:30px;
 }
-.pop{
+
+.pop {
 	margin-right:50px;
+	font-size: 26px;
+	font-weight: normal;
+	line-height: 1.428571429;
+	white-space: nowrap;
+	vertical-align: middle;	
 }
 
 #logo{

@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
 from django.template.defaultfilters import slugify
+from taggit.forms import *
 from .models import Game, MagosAGame, MagosBGame, GameType, BLOCK_SIZE_CHOICES, \
     Organization, Gender, UserSettings
 
@@ -58,6 +59,12 @@ class BaseGameForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'class':'form-control'}),
     )
 
+    tags = TagField(
+        label=_(u'Tags'),
+        required=False,
+        help_text=_(u'A comma-separated list of tags.'),
+        widget=forms.TextInput(attrs={'class':'form-control'}),
+    )
 
     class Meta:
         model = Game

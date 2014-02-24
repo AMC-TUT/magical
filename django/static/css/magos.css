@@ -490,3 +490,26 @@ p.space_top {
 .rateit-range {
     overflow: hidden;
 }
+
+.helptext {
+    color: #777;
+    font-style: italic;    
+}
+
+#gameTags {
+    margin-bottom: 15px;
+}
+
+.tag {
+    font-size: 12px;
+    font-weight: normal;
+    padding: 4px 8px;
+}
+
+a.removeTag {
+    background: #fff;
+    color: #f20;
+    padding: 0px 3px;
+    margin-right: 2px;
+}
+

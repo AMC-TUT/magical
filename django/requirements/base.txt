@@ -38,3 +38,4 @@ switch2bill-common==2.1.2
 virtualenv==1.7
 wsgiref==0.1.2
 yolk==0.4.3
+django-taggit==0.11.2

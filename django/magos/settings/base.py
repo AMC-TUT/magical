@@ -216,6 +216,7 @@ THIRD_PARTY_APPS = (
     'djcelery',
     'imagekit',
     'polymorphic',
+    'taggit',
 )
 
 # Apps specific for this project

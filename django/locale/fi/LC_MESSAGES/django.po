@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Magos portal\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-19 14:08+0200\n"
-"PO-Revision-Date: 2014-02-19 14:08+0200\n"
+"POT-Creation-Date: 2014-02-24 16:03+0200\n"
+"PO-Revision-Date: 2014-02-24 16:03+0200\n"
 "Last-Translator: Mikko Koskela <mikko.koskela@jouhea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fi\n"
@@ -20,15 +20,15 @@ msgstr ""
 
 #: apps/crystal/models.py:11
 msgid "word type"
-msgstr ""
+msgstr "sanatyyppi"
 
 #: apps/crystal/models.py:12
 msgid "word types"
-msgstr ""
+msgstr "sanatyypit"
 
 #: apps/crystal/models.py:25
 msgid "list"
-msgstr ""
+msgstr "listaus"
 
 #: apps/crystal/models.py:26
 msgid "lists"
@@ -42,7 +42,7 @@ msgstr "sana"
 msgid "words"
 msgstr "sanat"
 
-#: apps/crystal/models.py:52
+#: apps/crystal/models.py:52 apps/game/models.py:434
 msgid "description"
 msgstr "kuvaus"
 
@@ -55,233 +55,269 @@ msgstr "kuvaukset"
 msgid "Successfully deleted %d audio files."
 msgstr ""
 
-#: apps/game/forms.py:35
+#: apps/game/forms.py:36
 msgid "Game image"
 msgstr "Pelin kuva"
 
-#: apps/game/forms.py:51
+#: apps/game/forms.py:52
 msgid "Title"
 msgstr "Otsikko"
 
-#: apps/game/forms.py:65
+#: apps/game/forms.py:58
 msgid "Description"
 msgstr "Kuvaus"
 
-#: apps/game/forms.py:85
+#: apps/game/forms.py:63 templates/apps/game/details.html:43
+msgid "Tags"
+msgstr "Asiasanat"
+
+#: apps/game/forms.py:65
+msgid "A comma-separated list of tags."
+msgstr "Erota asiasanat pilkulla"
+
+#: apps/game/forms.py:84
 msgid "Game with the same title exists. Try another title."
 msgstr "Samanniminen peli on jo olemassa. Muuta pelin nimeä."
 
-#: apps/game/forms.py:97
+#: apps/game/forms.py:96
 msgid "Game Type"
 msgstr "Pelin tyyppi"
 
-#: apps/game/forms.py:102
+#: apps/game/forms.py:101
 msgid "Block size"
-msgstr ""
+msgstr "Lohkon koko"
 
-#: apps/game/forms.py:109
+#: apps/game/forms.py:108
 msgid "Resolution"
 msgstr "Resoluutio"
 
-#: apps/game/forms.py:135
+#: apps/game/forms.py:134
 msgid "Login was invalid. Please try again."
 msgstr "Kirjautuminen epäonnistui. Yritä uudelleen."
 
-#: apps/game/forms.py:167
+#: apps/game/forms.py:166
 msgid "Password"
 msgstr "Salasana"
 
-#: apps/game/forms.py:172
+#: apps/game/forms.py:171
 msgid "Password again"
 msgstr "Salasana uudelleen"
 
-#: apps/game/forms.py:179
+#: apps/game/forms.py:178
 msgid "Select gender"
 msgstr "Valitse sukupuoli"
 
-#: apps/game/forms.py:185
+#: apps/game/forms.py:184
 msgid "I have a special code"
 msgstr "Minulla on erikoiskoodi"
 
-#: apps/game/forms.py:200
+#: apps/game/forms.py:199
 msgid "Code is not valid."
 msgstr "Koodi ei kelpaa."
 
-#: apps/game/forms.py:208
+#: apps/game/forms.py:207
 msgid "Can not create public users at this time. Please contact Magos support."
 msgstr ""
 "Julkisia käyttäjiä ei voida valitettavasti luoda. Ota yhteyttä Magos "
 "ylläpitoon."
 
-#: apps/game/forms.py:296
+#: apps/game/forms.py:295
 msgid "use uppercase text"
 msgstr "käytä isoja kirjaimia"
 
-#: apps/game/models.py:17
+#: apps/game/models.py:18
 msgid "32 pixels"
 msgstr "32 pikseliä"
 
-#: apps/game/models.py:18
+#: apps/game/models.py:19
 msgid "48 pixels"
 msgstr "48 pikseliä"
 
-#: apps/game/models.py:19
+#: apps/game/models.py:20
 msgid "64 pixels"
 msgstr "64 pikseliä"
 
-#: apps/game/models.py:98
+#: apps/game/models.py:99
 msgid "role"
 msgstr "rooli"
 
-#: apps/game/models.py:99
+#: apps/game/models.py:100
 msgid "roles"
 msgstr "roolit"
 
-#: apps/game/models.py:112
+#: apps/game/models.py:113
 msgid "language"
 msgstr "kieli"
 
-#: apps/game/models.py:113
+#: apps/game/models.py:114
 msgid "languages"
 msgstr "kielet"
 
-#: apps/game/models.py:125
+#: apps/game/models.py:126
 msgid "country"
 msgstr "maa"
 
-#: apps/game/models.py:126
+#: apps/game/models.py:127
 msgid "countries"
 msgstr "maat"
 
-#: apps/game/models.py:167
+#: apps/game/models.py:168
 msgid "organization"
 msgstr "organisaatio"
 
-#: apps/game/models.py:168
+#: apps/game/models.py:169
 msgid "organizations"
 msgstr "organisaatiot"
 
-#: apps/game/models.py:183
+#: apps/game/models.py:184
 msgid "disability"
 msgstr "vamma"
 
-#: apps/game/models.py:184
+#: apps/game/models.py:185
 msgid "disabilities"
 msgstr "vammat"
 
-#: apps/game/models.py:196
+#: apps/game/models.py:197
 msgid "game type"
 msgstr "pelityyppi"
 
-#: apps/game/models.py:197
+#: apps/game/models.py:198
 msgid "game types"
 msgstr "pelityypit"
 
-#: apps/game/models.py:213
+#: apps/game/models.py:214
 msgid "achievement"
 msgstr "saavutus"
 
-#: apps/game/models.py:214
+#: apps/game/models.py:215
 msgid "achievements"
 msgstr "saavutukset"
 
-#: apps/game/models.py:227 apps/game/models.py:228
+#: apps/game/models.py:228 apps/game/models.py:229
 msgid "user has achievement"
 msgstr "käyttäjällä on saavutus"
 
-#: apps/game/models.py:240
+#: apps/game/models.py:241
 msgid "gender"
 msgstr "sukupuoli"
 
-#: apps/game/models.py:241
+#: apps/game/models.py:242
 msgid "genders"
 msgstr "sukupuolet"
 
-#: apps/game/models.py:269
+#: apps/game/models.py:270
 msgid "user profile"
 msgstr "käyttäjäprofiili"
 
-#: apps/game/models.py:270
+#: apps/game/models.py:271
 msgid "user profiles"
 msgstr "käyttäjäprofiilit"
 
-#: apps/game/models.py:350
+#: apps/game/models.py:351 apps/game/models.py:428
 msgid "image"
 msgstr "kuva"
 
-#: apps/game/models.py:351
+#: apps/game/models.py:352
 msgid "images"
 msgstr "kuvat"
 
-#: apps/game/models.py:396
+#: apps/game/models.py:397
 msgid "Audio file player"
 msgstr "Äänitiedostojen soitin"
 
-#: apps/game/models.py:399
+#: apps/game/models.py:400
 msgid "audio"
 msgstr "ääni"
 
-#: apps/game/models.py:400
+#: apps/game/models.py:401
 msgid "audios"
 msgstr "äänet"
 
-#: apps/game/models.py:418
+#: apps/game/models.py:410
+msgid "title"
+msgstr "otsikko"
+
+#: apps/game/models.py:416
+msgid "slug"
+msgstr "polkutunnus"
+
+#: apps/game/models.py:422
+msgid "state"
+msgstr "tila"
+
+#: apps/game/models.py:440
+msgid "cloned"
+msgstr "kloonattu"
+
+#: apps/game/models.py:445
+msgid "created"
+msgstr "luontiaika"
+
+#: apps/game/models.py:450
+msgid "updated"
+msgstr "päivitysaika"
+
+#: apps/game/models.py:455
+msgid "creator"
+msgstr "luoja"
+
+#: apps/game/models.py:462
 msgid "game"
 msgstr "peli"
 
-#: apps/game/models.py:419 templates/apps/game/magos_statistics.html:5
+#: apps/game/models.py:463 templates/apps/game/magos_statistics.html:5
 msgid "games"
 msgstr "peliä"
 
-#: apps/game/models.py:438
+#: apps/game/models.py:482
 msgid "Magos A game"
 msgstr "Magos A peli"
 
-#: apps/game/models.py:439
+#: apps/game/models.py:483
 msgid "Magos A games"
 msgstr "Magos A pelit"
 
-#: apps/game/models.py:451
+#: apps/game/models.py:495
 msgid "Magos B game"
 msgstr "Magos B peli"
 
-#: apps/game/models.py:452
+#: apps/game/models.py:496
 msgid "Magos B games"
 msgstr "Magos B pelit"
 
-#: apps/game/models.py:466
+#: apps/game/models.py:510
 msgid "revision"
 msgstr "revisio"
 
-#: apps/game/models.py:467
+#: apps/game/models.py:511
 msgid "revisions"
 msgstr "revisiot"
 
-#: apps/game/models.py:483
+#: apps/game/models.py:527
 msgid "highscore"
 msgstr "pistetaulukko"
 
-#: apps/game/models.py:484
+#: apps/game/models.py:528
 msgid "highscores"
 msgstr "pistetaulukot"
 
-#: apps/game/models.py:501
+#: apps/game/models.py:545
 msgid "review"
 msgstr "arvostelu"
 
-#: apps/game/models.py:502
+#: apps/game/models.py:546
 msgid "reviews"
 msgstr "arvostelut"
 
-#: apps/game/models.py:517
+#: apps/game/models.py:561
 msgid "author"
 msgstr "tekijä"
 
-#: apps/game/models.py:518
+#: apps/game/models.py:562
 msgid "authors"
 msgstr "tekijät"
 
-#: apps/game/models.py:582 apps/game/models.py:583
+#: apps/game/models.py:626 apps/game/models.py:627
 msgid "user settings"
 msgstr "käyttäjän asetukset"
 
@@ -330,7 +366,7 @@ msgstr "Historia"
 
 #: templates/admin/game/audio/change_form.html:36
 msgid "View on site"
-msgstr ""
+msgstr "Katso sivustolla"
 
 #: templates/admin/game/audio/change_form.html:47
 #: templates/admin/game/audio/change_list.html:70
@@ -341,7 +377,7 @@ msgstr[1] ""
 
 #: templates/admin/game/audio/change_list.html:81
 msgid "Filter"
-msgstr ""
+msgstr "Suodata"
 
 #: templates/apps/game/ajax_list_available_authors.html:10
 msgid "Add as author"
@@ -369,7 +405,7 @@ msgid "Here you can define a new Magos <em>%(gametype_text)s</em> game."
 msgstr "Tässä voit luoda uuden Magos <em>%(gametype_text)s</em> pelin."
 
 #: templates/apps/game/create.html:12
-#: templates/apps/game/user_settings.html:23
+#: templates/apps/game/user_settings.html:25
 msgid "Cancel"
 msgstr "Peruuta"
 
@@ -399,28 +435,32 @@ msgstr "Lisää pelin kuva"
 msgid "Game created by %(game_creator)s."
 msgstr "Pelin luonut %(game_creator)s."
 
-#: templates/apps/game/details.html:49
+#: templates/apps/game/details.html:57
+msgid "Reviews"
+msgstr "Arvostelut"
+
+#: templates/apps/game/details.html:65
 msgid "Play game"
 msgstr "Pelaa peliä"
 
-#: templates/apps/game/details.html:51
+#: templates/apps/game/details.html:67
 msgid "Launch game editor"
 msgstr "Avaa pelieditori"
 
-#: templates/apps/game/details.html:66
+#: templates/apps/game/details.html:82
 #, python-format
 msgid "Game created on %(game_created)s."
 msgstr "Pelin luontiaika %(game_created)s."
 
-#: templates/apps/game/details.html:70
+#: templates/apps/game/details.html:86
 msgid "Comments"
 msgstr "Kommentit"
 
-#: templates/apps/game/details.html:71
+#: templates/apps/game/details.html:87
 msgid "No comments yet."
 msgstr "Ei kommentteja."
 
-#: templates/apps/game/details.html:75
+#: templates/apps/game/details.html:91
 msgid "Delete game"
 msgstr "Poista peli"
 
@@ -471,24 +511,28 @@ msgstr ""
 "pelinluontiympäristö, joka on suunniteltu 21. vuosisadan taitojen, kuten "
 "luovuus, ongelmanratkaisu ja yhteistyö kehittämiseen."
 
-#: templates/apps/game/index.html:20
+#: templates/apps/game/index.html:19
+msgid "Search games"
+msgstr "Hae pelejä"
+
+#: templates/apps/game/index.html:27
 #, python-format
 msgid "%(game_title)s is Out!"
 msgstr "%(game_title)s on julkaistu!"
 
-#: templates/apps/game/index.html:22
+#: templates/apps/game/index.html:29
 msgid "Experience the latest game in your Magos universe."
 msgstr "Koe Magos universumin uusin peli."
 
-#: templates/apps/game/index.html:23
+#: templates/apps/game/index.html:30
 msgid "Play now"
 msgstr "Pelaa nyt"
 
-#: templates/apps/game/index.html:31
+#: templates/apps/game/index.html:38
 msgid "Magos games"
 msgstr "Magos pelit"
 
-#: templates/apps/game/index.html:35
+#: templates/apps/game/index.html:42
 msgid "Magos-lite games"
 msgstr "Magos-lite pelit"
 
@@ -518,11 +562,11 @@ msgstr ""
 msgid "Magos News"
 msgstr "Magos uutiset"
 
-#: templates/apps/game/user_settings.html:8
+#: templates/apps/game/user_settings.html:10
 msgid "User settings"
 msgstr "Käyttäjän asetukset"
 
-#: templates/apps/game/user_settings.html:22
+#: templates/apps/game/user_settings.html:24
 msgid "Save settings"
 msgstr "Tallenna asetukset"
 

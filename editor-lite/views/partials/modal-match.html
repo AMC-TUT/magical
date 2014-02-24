@@ -4,13 +4,13 @@
  		<div class="modal-content">
   		<div class="modal-header">
     		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    		<h4 class="modal-title" id="hazardModalLabel"><%= t('Matching rules') %></h4>
+    		<h4 class="modal-title" id="hazardModalLabel"><%= t('Tasks') %></h4>
   		</div>
    		<div class="modal-body">
 
 				<div id="matchType" class="form-group clearfix row">
 					<form class="form-horizontal" role="form">
-						<label for="matchList" class="col-sm-5 control-label"><%= t('Select matching rule type') %>:</label>
+						<label for="matchList" class="col-sm-5 control-label"><%= t('Select task type') %>:</label>
 						<div class="col-sm-7">
 							<select id="matchList" class="form-control">
 								<option value ="-1"></option>
@@ -152,7 +152,7 @@
       	
   		<div class="modal-footer" style="clear:left;">
   			<div class="warning" id="matchWarning"></div>
-    		<a  href="#" class="pop" data-toggle="popover" data-content="<%= t('match_info') %>"><%= t('Info') %></a>
+    		<i data-toggle="popover" data-content="<%= t('match_info') %>" class="pop fa fa-question-circle"></i>
     		<button type="button" class="btn btn-default" data-dismiss="modal"><%= t('Close') %></button>
   		</div>
   	</div><!-- /.modal-content -->
