@@ -205,8 +205,7 @@ var editor = {
 			if(editor.initial) {
 
 				$('#sidebar .btn').click(function() {
-					console.log('SILENT');
-					utils.playSound('silent'); 
+					utils.playSound('silent');
 				});
 
 				editor.bindUiFormSubmits();
