@@ -122,6 +122,27 @@ class MagosBGameForm(BaseGameForm):
         exclude = ('image', 'creator', 'cloned', 'slug', 'state', 'rows', 'cols', 'cloned', )
 
 
+class GameTagsForm(forms.ModelForm):
+    tags = TagField(
+        label=_(u'Add tags'),
+        required=True,
+        help_text=_(u'Separate tags with comma.'),
+        widget=forms.TextInput(attrs={'class':'form-control small'}),
+    )
+
+    class Meta:
+        model = Game
+        fields = ('tags',)
+
+    def save(self, commit = True):
+        game = super(GameTagsForm, self).save(commit = False)
+        tags = self.cleaned_data.get('tags' or None)
+        if tags:
+            # add tags as positional arguments to .add()
+            game.tags.add(*tags)
+        return game
+
+
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=255, required=True)
     password = forms.CharField(widget=forms.PasswordInput, required=True)

@@ -20,7 +20,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from .models import Game, MagosAGame, MagosBGame, Revision, Author, \
         Highscore, Review, Image, Thumbnail, Language, UserSettings
 from .forms import MagosAGameForm, MagosBGameForm, LoginForm, UserRegistrationForm, \
-    BatchCreateUsersForm, GameImageForm, UserSettingsForm
+    BatchCreateUsersForm, GameImageForm, UserSettingsForm, GameTagsForm
 from .decorators import ajax_login_required
 from .utils import get_redis_game_data, set_redis_game_data, create_game_for_redis
 
@@ -173,6 +173,30 @@ def delete_game_image(request, gameslug):
         return HttpResponseRedirect(reverse('home'))
 
 
+@login_required
+def delete_game_tag(request, gameslug, tagslug):
+    user = request.user
+    organization = None
+    if user.is_authenticated():
+        organization = user.get_profile().organization
+    else:
+        return HttpResponseRedirect(reverse('home'))
+    try:
+        game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)            
+        game_title = game.title
+        isAuthor = game.author_set.filter(user=user)
+        if isAuthor or user == game.creator:
+            try:
+                tag = game.tags.get(slug=tagslug)
+                game.tags.remove(tag.name)
+                messages.success(request, 'Tag was removed.')
+            except Tag.DoesNotExist:
+                pass
+        return redirect('game_details', gameslug=game.slug)
+    except Game.DoesNotExist:
+        return HttpResponseRedirect(reverse('home'))
+
+
 def game_details(request, gameslug):
     """Game details"""
     tpl = 'apps/game/details.html'
@@ -227,7 +251,8 @@ def game_details(request, gameslug):
             avg_stars = float(stars_total) / num_reviews
 
     except Game.DoesNotExist:
-        pass
+        raise Http404('Game does not exist')
+
     if not game.image:
         image_form = GameImageForm(
             None,
@@ -237,7 +262,11 @@ def game_details(request, gameslug):
         )
         context['image_form'] = image_form
     
+    tags_form = GameTagsForm()
+    context['tags_form'] = tags_form
+
     if request.POST:
+        # Image form
         image_form = GameImageForm(
             request.POST,
             request.FILES,
@@ -246,6 +275,19 @@ def game_details(request, gameslug):
         if image_form.is_valid():
             game.image = image_form.cleaned_data['image']
             game.save()
+            return redirect('game_details', gameslug=game.slug)
+
+        # Tags form
+        tags_form = GameTagsForm(
+            request.POST,
+            instance=game,
+        )
+        context['tags_form'] = tags_form
+        if tags_form.is_valid():
+            game = tags_form.save()
+            print game.tags.all()
+            #game.image = image_form.cleaned_data['image']
+            #game.save()
             return redirect('game_details', gameslug=game.slug)
 
     if game.get_real_instance_class() == MagosBGame:        

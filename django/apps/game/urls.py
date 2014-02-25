@@ -16,7 +16,10 @@ urlpatterns = patterns('',
 
     url(r'^image/delete/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.delete_game_image', name="delete_game_image"),
 
+    url(r'^tag/delete/(?P<gameslug>[\w.@+-]+)/(?P<tagslug>[\w.@+-]+)$', 'apps.game.views.delete_game_tag', name="delete_game_tag"),
+
     url(r'^delete/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.delete_game', name="delete_game"),
+
 
     url(r'^game-authors/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.game_authors', name="game_authors"),
     url(r'^available-authors/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.available_authors', name="available_authors"),

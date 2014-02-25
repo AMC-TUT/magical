@@ -513,3 +513,11 @@ a.removeTag {
     margin-right: 2px;
 }
 
+a.removeTag:hover {
+    text-decoration: none;
+}
+
+#addTags {
+    margin-top: 10px;
+}
+

@@ -44,13 +44,22 @@
             {% if game.tags.all %}
                 {% for tag in game.tags.all %}
                     {% if can_edit %}
-                        <span class="tag label label-primary"><a href="#"><a class="removeTag" href="#">&times;</button></a> {{ tag }}</span>
+                        <span class="tag label label-primary"><a href="#"><a class="removeTag" href="{% url 'delete_game_tag' gameslug=game.slug tagslug=tag.slug %}">&times;</button></a> {{ tag }}</span>
                     {% else %}
                         <span class="label label-primary">{{ tag }}</span>
                     {% endif %}
-                {% endfor %}
+                {% endfor %}                
             {% else %}
                 <p>-</p>
+            {% endif %}
+            {% if can_edit %}
+                <div id="addTags" class="well">
+                    <form role="form" action="{% url 'game_details' gameslug=game.slug %}" id="addGameTagsForm" class="form-horizontal" method="post">
+                        {% csrf_token %}
+                        {{ tags_form.as_p }}
+                        <button type="submit" id="addGameTags" class="btn btn-success">{% trans 'Add tags' %}</button>
+                    </form>
+                </div>            
             {% endif %}
 
         </div>
