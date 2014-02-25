@@ -4,30 +4,28 @@ utils = {
 	apiUrl: null,
 
 	loadAudio: function() {
-        // Update the UI
-        $("#statusConsole").fadeIn().append("Loading audio...");
-            var self = this;
-            var queue = new createjs.LoadQueue();
-			createjs.Sound.alternateExtensions = ["ogg"];
-            queue.installPlugin(createjs.Sound);
-            queue.addEventListener("fileload", self.handleFileLoad);
-            queue.addEventListener("complete", self.handleComplete);
-            var audioQueue = [];
-            _.each(gameSounds, function(val, key) {
-				audioQueue.push( { id: key, src: val.src } );
-			});
-            queue.loadManifest(audioQueue);
+		var loading_msg = i18n.t("Loading audio...");
+        $("#statusConsole").fadeIn().append( loading_msg );
+        var self = this;
+        var queue = new createjs.LoadQueue();
+		createjs.Sound.alternateExtensions = ["ogg"];
+        queue.installPlugin(createjs.Sound);
+        queue.addEventListener("fileload", self.handleFileLoad);
+        queue.addEventListener("complete", self.handleComplete);
+        var audioQueue = [];
+        _.each(gameSounds, function(val, key) {
+			audioQueue.push( { id: key, src: val.src } );
+		});
+        queue.loadManifest(audioQueue);
 	},
 
     handleFileLoad: function(event) {
-        // Update the UI
-        $("#statusConsole").append("<br/>Loaded: " + event.item.id );
-        // Play the loaded sound
-        createjs.Sound.play(event.item.id);
+        // console message
+        $("#statusConsole").append('<br/>' + i18n.t("Loaded") + ':' + event.item.id );
     },
 
     handleComplete: function(event) {
-        $("#statusConsole").append("<br/>Loading Complete!").fadeOut(2000);
+        $("#statusConsole").append("<br/>" + i18n.t("Loading complete!") ).fadeOut(2000);
     },
 
     playSound: function(sound_name) {

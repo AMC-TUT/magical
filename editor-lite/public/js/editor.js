@@ -131,6 +131,7 @@ var editor = {
 	},
 
 	initEditor: function() {
+		utils.initAudio();
 		if(this.user.use_uppercase_text) utils.uppercaseAll();
 		Crafty.init(1024, 748);
 		this.mediaLoader = new MediaLoader();
@@ -518,11 +519,13 @@ var editor = {
 		// platform type
 		$('select#platformList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		gameinfo.level1.platformType = valueSelected;
     		editor.definePlatformType(valueSelected, editor.setGame);
 		});
 		$('select#jumpList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		gameinfo.level1.jumpPower = parseInt(valueSelected, 10);
     		editor.setGame();
 		});
@@ -530,6 +533,7 @@ var editor = {
 		// jump sensitivity
 		$('select#jumpSensitivityList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		gameinfo.level1.sensitivity.jump = parseInt(valueSelected);
     		editor.setGame();
 		});
@@ -537,28 +541,33 @@ var editor = {
 		// motion sensitivity
 		$('select#motionSensitivityList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		gameinfo.level1.sensitivity.motion = parseInt(valueSelected);
     		editor.setGame();
 		});
 
 		$('select#modeList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		editor.getMode(valueSelected);
     		editor.setGame();
 		});
 
 		$('select#survivalList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		editor.getSurvivalValues(parseFloat(valueSelected));
     		editor.setGame();
 		});
 		$('select#gameDurationList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		editor.getGameDuration(parseInt(valueSelected, 10));
     		editor.setGame();
 		});
 		$('select#distanceList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		editor.getGoalDistance(parseInt(valueSelected, 10));
     		editor.setGame();
 		});		
@@ -566,6 +575,7 @@ var editor = {
 		// match
 		$('select#matchList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		editor.getMatchType(valueSelected);
     		editor.setGame();
 		});
@@ -573,6 +583,7 @@ var editor = {
 		// player image
 		$('select#playerList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		gameinfo.level1.playerImg = valueSelected;
     		editor.setGame();
     		editor.changePlayerImg(valueSelected);
@@ -582,6 +593,7 @@ var editor = {
 		// background color
 		$('select#colorList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		gameinfo.level1.bgcolor = valueSelected;
     		editor.setGame();
     		editor.changeBgColor(valueSelected);
@@ -589,6 +601,7 @@ var editor = {
 		// static background element
 		$('select#skyList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		gameinfo.level1.sky = valueSelected;
     		editor.setGame();
     		editor.changeSkyImg(valueSelected);
@@ -596,6 +609,7 @@ var editor = {
 		// scrolling background 3
 		$('select#p3List').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		gameinfo.level1.scroll[2] = {item: valueSelected, speed:editor.p3_speed};
     		editor.setGame();
     		editor.createHelpTexts();
@@ -604,6 +618,7 @@ var editor = {
 		// scrolling background 2
 		$('select#p2List').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		gameinfo.level1.scroll[1] = {item: valueSelected, speed:editor.p2_speed};
     		editor.setGame();
     		editor.createHelpTexts();
@@ -612,6 +627,7 @@ var editor = {
 		// scrolling background 1
 		$('select#p1List').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		gameinfo.level1.scroll[0] = {item: valueSelected, speed:editor.p1_speed};
     		editor.setGame();
     		editor.createHelpTexts();
@@ -622,6 +638,7 @@ var editor = {
 		$('select#collectList').change(function() {
 			var optionSelected = $("option:selected", this);
     		var valueSelected = this.value;
+    		utils.playSound('blop');
 			if(valueSelected != '') {
 				var collectable = {
 	 				speed: "average", 
@@ -639,6 +656,7 @@ var editor = {
 		$('select#avoidList').change(function() {
 			var optionSelected = $("option:selected", this);
     		var valueSelected = this.value;
+    		utils.playSound('blop');
 			if(valueSelected != '') {		
 				var hazard = {
 	 				speed: "average", 
@@ -654,18 +672,21 @@ var editor = {
 		// appearance interval of collectibles
 		$('select#itemIntervalList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		gameinfo.level1.itemInterval = valueSelected;
     		editor.setGame();
 		});
 		// appearance interval of hazards
 		$('select#hazardIntervalList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		gameinfo.level1.hazardInterval = valueSelected;
     		editor.setGame();
 		});
 		// appearance interval of hazards
 		$('select#hazardEffectList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		gameinfo.level1.hazardEffect = valueSelected;
     		editor.setGame();
 		});
@@ -673,6 +694,7 @@ var editor = {
 		// extra lives
 		$('select#extraList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
 			gameinfo.level1.extraLife = (valueSelected == "1") ? true : false; 		
 			editor.setGame();    		
 		});
@@ -680,6 +702,7 @@ var editor = {
 		// extra lives
 		$('select#turboList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
 			gameinfo.level1.turboSpeed = (valueSelected == "1") ? true : false; 		
 			editor.setGame();
 		});
@@ -687,6 +710,7 @@ var editor = {
 		// match right points
 		$('select#matchRightList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		gameinfo.level1.matchPointsRight = parseInt(valueSelected);
     		editor.setGame();
 		});
@@ -694,6 +718,7 @@ var editor = {
 		// match wrong points
 		$('select#matchWrongList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		gameinfo.level1.matchPointsWrong = parseInt(valueSelected);
     		editor.setGame();
 		});
@@ -701,6 +726,7 @@ var editor = {
 		// match appearance interval
 		$('select#wordIntervalList').change(function() {
     		var valueSelected = this.value;
+    		utils.playSound('blop');
     		gameinfo.level1.wordInterval = parseInt(valueSelected);
     		editor.setGame();
 		});
@@ -1455,24 +1481,28 @@ var editor = {
 
 	getSpeed: function(i) {
 		var speed = $('#speedList_' + i).val();
+		utils.playSound('blop');
 		gameinfo.level1.collectables[i].speed = speed;
 		editor.setGame();
 	},
 
 	getHSpeed: function(i) {
 		var speed = $('#speedListH_' + i).val();
+		utils.playSound('blop');
 		gameinfo.level1.hazards[i].speed = speed;
 		editor.setGame();
 	},
 
 	getScore: function(i) {
 		var score = $('#scoreList_' + i).val();
+		utils.playSound('blop');
 		gameinfo.level1.collectables[i].score = score;
 		editor.setGame();
 	},
 
 	getHScore: function(i){
 		var score = $('#scoreListH_' + i).val();
+		utils.playSound('blop');
 		gameinfo.level1.hazards[i].score = score;
 		editor.setGame();
 	},

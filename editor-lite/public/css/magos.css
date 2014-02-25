@@ -259,6 +259,7 @@ button.magosLiteBtn {
 }
 
 #statusConsole {
+	display:none;
 	position:absolute;
 	width:250px;
 	background:#ececec;

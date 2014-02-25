@@ -73,12 +73,12 @@ var game = {
 			lang_code = this.user.lang_code;
 		}
 		utils.i18nInit(lang_code, this.getGameToPlay, game);
-		utils.initAudio();
 	},
 
 	
 	/* PREVIEW game */
 	initGame: function() {
+		if(!this.preview) utils.initAudio();
 		this.mediaLoader = new MediaLoader();
 		this.fontGame = {font: 'Arial', size: 24, color: '#FF0000'};
 		this.playerDead = false;
@@ -493,7 +493,7 @@ var game = {
 				item.onHit(playerImg, function(){ 
 					Crafty.e('ScoreAnimation').scoreanimation(this.x, this.y, "+"+cScore);
 					this.destroy();
-					utils.playSound('jippii')
+					utils.playSound('jippii');
 					game.score+=cScore;
 					Crafty("Score").text(i18n.t('Score') + ": "+game.score);
 				});	
@@ -544,7 +544,14 @@ var game = {
 					var sinY= Math.sin(this.counter/this.vertical);
 					this.y += sinY*this.multiplyer;
 				});
-				item.onHit(playerImg, function(){Crafty.e('ScoreAnimation').scoreanimation(this.x, this.y, aScore); this.destroy();game.score+=aScore; Crafty("Score").text(i18n.t('Score') + ": "+game.score); hitWithHazard()});	
+				item.onHit(playerImg, function(){
+					Crafty.e('ScoreAnimation').scoreanimation(this.x, this.y, aScore);
+					this.destroy();
+					utils.playSound('wrong');
+					game.score+=aScore;
+					Crafty("Score").text(i18n.t('Score') + ": "+game.score); 
+					hitWithHazard()
+				});	
 			}
 			
 			function hitWithHazard(){
