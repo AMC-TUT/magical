@@ -70,6 +70,15 @@
                     </div>
                   </div>
 
+                  <div class="form-group">
+                    <label for="{{ register_form.gender.auto_id }}" class="col-sm-3 control-label">{{ register_form.language.label|capfirst }}</label>
+                    <div class="col-sm-4">
+                      {{ register_form.language }}
+                    </div>
+                    <div class="col-sm-5">
+                      {{ register_form.language.errors }}
+                    </div>
+                  </div>
 
                   <div class="form-group">
                     <label for="{{ register_form.password1.auto_id }}" class="col-sm-3 control-label"><span class="required">*</span> {{ register_form.password1.label|capfirst }}</label>

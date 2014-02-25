@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate
 from django.template.defaultfilters import slugify
 from taggit.forms import *
 from .models import Game, MagosAGame, MagosBGame, GameType, BLOCK_SIZE_CHOICES, \
-    Organization, Gender, UserSettings
+    Organization, Gender, UserSettings, Language
 
 
 class AjaxBaseForm(forms.BaseForm):
@@ -179,6 +179,13 @@ class UserRegistrationForm(UserCreationForm):
         widget=forms.Select(attrs={'class':'form-control small'})
     )
 
+    language = forms.ModelChoiceField(
+        required=True,
+        queryset=Language.objects.all(),
+        empty_label=None,
+        widget=forms.Select(attrs={'class':'form-control small'})
+    )
+
     special_code = forms.CharField(
         required = False, 
         label = _(u'I have a special code'),
@@ -253,12 +260,12 @@ class UserRegistrationForm(UserCreationForm):
 
         special_code = self.cleaned_data.get('special_code' or None)
         organization = self.get_organization(special_code)
+        language = self.cleaned_data.get('language' or None)
+        gender = self.cleaned_data.get('gender' or None)
         user_profile = user.get_profile()
         user_profile.organization = organization
-
-        gender = self.cleaned_data.get('gender' or None)
+        user_profile.language = language
         user_profile.gender = gender
-
         user_profile.save()
         return user
 
