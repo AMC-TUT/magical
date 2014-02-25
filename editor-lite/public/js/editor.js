@@ -204,7 +204,10 @@ var editor = {
 			editor.updateFormValues();
 			if(editor.initial) {
 
-				$('#sidebar .btn').click(utils.playSound('silent')); 
+				$('#sidebar .btn').click(function() {
+					console.log('SILENT');
+					utils.playSound('silent'); 
+				});
 
 				editor.bindUiFormSubmits();
 				editor.bindUIElementChanges();
