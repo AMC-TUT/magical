@@ -155,6 +155,7 @@ var game = {
 			playBtn.text(i18n.t('Play'));
 			stage.append(playBtn);
 			playBtn.click(function() {
+				utils.playSound('jippii');
 				$('#playBtn, #editBtn').remove();
 				Crafty.scene('game');
 			});
