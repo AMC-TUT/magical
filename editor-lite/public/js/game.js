@@ -56,7 +56,6 @@ var game = {
 	isJumping: null,
 	characterGround: null,
 
-
 	getGameToPlay: function() {
 		if(this.gameSlug) {
 			utils.djangoUrl = this.djangoUrl; 
@@ -74,6 +73,7 @@ var game = {
 			lang_code = this.user.lang_code;
 		}
 		utils.i18nInit(lang_code, this.getGameToPlay, game);
+		utils.initAudio();
 	},
 
 	
@@ -184,7 +184,6 @@ var game = {
 			.textFont({ size: '25px', weight: 'bold' })
 			.textColor('#000000');
 
-			console.log(game.user);
 			if(game.user.use_uppercase_text) utils.uppercaseAll();
 
 		});
@@ -491,7 +490,13 @@ var game = {
 					var sinY= Math.sin(this.counter/this.vertical);
 					this.y += sinY*this.multiplyer;
 				});
-				item.onHit(playerImg, function(){ Crafty.e('ScoreAnimation').scoreanimation(this.x, this.y, "+"+cScore); this.destroy();game.score+=cScore; Crafty("Score").text(i18n.t('Score') + ": "+game.score);});	
+				item.onHit(playerImg, function(){ 
+					Crafty.e('ScoreAnimation').scoreanimation(this.x, this.y, "+"+cScore);
+					this.destroy();
+					utils.playSound('jippii')
+					game.score+=cScore;
+					Crafty("Score").text(i18n.t('Score') + ": "+game.score);
+				});	
 			}
 			
 			// ############## HAZARDS & AVOIDABLES #################	

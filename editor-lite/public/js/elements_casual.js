@@ -78,6 +78,14 @@ var sounds = {
 	"sound_dead": {"url": "/editor-lite/static/sounds/dead.mp3"}
 };
 
+var gameSounds = {
+	"jippii": { id: "jippii", src:"/editor-lite/static/audio/sounds/jippii.mp3"},
+    "coin-sound": { id: "coin-sound", src:"/editor-lite/static/audio/sounds/coin-sound.mp3"},
+    "dead": { id: "dead", src:"/editor-lite/static/audio/sounds/coin-sound.mp3"},
+    "right": { id: "right", src:"/editor-lite/static/audio/sounds/coin-sound.mp3"},
+    "wrong": { id: "wrong", src:"/editor-lite/static/audio/sounds/wrong.mp3"}
+};
+
 var textureMenu =  {
 	groundPlayers:[
 		{text:"monster truck", value:"monster-truck"},

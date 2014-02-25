@@ -3,6 +3,42 @@ utils = {
 	djangoUrl: null,
 	apiUrl: null,
 
+	loadAudio: function() {
+        // Update the UI
+        $("#statusConsole").fadeIn().append("Loading audio...");
+            var self = this;
+            var queue = new createjs.LoadQueue();
+			createjs.Sound.alternateExtensions = ["ogg"];
+            queue.installPlugin(createjs.Sound);
+            queue.addEventListener("fileload", self.handleFileLoad);
+            queue.addEventListener("complete", self.handleComplete);
+            var audioQueue = [];
+            _.each(gameSounds, function(val, key) {
+				audioQueue.push( { id: key, src: val.src } );
+			});
+            queue.loadManifest(audioQueue);
+	},
+
+    handleFileLoad: function(event) {
+        // Update the UI
+        $("#statusConsole").append("<br/>Loaded: " + event.item.id );
+        // Play the loaded sound
+        createjs.Sound.play(event.item.id);
+    },
+
+    handleComplete: function(event) {
+        $("#statusConsole").append("<br/>Loading Complete!").fadeOut(2000);
+    },
+
+    playSound: function(sound_name) {
+        createjs.Sound.play(sound_name);
+    },
+
+	initAudio: function() {
+		this.loadAudio();
+
+	},
+
 	i18nInit: function(lang_code, callback, scope) {
 		lang_code = (!_.isUndefined(lang_code)) ? lang_code : 'en';
 		i18n.init({
