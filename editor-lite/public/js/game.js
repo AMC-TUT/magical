@@ -626,10 +626,12 @@ var game = {
 			function checkFractionAnswer(item){
 				//if(item.result != game.curTask){
 				if( (item.result.denominator != game.curTask.denominator) && (item.result.numerator != game.curTask.numerator) ) {
+					utils.playSound('wrong');
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, gameinfo["level1"].matchPointsWrong); 
 					game.score+=gameinfo["level1"].matchPointsWrong; 
 				}else{
-					game.score+=gameinfo["level1"].matchPointsRight; 
+					game.score+=gameinfo["level1"].matchPointsRight;
+					utils.playSound('right');
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, "+"+gameinfo["level1"].matchPointsRight);
 					createNewTask(); 
 				}
@@ -767,9 +769,11 @@ var game = {
 				
 				//if(item.result != game.curTask){
 				if(item.result != game.curAnswer){
+					utils.playSound('wrong');					
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, gameinfo["level1"].matchPointsWrong); 
 					game.score+=gameinfo["level1"].matchPointsWrong; 
 				}else{
+					utils.playSound('right');
 					game.score+=gameinfo["level1"].matchPointsRight; 
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, "+"+gameinfo["level1"].matchPointsRight);
 					createNewWordTask(); 
@@ -779,12 +783,13 @@ var game = {
 			}
 			
 			function checkMemoryAnswer(item){
-				console.log(item.result + " : "+game.curTask);
-				
+				console.log(item.result + " : "+game.curTask);				
 				if(item.result != game.curTask){
+					utils.playSound('wrong');
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, gameinfo["level1"].matchPointsWrong); 
 					game.score+=gameinfo["level1"].matchPointsWrong;
 				}else{
+					utils.playSound('right');
 					game.score+=gameinfo["level1"].matchPointsRight;
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, "+"+gameinfo["level1"].matchPointsRight);
 					createNewMemoryTask(false); 
@@ -792,8 +797,7 @@ var game = {
 				Crafty("Score").text(i18n.t('Score') + ": "+game.score); 
 				item.destroy();
 			}
-			
-					
+
 			function updateLives(){
 				if(game.lives<=0){
 					Crafty("Lives").text(game.lives);
