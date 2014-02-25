@@ -79,9 +79,10 @@ var sounds = {
 };
 
 var gameSounds = {
-	"blop": { id: "jippii", src:"/editor-lite/static/audio/sounds/blop.mp3"},
+	"silent": { id: "silent", src:"/editor-lite/static/audio/sounds/silent.mp3"},
+	"blop": { id: "blop", src:"/editor-lite/static/audio/sounds/blop.mp3"},
 	"jippii": { id: "jippii", src:"/editor-lite/static/audio/sounds/jippii.mp3"},
-    "coin-sound": { id: "coin-sound", src:"/editor-lite/static/audio/sounds/coin-sound.mp3"},
+    "coin": { id: "coin", src:"/editor-lite/static/audio/sounds/coin-sound.mp3"},
     "dead": { id: "dead", src:"/editor-lite/static/audio/sounds/dead.mp3"},
     "right": { id: "right", src:"/editor-lite/static/audio/sounds/right.mp3"},
     "wrong": { id: "wrong", src:"/editor-lite/static/audio/sounds/wrong.mp3"}

@@ -203,6 +203,9 @@ var editor = {
 			editor.createUIElements();
 			editor.updateFormValues();
 			if(editor.initial) {
+
+				$('#sidebar .btn').click(utils.playSound('silent')); 
+
 				editor.bindUiFormSubmits();
 				editor.bindUIElementChanges();
 				editor.bindUIClicks();

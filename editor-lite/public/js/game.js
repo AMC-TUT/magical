@@ -494,7 +494,7 @@ var game = {
 				item.onHit(playerImg, function(){ 
 					Crafty.e('ScoreAnimation').scoreanimation(this.x, this.y, "+"+cScore);
 					this.destroy();
-					utils.playSound('jippii');
+					utils.playSound('coin');
 					game.score+=cScore;
 					Crafty("Score").text(i18n.t('Score') + ": "+game.score);
 				});	
@@ -632,7 +632,7 @@ var game = {
 					game.score+=gameinfo["level1"].matchPointsWrong; 
 				}else{
 					game.score+=gameinfo["level1"].matchPointsRight;
-					utils.playSound('right');
+					utils.playSound('coin');
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, "+"+gameinfo["level1"].matchPointsRight);
 					createNewTask(); 
 				}
@@ -774,7 +774,7 @@ var game = {
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, gameinfo["level1"].matchPointsWrong); 
 					game.score+=gameinfo["level1"].matchPointsWrong; 
 				}else{
-					utils.playSound('right');
+					utils.playSound('coin');
 					game.score+=gameinfo["level1"].matchPointsRight; 
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, "+"+gameinfo["level1"].matchPointsRight);
 					createNewWordTask(); 
@@ -790,7 +790,7 @@ var game = {
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, gameinfo["level1"].matchPointsWrong); 
 					game.score+=gameinfo["level1"].matchPointsWrong;
 				}else{
-					utils.playSound('right');
+					utils.playSound('coin');
 					game.score+=gameinfo["level1"].matchPointsRight;
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, "+"+gameinfo["level1"].matchPointsRight);
 					createNewMemoryTask(false); 
