@@ -405,6 +405,10 @@ ul.nav {
     color: #f00;
 }
 
+.has-error .form-control {
+    background: #fcc;
+}
+
 .errorlist {
     float: right;
     list-style: none;
@@ -521,3 +525,11 @@ a.removeTag:hover {
     margin-top: 10px;
 }
 
+.well .form-horizontal .form-group {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+#cancelCreateGame {
+    float:right;
+}

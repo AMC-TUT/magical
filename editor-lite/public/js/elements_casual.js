@@ -73,10 +73,6 @@ var textures =  {
 	"parachute": "/editor-lite/static/img/parachute.png"
 };
 
-var sounds = {
-	"sound_right": {"url": "/editor-lite/static/sounds/jippii.mp3"},
-	"sound_dead": {"url": "/editor-lite/static/sounds/dead.mp3"}
-};
 
 var gameSounds = {
 	"silent": { id: "silent", src:"/editor-lite/static/audio/sounds/silent.mp3"},

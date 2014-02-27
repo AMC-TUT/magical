@@ -1,5 +1,6 @@
 {% extends "apps/game/game_base.html" %}
 {% load i18n %}
+{% load crispy_forms_tags %}
 
 {% block bodyclass %}create{% endblock %}
 
@@ -20,15 +21,15 @@
             {% endif %}
         {% else %}
             {% if can_edit %}
-            <div class="row add_game_image">
-                <div id="main-content" class="well col-xs-6">
-                    <form role="form" action="{% url 'game_details' gameslug=game.slug %}" id="addGameImageForm" class="form-horizontal" enctype="multipart/form-data" method="post">
-                        {% csrf_token %}
-                        {{ image_form.as_p }}
-                        <button type="submit" id="addGameImage" class="btn btn-success">{% trans 'Add game image' %}</button>
-                    </form>
+                <div class="row add_game_image">
+                    <div id="main-content" class="well col-xs-6">
+                        <form role="form" action="{% url 'game_details' gameslug=game.slug %}" id="addGameImageForm" class="form-horizontal" enctype="multipart/form-data" method="post">
+                            {% csrf_token %}
+                            {{ image_form|crispy }}
+                            <button type="submit" name="addGameImage" id="addGameImage" class="btn btn-success">{% trans 'Add game image' %}</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
             {% else %}
                 <img src="{{ STATIC_URL }}img/default-game-image.png" class="game-image embedded">
             {% endif %}
@@ -48,7 +49,7 @@
                     {% else %}
                         <span class="label label-primary">{{ tag }}</span>
                     {% endif %}
-                {% endfor %}                
+                {% endfor %}
             {% else %}
                 <p>-</p>
             {% endif %}
@@ -56,8 +57,8 @@
                 <div id="addTags" class="well">
                     <form role="form" action="{% url 'game_details' gameslug=game.slug %}" id="addGameTagsForm" class="form-horizontal" method="post">
                         {% csrf_token %}
-                        {{ tags_form.as_p }}
-                        <button type="submit" id="addGameTags" class="btn btn-success">{% trans 'Add tags' %}</button>
+                        {{ tags_form|crispy }}
+                        <button type="submit" name="addGameTags" id="addGameTags" class="btn btn-success">{% trans 'Add tags' %}</button>
                     </form>
                 </div>            
             {% endif %}

@@ -133,7 +133,6 @@ var game = {
 		Crafty.scene('preloadgame', function() {
 			Crafty.e('Text2').setStyle(game.fontGame).text('Loading...');
 			game.mediaLoader.addImages(textures);
-			game.mediaLoader.addSounds(sounds);
 			game.mediaLoader.load(function(success) {
 				if(success) {
 					game.getGameData();
@@ -287,7 +286,7 @@ var game = {
 			}
 
 			if(gameinfo["level1"].platformType == "air"){
-				player = Crafty.e("2D, Canvas, Multiway,"+playerImg).attr({x: 110, y: 100, z: 1000}).multiway(8, { UP_ARROW: -90});
+				player = Crafty.e("2D, Canvas, Multiway,"+playerImg).attr({x: 110, y: 100, z: 1000}).multiway(8, { SPACE: -90});
 			
 				player.bind("EnterFrame", function(frame) {
 					player.y+=game.ymov;
@@ -302,7 +301,7 @@ var game = {
 					
 					if(player.y>760){
 						game.lives--;
-						//Crafty.audio.play("sound_dead");
+						utils.playSound("dead");
 						Crafty("numfish").each(function(i) {
 							this.destroy();
 						});
@@ -333,9 +332,11 @@ var game = {
 				}
 				Crafty.addEvent(Crafty.stage.elem, Crafty.stage.elem, "mousedown", Crafty.stage.elem.onMouseDown);
 			} else {
-				document.onkeydown = handleKeyDown;	
-				player = Crafty.e("2D, Canvas, Physics, Player, Gravity, Twoway, Collision,"+playerImg).attr({x:110, y:100, z: 1001});
-		       
+		       	player = Crafty.e("2D, Canvas, Physics, Player, Gravity, Keyboard, Collision,"+playerImg).attr({x:110, y:100, z: 1001});
+				player.bind('KeyDown', function (e) { 
+					if (this.isDown('SPACE')) jump();
+				});
+
 		        Crafty.stage.elem.onMouseDown = function(e) {
 					jump();
 				};
@@ -964,7 +965,7 @@ var game = {
 			if(playerDead){
 				feedbackText = i18n.t('Game over') + "! ";
 				if(game.gameMode == "time"){
-					feedbackText += i18n.t("time_feedback_success");
+					feedbackText += i18n.t("time_feedback_failure");
 				}
 				if(game.gameMode == "distance") {
 					feedbackText += i18n.t("distance_feedback_fail", { postProcess: 'sprintf', sprintf: [game.reached] });

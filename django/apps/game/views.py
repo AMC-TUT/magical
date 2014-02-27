@@ -4,7 +4,6 @@ from django.http import HttpResponse, Http404, HttpResponseNotAllowed, HttpRespo
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
-from django.utils import simplejson
 from django.contrib.auth import login, logout
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
@@ -14,6 +13,8 @@ from django.core.servers.basehttp import FileWrapper
 from django.db.models import Q
 from django.contrib import messages
 import json
+from crispy_forms.utils import render_crispy_form
+from jsonview.decorators import json_view
 
 from django.contrib.auth.forms import AuthenticationForm
 
@@ -266,29 +267,31 @@ def game_details(request, gameslug):
     context['tags_form'] = tags_form
 
     if request.POST:
-        # Image form
-        image_form = GameImageForm(
-            request.POST,
-            request.FILES,
-        )
-        context['image_form'] = image_form
-        if image_form.is_valid():
-            game.image = image_form.cleaned_data['image']
-            game.save()
-            return redirect('game_details', gameslug=game.slug)
+        if 'addGameImage' in request.POST:
+            # Image form
+            image_form = GameImageForm(
+                request.POST,
+                request.FILES,
+            )
+            context['image_form'] = image_form
+            if image_form.is_valid():
+                game.image = image_form.cleaned_data['image']
+                game.save()
+                return redirect('game_details', gameslug=game.slug)
 
-        # Tags form
-        tags_form = GameTagsForm(
-            request.POST,
-            instance=game,
-        )
-        context['tags_form'] = tags_form
-        if tags_form.is_valid():
-            game = tags_form.save()
-            print game.tags.all()
-            #game.image = image_form.cleaned_data['image']
-            #game.save()
-            return redirect('game_details', gameslug=game.slug)
+        if 'addGameTags' in request.POST:
+            # Tags form
+            tags_form = GameTagsForm(
+                request.POST,
+                instance=game,
+            )
+            context['tags_form'] = tags_form
+            if tags_form.is_valid():
+                game = tags_form.save()
+                print game.tags.all()
+                #game.image = image_form.cleaned_data['image']
+                #game.save()
+                return redirect('game_details', gameslug=game.slug)
 
     if game.get_real_instance_class() == MagosBGame:        
         editor_url = settings.MAGOS_LITE_EDITOR_URL
@@ -429,12 +432,109 @@ def create_game_a(request):
                 'errors': dict([(k, [unicode(e) for e in v]) for k,v in form.errors.items()])
             }
 
-        json_data = simplejson.dumps(data)
+        json_data = json.dumps(data)
         return HttpResponse(json_data, mimetype='application/json')
     else:
         form = GameForm(organization=organization)
     context['form'] = form
     return render(request, tpl, context)
+
+@ajax_login_required
+@json_view
+def save_create_game_b(request):
+    user = request.user
+    organization = user.get_profile().organization
+    form = MagosBGameForm(request.POST or None, organization=organization)
+    if form.is_valid():
+        game = form.save()
+        game.creator = user
+        game.save()
+        
+        # create initial revision
+        revision_data = {}
+        
+        scroll_data = [
+            {
+                "item" : None,
+                "speed" : 5
+            },
+            {
+                "item" : None,
+                "speed" : 10
+            },
+            {
+                "item" : None,
+                "speed" : 15
+            }
+        ]
+        sensitivity_data = {
+            "jump": 18000,
+            "motion": 10000
+        }
+        revision_data['title'] = game.title
+        revision_data['instructions'] = ""
+        revision_data['platformType'] = "air"
+        revision_data['playerImg'] = "magos-girl" 
+        revision_data['itemInterval'] = 4000
+        revision_data['hazardInterval'] = 5000
+        revision_data['wordInterval'] = 4000
+        revision_data['sky'] = None
+        revision_data['scroll'] = scroll_data
+        revision_data['collectables'] = []
+        revision_data['hazards'] = []
+        revision_data['powerups'] = []
+        revision_data['wordRules'] = []
+        revision_data['answers'] = []
+        revision_data['fractionRules'] = []
+        revision_data['matchRule'] = None
+        revision_data['gameMode'] = "time"
+        revision_data['gameDuration'] = 60
+        revision_data['goalDistance'] = 400
+        revision_data['survivalFactor'] = 0.95
+        revision_data['extraLife'] = False
+        revision_data['turboSpeed'] = False
+        revision_data['bgcolor'] = "#F2F2F2"
+
+        revision_data['star3limit'] = 2000
+        revision_data['star2limit'] = 1000 
+        revision_data['star1limit'] = 500
+        revision_data['memoryIncrease'] = 0 
+        revision_data['memoryStart'] = 0
+        revision_data['matchPointsRight'] = 0
+        revision_data['matchPointsWrong'] = 0 
+        revision_data['hazardEffect'] = 0
+        revision_data['sliceAmount'] = 0 
+        revision_data['pieceAmount'] = 0 
+        revision_data['pizzaRules'] = [] 
+        revision_data['jumpPower'] = -24 
+        revision_data['bonustimelimit'] = 220 
+        revision_data['sensitivity'] = sensitivity_data 
+
+        revision_data = json.dumps(revision_data)
+
+        revision = Revision(game=game, data=revision_data)
+        revision.save()
+        # add user as author
+        author = Author(game=game, user=user)
+        author.save()
+
+        # we have to create and save initial game data to Redis
+        redis_game_data = create_game_for_redis(game.slug)
+        jresult = json.dumps(redis_game_data)
+        set_redis_game_data(game.slug, jresult)
+
+        # redirect to newly created game
+        url = '/game/details/%s' % game.slug
+        #return redirect(url)
+        data = {
+            'success': True,
+            'url': url
+        }
+        return data
+
+    form_html = render_crispy_form(form)
+    return {'success': False, 'form_html': form_html}
+
 
 @login_required
 def create_game_b(request):
@@ -444,6 +544,7 @@ def create_game_b(request):
     organization = user.get_profile().organization
     GameForm = MagosBGameForm
     context['gametype_text'] = 'Lite'
+    """
     if request.method == 'POST':
         form = GameForm(request.POST, request.FILES, organization=organization)
         if form.is_valid():
@@ -531,16 +632,18 @@ def create_game_b(request):
                 'success': True,
                 'url': url
             }
-
         else:
-            data = {
-                'errors': dict([(k, [unicode(e) for e in v]) for k,v in form.errors.items()])
-            }
+            #data = {
+            #    'errors': dict([(k, [unicode(e) for e in v]) for k,v in form.errors.items()])
+            #}
+            form_html = render_crispy_form(form)
+            data = {'success': False, 'form_html': form_html}
 
-        json_data = simplejson.dumps(data)
+        json_data = json.dumps(data)
         return HttpResponse(json_data, mimetype='application/json')
     else:
-        form = GameForm(organization=organization)
+    """
+    form = GameForm(organization=organization)
     context['form'] = form
     return render(request, tpl, context)
 
@@ -580,7 +683,7 @@ def rate_game(request, game_pk, stars):
                 review = Review(game=game, user=user, stars=stars)
             review.save()
 
-    json = simplejson.dumps({ 'success': True })
+    json = json.dumps({ 'success': True })
     return HttpResponse(json, mimetype='application/json')
 
 @login_required
@@ -651,7 +754,7 @@ def remove_author(request, gameslug, username):
         except Author.DoesNotExist:
             pass
 
-    json_data = simplejson.dumps({ 'success': True })
+    json_data = json.dumps({ 'success': True })
     return HttpResponse(json_data, mimetype='application/json')
 
 

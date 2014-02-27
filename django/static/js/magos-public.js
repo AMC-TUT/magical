@@ -43,6 +43,8 @@ App.games = {
 
     init_create: function() {
         this.bindSelectGameType();
+        this.bindCreateSubmit();
+        this.bindCancelCreate();
     },
 
     loadCreateForm: function(formType) {
@@ -57,9 +59,6 @@ App.games = {
         ajaxReq.done(function ( data, textStatus, jqXHR ) {
             $('#createGame').append(data);
             App.accessibility.refresh();
-            self.disableSubmit();
-            self.bindCreateSubmit(formType);
-            self.bindCancelCreate();
         });
         ajaxReq.fail(function (jqXHR, textStatus, errorThrown) {
             $('#createGame').html('<p>Error in request. ' + errorThrown + '</p>');
@@ -67,19 +66,17 @@ App.games = {
     },
 
     bindCancelCreate: function() {
-        $('#cancelCreateGame').click(function(e) {
+        $(document).on('click', '#cancelCreateGame', function(e) {
             $('#selectGameType').slideDown();
             $('#createGameContainer').slideUp();
         });
     },
 
-    bindCreateSubmit: function(formType) {
-        $('#submitCreateGame').click(function(e) {
-            $('#errors').empty().hide();
-            $('label.errors').removeClass('errors');
-            $('.errortext').remove();
-            var ajaxUrl = '/game/create/' + formType + '/';
-            var formData = $('#createGameForm').serializeArray();
+    bindCreateSubmit: function() {
+        $(document).on('submit', 'form#createGameForm', function(e) {
+            var thisForm = this;
+            var ajaxUrl = this.action;
+            var formData = $(this).serializeArray();
             var ajaxReq = $.ajax({
                 dataType : 'json',
                 type: 'POST',
@@ -87,25 +84,14 @@ App.games = {
                 url : ajaxUrl
             });
             ajaxReq.done(function ( data, textStatus, jqXHR ) {
-                console.log(data);
-                if (data.errors){
-                    // display from errors
-                    for (error in data.errors) {
-                        $('label[for="id_' + error + '"]').addClass('errors').after('<span class="errortext errors">' + data.errors[error][0] + '</span>');
-                    }
+                if (!(data['success'])) {
+                    // display from with errors
+                    $(thisForm).replaceWith(data['form_html']);
                 } else {
-                    if(data.success) {
-                        // redirect to newly created game page
-                        window.location.replace(data.url);
-                    }
+                    // redirect to newly created game page
+                    window.location.replace(data.url);
                 }
             });
-        });     
-    },    
-
-    disableSubmit: function() {
-        $("#createGameForm").submit(function(e) {
-            e.preventDefault();
             return false;
         });
     },

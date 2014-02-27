@@ -176,8 +176,6 @@ var editor = {
 		Crafty.scene('preload', function() {
 			Crafty.e('Text2').setStyle(editor.fontGame).text('Loading...');
 			editor.mediaLoader.addImages(textures);
-			editor.mediaLoader.addSounds(sounds);
-			//mediaLoader.addSprites(sprites);
 			editor.mediaLoader.load(function(success) {
 				if(success) {
 					//editor.checkLocalStoreSupport();

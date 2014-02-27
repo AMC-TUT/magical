@@ -14,6 +14,8 @@ urlpatterns = patterns('',
     url(r'^create/A/$', 'apps.game.views.create_game_a', name="create_game_a"),
     url(r'^create/B/$', 'apps.game.views.create_game_b', name="create_game_b"),
 
+    url(r'^create/save/B/$', 'apps.game.views.save_create_game_b', name="save_create_game_b"),
+
     url(r'^image/delete/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.delete_game_image', name="delete_game_image"),
 
     url(r'^tag/delete/(?P<gameslug>[\w.@+-]+)/(?P<tagslug>[\w.@+-]+)$', 'apps.game.views.delete_game_tag', name="delete_game_tag"),

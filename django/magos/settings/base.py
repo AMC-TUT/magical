@@ -160,6 +160,10 @@ TEMPLATE_LOADERS = (
 TEMPLATE_DIRS = (
     os.path.normpath(os.path.join(SITE_ROOT, 'templates')),
 )
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+CRISPY_FAIL_SILENTLY = not DEBUG
+
 ########## END TEMPLATES
 
 
@@ -217,6 +221,7 @@ THIRD_PARTY_APPS = (
     'imagekit',
     'polymorphic',
     'taggit',
+    'crispy_forms',
 )
 
 # Apps specific for this project

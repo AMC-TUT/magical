@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
 from django.template.defaultfilters import slugify
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Submit, Button, Div
 from taggit.forms import *
 from .models import Game, MagosAGame, MagosBGame, GameType, BLOCK_SIZE_CHOICES, \
     Organization, Gender, UserSettings, Language
@@ -43,6 +45,12 @@ class GameImageForm(forms.Form):
         super(GameImageForm, self).__init__(*args, **kwargs)
         if game_slug:
             self.fields['game_slug'].initial = game_slug
+
+        # add error class to fields w/ errors
+        for field in self.errors:
+            if not field == '__all__': 
+                self.fields[field].widget.attrs['class'] = \
+                    self.fields[field].widget.attrs.get('class', '') + ' error'
 
 
 class BaseGameForm(forms.ModelForm):
@@ -120,6 +128,17 @@ class MagosBGameForm(BaseGameForm):
     class Meta:
         model = MagosBGame
         exclude = ('image', 'creator', 'cloned', 'slug', 'state', 'rows', 'cols', 'cloned', )
+
+    def __init__(self, *args, **kwargs):
+        super(MagosBGameForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'createGameForm'
+        self.helper.form_class = 'magosForm'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'save_create_game_b'
+
+        self.helper.add_input(Submit('submit', _(u'Create'), css_class='btn btn-success', css_id='submitCreateGame'))
+        self.helper.add_input(Button('cancel', _(u'Cancel'), css_class='btn btn-danger', css_id='cancelCreateGame'))
 
 
 class GameTagsForm(forms.ModelForm):
@@ -217,6 +236,32 @@ class UserRegistrationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')  
+
+    def __init__(self, *args, **kwargs):
+        super(UserRegistrationForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'registerForm'
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-sm-2'
+        self.helper.field_class = 'col-sm-5'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'register_user'
+        self.helper.layout = Layout(
+            'username',
+            'email',
+            'first_name',
+            'lasst_name',
+            'password1',
+            'password2',
+            'gender',
+            'language',
+            'special_code',
+            Div(
+                Submit('register_user', _(u'Register'), css_class='btn btn-primary', css_id='submitRegisterUser'),
+                css_class='col-sm-offset-2'
+            )
+        )
+
 
     def clean_special_code(self):
         special_code = self.cleaned_data.get('special_code' or None)

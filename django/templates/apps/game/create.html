@@ -1,17 +1,13 @@
 {% load i18n %}
+{% load crispy_forms_tags %}
+
 {% if form %}
     <div id="createGameContainer">
         <h1>{% trans 'Create a new game' %}</h1>
         <p>{% blocktrans %}Here you can define a new Magos <em>{{ gametype_text }}</em> game.{% endblocktrans %}</p>
         <hr />
         <div class="col-xs-9">
-            <form role="form" action="/game/create/" id="createGameForm" enctype="multipart/form-data" method="post">
-                {{ form.non_field_errors }}
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" id="cancelCreateGame" class="btn btn-danger">{% trans 'Cancel' %}</button>
-                <button type="submit" id="submitCreateGame" class="btn btn-success">{% trans 'Create' %}</button>
-            </form>
+            {% crispy form %}       
         </div>
     </div>
 {% endif %}

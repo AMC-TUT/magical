@@ -1,131 +1,18 @@
 {% extends "apps/game/game_base.html" %}
 {% load i18n %}
+{% load crispy_forms_tags %}
 
 {% block bodyclass %}register{% endblock %}
 
 {% block content %}
     
-        <div class="row wide-content">
-            <div class="col-xs-12">
-                <h1>Register as a new Magos user</h1>
-                {% if register_form %}
-                <form id="registerForm" method="post" class="form-horizontal" role="form" action="{% url "register_user" %}">
-                  {% csrf_token %}
-                  {% if register_form.non_field_errors %}
-                    <ul class="errors">
-                    {% for error in register_form.non_field_errors %}
-                      <li>{{ error }}</li>
-                    {% endfor %}
-                    </ul>
-                  {% endif %}
+  <div class="row wide-content">
+      <div class="col-xs-12">
+          <h1>Register as a new Magos user</h1>
 
-                  <div class="form-group">
-                    <label for="{{ register_form.username.auto_id }}" class="col-sm-3 control-label"><span class="required">*</span> {{ register_form.username.label|capfirst }}</label>
-                    <div class="col-sm-4">
-                      {{ register_form.username }}
-                    </div>
-                    <div class="col-sm-5">
-                      {{ register_form.username.errors }}
-                    </div>
-                  </div>
+          {% crispy register_form %}
 
-                  <div class="form-group">
-                    <label for="{{ register_form.email.auto_id }}" class="col-sm-3 control-label">{{ register_form.email.label|capfirst }}</label>
-                    <div class="col-sm-4">
-                      {{ register_form.email }}
-                    </div>
-                    <div class="col-sm-5">
-                      {{ register_form.email.errors }}
-                    </div>
-                  </div>
-
-
-                  <div class="form-group">
-                    <label for="{{ register_form.first_name.auto_id }}" class="col-sm-3 control-label">{{ register_form.first_name.label|capfirst }}</label>
-                    <div class="col-sm-4">
-                      {{ register_form.first_name }}
-                    </div>
-                    <div class="col-sm-5">
-                      {{ register_form.first_name.errors }}
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="{{ register_form.last_name.auto_id }}" class="col-sm-3 control-label">{{ register_form.last_name.label|capfirst }}</label>
-                    <div class="col-sm-4">
-                      {{ register_form.last_name }}
-                    </div>
-                    <div class="col-sm-5">
-                      {{ register_form.last_name.errors }}
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="{{ register_form.gender.auto_id }}" class="col-sm-3 control-label">{{ register_form.gender.label|capfirst }}</label>
-                    <div class="col-sm-4">
-                      {{ register_form.gender }}
-                    </div>
-                    <div class="col-sm-5">
-                      {{ register_form.gender.errors }}
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="{{ register_form.gender.auto_id }}" class="col-sm-3 control-label">{{ register_form.language.label|capfirst }}</label>
-                    <div class="col-sm-4">
-                      {{ register_form.language }}
-                    </div>
-                    <div class="col-sm-5">
-                      {{ register_form.language.errors }}
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="{{ register_form.password1.auto_id }}" class="col-sm-3 control-label"><span class="required">*</span> {{ register_form.password1.label|capfirst }}</label>
-                    <div class="col-sm-4">
-                      {{ register_form.password1 }}
-                    </div>
-                    <div class="col-sm-5">
-                      {{ register_form.password1.errors }}
-                    </div>
-                  </div>
-
-
-                  <div class="form-group">
-                    <label for="{{ register_form.password2.auto_id }}" class="col-sm-3 control-label"><span class="required">*</span> {{ register_form.password2.label|capfirst }}</label>
-                    <div class="col-sm-4">
-                      {{ register_form.password2 }}
-                    </div>
-                    <div class="col-sm-5">
-                      {{ register_form.password2.errors }}
-                    </div>
-                  </div>
-
-                  <div class="form-group special_code">
-                    <label for="{{ register_form.special_code.auto_id }}" class="col-sm-3 control-label">{{ register_form.special_code.label|capfirst }}</label>
-                    <div class="col-sm-4">
-                      {{ register_form.special_code }}
-                    </div>
-                    <div class="col-sm-5">
-                      {{ register_form.special_code.errors }}
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <div class="col-sm-3">
-                    </div>
-                    <div class="col-sm-4">
-                      <button type="submit" name="register_user" class="btn btn-primary">Register</button>
-                      <input type="hidden" name="next" value="/" />
-                    </div>
-                    <div class="col-sm-5">
-                    </div>                    
-                  </div>
-
-                </form>
-                {% endif %}
-
-            </div>
-        </div>
+      </div>
+  </div>
     
 {% endblock %}
