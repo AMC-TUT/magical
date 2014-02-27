@@ -965,7 +965,7 @@ var game = {
 			if(playerDead){
 				feedbackText = i18n.t('Game over') + "! ";
 				if(game.gameMode == "time"){
-					feedbackText += i18n.t("time_feedback_failure");
+					feedbackText += i18n.t("time_feedback_fail");
 				}
 				if(game.gameMode == "distance") {
 					feedbackText += i18n.t("distance_feedback_fail", { postProcess: 'sprintf', sprintf: [game.reached] });

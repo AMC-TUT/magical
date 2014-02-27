@@ -182,7 +182,7 @@
     "Time": "Aika",
     "LEVEL": "TASO",
     "Game over": "Game over",
-    "time_feedback_failure": "Et selvinnyt hengissä tarpeeksi pitkään. Yritä uudelleen.",
+    "time_feedback_fail": "Et selvinnyt hengissä tarpeeksi pitkään. Yritä uudelleen.",
     "Well done": "Onneksi olkoon",
     "distance_feedback_fail": "Pystyit matkaamaan %s metriä. Yritä uudelleen.",
     "distance_feedback_success": "Saavutit %s metrin rajapyykin.",
