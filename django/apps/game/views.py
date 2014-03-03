@@ -16,7 +16,7 @@ import json
 from crispy_forms.utils import render_crispy_form
 from jsonview.decorators import json_view
 
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 
 from .models import Game, MagosAGame, MagosBGame, Revision, Author, \
         Highscore, Review, Image, Thumbnail, Language, UserSettings
@@ -78,7 +78,12 @@ def user_settings(request):
         request.POST or None,
         instance=user_settings
     )
+    password_form = PasswordChangeForm(
+        user,
+        request.POST or None,
+    )
     context['settings_form'] = form
+    context['password_form'] = password_form
     if request.is_ajax():
         if request.method == 'POST':
             if form.is_valid():

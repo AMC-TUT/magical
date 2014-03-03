@@ -35,6 +35,8 @@ urlpatterns = patterns('',
     url(r'^language/set/$', 'apps.game.views.set_language', name="set_language"),
 
     url(r'^user/settings/$', 'apps.game.views.user_settings', name="user_settings"),
+    #url(r'^user/password/change/$', 'apps.game.views.change_password', name="change_password"),
+
 
     #url(r'^watch/$', direct_to_template, {'template': 'apps/game/watch.html'}, name="watch"),
     url(r'^watch/$', TemplateView.as_view(template_name='apps/game/watch.html'), name='watch'),

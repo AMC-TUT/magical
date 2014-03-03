@@ -271,3 +271,11 @@ button.magosLiteBtn {
 	padding:10px;	
 	box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
 }
+
+#addTaskSubmit {
+	margin-bottom: 10px;
+}
+
+#matching {
+	clear:both;
+}

@@ -335,6 +335,7 @@ class UserRegistrationForm(UserCreationForm):
         user_profile.save()
         return user
 
+
 import csv
 
 class BatchCreateUsersForm(forms.Form):

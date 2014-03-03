@@ -50,6 +50,7 @@ var game = {
 	turboMultiplier:null,
 	curAnswer: null,
 	curAnswers: null,
+	curTaskEref: null,
 	KEYCODE_UP: null,
 	yVel: null,
 	groundGravity: null,
@@ -654,7 +655,7 @@ var game = {
 				item.destroy();
 			}
 			
-			function addWord(){
+			function addWord() {
 				var x;
 				var y;
 				var r = Math.floor(Math.random()*game.curAnswers.length);
@@ -680,14 +681,18 @@ var game = {
 				var dx = xSpeed;//Crafty.math.randomInt(3, 5);
 				var dy = 0;
 				
-				if(task == game.curAnswer){
+				// if wrong answer has been shown too many (4) times, force right answer to be shown
+				if(_.contains(game.curRightAnswers, task)) {
 					answerCounter = 0;
-				}else{
+				} else {
 					answerCounter++;
 				}
+
 				if(answerCounter==4){
 					answerCounter = 0;
-					task = game.curAnswer;
+					var rIdx = Math.floor(Math.random()*game.curRightAnswers.length);
+					task = game.curRightAnswers[rIdx];
+					console.log('FORCE RIGHT ANSWER!!! ' + task  );
 				}
 				
 				//var word = Crafty.e("2D, DOM, cloud, Collision").attr({y:y, x:x, z:1000, result: w1});
@@ -768,18 +773,28 @@ var game = {
 			function checkWordAnswer(item){
 				console.log("checkAnswer");
 				console.log(item.result + " : "+game.curTask);
-				
-				//if(item.result != game.curTask){
+				if( _.contains(game.curRightAnswers, item.result) ) {
+					utils.playSound('coin');
+					game.score+=gameinfo["level1"].matchPointsRight; 
+					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, "+"+gameinfo["level1"].matchPointsRight);
+					createNewWordTask();
+				} else {
+					utils.playSound('wrong');					
+					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, gameinfo["level1"].matchPointsWrong); 
+					game.score+=gameinfo["level1"].matchPointsWrong;
+				}
+				/*
 				if(item.result != game.curAnswer){
 					utils.playSound('wrong');					
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, gameinfo["level1"].matchPointsWrong); 
 					game.score+=gameinfo["level1"].matchPointsWrong; 
-				}else{
+				} else {
 					utils.playSound('coin');
 					game.score+=gameinfo["level1"].matchPointsRight; 
 					Crafty.e('ScoreAnimation').scoreanimation(item.x, item.y, "+"+gameinfo["level1"].matchPointsRight);
 					createNewWordTask(); 
 				}
+				*/
 				Crafty("Score").text(i18n.t('Score') + ": "+game.score); 
 				item.destroy();
 			}
@@ -806,7 +821,7 @@ var game = {
 					killParallaxTweens();
 					playerDead = true;
 					Crafty.scene('gameover');
-				}else{
+				} else {
 					Crafty("Lives").text(game.lives);
 				}
 			}
@@ -828,16 +843,27 @@ var game = {
 			function createNewWordTask() {
 				// TODO: store last task eref -> if same again, take some other, if only one, take that
 				game.curAnswers = [];
-				var r = Crafty.math.randomInt(0, gameinfo["level1"].wordRules.length-1);
+				var r = Crafty.math.randomInt(0, gameinfo.level1.wordRules.length-1);
 				var task = gameinfo.level1.wordRules[r];
-				game.curAnswers.push(gameinfo.level1.wordRules[r].right);
-				for(var i = 0; i < gameinfo.level1.wordRules[r].wrongArr.length; i++) {
-					game.curAnswers.push(gameinfo.level1.wordRules[r].wrongArr[i]);
+				if(gameinfo.level1.wordRules.length > 1 && task.eref != game.curTaskEref) {
+					game.curTaskEref = task.eref;
+
+					_.each(gameinfo.level1.wordRules[r].rightArr, function(rightAnswer, index, list) {
+						game.curAnswers.push(rightAnswer);
+					});
+				
+					_.each(gameinfo.level1.wordRules[r].wrongArr, function(wrongAnswer, index, list) {
+						game.curAnswers.push(wrongAnswer);
+					});
+
+					var w1 = task.task;
+					game.curRightAnswers = gameinfo.level1.wordRules[r].rightArr;
+					game.curTask = w1;
+					taskLabel.changeTask(game.curTask);
+				} else {
+					// don't show same task twice in a row
+					createNewWordTask();
 				}
-				var w1 = task.task;
-				game.curAnswer = task.right;
-				game.curTask = w1;
-				taskLabel.changeTask(game.curTask);
 			}
 			
 			function createNewMemoryTask(first) {

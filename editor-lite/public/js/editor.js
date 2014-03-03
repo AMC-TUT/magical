@@ -423,6 +423,7 @@ var editor = {
 		// word rules
 		if(gameinfo.level1.wordRules) {
 			$('#matching').empty();
+			editor.updateWordRules(); // update old "one right" rules to new "multiple right"
 			_.each(gameinfo.level1.wordRules, function(wordRule, index, list) {
 				editor.addMatchRule(wordRule, false);
 			});
@@ -436,6 +437,19 @@ var editor = {
 			});
 		}
 
+	},
+
+	// for backwards compatibility
+	updateWordRules: function() {
+		var updatedRules = [];
+		_.each(gameinfo.level1.wordRules, function(wordRule, index, list) {
+			if( _.isUndefined(wordRule.rightArr) && !_.isUndefined(wordRule.right) ) {
+				wordRule['rightArr'] = [wordRule.right];
+				delete wordRule['right'];
+			}
+			updatedRules.push(wordRule);
+		});
+		gameinfo.level1.wordRules = updatedRules;
 	},
 
 	bindUiFormSubmits: function() {
@@ -452,10 +466,17 @@ var editor = {
 			if(wAnswers[index-1] == "" || wAnswers[index-1] == " "){
 				w3.pop();
 			}
+
+			var rAnswers = w2.split(",");
+			var rIndex = w2.length;
+			if(rAnswers[rIndex-1] == "" || rAnswers[rIndex-1] == " "){
+				w2.pop();
+			}
+
     		if(w1!="" && w2!="" && w1!=" " && w2!=" ") {
     			var matchRules = {
     				'task': w1,
-    				'right': w2,
+    				'rightArr': rAnswers,
     				'wrongArr': wAnswers,
 	 				'eref': editor.guid() // uuid
     			}
@@ -1066,12 +1087,18 @@ var editor = {
 	},
 
 	addMatchRule: function(matchRule, addNew) {
-		if( !_.isEmpty(matchRule.task) && !_.isEmpty(matchRule.right) ) {
-			var ruleTxt = matchRule.task + " = " + matchRule.right;
+		if( !_.isEmpty(matchRule.task) && !_.isEmpty(matchRule.rightArr) ) {
 			var wrongAnswers = '';
 			if( !_.isEmpty(matchRule.wrongArr) ) {
 				wrongAnswers = matchRule.wrongArr.join(', ');
 			}
+			var rightAnswers = '';
+			if( !_.isEmpty(matchRule.rightArr) ) {
+				rightAnswers = matchRule.rightArr.join(', ');
+			} else {
+				rightAnswers = matchRule.right;
+			}
+
 			$('.words_input').val('');
 
 			// show matching rule
@@ -1080,7 +1107,7 @@ var editor = {
 			
 			i18n.t("wrong answers")
 			
-			var txtNode = $('<span>').html('<b>' + ruleTxt + '</b><br>' + i18n.t("wrong answers") + ': ' + wrongAnswers);
+			var txtNode = $('<span>').html('<b>' + i18n.t("Task") + ': ' + matchRule.task + '</b><br>' + i18n.t("right answers") + ': ' + rightAnswers + '<br>' + i18n.t("wrong answers") + ': ' + wrongAnswers);
 			activeElement.append(txtNode);
 			container.append(activeElement);
 

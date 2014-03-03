@@ -12,11 +12,23 @@
 
       <div class="modal-body">
 
-	    <div class="col-xs-12">
-	        <div class="errors"></div>
+          <div id="settingContent">
+
+            <div id="settingsForm">
+    	        <div class="errors"></div>
+                {% csrf_token %}
+                {{ settings_form.as_p }}
+            </div>
+
+          </div>
+
+          <div id="changePasswordForm">
+            <div class="password_errors"></div>
             {% csrf_token %}
-            {{ settings_form.as_p }}
-        </div>
+            {{ password_form.as_p }}
+          </div>
+
+
       </div> <!-- modal-body -->
 
       <div class="modal-footer">

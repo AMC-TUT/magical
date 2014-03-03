@@ -59,7 +59,7 @@
     "player_info": "Scegli l’icona che il giocatore controlla nel gioco",
 
     "Background properties": "Creazione dello sfondo",
-    "Background color": "Colore di sfondo",
+    "Scene background": "Colore di sfondo",
     "light grey": "grigio chiaro",
     "grey": "grigio",
     "brown": "marrone",
@@ -103,9 +103,10 @@
     "memory": "memory",
     "fraction": "frazioni",
     "Write a task": "Scrivi un compito",
-    "Write an answer": "Scrivi una risposta",
+    "Write right answer": "Scrivi delle risposte giuste",
     "Write wrong answers": "Scrivi delle risposte errate",
-    "separate multiple wrong answers with comma": "inserire una virgola dopo ciascuna risposta errata",
+    "separate multiple right and wrong answers with comma": "inserire una virgola dopo ciascuna risposta giusta e errata",
+
     "Add task": "Aggiungi un compito",
     "Appearance interval": "Intervallo di tempo fra elementi",
     "seconds": "secondi",
