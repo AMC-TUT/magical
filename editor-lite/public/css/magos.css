@@ -23,6 +23,10 @@ legend {
 	font-size: 12px;
 }
 
+.popover {
+	max-width: 500px !important;
+}
+
 #editor-stage{
 	position:absolute;
 	left:0px;
