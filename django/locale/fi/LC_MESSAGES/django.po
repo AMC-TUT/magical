@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Magos portal\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-25 11:41+0200\n"
+"POT-Creation-Date: 2014-03-03 11:03+0200\n"
 "PO-Revision-Date: 2014-02-25 11:41+0200\n"
 "Last-Translator: Mikko Koskela <mikko.koskela@jouhea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,81 +55,95 @@ msgstr "kuvaukset"
 msgid "Successfully deleted %d audio files."
 msgstr ""
 
-#: apps/game/forms.py:36
+#: apps/game/forms.py:38
 msgid "Game image"
 msgstr "Pelin kuva"
 
-#: apps/game/forms.py:52
+#: apps/game/forms.py:60
 msgid "Title"
 msgstr "Otsikko"
 
-#: apps/game/forms.py:58
+#: apps/game/forms.py:66
 msgid "Description"
 msgstr "Kuvaus"
 
-#: apps/game/forms.py:63 templates/apps/game/details.html:43
+#: apps/game/forms.py:71 templates/apps/game/details.html:44
 msgid "Tags"
 msgstr "Asiasanat"
 
-#: apps/game/forms.py:65
+#: apps/game/forms.py:73
 msgid "A comma-separated list of tags."
 msgstr "Erota asiasanat pilkulla"
 
-#: apps/game/forms.py:84
+#: apps/game/forms.py:92
 msgid "Game with the same title exists. Try another title."
 msgstr "Samanniminen peli on jo olemassa. Muuta pelin nimeä."
 
-#: apps/game/forms.py:96
+#: apps/game/forms.py:104
 msgid "Game Type"
 msgstr "Pelin tyyppi"
 
-#: apps/game/forms.py:101
+#: apps/game/forms.py:109
 msgid "Block size"
 msgstr "Lohkon koko"
 
-#: apps/game/forms.py:108
+#: apps/game/forms.py:116
 msgid "Resolution"
 msgstr "Resoluutio"
 
-#: apps/game/forms.py:127 templates/apps/game/details.html:60
+#: apps/game/forms.py:140 templates/apps/game/game_base.html:33
+#: templates/apps/game/game_base.html:76
+msgid "Create"
+msgstr "Luo"
+
+#: apps/game/forms.py:141 templates/apps/game/user_settings.html:25
+msgid "Cancel"
+msgstr "Peruuta"
+
+#: apps/game/forms.py:146 templates/apps/game/details.html:61
 msgid "Add tags"
 msgstr "Lisää asiasanoja"
 
-#: apps/game/forms.py:129
+#: apps/game/forms.py:148
 msgid "Separate tags with comma."
 msgstr "Erota asiasanat toisistaan pilkulla."
 
-#: apps/game/forms.py:155
+#: apps/game/forms.py:174
 msgid "Login was invalid. Please try again."
 msgstr "Kirjautuminen epäonnistui. Yritä uudelleen."
 
-#: apps/game/forms.py:187
+#: apps/game/forms.py:206
 msgid "Password"
 msgstr "Salasana"
 
-#: apps/game/forms.py:192
+#: apps/game/forms.py:211
 msgid "Password again"
 msgstr "Salasana uudelleen"
 
-#: apps/game/forms.py:199
+#: apps/game/forms.py:218
 msgid "Select gender"
 msgstr "Valitse sukupuoli"
 
-#: apps/game/forms.py:212
+#: apps/game/forms.py:231
 msgid "I have a special code"
 msgstr "Minulla on erikoiskoodi"
 
-#: apps/game/forms.py:227
+#: apps/game/forms.py:260 templates/apps/game/game_base.html:36
+#: templates/apps/game/game_base.html:79
+msgid "Register"
+msgstr "Rekisteröidy"
+
+#: apps/game/forms.py:272
 msgid "Code is not valid."
 msgstr "Koodi ei kelpaa."
 
-#: apps/game/forms.py:235
+#: apps/game/forms.py:280
 msgid "Can not create public users at this time. Please contact Magos support."
 msgstr ""
 "Julkisia käyttäjiä ei voida valitettavasti luoda. Ota yhteyttä Magos "
 "ylläpitoon."
 
-#: apps/game/forms.py:323
+#: apps/game/forms.py:368
 msgid "use uppercase text"
 msgstr "käytä isoja kirjaimia"
 
@@ -403,87 +417,73 @@ msgstr "Tekijöitä ei löytynyt"
 msgid "No games found"
 msgstr "Pelejä ei löytynyt"
 
-#: templates/apps/game/create.html:4
+#: templates/apps/game/create.html:6
 msgid "Create a new game"
 msgstr "Luo uusi peli"
 
-#: templates/apps/game/create.html:5
+#: templates/apps/game/create.html:7
 #, python-format
 msgid "Here you can define a new Magos <em>%(gametype_text)s</em> game."
 msgstr "Tässä voit luoda uuden Magos <em>%(gametype_text)s</em> pelin."
-
-#: templates/apps/game/create.html:12
-#: templates/apps/game/user_settings.html:25
-msgid "Cancel"
-msgstr "Peruuta"
-
-#: templates/apps/game/create.html:13 templates/apps/game/game_base.html:33
-#: templates/apps/game/game_base.html:79
-msgid "Create"
-msgstr "Luo"
 
 #: templates/apps/game/create_base.html:14
 msgid "Select game type"
 msgstr "Valitse pelityyppi"
 
-#: templates/apps/game/details.html:13
+#: templates/apps/game/details.html:14
 msgid "Game permalink"
 msgstr "Pelin pysyvä osoite"
 
-#: templates/apps/game/details.html:18
+#: templates/apps/game/details.html:19
 msgid "Delete image"
 msgstr "Poista kuva"
 
-#: templates/apps/game/details.html:28
+#: templates/apps/game/details.html:29
 msgid "Add game image"
 msgstr "Lisää pelin kuva"
 
-#: templates/apps/game/details.html:38
+#: templates/apps/game/details.html:39
 #, python-format
 msgid "Game created by %(game_creator)s."
 msgstr "Pelin luonut %(game_creator)s."
 
-#: templates/apps/game/details.html:68
+#: templates/apps/game/details.html:69
 msgid "Reviews"
 msgstr "Arvostelut"
 
-#: templates/apps/game/details.html:76
+#: templates/apps/game/details.html:77
 msgid "Play game"
 msgstr "Pelaa peliä"
 
-#: templates/apps/game/details.html:78
+#: templates/apps/game/details.html:79
 msgid "Launch game editor"
 msgstr "Avaa pelieditori"
 
-#: templates/apps/game/details.html:93
+#: templates/apps/game/details.html:94
 #, python-format
 msgid "Game created on %(game_created)s."
 msgstr "Pelin luontiaika %(game_created)s."
 
-#: templates/apps/game/details.html:97
+#: templates/apps/game/details.html:98
 msgid "Comments"
 msgstr "Kommentit"
 
-#: templates/apps/game/details.html:98
+#: templates/apps/game/details.html:99
 msgid "No comments yet."
 msgstr "Ei kommentteja."
 
-#: templates/apps/game/details.html:102
+#: templates/apps/game/details.html:103
 msgid "Delete game"
 msgstr "Poista peli"
 
-#: templates/apps/game/game_base.html:32 templates/apps/game/game_base.html:78
+#: templates/apps/game/game_base.html:32 templates/apps/game/game_base.html:75
 msgid "Play"
 msgstr "Pelaa"
 
-#: templates/apps/game/game_base.html:34 templates/apps/game/game_base.html:80
+#: templates/apps/game/game_base.html:34 templates/apps/game/game_base.html:77
 #: templates/apps/game/watch.html:14
 msgid "Watch"
 msgstr "Katso"
-
-#: templates/apps/game/game_base.html:36 templates/apps/game/game_base.html:82
-msgid "Register"
-msgstr "Rekisteröidy"
 
 #: templates/apps/game/game_base.html:45
 msgid "Welcome to Magos"
@@ -501,11 +501,11 @@ msgstr "Kirjaudu ulos"
 msgid "settings"
 msgstr "asetukset"
 
-#: templates/apps/game/game_base.html:88
+#: templates/apps/game/game_base.html:85
 msgid "Version info"
 msgstr "Versiotiedot"
 
-#: templates/apps/game/game_base.html:111
+#: templates/apps/game/game_base.html:113
 msgid "Loading..."
 msgstr "Ladataan..."
 
