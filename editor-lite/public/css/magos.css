@@ -47,6 +47,10 @@ legend {
 	margin-right:30px;
 }
 
+.menubtn {
+	cursor: pointer;
+}
+
 .pop {
 	margin-right:50px;
 	font-size: 26px;
