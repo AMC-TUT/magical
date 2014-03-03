@@ -845,7 +845,7 @@ var game = {
 				game.curAnswers = [];
 				var r = Crafty.math.randomInt(0, gameinfo.level1.wordRules.length-1);
 				var task = gameinfo.level1.wordRules[r];
-				if(gameinfo.level1.wordRules.length > 1 && task.eref != game.curTaskEref) {
+				if( gameinfo.level1.wordRules.length == 1 || (gameinfo.level1.wordRules.length > 1 && task.eref != game.curTaskEref) ) {
 					game.curTaskEref = task.eref;
 
 					_.each(gameinfo.level1.wordRules[r].rightArr, function(rightAnswer, index, list) {
