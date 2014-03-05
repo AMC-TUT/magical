@@ -324,19 +324,24 @@ body.register #main-nav ul li a.register {
 }
 
 .slogan {
-    font-size: 1.8em;
+    font-size: 2.2em;
     line-height: 1.4em;
     background: rgba(255,255,255,0.2);
-    width: 570px;;
+    width: 520px;
     text-shadow: 1px 1px 2px rgba(255,255,255,0.3), -1px -1px 2px rgba(0,0,0,0.1);
     text-align: center;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
+    padding: 20px;    
 }
 
 ul.nav {
     margin-bottom: 0px;
+}
+
+#playLatest {
+    margin-top: 10px;
 }
 
 .featured-game {
@@ -354,13 +359,14 @@ ul.nav {
 }
 
 #featured-slogan {
-    position:absolute;
+    position: absolute;
     bottom: 0;
     left: 0;
-    width: 508px;
-    background: rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.8);
     padding: 5px 15px;
     text-shadow: 1px 1px 2px rgba(255,255,255,0.3), -1px -1px 2px rgba(0,0,0,0.1);
+    width: 100%;
+    text-align: center;
 }
 
 

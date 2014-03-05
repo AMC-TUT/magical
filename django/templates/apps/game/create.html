@@ -3,8 +3,9 @@
 
 {% if form %}
     <div id="createGameContainer">
-        <h1>{% trans 'Create a new game' %}</h1>
-        <p>{% blocktrans %}Here you can define a new Magos <em>{{ gametype_text }}</em> game.{% endblocktrans %}</p>
+        <h1>{% blocktrans %}Create a new game{% endblocktrans %}</h1>
+		<p>{% blocktrans %}Here’s the place to start making a new Magos {{ gametype_text }} game.{% endblocktrans %}</p>
+        <p>{% blocktrans %}Want to make a new Magos Lite game? First of all, give it a title and add a short description so that others can see it and select it.{% endblocktrans %}</p>
         <hr />
         <div class="col-xs-9">
             {% crispy form %}

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Magos portal\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-03 11:03+0200\n"
-"PO-Revision-Date: 2014-02-25 11:41+0200\n"
+"POT-Creation-Date: 2014-03-04 15:55+0200\n"
+"PO-Revision-Date: 2014-03-04 15:59+0200\n"
 "Last-Translator: Mikko Koskela <mikko.koskela@jouhea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fi\n"
@@ -71,9 +71,13 @@ msgstr "Kuvaus"
 msgid "Tags"
 msgstr "Asiasanat"
 
-#: apps/game/forms.py:73
-msgid "A comma-separated list of tags."
-msgstr "Erota asiasanat pilkulla"
+#: apps/game/forms.py:73 apps/game/forms.py:148
+msgid ""
+"Add one or more tags to identify your game better. Separate each tag with a "
+"comma."
+msgstr ""
+"Lisää yksi tai useampia asiasanoja kuvaamaan peliäsi. Erota asiasanat "
+"toisistaan pilkulla."
 
 #: apps/game/forms.py:92
 msgid "Game with the same title exists. Try another title."
@@ -96,17 +100,13 @@ msgstr "Resoluutio"
 msgid "Create"
 msgstr "Luo"
 
-#: apps/game/forms.py:141 templates/apps/game/user_settings.html:25
+#: apps/game/forms.py:141 templates/apps/game/user_settings.html:30
 msgid "Cancel"
 msgstr "Peruuta"
 
 #: apps/game/forms.py:146 templates/apps/game/details.html:61
 msgid "Add tags"
 msgstr "Lisää asiasanoja"
-
-#: apps/game/forms.py:148
-msgid "Separate tags with comma."
-msgstr "Erota asiasanat toisistaan pilkulla."
 
 #: apps/game/forms.py:174
 msgid "Login was invalid. Please try again."
@@ -143,7 +143,7 @@ msgstr ""
 "Julkisia käyttäjiä ei voida valitettavasti luoda. Ota yhteyttä Magos "
 "ylläpitoon."
 
-#: apps/game/forms.py:368
+#: apps/game/forms.py:369
 msgid "use uppercase text"
 msgstr "käytä isoja kirjaimia"
 
@@ -423,8 +423,16 @@ msgstr "Luo uusi peli"
 
 #: templates/apps/game/create.html:7
 #, python-format
-msgid "Here you can define a new Magos <em>%(gametype_text)s</em> game."
-msgstr "Tässä voit luoda uuden Magos <em>%(gametype_text)s</em> pelin."
+msgid "Here’s the place to start making a new Magos %(gametype_text)s game."
+msgstr "Tässä voit luoda uuden Magos %(gametype_text)s pelin."
+
+#: templates/apps/game/create.html:8
+msgid ""
+"Want to make a new Magos Lite game? First of all, give it a title and add a "
+"short description so that others can see it and select it."
+msgstr ""
+"Haluatko luoda uuden Magos Lite pelin? Aloita antamalla otsikko ja lyhyt "
+"kuvaus, jotta muut voivat nähdä pelin ja valita sen."
 
 #: templates/apps/game/create_base.html:14
 msgid "Select game type"
@@ -510,14 +518,8 @@ msgid "Loading..."
 msgstr "Ladataan..."
 
 #: templates/apps/game/index.html:9
-msgid ""
-"Gather a team and step into the fantasy world of Magos - A game authoring "
-"environment designed to foster the learning of critical 21st century skills "
-"like creativity, problem solving and collaboration."
-msgstr ""
-"Kokoa ryhmä ja astu Magoksen kiehtovaan maailmaan. Magos on "
-"pelinluontiympäristö, joka on suunniteltu 21. vuosisadan taitojen, kuten "
-"luovuus, ongelmanratkaisu ja yhteistyö kehittämiseen."
+msgid "Welcome to the MAGICAL world of Magos!"
+msgstr "Tervetuloa Magosin MAAGISEEN maailmaan!"
 
 #: templates/apps/game/index.html:20
 msgid "Search games"
@@ -553,18 +555,17 @@ msgid "users"
 msgstr "käyttäjää"
 
 #: templates/apps/game/sidebar.html:4
-msgid "Attention"
-msgstr "Huomio"
+msgid "Hi there!"
+msgstr "Hei!"
 
 #: templates/apps/game/sidebar.html:6
 msgid ""
-"Magos Lite is still in development. Some parts of the system do not work "
-"yet. Nevertheless, you can start creating games with Magos Lite. We'll fix "
-"existing problems as soon as possible. Have fun!"
+"We want to make Magos Lite more fun for you. If you have any comments or "
+"ideas, please send us an email message at:  magical - at - itd.cnr.it. Enjoy!"
 msgstr ""
-"Magos Lite on kehitysasteella. Jotkin järjestelmän osat eivät vielä toimi. "
-"Siitä huolimatta voit aloittaa Magos Lite pelien luomisen. Parannamme "
-"järjestelmää jatkuvasti. Pidä hauskaa!"
+"Haluamme tehdä Magos Liten hauskemmaksi sinulle. Jos sinulla on kommentteja "
+"tai ideoita, lähetä meille sähköpostia osoitteella magical - at - itd.cnr."
+"it. Nauti!"
 
 #: templates/apps/game/sidebar.html:8
 msgid "Magos News"
@@ -574,7 +575,7 @@ msgstr "Magos uutiset"
 msgid "User settings"
 msgstr "Käyttäjän asetukset"
 
-#: templates/apps/game/user_settings.html:24
+#: templates/apps/game/user_settings.html:29
 msgid "Save settings"
 msgstr "Tallenna asetukset"
 
@@ -585,3 +586,30 @@ msgid ""
 msgstr ""
 "Lisää videoita <a href=\"http://www.youtube.com/user/magosTV\" target="
 "\"_blank\">MagosTV</a> Youtube-kanavalla."
+
+#~ msgid "A comma-separated list of tags."
+#~ msgstr "Erota asiasanat pilkulla"
+
+#~ msgid "Separate tags with comma."
+#~ msgstr "Erota asiasanat toisistaan pilkulla."
+
+#~ msgid ""
+#~ "Gather a team and step into the fantasy world of Magos - A game authoring "
+#~ "environment designed to foster the learning of critical 21st century "
+#~ "skills like creativity, problem solving and collaboration."
+#~ msgstr ""
+#~ "Kokoa ryhmä ja astu Magoksen kiehtovaan maailmaan. Magos on "
+#~ "pelinluontiympäristö, joka on suunniteltu 21. vuosisadan taitojen, kuten "
+#~ "luovuus, ongelmanratkaisu ja yhteistyö kehittämiseen."
+
+#~ msgid "Attention"
+#~ msgstr "Huomio"
+
+#~ msgid ""
+#~ "Magos Lite is still in development. Some parts of the system do not work "
+#~ "yet. Nevertheless, you can start creating games with Magos Lite. We'll "
+#~ "fix existing problems as soon as possible. Have fun!"
+#~ msgstr ""
+#~ "Magos Lite on kehitysasteella. Jotkin järjestelmän osat eivät vielä "
+#~ "toimi. Siitä huolimatta voit aloittaa Magos Lite pelien luomisen. "
+#~ "Parannamme järjestelmää jatkuvasti. Pidä hauskaa!"

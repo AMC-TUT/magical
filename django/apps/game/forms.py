@@ -70,7 +70,7 @@ class BaseGameForm(forms.ModelForm):
     tags = TagField(
         label=_(u'Tags'),
         required=False,
-        help_text=_(u'A comma-separated list of tags.'),
+        help_text=_(u'Add one or more tags to identify your game better. Separate each tag with a comma.'),
         widget=forms.TextInput(attrs={'class':'form-control'}),
     )
 
@@ -145,7 +145,7 @@ class GameTagsForm(forms.ModelForm):
     tags = TagField(
         label=_(u'Add tags'),
         required=True,
-        help_text=_(u'Separate tags with comma.'),
+        help_text=_(u'Add one or more tags to identify your game better. Separate each tag with a comma.'),
         widget=forms.TextInput(attrs={'class':'form-control small'}),
     )
 
