@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Magos portal\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-07 10:07+0200\n"
-"PO-Revision-Date: 2014-03-07 10:09+0200\n"
+"POT-Creation-Date: 2014-03-07 10:23+0200\n"
+"PO-Revision-Date: 2014-03-07 10:25+0200\n"
 "Last-Translator: Mikko Koskela <mikko.koskela@jouhea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fi\n"
@@ -508,6 +508,10 @@ msgstr "Ei kommentteja."
 msgid "Delete game"
 msgstr "Poista peli"
 
+#: templates/apps/game/game_base.html:10 templates/apps/game/login.html:9
+msgid "Collaborative Game Creation"
+msgstr "Tee pelejä yhteistyössä"
+
 #: templates/apps/game/game_base.html:32 templates/apps/game/game_base.html:75
 msgid "Play"
 msgstr "Pelaa"
@@ -525,7 +529,7 @@ msgstr "Tervetuloa Magosiin"
 msgid "Organization"
 msgstr "Organisaatio"
 
-#: templates/apps/game/game_base.html:48 templates/apps/game/login.html:31
+#: templates/apps/game/game_base.html:48 templates/apps/game/login.html:33
 msgid "Logout"
 msgstr "Kirjaudu ulos"
 
@@ -533,7 +537,7 @@ msgstr "Kirjaudu ulos"
 msgid "settings"
 msgstr "asetukset"
 
-#: templates/apps/game/game_base.html:85
+#: templates/apps/game/game_base.html:85 templates/apps/game/login.html:48
 msgid "Version info"
 msgstr "Versiotiedot"
 

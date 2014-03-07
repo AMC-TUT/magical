@@ -1,10 +1,12 @@
 {% load url from future %}
 {% load i18n %}
+{% load magos_tags %}
+
 <!DOCTYPE html>
 <html lang="fi">
 <head>
     <meta charset=utf-8>
-    <title>Magos - Collaborative Game Creation</title>
+    <title>Magos - {% trans "Collaborative Game Creation" %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.min.css" />
     <link rel="stylesheet" href="{{ STATIC_URL }}css/magos.css" />
@@ -18,44 +20,39 @@
   {% load i18n %}
 <body class="standalone">
 
-<div id="header_wrap">
+    <div id="header_wrap">
 
-    <header>
-        <img src="{{ STATIC_URL }}img/magos-logo.png" id="logo">
+        <header>
+            <img src="{{ STATIC_URL }}img/magos-logo.png" id="logo">
 
-        <section id="login-info">
-              {% if not user.is_authenticated %}
-                {% include "apps/game/login_form.html" %}
-              {% else %}
-                <p>Welcome to Magos {{ user.username }}</p>
-                <p><a id="logout" class="navbar-link" href="/game/logout/">{% trans "Logout" %}</a></p>
-              {% endif %}
-        </section>
+            <section id="login-info">
+                  {% if not user.is_authenticated %}
+                    {% include "apps/game/login_form.html" %}
+                  {% else %}
+                    <p>Welcome to Magos {{ user.username }}</p>
+                    <p><a id="logout" class="navbar-link" href="/game/logout/">{% trans "Logout" %}</a></p>
+                  {% endif %}
+            </section>
 
-    </header>
+        </header>
 
-</div>
+    </div>
 
-
-<div id="footer_wrapper">
-    <footer>
-
-        <section id="footer-left">
-            <img id="magos-logo-footer" src="{{ STATIC_URL }}img/magos-logo-footer.png">
-
-        </section>
-
-
-        <div class="footer-wide">
-            <p>&copy; Copyright 2012 Magos.</p>
-        </div>
-
-    </footer>
-</div>
-
-
-
-
+    <div id="footer_wrapper">
+        <footer>
+            <section id="footer-left">
+                <img id="magos-logo-footer" src="{{ STATIC_URL }}img/magos-logo-footer.png">
+            </section>
+            
+            <div class="footer-wide">
+                <p>&copy; Copyright 2012-2013 Magical project. <br /><span class="version-info">{% trans 'Version info' %}: {% git_rev_tag %}</span></p>
+                <div id="euAck">
+                    <img src="{{ STATIC_URL }}img/eu_flag_llp_en.png" id="euFlag">
+                    <p>This project has been funded with support from the European Commission. This communication reflects the views only of the author, and the Commission cannot be held responsible for any use which may be made of the information contained therein.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <script src="{{ STATIC_URL }}js/lib/jquery-1.7.1.min.js"></script>
     <script src="{{ STATIC_URL }}js/lib/underscore-min.js"></script>

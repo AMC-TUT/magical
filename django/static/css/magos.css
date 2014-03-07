@@ -162,7 +162,13 @@ footer {
 }
 
 .standalone footer {
-    width: 440px;
+    width: 640px;
+}
+
+.standalone #footer-left {
+    margin: 0 30px;
+    float: left;
+    width: 100%;
 }
 
 #footer-left {
@@ -174,6 +180,10 @@ footer {
 .footer-wide {
     clear:left;
     margin: 20px 330px 40px 20px;
+}
+
+.standalone .footer-wide {
+    margin: 20px 20px 40px 20px;
 }
 
 #euAck {
