@@ -13,4 +13,5 @@ def user_settings(request):
 			user_settings = UserSettings.objects.get(user=user)
 		except UserSettings.DoesNotExist:
 			pass
+
  	return {'user_settings': user_settings }

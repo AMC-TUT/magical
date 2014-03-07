@@ -689,6 +689,5 @@ def store_info_to_session(sender, user, request, **kwargs):
     from django.utils import translation
     translation.activate(lang_code)
 
-
     
 user_logged_in.connect(store_info_to_session)

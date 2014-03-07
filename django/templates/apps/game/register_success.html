@@ -7,10 +7,10 @@
     
         <div class="row wide-content">
             <div class="col-xs-12">
-                <h1>Thank you for registering!</h1>
-                <p>Welcome to the world of Magos.</p>
+                <h1>{% blocktrans %}Thank you for registering!{% endblocktrans %}</h1>
+                <p>{% blocktrans %}Welcome to the MAGICAL world of Magos!{% endblocktrans %}</p>
                 {% if not user.is_authenticated %}
-                  <p>You can now log in to start creating games.</p>
+                  <p>{% blocktrans %}You can now log in to start creating games.{% endblocktrans %}</p>
                   <div class="inPageLogin">
                     {% include "apps/game/login_form.html" %}
                   </div>

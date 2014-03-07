@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Magos portal\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-04 15:55+0200\n"
-"PO-Revision-Date: 2014-03-04 15:59+0200\n"
+"POT-Creation-Date: 2014-03-07 10:07+0200\n"
+"PO-Revision-Date: 2014-03-07 10:09+0200\n"
 "Last-Translator: Mikko Koskela <mikko.koskela@jouhea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fi\n"
@@ -53,7 +53,7 @@ msgstr "kuvaukset"
 #: apps/game/admin.py:79
 #, python-format
 msgid "Successfully deleted %d audio files."
-msgstr ""
+msgstr "Poistettiin onnistuneesti %d äänitiedostoa."
 
 #: apps/game/forms.py:38
 msgid "Game image"
@@ -108,42 +108,66 @@ msgstr "Peruuta"
 msgid "Add tags"
 msgstr "Lisää asiasanoja"
 
-#: apps/game/forms.py:174
-msgid "Login was invalid. Please try again."
-msgstr "Kirjautuminen epäonnistui. Yritä uudelleen."
+#: apps/game/forms.py:168 apps/game/forms.py:196
+msgid "Username"
+msgstr "Käyttäjätunnus"
 
-#: apps/game/forms.py:206
+#: apps/game/forms.py:174 apps/game/forms.py:220
 msgid "Password"
 msgstr "Salasana"
 
-#: apps/game/forms.py:211
+#: apps/game/forms.py:184
+msgid "Login was invalid. Please try again."
+msgstr "Kirjautuminen epäonnistui. Yritä uudelleen."
+
+#: apps/game/forms.py:202
+msgid "Email"
+msgstr "Sähköposti"
+
+#: apps/game/forms.py:208
+msgid "First name"
+msgstr "Etunimi"
+
+#: apps/game/forms.py:214
+msgid "Last name"
+msgstr "Sukunimi"
+
+#: apps/game/forms.py:225
 msgid "Password again"
 msgstr "Salasana uudelleen"
 
-#: apps/game/forms.py:218
+#: apps/game/forms.py:230
+msgid "Gender"
+msgstr "Sukupuoli"
+
+#: apps/game/forms.py:233
 msgid "Select gender"
 msgstr "Valitse sukupuoli"
 
-#: apps/game/forms.py:231
+#: apps/game/forms.py:238
+msgid "Language"
+msgstr "Kieli"
+
+#: apps/game/forms.py:247
 msgid "I have a special code"
 msgstr "Minulla on erikoiskoodi"
 
-#: apps/game/forms.py:260 templates/apps/game/game_base.html:36
+#: apps/game/forms.py:276 templates/apps/game/game_base.html:36
 #: templates/apps/game/game_base.html:79
 msgid "Register"
 msgstr "Rekisteröidy"
 
-#: apps/game/forms.py:272
+#: apps/game/forms.py:288
 msgid "Code is not valid."
 msgstr "Koodi ei kelpaa."
 
-#: apps/game/forms.py:280
+#: apps/game/forms.py:296
 msgid "Can not create public users at this time. Please contact Magos support."
 msgstr ""
 "Julkisia käyttäjiä ei voida valitettavasti luoda. Ota yhteyttä Magos "
 "ylläpitoon."
 
-#: apps/game/forms.py:369
+#: apps/game/forms.py:385
 msgid "use uppercase text"
 msgstr "käytä isoja kirjaimia"
 
@@ -371,7 +395,7 @@ msgstr "Tuo käyttäjiä"
 #: templates/admin/game/audio/change_list.html:61
 #, python-format
 msgid "Add %(name)s"
-msgstr ""
+msgstr "Lisää %(name)s"
 
 #: templates/admin/game/audio/change_form.html:22
 #: templates/admin/game/audio/change_list.html:44
@@ -518,6 +542,7 @@ msgid "Loading..."
 msgstr "Ladataan..."
 
 #: templates/apps/game/index.html:9
+#: templates/apps/game/register_success.html:11
 msgid "Welcome to the MAGICAL world of Magos!"
 msgstr "Tervetuloa Magosin MAAGISEEN maailmaan!"
 
@@ -546,6 +571,14 @@ msgstr "Magos pelit"
 msgid "Magos-lite games"
 msgstr "Magos-lite pelit"
 
+#: templates/apps/game/login_form.html:6
+msgid "Your username and password didn't match. Please try again."
+msgstr "Käyttäjätunnus ja salasana eivät täsmää. Yritä uudelleen, ole hyvä."
+
+#: templates/apps/game/login_form.html:14
+msgid "Log in"
+msgstr "Kirjaudu sisään"
+
 #: templates/apps/game/magos_statistics.html:2
 msgid "Magos Statistics"
 msgstr "Magos tilastoja"
@@ -553,6 +586,18 @@ msgstr "Magos tilastoja"
 #: templates/apps/game/magos_statistics.html:4
 msgid "users"
 msgstr "käyttäjää"
+
+#: templates/apps/game/register_success.html:10
+msgid "Thank you for registering!"
+msgstr "Kiitos rekisteröitymisestä!"
+
+#: templates/apps/game/register_success.html:13
+msgid "You can now log in to start creating games."
+msgstr "Voit nyt kirjautua sisään ja aloittaa pelien luomisen."
+
+#: templates/apps/game/register_user.html:12
+msgid "Register as a new Magos user"
+msgstr "Rekisteröidy uudeksi Magos-käyttäjäksi"
 
 #: templates/apps/game/sidebar.html:4
 msgid "Hi there!"

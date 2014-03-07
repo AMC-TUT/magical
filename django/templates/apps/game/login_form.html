@@ -1,8 +1,9 @@
+{% load i18n %}
 <form id="loginForm" method="post" action="{% url "login_user" %}">
     {% csrf_token %}
 	{% if login_form.errors %}
 	<div class="errors">
-		<p>Your username and password didn't match. Please try again.</p>
+		<p>{% blocktrans %}Your username and password didn't match. Please try again.{% endblocktrans %}</p>
 	</div>
 	{% endif %}
     <label for="username">{{ login_form.username.label_tag }}</label>
@@ -10,7 +11,7 @@
     <label for="password">{{ login_form.password.label_tag }}</label>
     <input type="password" name="password" id="password" /></p>
 
-    <input type="submit" name="log_in" value="Log in" />
+    <input type="submit" name="log_in" value="{% trans 'Log in' %}" />
 
     {% if next %}
 		<input type="hidden" name="next" value="{{ next }}" />

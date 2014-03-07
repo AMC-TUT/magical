@@ -222,6 +222,7 @@ THIRD_PARTY_APPS = (
     'polymorphic',
     'taggit',
     'crispy_forms',
+    'modeltranslation',
 )
 
 # Apps specific for this project

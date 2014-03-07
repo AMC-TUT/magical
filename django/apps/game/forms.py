@@ -163,8 +163,18 @@ class GameTagsForm(forms.ModelForm):
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=255, required=True)
-    password = forms.CharField(widget=forms.PasswordInput, required=True)
+    
+    username = forms.CharField(
+        label = _(u'Username'),
+        max_length=255, 
+        required=True
+    )
+    
+    password = forms.CharField(
+        label = _(u'Password'),
+        widget=forms.PasswordInput, 
+        required=True
+    )
 
     def clean(self):
         username = self.cleaned_data.get('username')
@@ -183,21 +193,25 @@ class LoginForm(forms.Form):
 class UserRegistrationForm(UserCreationForm):
 
     username = forms.CharField(
+        label = _(u'Username'),
         required = True, 
         widget=forms.TextInput(attrs={'class':'form-control small'})
     )
 
     email = forms.EmailField(
+        label = _(u'Email'),        
         required = False, 
         widget=forms.TextInput(attrs={'class':'form-control'})
     )
 
     first_name = forms.CharField(
+        label = _(u'First name'),
         required = False, 
         widget=forms.TextInput(attrs={'class':'form-control small'})
     )
 
     last_name = forms.CharField(
+        label = _(u'Last name'),
         required = False, 
         widget=forms.TextInput(attrs={'class':'form-control small'})
     )
@@ -213,6 +227,7 @@ class UserRegistrationForm(UserCreationForm):
     )
 
     gender = forms.ModelChoiceField(
+        label = _(u'Gender'),
         required=False,
         queryset=Gender.objects.all(),
         empty_label=_(u'Select gender'),
@@ -220,6 +235,7 @@ class UserRegistrationForm(UserCreationForm):
     )
 
     language = forms.ModelChoiceField(
+        label = _(u'Language'),
         required=True,
         queryset=Language.objects.all(),
         empty_label=None,
@@ -250,7 +266,7 @@ class UserRegistrationForm(UserCreationForm):
             'username',
             'email',
             'first_name',
-            'lasst_name',
+            'last_name',
             'password1',
             'password2',
             'gender',
