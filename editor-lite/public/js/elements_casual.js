@@ -50,6 +50,20 @@ var textures =  {
 	"cloud": "/editor-lite/static/img/cloud.png",
 	"storm-cloud": "/editor-lite/static/img/cloud-storm.png",
 	"magos-girl": "/editor-lite/static/img/magos-girl.png",
+
+	"sausage-man": "/editor-lite/static/img/sausage-man.png",
+	"skater": "/editor-lite/static/img/skater.png",
+	"chocobar": "/editor-lite/static/img/chocobar.png",
+	"fries": "/editor-lite/static/img/fries.png",
+	"pizza": "/editor-lite/static/img/pizza.png",
+	"carrot": "/editor-lite/static/img/carrot.png",
+	"cucumber": "/editor-lite/static/img/cucumber.png",
+	"yellow-pepper": "/editor-lite/static/img/yellow-pepper.png",
+	"garlic": "/editor-lite/static/img/garlic.png",
+	"tomato": "/editor-lite/static/img/tomato.png",
+	"broccoli": "/editor-lite/static/img/broccoli.png",
+	"eggplant": "/editor-lite/static/img/eggplant.png",
+
 	"gift": "/editor-lite/static/img/gift.png",
 	"sky-small-clouds": "/editor-lite/static/img/sky-small-clouds.png",
 	"santa": "/editor-lite/static/img/santa.png",
@@ -58,6 +72,12 @@ var textures =  {
 	"toxic": "/editor-lite/static/img/toxic.png",
 	"radioactive": "/editor-lite/static/img/radioactive.png",
 	"flammable": "/editor-lite/static/img/flammable.png",
+	"bacteria": "/editor-lite/static/img/bacteria.png",
+	"germ": "/editor-lite/static/img/germ.png",
+	"funny-germ": "/editor-lite/static/img/funny-germ.png",
+	"dust": "/editor-lite/static/img/dust.png",
+	"tri-head-bacteria": "/editor-lite/static/img/tri-head-bacteria.png",
+
 	"magos-logo": "/editor-lite/static/img/magos-lite-logo.png",
 	"p_1_6": "/editor-lite/static/img/pizza/p_1_6.png",
 	"p_2_6": "/editor-lite/static/img/pizza/p_2_6.png",
@@ -87,14 +107,17 @@ var gameSounds = {
 var textureMenu =  {
 	groundPlayers:[
 		{text:"monster truck", value:"monster-truck"},
-		{text:"car", value:"car"}
+		{text:"car", value:"car"},
+		{text:"skater", value:"skater"}
+
 	],
 	airPlayers:[
 		{text:"magos-girl", value:"magos-girl"},
 		{text:"witch", value:"witch"},
 		{text:"santa claus", value:"santa"},
 		{text:"rocket", value:"rocket"},
-		{text:"aeroplane", value:"aeroplane"}
+		{text:"aeroplane", value:"aeroplane"},
+		{text:"sausage man", value:"sausage-man"}
 	],
 	grounds:[
 		{text:"", value:""},
