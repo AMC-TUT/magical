@@ -238,13 +238,9 @@ class Gender(models.Model):
     abbr = models.CharField(max_length=1, null=False, blank=False, default='M')
 
     class Meta:
+        unique_together = (('name','abbr'),)
         verbose_name = _('gender')
         verbose_name_plural = _('genders')
-
-    @classmethod
-    def get_default_gender(cls):
-        default_gender, created = Gender.objects.get_or_create(name='male', abbr='M')
-        return default_gender
 
     def __unicode__(self):
         return u"%s" % (self.name)
@@ -263,7 +259,6 @@ class UserProfile(models.Model):
     disability = models.ForeignKey(Disability, null=True, blank=True)
     country = models.ForeignKey(Country, null=True, blank=True)
     updated = models.DateTimeField(auto_now=True)
-    #gender = models.ForeignKey(Gender, default=Gender.get_default_gender)
     gender = models.ForeignKey(Gender, null=True, blank=True)
 
     class Meta:
@@ -640,7 +635,12 @@ def create_user_profile(sender, instance, created, **kwargs):
     default_lang, lang_created = Language.objects.get_or_create(code='fi', title='suomi', slug='finnish')
     default_role, role_created = Role.objects.get_or_create(name='student', permission_level=1)
     default_organization, organization_created = Organization.objects.get_or_create(name='TTY', slug='tty', language=default_lang, country=default_country)
-    default_gender, gender_created = Gender.objects.get_or_create(name='male', abbr='M')
+    default_gender = None
+    try:
+        default_gender = Gender.objects.get(abbr='M')
+    except Gender.DoesNotExist:
+        pass
+    #default_gender, gender_created = Gender.objects.get_or_create(name='male', abbr='M')
 
     if created:
         try:
