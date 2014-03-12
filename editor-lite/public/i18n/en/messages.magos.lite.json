@@ -194,6 +194,11 @@
     "Save instructions": "Save instructions",
     "instructions_info": "Write the instructions for your game here. Try to make them as clear as possibile. Be sure to describe the main aim of the game.",
 
+    "My games": "My games",
+    "Select game to edit": "Select game to edit",
+    "Change game": "Change game",
+    "my_games_info": "You can change the game you are editing.",
+
     "Play": "Play",
     "Edit": "Edit",
     "Score": "Score",

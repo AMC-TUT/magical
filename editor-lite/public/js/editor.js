@@ -17,6 +17,7 @@ function showWarning(warning){
 var editor = {
 	djangoUrl: 'http://localhost:8080',
 	apiUrl: '/api/v1/games/',
+	apiBaseUrl: '/api/v1/',
 	user: null,
 	initial: true,
 	gameSlug: null,
@@ -96,8 +97,10 @@ var editor = {
 
 	getGame: function() {
 		if(this.gameSlug) {
+			utils.user = this.user;
 			utils.djangoUrl = this.djangoUrl; 
 			utils.apiUrl = this.apiUrl;
+			utils.apiBaseUrl = this.apiBaseUrl;
 			utils.getGameToEdit(this.gameSlug, this.initEditor);
 		}
 	},
@@ -196,7 +199,7 @@ var editor = {
 			editor.createMissingErefs(gameinfo.level1.wordRules);			
 			
 			editor.createHelpTexts();
-			
+			editor.bindOpenModals();
 			// create predefined UI elements
 			editor.createUIElements();
 			editor.updateFormValues();
@@ -218,6 +221,26 @@ var editor = {
 		});
 		Crafty.scene('preload');
 	},
+
+	openMyGamesModal: function(games) {
+        console.log(games);
+        $('#usersGame').empty();
+		_.each(games, function(game, index, list) {
+			if(game.slug != editor.gameSlug) {			
+	        	$('#usersGame').append('<option value="' + game.slug + '">' + game.title + '</option>');
+	    	}
+		});
+        $('#myGamesModal').modal('show');
+	},
+
+	bindOpenModals: function() {
+		var self = this;
+        $(document).on('click', '#openMyGames', function(e) {
+            e.preventDefault();
+            utils.getUserGames(self.openMyGamesModal);
+        });
+	},
+
 
 	createHelpTexts: function() {
 		var stage = $('#editor-stage');
@@ -516,6 +539,18 @@ var editor = {
 			var instructions = $('textarea#instructionTxt').val();
 			gameinfo.level1.instructions = instructions;
 			editor.setGame();
+		});
+
+		// change game form
+		$(document).on('submit', 'form#changeGameForm', function(e) {
+			e.preventDefault();
+			var gameSlug = $('#usersGame').val();
+			if(gameSlug != "" && gameSlug != editor.gameSlug) {
+				//editor.gameSlug = gameSlug;
+				//editor.init();
+				var gameEditorUrl = editor.djangoUrl + '/editor-lite/edit/' + gameSlug;
+				window.location = gameEditorUrl; 
+			}
 		});
 
 	},

@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
 from django.template.defaultfilters import slugify
+from django.db import IntegrityError
+from unidecode import unidecode
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Button, Div
 from taggit.forms import *
@@ -86,7 +88,7 @@ class BaseGameForm(forms.ModelForm):
 
     def clean_title(self):
         title = self.cleaned_data['title']
-        slug = slugify(title)
+        slug = slugify(unidecode(title))
         try:
             Game.objects.get(slug=slug)
             raise forms.ValidationError(_(u"Game with the same title exists. Try another title."))
@@ -157,8 +159,12 @@ class GameTagsForm(forms.ModelForm):
         game = super(GameTagsForm, self).save(commit = False)
         tags = self.cleaned_data.get('tags' or None)
         if tags:
-            # add tags as positional arguments to .add()
-            game.tags.add(*tags)
+            print tags
+            for tag in tags:
+                try:
+                    game.tags.add(tag)
+                except IntegrityError:
+                    pass
         return game
 
 

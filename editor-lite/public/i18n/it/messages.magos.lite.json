@@ -194,6 +194,11 @@
     "Save instructions": "Salve le instruzione",
     "instructions_info": "In questo spazio puoi scrivere le istruzioni del tuo gioco. È importante che siano chiare e complete, e che spieghino bene l'obiettivo del gioco.",
 
+    "My games": "My games",
+    "Select game to edit": "Select game to edit",
+    "Change game": "Change game",
+    "my_games_info": "You can change the game you are editing.",
+
     "Play": "Gioca",
     "Edit": "Modifica",
     "Score": "Punteggi",

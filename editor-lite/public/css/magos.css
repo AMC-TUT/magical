@@ -44,7 +44,7 @@ legend {
 	top:2px;
 	z-index:900;
 }
-#preview{
+#preview, #openMyGames {
 	margin-top:30px;
 }
 .dropLabel{
@@ -248,12 +248,12 @@ button.magosLiteBtn {
 }
 
 #playBtn {
-	top: 450px;
-	left: 290px;
+	top: 530px;
+	left: 200px;
 }
 
 #editBtn {
-	top: 450px;
+	top: 530px;
 	left: 490px;
 }
 

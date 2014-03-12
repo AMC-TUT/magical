@@ -1,7 +1,10 @@
 
 utils = {
+	user: null,
 	djangoUrl: null,
 	apiUrl: null,
+	apiUrl: null,
+	apiBaseUrl: null,
 
 	loadAudio: function() {
 		var loading_msg = i18n.t("Loading audio...");
@@ -94,6 +97,26 @@ utils = {
 	        });
 		}
 	},
+
+	/* Get list of games where user is author */
+	getUserGames: function(callback) {
+		var self = this;
+		if(self.user) {
+	        var ajaxUrl = this.djangoUrl + this.apiBaseUrl + 'users_games/' + self.user.userName;
+	        var ajaxReq = $.ajax({
+	            dataType : 'json',
+	            type : 'GET',
+	            url : ajaxUrl
+	        });
+	        ajaxReq.done(function ( data, textStatus, jqXHR ) {
+	            callback.call(editor, data.games);
+	        });
+	        ajaxReq.fail(function (jqXHR, textStatus, errorThrown) {
+	        });
+		}
+
+	},
+
 
 	uppercaseAll: function() {
 		$('body, button, select, input').css({ 'text-transform': 'uppercase'});

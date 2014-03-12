@@ -293,7 +293,6 @@ def game_details(request, gameslug):
             context['tags_form'] = tags_form
             if tags_form.is_valid():
                 game = tags_form.save()
-                print game.tags.all()
                 #game.image = image_form.cleaned_data['image']
                 #game.save()
                 return redirect('game_details', gameslug=game.slug)

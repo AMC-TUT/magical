@@ -4,14 +4,90 @@ from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 from audiofield.fields import AudioField
 import datetime, mimetypes, hashlib, time
+from unidecode import unidecode
+from autoslug import AutoSlugField
 from imagekit.models import ImageSpecField
 from django.conf import settings
 from polymorphic import PolymorphicModel
+from django.db import models, IntegrityError, transaction
 
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.template.defaultfilters import slugify
 from taggit.managers import TaggableManager
+
+from taggit.managers import TaggableManager
+from taggit.models import TagBase, GenericTaggedItemBase
+
+try:
+    atomic = transaction.atomic
+except AttributeError:
+    from contextlib import contextmanager
+
+    @contextmanager
+    def atomic(using=None):
+        sid = transaction.savepoint(using=using)
+        try:
+            yield
+        except IntegrityError:
+            transaction.savepoint_rollback(sid, using=using)
+            raise
+        else:
+            transaction.savepoint_commit(sid, using=using)
+
+class MagosTag(TagBase):
+    """
+    Custom tag class for django-taggit
+    """
+    class Meta:
+        verbose_name = _("Tag")
+        verbose_name_plural = _("Tags")
+
+    def save(self, *args, **kwargs):
+        # This is already fixed in trunk of django-taggit
+        # Remove when updating django-taggit
+        if not self.pk and not self.slug:
+            self.slug = self.slugify(self.name)
+            from django.db import router
+            using = kwargs.get("using") or router.db_for_write(
+                type(self), instance=self)
+            # Make sure we write to the same db for all attempted writes,
+            # with a multi-master setup, theoretically we could try to
+            # write and rollback on different DBs
+            kwargs["using"] = using
+            # Be oportunistic and try to save the tag, this should work for
+            # most cases ;)
+            try:
+                with atomic(using=using):
+                    res = super(MagosTag, self).save(*args, **kwargs)
+                return res
+            except IntegrityError:
+                pass
+            # Now try to find existing slugs with similar names
+            slugs = set(MagosTag.objects.filter(slug__startswith=self.slug)\
+                                   .values_list('slug', flat=True))
+            i = 1
+            while True:
+                slug = self.slugify(self.name, i)
+                if slug not in slugs:
+                    self.slug = slug
+                    # We purposely ignore concurrecny issues here for now.
+                    # (That is, till we found a nice solution...)
+                    return super(MagosTag, self).save(*args, **kwargs)
+                i += 1
+        else:
+            return super(MagosTag, self).save(*args, **kwargs)
+
+    def slugify(self, tag, i=None):
+        slug = slugify(unidecode(tag))
+        if i is not None:
+            slug += "_%d" % i
+        return slug
+
+
+class MagosTaggedKeys(GenericTaggedItemBase):
+    tag = models.ForeignKey(MagosTag, related_name="%(app_label)s_%(class)s_items")
+
 
 # Game block sizes (32, 48, 64)
 BLOCK_SIZE_CHOICES = (
@@ -106,7 +182,11 @@ class Role(models.Model):
 class Language(models.Model):
     """Language model"""
     title = models.CharField(max_length=45, null=False, blank=False)
-    slug = models.SlugField(max_length=45, unique=True, null=False, blank=False)
+    slug = AutoSlugField(
+        populate_from=lambda instance: instance.title,
+        unique_with=['title', 'code'],
+        slugify=lambda value: unidecode(value)
+    )
     code = models.CharField(max_length=2, null=False, blank=False)
 
     class Meta:
@@ -120,7 +200,12 @@ class Language(models.Model):
 class Country(models.Model):
     """Country model"""
     name = models.CharField(max_length=45, null=False, blank=False)
-    slug = models.SlugField(max_length=45, null=False, blank=False)
+    #slug = models.SlugField(max_length=45, null=False, blank=False)
+    slug = AutoSlugField(
+        populate_from=lambda instance: instance.name,
+        unique_with=['name'],
+        slugify=lambda value: unidecode(value)
+    )
 
     class Meta:
         verbose_name = _('country')
@@ -451,7 +536,7 @@ class Game(PolymorphicModel):
         blank = True, 
         null = True
     )
-    tags = TaggableManager()
+    tags = TaggableManager(through=MagosTaggedKeys)
 
     class Meta:
         verbose_name = _('game')
@@ -662,7 +747,7 @@ post_save.connect(create_user_profile, sender=User)
 def slugify_title_callback(sender, instance, *args, **kwargs):
     # TODO: We can't do it this way, game slug should not be edited!
     if hasattr(instance, 'title') and hasattr(instance, 'slug'):
-        instance.slug = slugify(instance.title)
+        instance.slug = slugify(unidecode(instance.title))
 
 
 # store additonal user info when user logs in

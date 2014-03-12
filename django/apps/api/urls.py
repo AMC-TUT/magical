@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, url
 from apps.api.views import UsersListView, UserDetailView, LanguagesListView, HighscoreListView, \
     GameReviewView, ImageView, ImageUpdateView, ImageSearchView, AudioView, AudioUpdateView, \
-    AudioSearchView, GameView, GameDetailView, RevisionView
+    AudioSearchView, GameView, GameDetailView, RevisionView, UsersGamesView
 
 urlpatterns = patterns('',
     # PORTAL
@@ -22,6 +22,8 @@ urlpatterns = patterns('',
     # games
     url(r'^games$', GameView.as_view(), name='game-view'), # GET, POST
     url(r'^games/(?P<gameslug>[\w.@+-]+)$', GameDetailView.as_view(), name='game-detail-view'), #GET, PUT
+
+    url(r'^users_games/(?P<username>[\w.@+-]+)$', UsersGamesView.as_view(), name='users-games-view'), # GET
 
     # revisions
     url(r'^revisions/(?P<gameslug>[\w.@+-]+)$', RevisionView.as_view(), name='revision-view'), #GET, POST

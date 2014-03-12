@@ -52,6 +52,10 @@
 			<!-- Button trigger PUBLISH GAME -->
 			<button type="button" class="btn btn-success btn-block" onclick="editor.publishGame()"><%= t('Publish') %></button>
 
+
+			<!-- Button trigger INFO -->
+			<button type="button" class="btn btn-warning btn-block" id="openMyGames"><%= t('My games') %></button>
+
 		</div>
 
 	</div> <!-- editor-stage -->
@@ -71,6 +75,7 @@
 <%- include partials/modal-playertype.html %>
 <%- include partials/modal-feedback.html %>
 <%- include partials/modal-settings.html %>
+<%- include partials/modal-my-games.html %>
 
 <!-- Footer -->
 <% include foot_editor.html %>

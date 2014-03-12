@@ -194,6 +194,11 @@
     "Save instructions": "Tallenna peliohjeet",
     "instructions_info": "Voit kirjoittaa ohjeet pelillesi. Yritä kirjoittaa selkeät ohjeet ja painottaa pelin päätavoitetta.",
 
+    "My games": "Minun pelini",
+    "Select game to edit": "Valitse muokattava peli",
+    "Change game": "Muokkaa peliä",
+    "my_games_info": "Voit vaihtaa muokattavaa peliä.",
+
     "Play": "Pelaa",
     "Edit": "Muokkaa peliä",
     "Score": "Pisteet",

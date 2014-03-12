@@ -1143,3 +1143,46 @@ class UserDetailView(ResponseMixin, View):
     def dispatch(self,*args,**kwargs):
         return super(UserDetailView,self).dispatch(*args,**kwargs)
         
+
+class UsersGamesView(ResponseMixin, View):
+    renderers = DEFAULT_RENDERERS
+ 
+    def get(self, request, username):
+        """
+        Magos B games where user is an author
+        """
+        session_user = request.user
+        if not session_user.is_authenticated():
+            response = Response(403, {'statusCode': 403, 'message' : 'Not authorized'})
+            return self.render(response)
+        organization = session_user.get_profile().organization        
+        try:
+            user = User.objects.get(username=username, userprofile__organization=organization)
+        except User.DoesNotExist:
+            response = Response(404, {'statusCode': 404, 'message' : 'User not found'})
+            return self.render(response)
+        profile = user.get_profile()
+        game_ids = user.author_set.all().values_list('game__id', flat=True)
+
+        games = Game.objects.instance_of(MagosBGame).filter(id__in=game_ids)
+
+        games_list = []
+        for game in games:
+            game_dict = {}
+            game_dict['title'] = game.title
+            game_dict['slug'] = game.slug
+            game_dict['created'] = game.created
+            game_dict['updated'] = game.updated
+            games_list.append(game_dict)
+
+        user_dict = {}
+        user_dict['userName'] = user.username
+        user_dict['games'] = games_list
+        response = Response(200, user_dict)
+        return self.render(response)
+
+        
+    @method_decorator(csrf_exempt)
+    def dispatch(self,*args,**kwargs):
+        return super(UsersGamesView,self).dispatch(*args,**kwargs)
+

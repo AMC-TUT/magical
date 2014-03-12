@@ -174,13 +174,13 @@ var game = {
 			}
 	
 			Crafty.e("TitleText, DOM, 2D, Text")
-			.attr({ x: 200, y: 170, w: 600, h: 300 })
+			.attr({ x: 200, y: 100, w: 600, h: 300 })
 			.text(game.title)
 			.textFont({ size: '45px', weight: 'bold' })
 			.textColor('#000000');
 			
 			Crafty.e("IntroText, DOM, 2D, Text")
-			.attr({ x: 200, y: 280, w: 600, h: 300 })
+			.attr({ x: 200, y: 180, w: 600, h: 300 })
 			.text(game.instructions)
 			.textFont({ size: '25px', weight: 'bold' })
 			.textColor('#000000');
