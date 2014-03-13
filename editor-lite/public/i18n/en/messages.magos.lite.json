@@ -137,6 +137,7 @@
     "tomato": "tomato",
     "broccoli": "broccoli",
     "eggplant": "eggplant",
+    "diamond": "diamond",
     "collectibles_info": "Collectibles are moving elements that the player tries to collect in order to win game points. To collect them, the player has to bump into them as they approach. Use these controls to add collectibles to your game and to fix the frequency of their appearance.",
 
     "Hazard properties": "Hazard properties",
