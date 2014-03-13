@@ -63,6 +63,7 @@ var textures =  {
 	"tomato": "/editor-lite/static/img/tomato.png",
 	"broccoli": "/editor-lite/static/img/broccoli.png",
 	"eggplant": "/editor-lite/static/img/eggplant.png",
+	"diamond": "/editor-lite/static/img/diamond.png",
 
 	"gift": "/editor-lite/static/img/gift.png",
 	"sky-small-clouds": "/editor-lite/static/img/sky-small-clouds.png",
