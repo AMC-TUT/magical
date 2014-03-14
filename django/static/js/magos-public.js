@@ -12,7 +12,7 @@ App.games = {
     },
 
     bindPlayEditButtons: function() {
-        $(document).on('click', '#playLatest', function(e) {
+        $(document).on('click', '#playLatest, #playGameBtn, #editGameBtn, #gamePermalink', function(e) {
             e.preventDefault();
             var url = $(this).attr('href');
             if(url) {

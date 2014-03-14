@@ -687,8 +687,8 @@ def rate_game(request, game_pk, stars):
                 review = Review(game=game, user=user, stars=stars)
             review.save()
 
-    json = json.dumps({ 'success': True })
-    return HttpResponse(json, mimetype='application/json')
+    json_data = json.dumps({ 'success': True })
+    return HttpResponse(json_data, mimetype='application/json')
 
 @login_required
 def add_author(request, gameslug):
