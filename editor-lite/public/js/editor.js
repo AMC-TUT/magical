@@ -92,7 +92,18 @@ var editor = {
 
 	init: function() {
 		this.checkIfMobile();
+		this.bindBackToPortal();
 		utils.i18nInit(this.user.lang_code, this.getGame, editor);
+	},
+
+	bindBackToPortal: function() {
+        $(document).on('#backToPortal', function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            if(url) {
+                window.location = url;
+            }
+        });
 	},
 
 	getGame: function() {
@@ -171,8 +182,7 @@ var editor = {
 		this.hazards = [];
 		this.powerUps = [];
 		this.gameMode = "normal";
-		
-		
+				
 		if(this.isMobile) $('#fullScreenBtn').hide();
 
 		// ###### PRELOAD ############## Preload all media used by the game and the selected level
