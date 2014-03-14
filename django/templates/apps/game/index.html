@@ -27,7 +27,7 @@
                         <h1>{% blocktrans with game_title=latest_revision.game.title %}{{ game_title }} is Out!{% endblocktrans %}</h1>
                         <p>
                             {% trans 'Experience the latest game in your Magos universe.' %}
-                            <br><a id="playLatest" class="btn btn-primary" type="button" href="{{ play_url }}{{ latest_revision.game.slug }}" target="_blank">{% trans 'Play now' %}</a>
+                            <br><a id="playLatest" class="btn btn-primary" type="button" href="{{ play_url }}{{ latest_revision.game.slug }}">{% trans 'Play now' %}</a>
                         </p>
                     </div>
                 </div>

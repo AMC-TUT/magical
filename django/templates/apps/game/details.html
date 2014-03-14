@@ -74,9 +74,9 @@
             <div id="response"></div>
         {% endif %}
         <p>
-            <a class="btn btn-primary" href="{{ play_url }}{{ game.slug }}" target="_blank">{% trans 'Play game' %}</a> 
+            <a class="btn btn-primary" href="{{ play_url }}{{ game.slug }}">{% trans 'Play game' %}</a> 
             {% if can_edit %}
-            <a class="btn btn-warning" href="{{ editor_url }}{{ game.slug }}" target="_blank">{% trans 'Launch game editor' %}</a> {% endif %}
+            <a class="btn btn-warning" href="{{ editor_url }}{{ game.slug }}">{% trans 'Launch game editor' %}</a> {% endif %}
         </p>
 
         <hr />
