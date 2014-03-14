@@ -110,6 +110,7 @@
     <script src="{{ STATIC_URL }}js/lib/jquery.form.min.js"></script>
     <script src="{{ STATIC_URL }}js/lib/underscore-min.js"></script>
     <script src="{{ STATIC_URL }}js/lib/jquery.blockUI.js"></script>
+    <script src="{{ STATIC_URL }}js/lib/jquery.stayInWebApp.min.js"></script>
     <script src="{{ STATIC_URL }}js/lib/noty/jquery.noty.js"></script>
     <script src="{{ STATIC_URL }}js/lib/noty/layouts/top.js"></script>
     <script src="{{ STATIC_URL }}js/lib/noty/themes/default.js"></script>
@@ -143,6 +144,8 @@
             function redirectToLogin() {
                 window.location.href = '{{ login_url }}';
             }
+
+            $.stayInWebApp();
 
             {% if user_settings %}
                 var use_uppercase_text = {{ user_settings.use_uppercase_text|yesno:"true,false" }};
