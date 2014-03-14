@@ -156,7 +156,7 @@ var game = {
 			stage.append(playBtn);
 			playBtn.click(function() {
 				utils.playSound('jippii');
-				$('#playBtn, #editBtn').remove();
+				$('#playBtn, #editBtn, #backBtn').remove();
 				Crafty.scene('game');
 			});
 
@@ -167,9 +167,18 @@ var game = {
 				editBtn.text(i18n.t('Edit'));
 				stage.append(editBtn);
 				editBtn.click(function() {
-					$('#playBtn, #editBtn').remove();
+					$('#playBtn, #editBtn, #backBtn').remove();
 					$("#editor-stage").show();
 					Crafty.scene('editor');
+				});
+			} else {
+				var backBtn = $('<button>');
+				backBtn.attr('id', 'backBtn');
+				backBtn.addClass('btn btn-danger magosLiteBtn');
+				backBtn.text(i18n.t('Back'));
+				stage.append(backBtn);
+				backBtn.click(function() {
+					window.location = game.djangoUrl;
 				});
 			}
 	

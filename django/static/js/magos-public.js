@@ -8,7 +8,19 @@ App.games = {
         // load magos games as default tab content
         this.listGames('B', $('.active a')[0].hash , $('.active a'));
         this.bindGames();
+        this.bindPlayEditButtons();
     },
+
+    bindPlayEditButtons: function() {
+        $(document).on('click', '#playLatest', function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            if(url) {
+                window.location = url;
+            }
+        });
+    },
+
     bindGames: function() {
         var self = this;
         // bind tab click

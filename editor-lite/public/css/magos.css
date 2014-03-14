@@ -252,10 +252,12 @@ button.magosLiteBtn {
 	left: 200px;
 }
 
-#editBtn {
+#editBtn, #backBtn {
 	top: 530px;
 	left: 490px;
 }
+
+
 
 .starsText {
 	line-height: 50px;
