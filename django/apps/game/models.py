@@ -536,7 +536,7 @@ class Game(PolymorphicModel):
         blank = True, 
         null = True
     )
-    tags = TaggableManager(through=MagosTaggedKeys)
+    tags = TaggableManager(through=MagosTaggedKeys, blank=True)
 
     class Meta:
         verbose_name = _('game')
