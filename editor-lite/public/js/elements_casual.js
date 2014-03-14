@@ -92,7 +92,7 @@ var textures =  {
 	"ground": "/editor-lite/static/img/ground.png",
 	"exit": "/editor-lite/static/img/exit.png",
 	"playBtn": "/editor-lite/static/img/play.png",
-	"parachute": "/editor-lite/static/img/parachute.png"
+	"parachute": "/editor-lite/static/img/parachute.png",
 };
 
 
@@ -111,7 +111,6 @@ var textureMenu =  {
 		{text:"monster truck", value:"monster-truck"},
 		{text:"car", value:"car"},
 		{text:"skater", value:"skater"}
-
 	],
 	airPlayers:[
 		{text:"magos-girl", value:"magos-girl"},
