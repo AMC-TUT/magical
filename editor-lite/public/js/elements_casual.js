@@ -24,6 +24,7 @@ var textures =  {
 	"houses3": "/editor-lite/static/img/parallax/houses3.png",
 	"desert": "/editor-lite/static/img/parallax/desert2.png",
 	"city-dark": "/editor-lite/static/img/parallax/city-dark.png",
+	"city-dark-blue": "/editor-lite/static/img/parallax/city-dark-blue.png",
 	"sky-blue": "/editor-lite/static/img/parallax/sky-blue.png",
 	"sky-grey": "/editor-lite/static/img/parallax/sky-grey.png",
 	"flappy": "/editor-lite/static/img/parallax/flappy-bg.png",
