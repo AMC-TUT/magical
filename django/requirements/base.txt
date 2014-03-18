@@ -44,3 +44,4 @@ django-jsonview==0.3.0
 django-modeltranslation==0.7.3
 Unidecode==0.04.14
 django-autoslug==1.7.2
+easy-thumbnails==1.5

@@ -1,9 +1,14 @@
+{% load thumbnail %}
 {% load i18n %}
 {% if games %}
 	<ul class="games-list">
 	{% for game in games %}
         <li>
-            <img src="{{ STATIC_URL }}img/thumbs/super-magos.png">
+            {% if game.image %}
+                <img src="{% thumbnail game.image 180x72 crop %}" alt="" />
+            {% else %}
+                <img src="{{ STATIC_URL }}img/empty-game-image.png">
+            {% endif %}
             <h1><a href="/game/details/{{ game.slug }}">{{ game.title }}</a></h1>
             <p>{{ game.description|truncatechars:60 }}</p>
         </li>

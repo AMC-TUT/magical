@@ -223,6 +223,7 @@ THIRD_PARTY_APPS = (
     'taggit',
     'crispy_forms',
     'modeltranslation',
+    'easy_thumbnails',
 )
 
 # Apps specific for this project

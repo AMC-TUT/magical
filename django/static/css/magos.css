@@ -410,13 +410,13 @@ ul.nav {
 }
 
 .games-list li {
-    display:block;
-    float:left;
-    width: 152px;
+    display: block;
+    float: left;
+    width: 180px;
     height: 180px;
     overflow: hidden;
-    margin-right: 20px;
-    margin-bottom: 20px;
+    margin-right: 5px;
+    margin-bottom: 5px;
 }
 
 .games-list h1 {
@@ -433,7 +433,7 @@ ul.nav {
 }
 
 .games-list p {
-
+    padding: 10px;
 }
 
 .errors, .errorlist {
@@ -568,4 +568,15 @@ a.removeTag:hover {
 
 #cancelCreateGame {
     float:right;
+}
+
+.games-list > li {
+    border-radius: 0 0 5px 5px;
+    -moz-border-radius: 0 0 5px 5px;
+    -webkit-border-radius: 0 0 5px 5px;
+    -o-border-radius: 0 0 5px 5px;
+    box-shadow:inset 0px 0px 10px rgba(0,0,0,.1), 4px 4px 10px rgba(255,255,255,0.1);
+    -webkit-box-shadow:inset 0px 0px 10px rgba(0,0,0,0.1), 4px 4px 10px rgba(255,255,255,0.1);
+    -moz-box-shadow:inset 0px 0px 10px rgba(0,0,0,0.1), 4px 4px 10px rgba(255,255,255,0.1);
+
 }
