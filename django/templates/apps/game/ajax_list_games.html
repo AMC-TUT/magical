@@ -5,7 +5,7 @@
 	{% for game in games %}
         <li>
             {% if game.image %}
-                <img src="{% thumbnail game.image 180x72 crop %}" alt="" />
+                <img src="{% thumbnail game.image 180x72 crop="smart" %}" alt="" />
             {% else %}
                 <img src="{{ STATIC_URL }}img/empty-game-image.png">
             {% endif %}
