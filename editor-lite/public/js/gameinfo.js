@@ -27,6 +27,7 @@ var gameinfo = {
 		extraLife: false,
 		turboSpeed: false,
 		bgcolor: "#F2F2F2",
+		fontColor: "#000000",
 		star3limit: 0,
 		star2limit: 0,
 		star1limit: 0,

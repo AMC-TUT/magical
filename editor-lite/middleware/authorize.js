@@ -6,12 +6,13 @@
 
 var _ = require('underscore')._,
 	config = require("../config"),
+	rest = require('restler'),
 	redis = require("redis"),
     redisClient = redis.createClient(config.redis.port, config.redis.ip);
 
 
 function base64Decode(encoded) {
-  return new Buffer(encoded || '', 'base64').toString('utf8');
+	return new Buffer(encoded || '', 'base64').toString('utf8');
 }
 
 // parse base64 encoded Django session object to JSON
@@ -42,22 +43,15 @@ function parseSessionObject(data) {
 module.exports = function(req, res, next) {
 	var gameSlug = req.params.slug;
 	if(req.session.user && req.session.isAuthenticated && gameSlug) {
-	    redisClient.get('game:' + gameSlug, function(err, data) {
-	    	if(!_.isNull(data)) {
-	    		// game data in Redis db
-		        var game = JSON.parse(data);
-		        var user = _.find(game.authors, function(author) { return author.userName === req.session.user.userName });
-		        if(user) {
-					console.log('USER AUTHORIZED! %s', gameSlug);
-					next();
-				} else {
-				    res.redirect('/');
-				    return false;					
-				}
+		rest.get(config.express.djangoUrl + '/api/v1/games/' + gameSlug).on('complete', function(result) {
+		    var game = result;
+	        var user = _.find(game.authors, function(author) { return author.userName === req.session.user.userName });
+	        if(user) {
+				console.log('USER AUTHORIZED! %s', gameSlug);
+				next();
 			} else {
-				// game does not exist
 			    res.redirect('/');
-			    return false;
+			    return false;					
 			}
 		});
 	} else {

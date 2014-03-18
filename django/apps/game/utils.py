@@ -125,14 +125,6 @@ def init_redis():
 
 def get_redis_game_data(gameslug):
     redis_db = init_redis()
-    """
-    redis_db = Redis(
-        host=getattr(settings, 'SESSION_REDIS_HOST', 'localhost'),
-        port=getattr(settings, 'SESSION_REDIS_PORT', 6379),
-        db=getattr(settings, 'SESSION_REDIS_DB', 0),
-        password=getattr(settings, 'SESSION_REDIS_PASSWORD', None)
-    )
-    """
     prefix = getattr(settings, 'GAME_REDIS_PREFIX', '')
     game_key = ':'.join([prefix, gameslug])
     data = redis_db.get(game_key)
@@ -143,6 +135,11 @@ def set_redis_game_data(gameslug, data):
     prefix = getattr(settings, 'GAME_REDIS_PREFIX', '')
     game_key = ':'.join([prefix, gameslug])
     data = redis_db.set(game_key, data)
-
     return True
 
+def del_redis_game(gameslug):
+    redis_db = init_redis()
+    prefix = getattr(settings, 'GAME_REDIS_PREFIX', '')
+    game_key = ':'.join([prefix, gameslug])
+    redis_db.delete(game_key)
+    return True

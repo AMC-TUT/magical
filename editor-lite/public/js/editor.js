@@ -53,7 +53,8 @@ var editor = {
 	ymov: null,
 	itemInterval: null,
 	bgcolor: null,
-	
+	fontColor: "#000000",
+
 	instructions: null,
 	title: null,
 
@@ -83,7 +84,7 @@ var editor = {
 	            url: ajaxUrl
 	        });
 	        ajaxReq.done(function ( data, textStatus, jqXHR ) {
-	        	utils.notify(i18n.t("Game saved"), 'success');       	
+	        	utils.notify(i18n.t("Game saved"), 'success');
 	        });
 	        ajaxReq.fail(function (jqXHR, textStatus, errorThrown) {
 	        });
@@ -201,12 +202,12 @@ var editor = {
 
 		// ###### EDITOR ############## Preload all media used by the game and the selected level
 		Crafty.scene('editor', function() {
-			Crafty.background(gameinfo["level1"].bgcolor);
+			Crafty.background(gameinfo.level1.bgcolor);
 			editor.getGameData();
 
 			Crafty.e("2D, DOM, Image, heart").attr({x: 30, y: 10, z: 1100});
 			
-			editor.createMissingErefs(gameinfo.level1.wordRules);			
+			editor.createMissingErefs(gameinfo.level1.wordRules);
 			
 			editor.createHelpTexts();
 			editor.bindOpenModals();
@@ -293,7 +294,7 @@ var editor = {
 			scroll3Help.text(i18n.t('Scrolling element 3'));
 			stage.append(scroll3Help);
 		}
-
+		this.changeFontColor();
 	},
 
 	updateFormValues: function() {
@@ -367,6 +368,9 @@ var editor = {
 			$('select#colorList').val(gameinfo.level1.bgcolor);
 		}
 
+		if(gameinfo.level1.fontColor) {
+			$('select#fontColorList').val(gameinfo.level1.fontColor);
+		}
 
 		if(gameinfo.level1.itemInterval) {
 			$('select#itemIntervalList').val(gameinfo.level1.itemInterval);
@@ -424,6 +428,11 @@ var editor = {
 		if(gameinfo.level1.bgcolor) {
     		editor.changeBgColor();			
 		}
+		// font color
+		if(gameinfo.level1.fontColor) {
+    		editor.changeFontColor();
+		}
+		
 		if(gameinfo.level1.sky) {
     		editor.changeSkyImg();
 		}
@@ -667,6 +676,16 @@ var editor = {
     		editor.setGame();
     		editor.changeBgColor(valueSelected);
 		});
+
+		// font color
+		$('select#fontColorList').change(function() {
+    		var valueSelected = this.value;
+    		utils.playSound('blop');
+    		gameinfo.level1.fontColor = valueSelected;
+    		editor.setGame();
+    		editor.changeFontColor(valueSelected);
+		});
+
 		// static background element
 		$('select#skyList').change(function() {
     		var valueSelected = this.value;
@@ -932,6 +951,19 @@ var editor = {
 		}
 		if(this.bgcolor) {
 			Crafty.background(this.bgcolor);
+		}
+	},
+
+	changeFontColor: function(colorVal) {
+		if(_.isUndefined(colorVal) || _.isNull(colorVal)) {
+			this.fontColor = gameinfo.level1.fontColor;
+		} else {
+			this.fontColor = gameinfo.level1.fontColor = colorVal;
+		}
+		if(this.fontColor) {
+			$('.stageHelp, .scrollHelp').css({
+				color: this.fontColor
+			});
 		}
 	},
 

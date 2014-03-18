@@ -172,12 +172,13 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
             response = Response(404, {'statusCode': 404, 'message' : 'Game not found'})
             return self.render(response)
         if game:
-            if not game.state == 2:
+            #if not game.state == 2:
                 # public games can be accessed even by anonymous users
-                session_user = request.user
-                if not session_user.is_authenticated():
-                    response = Response(403, {'statusCode': 403, 'message' : 'Not authorized'})
-                    return self.render(response)
+            session_user = request.user
+            #print session_user
+            #if not session_user.is_authenticated():
+                #response = Response(403, {'statusCode': 403, 'message' : 'Not authorized'})
+                #return self.render(response)
         result_dict = {}
         result_dict['title'] = game.title
         result_dict['id'] = game.id
@@ -226,6 +227,7 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
         """
         put_data = self.DATA
         session_user = request.user
+        print session_user
         if not session_user.is_authenticated():
             response = Response(403, {'statusCode': 403, 'message' : 'Not authorized'})
             return self.render(response)

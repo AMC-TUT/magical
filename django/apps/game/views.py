@@ -21,9 +21,9 @@ from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from .models import Game, MagosAGame, MagosBGame, Revision, Author, \
         Highscore, Review, Image, Thumbnail, Language, UserSettings
 from .forms import MagosAGameForm, MagosBGameForm, LoginForm, UserRegistrationForm, \
-    BatchCreateUsersForm, GameImageForm, UserSettingsForm, GameTagsForm
+    BatchCreateUsersForm, GameImageForm, UserSettingsForm, GameTagsForm, GameEditForm
 from .decorators import ajax_login_required
-from .utils import get_redis_game_data, set_redis_game_data, create_game_for_redis
+from .utils import get_redis_game_data, set_redis_game_data, create_game_for_redis, del_redis_game
 
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -96,7 +96,6 @@ def user_settings(request):
                 response = form.errors_as_json()
             return HttpResponse(json.dumps(response, ensure_ascii=False),
                     content_type='application/json')
-
     return render(request, tpl, context)
 
 @login_required
@@ -120,6 +119,48 @@ def delete_game(request, gameslug):
         return HttpResponseRedirect(reverse('home'))
 
     return HttpResponseRedirect(reverse('home'))
+
+@login_required
+def edit_game(request, gameslug):
+    tpl = 'apps/game/edit_game.html'
+    context = RequestContext(request)
+    user = request.user
+    isAuthor = False
+    organization = None
+    if user.is_authenticated():
+        organization = user.get_profile().organization
+    else:
+        return HttpResponseRedirect(reverse('home'))
+    game = None
+    try:
+        game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)
+        isAuthor = game.author_set.filter(user=user)
+    except Game.DoesNotExist:
+        raise Http404('Game does not exist')
+
+    if isAuthor or user == game.creator:
+        if request.method == 'POST':
+            form = GameEditForm(request.POST, instance=game)
+            if form.is_valid():
+                game = form.save()
+
+                # update revision data
+                revision = game.get_latest_revision()
+                if revision:
+                    json_data = json.loads(revision.data)
+                    json_data['title'] = game.title
+                    revision.data = json.dumps(json_data)
+                    revision.save()
+
+                return HttpResponseRedirect(
+                    reverse('game_details', args=(game.slug,))
+                )
+        else:
+            form = GameEditForm(instance=game)
+        context['game_form'] = form
+        return render(request, tpl, context)
+    else:
+        raise Http404('Game does not exist')
 
 
 def game_details_id(slug, gameid):
@@ -498,7 +539,7 @@ def save_create_game_b(request):
         revision_data['extraLife'] = False
         revision_data['turboSpeed'] = False
         revision_data['bgcolor'] = "#F2F2F2"
-
+        revision_data['fontColor'] = "#000000"
         revision_data['star3limit'] = 2000
         revision_data['star2limit'] = 1000 
         revision_data['star1limit'] = 500

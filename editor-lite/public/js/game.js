@@ -56,6 +56,7 @@ var game = {
 	groundGravity: null,
 	isJumping: null,
 	characterGround: null,
+	fontColor: "#000000",
 
 	getGameToPlay: function() {
 		if(this.gameSlug) {
@@ -80,8 +81,13 @@ var game = {
 	/* PREVIEW game */
 	initGame: function() {
 		if(!this.preview) utils.initAudio();
+
+		if(gameinfo.level1.fontColor) {
+			this.fontColor = gameinfo.level1.fontColor;			
+		}
+
 		this.mediaLoader = new MediaLoader();
-		this.fontGame = {font: 'Arial', size: 24, color: '#FF0000'};
+		this.fontGame = {font: 'Arial', size: 24, color: this.fontColor};
 		this.playerDead = false;
 		this.score = 0;
 		this.level = 1;
@@ -152,6 +158,7 @@ var game = {
 			var playBtn = $('<button>');
 			playBtn.attr('id', 'playBtn');
 			playBtn.addClass('btn btn-primary magosLiteBtn');
+			playBtn.css({color: game.fontColor });
 			playBtn.text(i18n.t('Play'));
 			stage.append(playBtn);
 			playBtn.click(function() {
@@ -164,6 +171,7 @@ var game = {
 				var editBtn = $('<button>');
 				editBtn.attr('id', 'editBtn');
 				editBtn.addClass('btn btn-success magosLiteBtn');
+				editBtn.css({color: game.fontColor });
 				editBtn.text(i18n.t('Edit'));
 				stage.append(editBtn);
 				editBtn.click(function() {
@@ -175,24 +183,25 @@ var game = {
 				var backBtn = $('<button>');
 				backBtn.attr('id', 'backBtn');
 				backBtn.addClass('btn btn-danger magosLiteBtn');
+				backBtn.css({color: game.fontColor });
 				backBtn.text(i18n.t('Back'));
 				stage.append(backBtn);
 				backBtn.click(function() {
 					window.location = game.djangoUrl;
 				});
 			}
-	
+
 			Crafty.e("TitleText, DOM, 2D, Text")
-			.attr({ x: 200, y: 100, w: 600, h: 300 })
-			.text(game.title)
-			.textFont({ size: '45px', weight: 'bold' })
-			.textColor('#000000');
-			
+				.attr({ x: 200, y: 100, w: 600, h: 300 })
+				.text(game.title)
+				.textFont({ size: '45px', weight: 'bold' })
+				.textColor(game.fontColor);
+
 			Crafty.e("IntroText, DOM, 2D, Text")
-			.attr({ x: 200, y: 180, w: 600, h: 300 })
-			.text(game.instructions)
-			.textFont({ size: '25px', weight: 'bold' })
-			.textColor('#000000');
+				.attr({ x: 200, y: 180, w: 600, h: 300 })
+				.text(game.instructions)
+				.textFont({ size: '25px', weight: 'bold' })
+				.textColor(game.fontColor);
 
 			if(game.user.use_uppercase_text) utils.uppercaseAll();
 
@@ -447,18 +456,16 @@ var game = {
 		   	function completeSky2() {p3tween2.restart();}
 		   	
 			Crafty.e("Score, DOM, 2D, Text")
-			.attr({ x: 730, y: 15, z: 9002, w: 200, h: 20, score: 0 })
-			.text(i18n.t('Score') + ": " + game.score)
-			.textFont({ size: '30px', weight: 'bold' })
-			.css("textShadow", "2px 2px #ffffff")
-			.textColor('#000000');
+				.attr({ x: 730, y: 15, z: 9002, w: 200, h: 20, score: 0 })
+				.text(i18n.t('Score') + ": " + game.score)
+				.textFont({ size: '30px', weight: 'bold' })
+				.textColor(game.fontColor);
 				
 			Crafty.e("Lives, DOM, 2D, Text")
-			.attr({ x: 45, y: 12, w: 50, z:1101, h: 20})
-			.text(game.lives)
-			.textFont({ size: '30px', weight: 'bold' })
-			.textColor('#FFFFFF');
-				
+				.attr({ x: 45, y: 12, w: 50, z:1101, h: 20})
+				.text(game.lives)
+				.textFont({ size: '30px', weight: 'bold' })
+				.textColor('#ffffff');				
 
 			// ############## Collectable #################	
 			function addCollectable() {
@@ -710,7 +717,7 @@ var game = {
 				word.attach(Crafty.e("2D, DOM, Text").attr({y:y+50, x:x+20, w:200, h:40, z:1001}).textFont({ size: '30px', weight: 'bold' }).textColor('#000000').css("textAlign", "center").text(task));
 				*/
 
-				var word = Crafty.e("2D, DOM, Text, Collision").attr({y:y, x:x, result: task, w:200, h:40, z:1001}).textFont({ size: '30px', weight: 'bold' }).textColor('#000000').css("textAlign", "center").text(task);
+				var word = Crafty.e("2D, DOM, Text, Collision").attr({y:y, x:x, result: task, w:200, h:40, z:1001}).textFont({ size: '30px', weight: 'bold' }).textColor(game.fontColor).css("textAlign", "center").text(task);
 
 
 				word.bind('EnterFrame', function () {
@@ -767,7 +774,7 @@ var game = {
 				var brain = Crafty.e("2D, Canvas, cloud, Collision").attr({y:y, x:x, z:1000, result: task});
 				brain.attach(Crafty.e("2D, DOM, Text").attr({y:y+50, x:x+20, w:200, h:40, z:1000}).textFont({ size: '30px', weight: 'bold' }).textColor('#000000').css("textAlign", "center").text(task));
 				*/
-				var brain = Crafty.e("2D, DOM, Text, Collision").attr({y:y, x:x, result: task, w:200, h:40, z:1000}).textFont({ size: '30px', weight: 'bold' }).textColor('#000000').css("textAlign", "center").text(task);
+				var brain = Crafty.e("2D, DOM, Text, Collision").attr({y:y, x:x, result: task, w:200, h:40, z:1000}).textFont({ size: '30px', weight: 'bold' }).textColor(game.fontColor).css("textAlign", "center").text(task);
 
 				brain.bind('EnterFrame', function () {
 					if (this.x>-200){
@@ -996,17 +1003,18 @@ var game = {
 				}*/
 			}
 			
-			var feedbackText;
+			var feedbackText = '';
+			var titleText = i18n.t('Game over') + "! ";
+
 			if(playerDead){
-				feedbackText = i18n.t('Game over') + "! ";
-				if(game.gameMode == "time"){
+				if(game.gameMode == "time") {
 					feedbackText += i18n.t("time_feedback_fail");
 				}
 				if(game.gameMode == "distance") {
 					feedbackText += i18n.t("distance_feedback_fail", { postProcess: 'sprintf', sprintf: [game.reached] });
 				}
 			} else {
-				feedbackText = i18n.t('Well done') + "! ";
+				titleText = i18n.t('Well done') + "! ";
 				if(game.gameMode == "distance"){
 					feedbackText += i18n.t("distance_feedback_success", { postProcess: 'sprintf', sprintf: [game.reached] });
 				}
@@ -1019,7 +1027,20 @@ var game = {
 			var hstars = game.updateHighStars (game.level, game.stars);
 			
 			var scorebg = Crafty.e("2D, DOM, Image, Mouse, scorebg").attr({x: 112, y: 130});
-			var menubtn = Crafty.e("2D, DOM, Image, Mouse, menubtn").attr({x: 700, y: 567, z:1000});
+			//var menubtn = Crafty.e("2D, DOM, Image, Mouse, menubtn").attr({x: 700, y: 567, z:1000});
+			var stage = $('#cr-stage');
+
+			var menuBtn = $('<button>');
+			menuBtn.attr('id', 'menuBtn');
+			menuBtn.addClass('btn btn-warning magosLiteBtn');
+			menuBtn.css({color: game.fontColor });
+			menuBtn.text(i18n.t('Back to menu'));
+			stage.append(menuBtn);
+			menuBtn.click(function() {
+				$('#menuBtn').remove();
+				$(Crafty.canvas._canvas).remove();
+				Crafty.scene('intro');
+			});
 			
 			/*
 			if(game.score>=hscore){
@@ -1032,10 +1053,10 @@ var game = {
 			.textColor('#FFFFFF');
 			*/
 			Crafty.e("LevelText, DOM, 2D, Text")
-			.attr({ x: 180, y: 165, w: 400, h: 50 })
-			.text(i18n.t('LEVEL') + " " + game.level)
-			.textFont({ size: '50px', weight: 'bold' })
-			.textColor('#FFFFFF');
+				.attr({ x: 180, y: 165, w: 400, h: 50 })
+				.text(titleText)
+				.textFont({ size: '50px', weight: 'bold' })
+				.textColor('#FFFFFF');
 			
 			/*Crafty.e("BonusText, DOM, 2D, Text")
 			.attr({ x: 200, y: 380, w: 400, h: 30 })
@@ -1044,16 +1065,16 @@ var game = {
 			.textColor('#FFFFFF');*/
 			
 			Crafty.e("CurScoreText, DOM, 2D, Text")
-			.attr({ x: 200, y: 470, w: 400, h: 30 })
-			.text(i18n.t('Score') + ": "+game.score)
-			.textFont({ size: '30px', weight: 'bold' })
-			.textColor('#FFFFFF');
-			
+				.attr({ x: 200, y: 470, w: 400, h: 30 })
+				.text(i18n.t('Score') + ": "+game.score)
+				.textFont({ size: '30px', weight: 'bold' })
+				.textColor('#FFFFFF');
+
 			Crafty.e("FeedbackText, DOM, 2D, Text")
-			.attr({ x: 200, y: 300, w: 400, h: 40 })
-			.text(feedbackText)
-			.textFont({ size: '30px', weight: 'bold' })
-			.textColor('#FFFFFF');
+				.attr({ x: 200, y: 300, w: 400, h: 40 })
+				.text(feedbackText)
+				.textFont({ size: '30px', weight: 'bold' })
+				.textColor('#FFFFFF');
 			
 			for(var j=0; j<3; j++){
 				//Crafty.e("2D, DOM, Image, star-dark").attr({x: 550+(j*70), y: 185});
@@ -1071,11 +1092,12 @@ var game = {
 				Crafty.e("2D, DOM, Image, newhighscore").attr({x: 550, y: 500});
 			}
 			*/
-			
+			/*
 			menubtn.bind('Click', function() {
 				$(Crafty.canvas._canvas).remove();
 				Crafty.scene('intro');
 			});
+			*/
 			
 			
 		});
@@ -1236,8 +1258,8 @@ Crafty.c('GameTimer', {
         this.w = 300;
         this.h = 30;
 		this.textFont({ size: '30px', weight: 'bold' });
-		this.css("textShadow", "2px 2px #ffffff");
-		this.textColor('#000000');
+		//this.css("textShadow", "2px 2px #ffffff");
+		this.textColor(game.fontColor);
         this.interval = setInterval('Crafty.trigger("Tick")', 1000);
         this.text(i18n.t('Time') + ": " + this.timeLeft);
         this.bind("StopTimer", function() {
@@ -1276,8 +1298,8 @@ Crafty.c('GameClock', {
         this.w = 300;
         this.h = 30;
 		this.textFont({ size: '30px', weight: 'bold' });
-		this.textColor('#000000');
-		this.css("textShadow", "2px 2px #ffffff");
+		this.textColor(game.fontColor);
+		//this.css("textShadow", "2px 2px #ffffff");
         this.interval = setInterval('Crafty.trigger("Tick")', 1000);
         this.text(i18n.t('Time') + ": " + this.duration);
         this.bind("StopTimer", function() {
@@ -1301,8 +1323,7 @@ Crafty.c('DistanceMeter', {
         this.w = 400;
         this.h = 30;
 		this.textFont({ size: '30px', weight: 'bold' });
-		this.textColor('#000000');
-		this.css("textShadow", "2px 2px #ffffff");
+		this.textColor(game.fontColor);
         this.text(this.meter + " m / " + this.goal + " m");
         this.counter = 0;
         this.bind("EnterFrame", function(frame) {
@@ -1372,8 +1393,7 @@ Crafty.c("ScoreAnimation", {
        		this.z = 5000;
        	 	this.text(_points);
        	 	this.textFont({ size: '30px', weight: 'bold' });
-       		this.css("textShadow", "2px 2px #ffffff");
-			this.textColor('#000000');
+			this.textColor(game.fontColor);
      		TweenLite.to(this._element, 2, {scale:2, ease:Linear.easeNone, onComplete:completeScore, onCompleteParams:[this]});
      	}
      }

@@ -1,0 +1,35 @@
+{% extends "apps/game/game_base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block bodyclass %}create{% endblock %}
+
+{% block content %}
+    
+                    
+
+        <div class="row wide-content">
+                    
+            <div id="main-content" class="col-xs-8">
+            	<h1>{% trans 'Edit game' %}</h1>
+
+                {% crispy game_form %}
+
+            </div>
+        
+            <div id="sidebar" class="col-xs-4">
+                {% include 'apps/game/sidebar.html' %}
+            </div>
+
+        </div>
+    
+    
+{% endblock %}
+
+{% block extrajs %}
+<script>
+$(document).ready(function() {
+    
+}); // document ready
+</script>
+{% endblock %}

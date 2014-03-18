@@ -100,7 +100,8 @@
                 
         <hr />
         {% if can_edit %}
-            <button class="btn btn-danger" id="deleteGame" href="{% url 'delete_game' game.slug%}">{% trans 'Delete game' %}</button>
+            <a class="btn btn-primary" id="editGame" href="{% url 'edit_game' game.slug %}"><i class="fa fa-pencil"></i> {% trans 'Edit game information' %}</a>
+            <button class="btn btn-danger" id="deleteGame" href="{% url 'delete_game' game.slug %}">{% trans 'Delete game' %}</button>
         {% endif %}
 
     {% endif %}

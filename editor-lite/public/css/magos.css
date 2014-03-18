@@ -257,7 +257,10 @@ button.magosLiteBtn {
 	left: 490px;
 }
 
-
+#menuBtn {
+	top: 540px;
+	left: 660px;
+}
 
 .starsText {
 	line-height: 50px;

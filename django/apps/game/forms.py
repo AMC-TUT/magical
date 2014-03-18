@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
+from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 from django.db import IntegrityError
 from unidecode import unidecode
@@ -97,6 +98,45 @@ class BaseGameForm(forms.ModelForm):
             pass
         return title
 
+
+class GameEditForm(BaseGameForm):
+
+    class Meta:
+        model = Game
+        include = ['title' , 'description', ]     
+
+    def __init__(self, *args, **kwargs):
+        super(GameEditForm,self).__init__(*args, **kwargs)
+        self.fields.pop('tags')
+        self.fields.pop('slug')
+        self.fields.pop('state')
+
+        self.helper = FormHelper()
+        self.helper.form_id = 'editGameForm'
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-sm-2'
+        self.helper.field_class = 'col-sm-5'
+        self.helper.form_method = 'post'
+        self.helper.form_action = reverse('edit_game', args=(self.instance.slug,))
+        self.helper.layout = Layout(
+            'title',
+            'description',
+            Div(
+                Submit('edit_game', _(u'Edit game'), css_class='btn btn-primary', css_id='submitEditGame'),
+                css_class='col-sm-offset-2'
+            )
+        )
+
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        slug = slugify(unidecode(title))
+        if title != self.instance.title:
+            try:
+                Game.objects.get(slug=slug)
+                raise forms.ValidationError(_(u"Game with the same title exists. Try another title."))
+            except Game.DoesNotExist:
+                pass
+        return title
 
 class MagosAGameForm(BaseGameForm):
 
