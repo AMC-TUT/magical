@@ -274,6 +274,17 @@ var game = {
 			if(game.gameMode == "distance") {
 				distanceCom = Crafty.e('DistanceMeter').distancemeter();
 			}
+
+			if(game.avoidables.length > 0) {
+				var panicBtn = Crafty.e("2D, DOM, Image, Mouse, panic").attr({x: 20, y: 70, z: 1000});					
+				panicBtn.bind('Click', function() {
+					Crafty("avoidable").each(function(i) {
+						game.addExplosion(this.x,this.y);
+						this.destroy();
+					});
+				});
+			}
+
 			
 			if(gameinfo["level1"].matchRule == "word") {
 				Crafty.e("2D, DOM, Image, sign").attr({x: 190, y: 5, z: 1000});
@@ -550,7 +561,7 @@ var game = {
 				
 				var multiplyer = Crafty.math.randomInt(0, 3);
 				var vertical = Crafty.math.randomInt(20, 50);
-				var item = Crafty.e("2D, Canvas, Image, Collision,"+type).attr({x: x, y: y, z: 100, counter: 0, multiplyer: multiplyer, vertical: vertical});
+				var item = Crafty.e("2D, Canvas, Image, Collision, avoidable, "+type).attr({x: x, y: y, z: 100, counter: 0, multiplyer: multiplyer, vertical: vertical});
 			
 				item.bind('EnterFrame', function () {
 					this.counter++;
@@ -1231,7 +1242,23 @@ var game = {
 		}
 		game.bonustimelimit = gameinfo["level1"].bonustimelimit;
 		Crafty.scene('intro');
+	},
+
+	addExplosion: function(X,Y){
+		var expl = Crafty.e("2D,Canvas,Particles").particles(explosion).attr({ x: X, y: Y, z: 1000});
+        var counter = 0;
+        expl.bind("EnterFrame", function(frame) {
+        	counter++;
+        	if(counter<100){
+        		this.x -= 3;
+        		this.y += 1;
+            } else {
+            	expl.unbind("EnterFrame");
+            }
+        });
+
 	}
+
 } // game
 
 function addGraphics(){
