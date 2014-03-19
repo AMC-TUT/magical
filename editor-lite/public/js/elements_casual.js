@@ -144,13 +144,13 @@ var textureMenu =  {
 };
 
 var explosion = {
-   	maxParticles: 100,
-  		size: 18,
+   	maxParticles: 60,
+  	size: 18,
    	sizeRandom: 4,
-  		 speed: 1,
+  	speed: 1,
    	speedRandom: 1.2,
    	// Lifespan in frames
-		 lifeSpan: 29,
+	lifeSpan: 29,
    	lifeSpanRandom: 7,
    	// Angle is calculated clockwise: 12pm is 0deg, 3pm is 90deg etc.
    	angle: 65,
@@ -168,7 +168,7 @@ var explosion = {
    	duration: 20,
    	// Will draw squares instead of circle gradients
    	fastMode: false,
-   	gravity: { x: -0.02, y: 0.1 },
+   	gravity: { x: -0.1, y: 0.1 },
    	// sensible values are 0-3
    	jitter: 0
 }

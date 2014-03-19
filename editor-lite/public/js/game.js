@@ -1247,6 +1247,7 @@ var game = {
 	addExplosion: function(X,Y){
 		var expl = Crafty.e("2D,Canvas,Particles").particles(explosion).attr({ x: X, y: Y, z: 1000});
         var counter = 0;
+        /*
         expl.bind("EnterFrame", function(frame) {
         	counter++;
         	if(counter<100){
@@ -1256,7 +1257,7 @@ var game = {
             	expl.unbind("EnterFrame");
             }
         });
-
+		*/
 	}
 
 } // game

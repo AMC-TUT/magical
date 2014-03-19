@@ -1,419 +1,455 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# jeff <jeff@itd.cnr.it>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Magos portal\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-04 15:46+0200\n"
-"PO-Revision-Date: 2014-03-04 15:50+0200\n"
-"Last-Translator: Mikko Koskela <mikko.koskela@jouhea.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2014-03-19 11:14+0200\n"
+"PO-Revision-Date: 2014-03-19 09:48+0200\n"
+"Last-Translator: jeff <jeff@itd.cnr.it>\n"
+"Language-Team: Me\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.4\n"
+"X-Generator: Virtaal 0.7.1\n"
 
 #: apps/crystal/models.py:11
 msgid "word type"
-msgstr ""
+msgstr "Tipo di parola"
 
 #: apps/crystal/models.py:12
 msgid "word types"
-msgstr ""
+msgstr "Tipi di parole"
 
 #: apps/crystal/models.py:25
 msgid "list"
-msgstr ""
+msgstr "elenco"
 
 #: apps/crystal/models.py:26
 msgid "lists"
-msgstr ""
+msgstr "elenchi"
 
 #: apps/crystal/models.py:39
 msgid "word"
-msgstr ""
+msgstr "parola"
 
 #: apps/crystal/models.py:40
 msgid "words"
-msgstr ""
+msgstr "parole"
 
-#: apps/crystal/models.py:52 apps/game/models.py:434
+#: apps/crystal/models.py:52 apps/game/models.py:514
 msgid "description"
-msgstr ""
+msgstr "descrizione"
 
 #: apps/crystal/models.py:53
 msgid "descriptions"
-msgstr ""
+msgstr "descrizioni"
 
 #: apps/game/admin.py:79
 #, python-format
 msgid "Successfully deleted %d audio files."
-msgstr ""
+msgstr "%d file audio cancellati con successo."
 
-#: apps/game/forms.py:38
+#: apps/game/forms.py:41
 msgid "Game image"
-msgstr ""
+msgstr "Immagine del gioco"
 
-#: apps/game/forms.py:60
+#: apps/game/forms.py:63
 msgid "Title"
-msgstr ""
+msgstr "Titolo"
 
-#: apps/game/forms.py:66
+#: apps/game/forms.py:69
 msgid "Description"
-msgstr ""
+msgstr "Descrizione"
 
-#: apps/game/forms.py:71 templates/apps/game/details.html:44
+#: apps/game/forms.py:74 apps/game/models.py:44
+#: templates/apps/game/details.html:44
 msgid "Tags"
-msgstr ""
+msgstr "Tag"
 
-#: apps/game/forms.py:73 apps/game/forms.py:148
+#: apps/game/forms.py:76 apps/game/forms.py:190
 msgid ""
 "Add one or more tags to identify your game better. Separate each tag with a "
 "comma."
 msgstr ""
-"Aggiungi uno o più tag per identificare meglio il tuo gioco. Inserire una "
-"virgola dopo ciascun tag inserito."
+"Aggiungi uno o più tag per identificare meglio il tuo gioco. Inserisci una "
+"virgola dopo ciascun tag."
 
-#: apps/game/forms.py:92
+#: apps/game/forms.py:95 apps/game/forms.py:136
 msgid "Game with the same title exists. Try another title."
-msgstr ""
+msgstr "Esiste già un gioco con questo titolo. Inserire un titolo diverso."
 
-#: apps/game/forms.py:104
+#: apps/game/forms.py:125 templates/apps/game/edit_game.html:14
+#, fuzzy
+msgid "Edit game"
+msgstr "gioco"
+
+#: apps/game/forms.py:146
 msgid "Game Type"
-msgstr ""
+msgstr "Tipo di gioco"
 
-#: apps/game/forms.py:109
+#: apps/game/forms.py:151
 msgid "Block size"
-msgstr ""
+msgstr "Dimensione blocco"
 
-#: apps/game/forms.py:116
+#: apps/game/forms.py:158
 msgid "Resolution"
-msgstr ""
+msgstr "Risoluzione"
 
-#: apps/game/forms.py:140 templates/apps/game/game_base.html:33
-#: templates/apps/game/game_base.html:76
+#: apps/game/forms.py:182 templates/apps/game/game_base.html:44
+#: templates/apps/game/game_base.html:87
 msgid "Create"
 msgstr "Creare"
 
-#: apps/game/forms.py:141 templates/apps/game/user_settings.html:30
+#: apps/game/forms.py:183 templates/apps/game/user_settings.html:30
 msgid "Cancel"
-msgstr ""
+msgstr "Annulla"
 
-#: apps/game/forms.py:146 templates/apps/game/details.html:61
+#: apps/game/forms.py:188 templates/apps/game/details.html:61
 msgid "Add tags"
+msgstr "Aggiungi tag"
+
+#: apps/game/forms.py:214 apps/game/forms.py:242
+msgid "Username"
 msgstr ""
 
-#: apps/game/forms.py:174
-msgid "Login was invalid. Please try again."
-msgstr ""
-
-#: apps/game/forms.py:206
+#: apps/game/forms.py:220 apps/game/forms.py:266
 msgid "Password"
+msgstr "Password"
+
+#: apps/game/forms.py:230
+msgid "Login was invalid. Please try again."
+msgstr "Accesso non riuscito. Riprova."
+
+#: apps/game/forms.py:248
+msgid "Email"
 msgstr ""
 
-#: apps/game/forms.py:211
+#: apps/game/forms.py:254
+msgid "First name"
+msgstr ""
+
+#: apps/game/forms.py:260
+msgid "Last name"
+msgstr ""
+
+#: apps/game/forms.py:271
 msgid "Password again"
-msgstr ""
+msgstr "Ripeti password"
 
-#: apps/game/forms.py:218
+#: apps/game/forms.py:276
+#, fuzzy
+msgid "Gender"
+msgstr "sesso"
+
+#: apps/game/forms.py:279
 msgid "Select gender"
-msgstr ""
+msgstr "Sesso"
 
-#: apps/game/forms.py:231
+#: apps/game/forms.py:284
+#, fuzzy
+msgid "Language"
+msgstr "lingua"
+
+#: apps/game/forms.py:293
 msgid "I have a special code"
-msgstr ""
+msgstr "Ho un codice di accesso speciale"
 
-#: apps/game/forms.py:260 templates/apps/game/game_base.html:36
-#: templates/apps/game/game_base.html:79
+#: apps/game/forms.py:322 templates/apps/game/game_base.html:47
+#: templates/apps/game/game_base.html:90
 msgid "Register"
-msgstr "Registro"
+msgstr "Iscriviti"
 
-#: apps/game/forms.py:272
+#: apps/game/forms.py:334
 msgid "Code is not valid."
-msgstr ""
+msgstr "Codice di accesso invalido"
 
-#: apps/game/forms.py:280
+#: apps/game/forms.py:342
 msgid "Can not create public users at this time. Please contact Magos support."
-msgstr ""
+msgstr "Servizio d'iscrizione momentariamente sospeso. Contattaci."
 
-#: apps/game/forms.py:369
+#: apps/game/forms.py:431
 msgid "use uppercase text"
-msgstr ""
+msgstr "Testo in MAIUSCOLO"
 
-#: apps/game/models.py:18
+#: apps/game/models.py:43
+#, fuzzy
+msgid "Tag"
+msgstr "Tag"
+
+#: apps/game/models.py:94
 msgid "32 pixels"
-msgstr ""
+msgstr "32 pixel"
 
-#: apps/game/models.py:19
+#: apps/game/models.py:95
 msgid "48 pixels"
-msgstr ""
+msgstr "48 pixel"
 
-#: apps/game/models.py:20
+#: apps/game/models.py:96
 msgid "64 pixels"
-msgstr ""
+msgstr "64 pixel"
 
-#: apps/game/models.py:99
+#: apps/game/models.py:175
 msgid "role"
-msgstr ""
+msgstr "ruolo"
 
-#: apps/game/models.py:100
+#: apps/game/models.py:176
 msgid "roles"
-msgstr ""
+msgstr "ruoli"
 
-#: apps/game/models.py:113
+#: apps/game/models.py:193
 msgid "language"
-msgstr ""
+msgstr "lingua"
 
-#: apps/game/models.py:114
+#: apps/game/models.py:194
 msgid "languages"
-msgstr ""
+msgstr "lingue"
 
-#: apps/game/models.py:126
+#: apps/game/models.py:211
 msgid "country"
-msgstr ""
+msgstr "paese"
 
-#: apps/game/models.py:127
+#: apps/game/models.py:212
 msgid "countries"
-msgstr ""
+msgstr "paesi"
 
-#: apps/game/models.py:168
+#: apps/game/models.py:253
 msgid "organization"
-msgstr ""
+msgstr "organizzazione"
 
-#: apps/game/models.py:169
+#: apps/game/models.py:254
 msgid "organizations"
-msgstr ""
+msgstr "organizzazioni"
 
-#: apps/game/models.py:184
+#: apps/game/models.py:269
 msgid "disability"
-msgstr ""
-
-#: apps/game/models.py:185
-msgid "disabilities"
-msgstr ""
-
-#: apps/game/models.py:197
-msgid "game type"
-msgstr ""
-
-#: apps/game/models.py:198
-msgid "game types"
-msgstr ""
-
-#: apps/game/models.py:214
-msgid "achievement"
-msgstr ""
-
-#: apps/game/models.py:215
-msgid "achievements"
-msgstr ""
-
-#: apps/game/models.py:228 apps/game/models.py:229
-msgid "user has achievement"
-msgstr ""
-
-#: apps/game/models.py:241
-msgid "gender"
-msgstr ""
-
-#: apps/game/models.py:242
-msgid "genders"
-msgstr ""
+msgstr "disabilità"
 
 #: apps/game/models.py:270
+msgid "disabilities"
+msgstr "disabilità"
+
+#: apps/game/models.py:282
+msgid "game type"
+msgstr "Tipo di gioco"
+
+#: apps/game/models.py:283
+msgid "game types"
+msgstr "Tipi di gioco"
+
+#: apps/game/models.py:299
+msgid "achievement"
+msgstr "risultato"
+
+#: apps/game/models.py:300
+msgid "achievements"
+msgstr "risultati"
+
+#: apps/game/models.py:313 apps/game/models.py:314
+msgid "user has achievement"
+msgstr "L'utente ha conseguito dei risultati"
+
+#: apps/game/models.py:327
+msgid "gender"
+msgstr "sesso"
+
+#: apps/game/models.py:328
+msgid "genders"
+msgstr "sessi"
+
+#: apps/game/models.py:350
 msgid "user profile"
-msgstr ""
+msgstr "profili utente"
 
-#: apps/game/models.py:271
+#: apps/game/models.py:351
 msgid "user profiles"
-msgstr ""
+msgstr "profili utente"
 
-#: apps/game/models.py:351 apps/game/models.py:428
+#: apps/game/models.py:431 apps/game/models.py:508
 msgid "image"
-msgstr ""
+msgstr "immagine"
 
-#: apps/game/models.py:352
+#: apps/game/models.py:432
 msgid "images"
-msgstr ""
+msgstr "immagini"
 
-#: apps/game/models.py:397
+#: apps/game/models.py:477
 msgid "Audio file player"
-msgstr ""
+msgstr "Riproduttore audio"
 
-#: apps/game/models.py:400
+#: apps/game/models.py:480
 msgid "audio"
-msgstr ""
+msgstr "file audio"
 
-#: apps/game/models.py:401
+#: apps/game/models.py:481
 msgid "audios"
-msgstr ""
+msgstr "file audio"
 
-#: apps/game/models.py:410
+#: apps/game/models.py:490
 msgid "title"
-msgstr ""
-
-#: apps/game/models.py:416
-msgid "slug"
-msgstr ""
-
-#: apps/game/models.py:422
-msgid "state"
-msgstr ""
-
-#: apps/game/models.py:440
-msgid "cloned"
-msgstr ""
-
-#: apps/game/models.py:445
-msgid "created"
-msgstr ""
-
-#: apps/game/models.py:450
-msgid "updated"
-msgstr ""
-
-#: apps/game/models.py:455
-msgid "creator"
-msgstr ""
-
-#: apps/game/models.py:462
-msgid "game"
-msgstr ""
-
-#: apps/game/models.py:463 templates/apps/game/magos_statistics.html:5
-msgid "games"
-msgstr ""
-
-#: apps/game/models.py:482
-msgid "Magos A game"
-msgstr ""
-
-#: apps/game/models.py:483
-msgid "Magos A games"
-msgstr ""
-
-#: apps/game/models.py:495
-msgid "Magos B game"
-msgstr ""
+msgstr "titolo"
 
 #: apps/game/models.py:496
-msgid "Magos B games"
-msgstr ""
+msgid "slug"
+msgstr "slug"
 
-#: apps/game/models.py:510
-msgid "revision"
-msgstr ""
+#: apps/game/models.py:502
+msgid "state"
+msgstr "stato"
 
-#: apps/game/models.py:511
-msgid "revisions"
-msgstr ""
+#: apps/game/models.py:520
+msgid "cloned"
+msgstr "clonato"
 
-#: apps/game/models.py:527
-msgid "highscore"
-msgstr ""
+#: apps/game/models.py:525
+msgid "created"
+msgstr "creato"
 
-#: apps/game/models.py:528
-msgid "highscores"
-msgstr ""
+#: apps/game/models.py:530
+msgid "updated"
+msgstr "aggiornato"
 
-#: apps/game/models.py:545
-msgid "review"
-msgstr ""
+#: apps/game/models.py:535
+msgid "creator"
+msgstr "autore"
 
-#: apps/game/models.py:546
-msgid "reviews"
-msgstr ""
+#: apps/game/models.py:542
+msgid "game"
+msgstr "gioco"
 
-#: apps/game/models.py:561
-msgid "author"
-msgstr ""
+#: apps/game/models.py:543 templates/apps/game/magos_statistics.html:5
+msgid "games"
+msgstr "giochi"
 
 #: apps/game/models.py:562
-msgid "authors"
-msgstr ""
+msgid "Magos A game"
+msgstr "gioco Magos A"
 
-#: apps/game/models.py:626 apps/game/models.py:627
+#: apps/game/models.py:563
+msgid "Magos A games"
+msgstr "giochi Magos A"
+
+#: apps/game/models.py:575
+msgid "Magos B game"
+msgstr "gioco Magos B"
+
+#: apps/game/models.py:576
+msgid "Magos B games"
+msgstr "giochi Magos B"
+
+#: apps/game/models.py:590
+msgid "revision"
+msgstr "revisione"
+
+#: apps/game/models.py:591
+msgid "revisions"
+msgstr "revisioni"
+
+#: apps/game/models.py:607
+msgid "highscore"
+msgstr "punteggio top"
+
+#: apps/game/models.py:608
+msgid "highscores"
+msgstr "punteggi top"
+
+#: apps/game/models.py:625
+msgid "review"
+msgstr "recensione"
+
+#: apps/game/models.py:626
+msgid "reviews"
+msgstr "recensioni"
+
+#: apps/game/models.py:641
+msgid "author"
+msgstr "autore"
+
+#: apps/game/models.py:642
+msgid "authors"
+msgstr "autori"
+
+#: apps/game/models.py:706 apps/game/models.py:707
 msgid "user settings"
-msgstr ""
+msgstr "impostazioni utente"
 
 #: magos/settings/base.py:64
 msgid "English"
-msgstr ""
+msgstr "Inglese"
 
 #: magos/settings/base.py:65
 msgid "Finnish"
-msgstr ""
+msgstr "Finlandese"
 
 #: magos/settings/base.py:66
 msgid "Italian"
-msgstr ""
+msgstr "Italiano"
 
 #: templates/admin/base_site.html:5
 msgid "Magos admin"
-msgstr ""
+msgstr "admin Magos"
 
 #: templates/admin/base_site.html:8
 msgid "Administration"
-msgstr ""
+msgstr "admin"
 
 #: templates/admin/auth/user/change_list.html:10
 msgid "Import users"
-msgstr ""
+msgstr "Importa utenti"
 
 #: templates/admin/auth/user/change_list.html:13
 #: templates/admin/game/audio/change_list.html:61
 #, python-format
 msgid "Add %(name)s"
-msgstr ""
+msgstr "Aggiungere %(name)s"
 
 #: templates/admin/game/audio/change_form.html:22
 #: templates/admin/game/audio/change_list.html:44
 msgid "Home"
-msgstr ""
+msgstr "Home"
 
 #: templates/admin/game/audio/change_form.html:25
 msgid "Add"
-msgstr ""
+msgstr "Aggiungi"
 
 #: templates/admin/game/audio/change_form.html:35
 msgid "History"
-msgstr ""
+msgstr "Cronologia"
 
 #: templates/admin/game/audio/change_form.html:36
 msgid "View on site"
-msgstr ""
+msgstr "visualizzare sul sito"
 
 #: templates/admin/game/audio/change_form.html:47
 #: templates/admin/game/audio/change_list.html:70
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Correggi l'errore seguente."
+msgstr[1] "Correggi i seguenti errori."
 
 #: templates/admin/game/audio/change_list.html:81
 msgid "Filter"
-msgstr ""
+msgstr "Filtro"
 
 #: templates/apps/game/ajax_list_available_authors.html:10
 msgid "Add as author"
-msgstr ""
+msgstr "Aggiungi un autore"
 
 #: templates/apps/game/ajax_list_game_authors.html:2
 msgid "Authors"
-msgstr ""
+msgstr "Autori"
 
 #: templates/apps/game/ajax_list_game_authors.html:10
 msgid "No authors found"
-msgstr ""
+msgstr "Nessun utente trovato"
 
-#: templates/apps/game/ajax_list_games.html:13
+#: templates/apps/game/ajax_list_games.html:18
 msgid "No games found"
-msgstr ""
+msgstr "Nessun gioco trovato"
 
 #: templates/apps/game/create.html:6
 msgid "Create a new game"
@@ -423,7 +459,7 @@ msgstr "Crei un nuovo gioco"
 #, python-format
 msgid "Here’s the place to start making a new Magos %(gametype_text)s game."
 msgstr ""
-"È qui che puoi cominciare a costruire un nuovo gioco con Magos "
+"Ecco dove puoi cominciare a costruire un nuovo gioco con Magos "
 "%(gametype_text)s."
 
 #: templates/apps/game/create.html:8
@@ -437,122 +473,151 @@ msgstr ""
 
 #: templates/apps/game/create_base.html:14
 msgid "Select game type"
-msgstr ""
+msgstr "Seleziona un tipo di gioco"
 
 #: templates/apps/game/details.html:14
 msgid "Game permalink"
-msgstr ""
+msgstr "link univoco del gioco"
 
 #: templates/apps/game/details.html:19
 msgid "Delete image"
-msgstr ""
+msgstr "Elimina immagine"
 
 #: templates/apps/game/details.html:29
 msgid "Add game image"
-msgstr ""
+msgstr "Aggiungi un'immagine identificativo"
 
 #: templates/apps/game/details.html:39
 #, python-format
 msgid "Game created by %(game_creator)s."
-msgstr ""
+msgstr "Gioco creato da %(game_creator)s."
 
 #: templates/apps/game/details.html:69
 msgid "Reviews"
-msgstr ""
+msgstr "Recensioni"
 
 #: templates/apps/game/details.html:77
 msgid "Play game"
-msgstr ""
+msgstr "Gioca"
 
 #: templates/apps/game/details.html:79
 msgid "Launch game editor"
-msgstr ""
+msgstr "Crea/modifica"
 
 #: templates/apps/game/details.html:94
 #, python-format
 msgid "Game created on %(game_created)s."
-msgstr ""
+msgstr "Gioco creato %(game_created)s."
 
 #: templates/apps/game/details.html:98
 msgid "Comments"
-msgstr ""
+msgstr "Commenti"
 
 #: templates/apps/game/details.html:99
 msgid "No comments yet."
-msgstr ""
+msgstr "Nessun commento"
 
 #: templates/apps/game/details.html:103
-msgid "Delete game"
+msgid "Edit game information"
 msgstr ""
 
-#: templates/apps/game/game_base.html:32 templates/apps/game/game_base.html:75
+#: templates/apps/game/details.html:104
+msgid "Delete game"
+msgstr "Elimina gioco"
+
+#: templates/apps/game/game_base.html:10 templates/apps/game/login.html:9
+msgid "Collaborative Game Creation"
+msgstr ""
+
+#: templates/apps/game/game_base.html:43 templates/apps/game/game_base.html:86
 msgid "Play"
 msgstr "Giocare"
 
-#: templates/apps/game/game_base.html:34 templates/apps/game/game_base.html:77
+#: templates/apps/game/game_base.html:45 templates/apps/game/game_base.html:88
 #: templates/apps/game/watch.html:14
 msgid "Watch"
 msgstr "Guardare"
 
-#: templates/apps/game/game_base.html:45
+#: templates/apps/game/game_base.html:56
 msgid "Welcome to Magos"
-msgstr ""
+msgstr "Benvenuti a Magos!"
 
-#: templates/apps/game/game_base.html:47
+#: templates/apps/game/game_base.html:58
 msgid "Organization"
-msgstr ""
+msgstr "Organizzazione"
 
-#: templates/apps/game/game_base.html:48 templates/apps/game/login.html:31
+#: templates/apps/game/game_base.html:59 templates/apps/game/login.html:33
 msgid "Logout"
-msgstr ""
+msgstr "Esci"
 
-#: templates/apps/game/game_base.html:52
+#: templates/apps/game/game_base.html:63
 msgid "settings"
-msgstr ""
+msgstr "impostazioni"
 
-#: templates/apps/game/game_base.html:85
+#: templates/apps/game/game_base.html:96 templates/apps/game/login.html:48
 msgid "Version info"
-msgstr ""
+msgstr "Informazioni di versione"
 
-#: templates/apps/game/game_base.html:113
+#: templates/apps/game/game_base.html:125
 msgid "Loading..."
-msgstr ""
+msgstr "Caricamento in corso..."
 
 #: templates/apps/game/index.html:9
+#: templates/apps/game/register_success.html:11
 msgid "Welcome to the MAGICAL world of Magos!"
 msgstr "Benvenuti a Magos, un mondo tutto MAGICAL!"
 
 #: templates/apps/game/index.html:20
 msgid "Search games"
-msgstr ""
+msgstr "Cerca giochi"
 
 #: templates/apps/game/index.html:27
 #, python-format
 msgid "%(game_title)s is Out!"
-msgstr ""
+msgstr "Adesso c'è anche %(game_title)s!"
 
 #: templates/apps/game/index.html:29
 msgid "Experience the latest game in your Magos universe."
-msgstr ""
+msgstr "Prova l'ultimo gioco del mondo Magos."
 
 #: templates/apps/game/index.html:30
 msgid "Play now"
-msgstr ""
+msgstr "Gioca adesso"
 
 #: templates/apps/game/index.html:38
 msgid "Magos games"
-msgstr ""
+msgstr "Giochi di Magos"
 
 #: templates/apps/game/index.html:42
 msgid "Magos-lite games"
+msgstr "Giochi di Magos Lite"
+
+#: templates/apps/game/login_form.html:6
+msgid "Your username and password didn't match. Please try again."
+msgstr ""
+
+#: templates/apps/game/login_form.html:14
+msgid "Log in"
 msgstr ""
 
 #: templates/apps/game/magos_statistics.html:2
 msgid "Magos Statistics"
-msgstr ""
+msgstr "Mostra statistiche"
 
 #: templates/apps/game/magos_statistics.html:4
 msgid "users"
+msgstr "utenti"
+
+#: templates/apps/game/register_success.html:10
+msgid "Thank you for registering!"
+msgstr ""
+
+#: templates/apps/game/register_success.html:13
+msgid "You can now log in to start creating games."
+msgstr ""
+
+#: templates/apps/game/register_user.html:12
+msgid "Register as a new Magos user"
 msgstr ""
 
 #: templates/apps/game/sidebar.html:4
@@ -564,24 +629,25 @@ msgid ""
 "We want to make Magos Lite more fun for you. If you have any comments or "
 "ideas, please send us an email message at:  magical - at - itd.cnr.it. Enjoy!"
 msgstr ""
-"Hai un commento o un’idea per aiutarci a rendere Magos Lite più bello? "
-"Mandaci un messaggio email presso: magica - at - itd.cnr.it. Buon "
-"divertimento!"
+"Aiutaci a rendere Magos Lite più bello e più divertente! Mandaci un "
+"messaggio email presso: magica - at - itd.cnr.it. Buon divertimento!"
 
 #: templates/apps/game/sidebar.html:8
 msgid "Magos News"
-msgstr ""
+msgstr "Notizie di Magos"
 
 #: templates/apps/game/user_settings.html:10
 msgid "User settings"
-msgstr ""
+msgstr "Impostazioni utente"
 
 #: templates/apps/game/user_settings.html:29
 msgid "Save settings"
-msgstr ""
+msgstr "Salva le impostazioni"
 
 #: templates/apps/game/watch.html:18
 msgid ""
 "More videos on <a href=\"http://www.youtube.com/user/magosTV\" target="
 "\"_blank\">MagosTV</a> Youtube channel."
 msgstr ""
+"Altri video su <a href=\"http://www.youtube.com/user/magosTV\" target="
+"\"_blank\">MagosTV</a> Youtube channel."
