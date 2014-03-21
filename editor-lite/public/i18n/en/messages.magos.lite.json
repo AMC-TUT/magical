@@ -31,6 +31,8 @@
     "easy": "easy",
     "average": "average",
     "hard": "hard",
+    "slow": "slow",
+    "fast": "fase",
     "Motion control": "Motion control",
     "Game mode": "Game mode",
     "time": "time",
@@ -130,7 +132,7 @@
 
     "Elements that player tries to collect": "Elements for player to collect",
     "earth": "Earth",
-    "saturnus": "Saturn",
+    "saturn": "Saturn",
     "coin": "coin",
     "star": "star",
     "gift": "gift",

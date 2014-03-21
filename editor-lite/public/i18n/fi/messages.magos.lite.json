@@ -31,6 +31,8 @@
     "easy": "helppo",
     "average": "keskiverto",
     "hard": "vaikea",
+    "slow": "hidas",
+    "fast": "nopea",    
     "Motion control": "Määrittele liikeherkkyys",
     "Game mode": "Valitse pelimuoto",
     "time": "aika",
@@ -130,7 +132,7 @@
 
     "Elements that player tries to collect": "Elementit, joita pelaaja yrittää kerätä",
     "earth": "maa",
-    "saturnus": "Saturnus",
+    "saturn": "Saturnus",
     "coin": "kolikko",
     "star": "tähti",
     "gift": "lahjapaketti",
