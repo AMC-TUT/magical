@@ -69,6 +69,9 @@
     "blue": "blue",
     "orange": "orange",
     "green": "green",
+    "red": "red",
+    "black": "black",
+    "white": "white",
     "Static background element": "Scene background",
     "sky-blue": "blue sky",
     "sky-grey": "grey sky",
@@ -99,6 +102,7 @@
     "houses far": "distant houses",
     "sea": "sea",
     "forest": "forest",
+    "Font color": "Font color",
     "background_info": "Use these controls to create a background for your game. Behind the action there is a set of moving scenery panels that overlap to form the scene. If you want to, you can include up to three of these. During the game they will move from right to left at different speeds and this will make it look like your character is moving forwards.",
 
     "Select task type": "Mission type",

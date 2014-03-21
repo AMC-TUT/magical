@@ -69,6 +69,9 @@
     "blue": "azzuro",
     "orange": "arancione",
     "green": "verde",
+    "red": "rosso",
+    "black": "nero",
+    "white": "bianco",
     "Static background element": "Sfondo di base (livello 4)",
     "sky-blue": "cielo blu",
     "sky-grey": "cielo grigio",
@@ -99,6 +102,7 @@
     "houses far": "case lontane",
     "sea": "mare",
     "forest": "foresta",
+    "Font color": "Colore carattere",
     "background_info": "Usare questi controlli per costruire lo sfondo del tuo gioco. Dietro l’azione ci sono dei “pannelli” grafici mobili che, sovrapposti uno all’altro, formano insieme la scenografia del gioco. Ne puoi selezionare fino a un massimo di tre. Nel gioco questi sfondi si spostano da destra a sinistra a velocità diverse, creando così l’effetto del movimento in avanti del personaggio-giocatore.",
 
     "Select task type": "tipo di abbinamento",

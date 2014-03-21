@@ -69,6 +69,9 @@
     "blue": "sininen",
     "orange": "oranssi",
     "green": "vihreä",
+    "red": "punainen",
+    "black": "musta",
+    "white": "valkoinen",
     "Static background element": "Kiinteä taustaelementti",
     "sky-blue": "sininen taivas",
     "sky-grey": "harmaa taivas",
@@ -99,6 +102,7 @@
     "houses far": "talot kaukana",
     "sea": "meri",
     "forest": "metsä",
+    "Font color": "Tekstin väri",
     "background_info": "Voit valita pelin taustavärin ja -grafiikat. Voit lisätä kolme vasemmalle liikkuvaa taustaelementtiä. Elementti 1 on etummaisena ja liikkuu nopeimmin. Elementti 3 on kauimpana ja liikkuu hitaimmin. Kaikkia elementtejä ei ole pakko käyttää.",
 
     "Select task type": "Valitse tehtävätyyppi",
