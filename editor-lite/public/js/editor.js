@@ -1472,7 +1472,7 @@ var editor = {
 	},
 
 	createScoreView: function() {
-		var scoreArr = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
+		var scoreArr = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 
 		var colContainer = $('#collectScore').empty();
 		// Collectables
@@ -1503,7 +1503,7 @@ var editor = {
 		}
 
 		var hazContainer = $('#hazardScore').empty();
-		var hazScoreArr = [0, -100, -200, -300, -400, -500, -600, -700, -800, -900, -1000];
+		var hazScoreArr = [0, -10, -20, -30, -40, -50, -60, -70, -80, -90, -100];
 
 		// Hazards
 		if(gameinfo.level1.hazards.length) {
