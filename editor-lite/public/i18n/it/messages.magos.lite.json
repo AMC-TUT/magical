@@ -210,13 +210,16 @@
     "Edit": "Modifica",
     "Back": "Indietro",
     "Score": "Punteggi",
+    "Final score": "Punteggio",
     "Time": "Tempo",
     "LEVEL": "LIVELLO",
     "Game over": "Gioco concluso",
     "Well done!": "Complimenti!",
-    "time_feedback_success": "Non sei riuscito a rimanere in gioco per un tempo sufficente. Riprova.",
+    "time_feedback_fail": "Non sei riuscito a rimanere in gioco per un tempo sufficente. Riprova.",
+    "time_feedback_success": "You stayed alive for %s seconds.",
     "distance_feedback_fail": "Hai percorso solo %s metri. Riprova.",
     "distance_feedback_success": "Sei riuscito a percorrere %s metri. Complimenti!.",
     "survival_feedback_text": "La tua vita è durata %s secondi nel gioco. Riprova, forse riuscirai a sopravivere di più.",
+    "Back to menu": "Indietro",
     "task": "missione"
 }

@@ -210,14 +210,16 @@
     "Edit": "Muokkaa peliä",
     "Back": "Takaisin",
     "Score": "Pisteet",
+    "Final score": "Pisteet",
     "Time": "Aika",
     "LEVEL": "TASO",
     "Game over": "Game over",
     "Well done": "Onneksi olkoon",
     "time_feedback_fail": "Et selvinnyt hengissä tarpeeksi pitkään. Yritä uudelleen.",
+    "time_feedback_success": "Selvisit hengissä %s sekuntia.",
     "distance_feedback_fail": "Pystyit matkaamaan %s metriä. Yritä uudelleen.",
     "distance_feedback_success": "Saavutit %s metrin rajapyykin.",
     "survival_feedback_text": "Selviydyit %s sekuntia. Ehkä pystyt vieläkin parempaan. Yritä uudelleen.",
+    "Back to menu": "Takaisin valikkoon",
     "task": "tehtävä"
-
 }

@@ -210,13 +210,16 @@
     "Edit": "Edit",
     "Back": "Back",
     "Score": "Score",
+    "Final score": "Final score",    
     "Time": "Time",
     "LEVEL": "LEVEL",
     "Game over": "Game over",
     "Well done!": "Well done!",
     "time_feedback_fail": "You did not stay alive long enough. Try again.",
+    "time_feedback_success": "You stayed alive for %s seconds.",
     "distance_feedback_fail": "You only managed to travel %s meters. Try again.",
     "distance_feedback_success": "You reached the %s meters landmark. Well done!.",
     "survival_feedback_text": "You survived %s seconds. Maybe you can survive even longer. Try again.",
+    "Back to menu": "Back to menu",
     "task": "task"
 }

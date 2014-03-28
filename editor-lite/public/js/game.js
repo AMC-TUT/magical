@@ -1026,11 +1026,13 @@ var game = {
 				}
 			} else {
 				titleText = i18n.t('Well done') + "! ";
-				if(game.gameMode == "distance"){
+				if(game.gameMode == "distance") {
 					feedbackText += i18n.t("distance_feedback_success", { postProcess: 'sprintf', sprintf: [game.reached] });
+				} else if(game.gameMode == "time") {
+					feedbackText += i18n.t("time_feedback_success", { postProcess: 'sprintf', sprintf: [gameinfo.level1.gameDuration] });
 				}
 			}
-			if(game.gameMode == "survival"){				
+			if(game.gameMode == "survival") {				
 				feedbackText += i18n.t("survival_feedback_text", { postProcess: 'sprintf', sprintf: [game.reached] });
 			} 
 			
@@ -1077,7 +1079,7 @@ var game = {
 			
 			Crafty.e("CurScoreText, DOM, 2D, Text")
 				.attr({ x: 200, y: 470, w: 400, h: 30 })
-				.text(i18n.t('Score') + ": "+game.score)
+				.text(i18n.t('Final score') + ": "+game.score)
 				.textFont({ size: '30px', weight: 'bold' })
 				.textColor('#FFFFFF');
 
