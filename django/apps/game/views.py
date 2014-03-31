@@ -23,7 +23,7 @@ from .models import Game, MagosAGame, MagosBGame, Revision, Author, \
 from .forms import MagosAGameForm, MagosBGameForm, LoginForm, UserRegistrationForm, \
     BatchCreateUsersForm, GameImageForm, UserSettingsForm, GameTagsForm, GameEditForm
 from .decorators import ajax_login_required
-from .utils import get_redis_game_data, set_redis_game_data, create_game_for_redis, del_redis_game
+from .utils import get_redis_game_data, set_redis_game_data, create_game_for_redis, del_redis_game, get_game_state
 
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -589,105 +589,6 @@ def create_game_b(request):
     organization = user.get_profile().organization
     GameForm = MagosBGameForm
     context['gametype_text'] = 'Lite'
-    """
-    if request.method == 'POST':
-        form = GameForm(request.POST, request.FILES, organization=organization)
-        if form.is_valid():
-            game = form.save()
-            game.creator = user
-            game.save()
-            
-            # create initial revision
-            revision_data = {}
-            
-            scroll_data = [
-                {
-                    "item" : None,
-                    "speed" : 5
-                },
-                {
-                    "item" : None,
-                    "speed" : 10
-                },
-                {
-                    "item" : None,
-                    "speed" : 15
-                }
-            ]
-            sensitivity_data = {
-                "jump": 18000,
-                "motion": 10000
-            }
-            revision_data['title'] = game.title
-            revision_data['instructions'] = ""
-            revision_data['platformType'] = "air"
-            revision_data['playerImg'] = "magos-girl" 
-            revision_data['itemInterval'] = 4000
-            revision_data['hazardInterval'] = 5000
-            revision_data['wordInterval'] = 4000
-            revision_data['sky'] = None
-            revision_data['scroll'] = scroll_data
-            revision_data['collectables'] = []
-            revision_data['hazards'] = []
-            revision_data['powerups'] = []
-            revision_data['wordRules'] = []
-            revision_data['answers'] = []
-            revision_data['fractionRules'] = []
-            revision_data['matchRule'] = None
-            revision_data['gameMode'] = "time"
-            revision_data['gameDuration'] = 60
-            revision_data['goalDistance'] = 400
-            revision_data['survivalFactor'] = 0.95
-            revision_data['extraLife'] = False
-            revision_data['turboSpeed'] = False
-            revision_data['bgcolor'] = "#F2F2F2"
-
-            revision_data['star3limit'] = 2000
-            revision_data['star2limit'] = 1000 
-            revision_data['star1limit'] = 500
-            revision_data['memoryIncrease'] = 0 
-            revision_data['memoryStart'] = 0
-            revision_data['matchPointsRight'] = 0
-            revision_data['matchPointsWrong'] = 0 
-            revision_data['hazardEffect'] = 0
-            revision_data['sliceAmount'] = 0 
-            revision_data['pieceAmount'] = 0 
-            revision_data['pizzaRules'] = [] 
-            revision_data['jumpPower'] = -24 
-            revision_data['bonustimelimit'] = 220 
-            revision_data['sensitivity'] = sensitivity_data 
-
-            revision_data = json.dumps(revision_data)
-
-            revision = Revision(game=game, data=revision_data)
-            revision.save()
-            # add user as author
-            author = Author(game=game, user=user)
-            author.save()
-
-            # we have to create and save initial game data to Redis
-            redis_game_data = create_game_for_redis(game.slug)
-            jresult = json.dumps(redis_game_data)
-            set_redis_game_data(game.slug, jresult)
-
-            # redirect to newly created game
-            url = '/game/details/%s' % game.slug
-            #return redirect(url)
-            data = {
-                'success': True,
-                'url': url
-            }
-        else:
-            #data = {
-            #    'errors': dict([(k, [unicode(e) for e in v]) for k,v in form.errors.items()])
-            #}
-            form_html = render_crispy_form(form)
-            data = {'success': False, 'form_html': form_html}
-
-        json_data = json.dumps(data)
-        return HttpResponse(json_data, mimetype='application/json')
-    else:
-    """
     form = GameForm(organization=organization)
     context['form'] = form
     return render(request, tpl, context)
@@ -846,28 +747,37 @@ def available_authors(request, gameslug):
     return render(request, tpl, context)
 
 
-def ajax_list_games(request, gametype='A'):
+def ajax_list_games(request, gametype='A', state='public'):
     """
     Get game objects of type A or B (magos-lite).
     :param request: Http request object.
     :param gametype: Game type as string 'A' or 'B'.
+    :param state: Game type as string 'all', 'private', 'public' or 'org'.
     """
+    game_state = get_game_state(state)
     if not gametype in ['A', 'B']:
         gametype = 'A'
     TypedGame = MagosAGame
     if gametype == 'B':
         TypedGame = MagosBGame
-
     tpl = 'apps/game/ajax_list_games.html'
     context = RequestContext(request)
     user = request.user
     if user.is_authenticated():
-        # authenticated users get list of their own games
-        games = TypedGame.objects.filter(author__user__userprofile__organization=user.userprofile.organization).distinct()
-        # should we add public (state=2) games?
+        # authenticated users
+        if game_state == 0:
+            # list of their own games
+            games = TypedGame.objects.filter(author__user__userprofile__organization=user.userprofile.organization, state=game_state).distinct()
+        elif game_state == 1:
+            # their organizatons games
+            games = TypedGame.objects.filter(author__user__userprofile__organization=user.userprofile.organization, state=game_state).distinct()
+        elif game_state == 2:
+            # public games
+            games = TypedGame.objects.filter(state=game_state).distinct()
+
     else:
         # anonymous users get list of public games, state=2
-        games = Game.objects.filter(state=2)
+        games = TypedGame.objects.filter(state=2)
     context['games'] = games
     return render(request, tpl, context)
 

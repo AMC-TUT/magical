@@ -35,6 +35,7 @@ RESOLUTION_CHOICES = (
     ('12_8', '12 cols, 8 rows'),
 )
 
+
 class GameImageForm(forms.Form):
     image = forms.ImageField(
         required=True,

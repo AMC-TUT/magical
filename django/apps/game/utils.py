@@ -143,3 +143,18 @@ def del_redis_game(gameslug):
     game_key = ':'.join([prefix, gameslug])
     redis_db.delete(game_key)
     return True
+
+def get_game_state(state_str):
+    """
+    Get game state as integer.
+    0 = private
+    1 = public for organization
+    2 = public for all
+    :param state: Game type as string 'private', 'org' or public'.
+    """
+    state = 0
+    if state_str == 'org':
+        state = 1
+    if state_str == 'public':
+        state = 2
+    return state

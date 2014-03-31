@@ -38,7 +38,7 @@ from django.conf import settings
 class RevisionView(RequestMixin, ResponseMixin, View):
     renderers = DEFAULT_RENDERERS
     parsers = DEFAULT_PARSERS
- 
+
     def get(self, request, gameslug):
         session_user = request.user
         if not session_user.is_authenticated():
@@ -64,7 +64,7 @@ class RevisionView(RequestMixin, ResponseMixin, View):
                 rev_offset = int(rev_offset)
             except ValueError:
                 rev_offset = DEFAULT_OFFSET
-  
+
         revisions_list = []
         revisions = game.revision_set.all()
         for revision in revisions:
@@ -79,12 +79,12 @@ class RevisionView(RequestMixin, ResponseMixin, View):
             else:
                 revision_dict['revision'] = json_data
             revisions_list.append(revision_dict)
-        result_dict = {}        
+        result_dict = {}
         result_dict['offset'] = rev_offset
         result_dict['limit'] = rev_limit
         result_dict['count'] = revisions.count()
         result_dict['results'] = revisions_list
-        
+
         response = Response(200, result_dict)
         return self.render(response)
 
@@ -239,7 +239,7 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
 
         valid_data = False
 
-        state_list = put_data.getlist('state', None) # Game state (1=private, 2=public)
+        state_list = put_data.getlist('state', None) # Game state (0=private, 1=public for organizaton, 2=public for all)
         revision_list = put_data.getlist('revision', None) #  Game revision as JSON (game_type:slug)
 
         # state
@@ -247,7 +247,6 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
         if state_list and len(state_list):
             state = state_list[0]
 
-        # state
         revision_data = None
         if revision_list and len(revision_list):
             revision_data = revision_list[0]
@@ -258,6 +257,7 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
         if valid_data:
             try:
                 # set state
+                print state
                 game.state = state
                 game.save()
 
@@ -462,7 +462,6 @@ class GameView(RequestMixin, ResponseMixin, View):
     @method_decorator(csrf_exempt)
     def dispatch(self,*args,**kwargs):
         return super(GameView,self).dispatch(*args,**kwargs)
-
 
 
 class AudioSearchView(RequestMixin, ResponseMixin, View):

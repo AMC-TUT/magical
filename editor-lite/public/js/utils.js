@@ -63,7 +63,8 @@ utils = {
 	        });
 	        ajaxReq.done(function ( data, textStatus, jqXHR ) {
 	        	if(data.level1) {
-	        		gameinfo['level1'] = data.level1;
+	        		gameinfo.level1 = data.level1;
+					gameinfo.state = data.state;		            
 	        		var msg = '<p><img src="/editor-lite/static/img/magos-lite-logo-small.png" id="logo" /></p>';
 	        		msg += '<h3>' + i18n.t("Welcome") + ' ' + editor.user.userName + '!</h3>';
 	        		msg += '<p>' + i18n.t("You are editing game") + ' <b>' + data.level1.title + '</b></p>';
@@ -89,7 +90,8 @@ utils = {
 	        });
 	        ajaxReq.done(function ( data, textStatus, jqXHR ) {
 	        	if(data.level1) {
-	        		gameinfo['level1'] = data.level1;
+	        		gameinfo.level1 = data.level1;
+	        		gameinfo.state = data.state;
 		            callback.call(game); // have to use call(), otherwise this refers to Window
 	        	}
 	        });

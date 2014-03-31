@@ -1,5 +1,6 @@
 var gameinfo = {
-	"level1":{
+	state: 0,
+	level1: {
 		title: "Game is not named.", 
 		instructions:"No instructions are given.", 
 		platformType: "air",

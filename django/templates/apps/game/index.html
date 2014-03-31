@@ -1,5 +1,6 @@
 {% extends "apps/game/game_base.html" %}
 {% load i18n %}
+{% load crispy_forms_tags %}
 
 {% block content %}
     
@@ -15,13 +16,7 @@
                     
             <div id="main-content" class="col-xs-8">
 
-                <!--
-                <div id="filter-tools">
-                    <h3>{% trans 'Search games' %}</h3>                    
-                </div>
-                -->
-
-                {% if latest_revision %}                           
+                {% if latest_revision %}
                 <div class="featured-game">
                     <div id="featured-slogan">
                         <h1>{% blocktrans with game_title=latest_revision.game.title %}{{ game_title }} is Out!{% endblocktrans %}</h1>
@@ -32,20 +27,34 @@
                     </div>
                 </div>
                 {% endif %}
+
                 <ul class="nav nav-tabs" id="gamesList">
-                    <!--
-                    <li class="active">
-                        <a href="#magos_games" data-url="A">{% trans 'Magos games' %}</a>
-                    </li>
-                    -->
-                    <li class="active">
-                        <a href="#magos_lite_games" data-url="B">{% trans 'Magos-lite games' %}</a>
-                    </li>
+                    {% if not user.is_authenticated %}
+                        <li class="active">
+                            <a href="#public_games" data-state="public" data-type="B" data-url="{% url 'ajax_list_games' gametype='B' %}">{% trans 'Public games' %}</a>
+                        </li>
+                    {% else %}
+                        <li class="active">
+                            <a href="#my_games" data-state="private" data-type="B" data-url="{% url 'ajax_list_games' gametype='B' %}">{% trans 'My games' %}</a>
+                        </li>
+                        <li class="">
+                            <a href="#org_games" data-state="org" data-type="B" data-url="{% url 'ajax_list_games' gametype='B' %}">{{ user.userprofile.organization }} {% trans 'games' %}</a>
+                        </li>
+                        <li class="">
+                            <a href="#public_games" data-state="public" data-type="B" data-url="{% url 'ajax_list_games' gametype='B' %}">{% trans 'Public games' %}</a>
+                        </li>
+                    {% endif %}
+
                 </ul>
             
                 <div class="tab-content">
-                    <div class="tab-pane active" id="magos_lite_games"></div>
-                    <div class="tab-pane" id="magos_games"></div>
+                    {% if not user.is_authenticated %}
+                        <div class="tab-pane active" id="public_games"></div>
+                    {% else %}
+                        <div class="tab-pane active" id="my_games"></div>
+                        <div class="tab-pane" id="org_games"></div>
+                        <div class="tab-pane" id="public_games"></div>
+                    {% endif %}
                 </div>
                 
             </div>

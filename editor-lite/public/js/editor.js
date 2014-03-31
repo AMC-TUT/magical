@@ -71,20 +71,23 @@ var editor = {
 	isMobile: false,
 
 	/* Update game revision */
-	setGame: function(callback) {
+	setGame: function(callback, state) {
 		var self = this;
+		if(_.isUndefined(state)) state = 0;
+		console.log(state);
 		if(editor.gameSlug) {
 		    var ajaxUrl = this.djangoUrl + this.apiUrl + editor.gameSlug;
 	        var ajaxReq = $.ajax({
 	            type: 'PUT',
 	            data: {
 	            	'revision': JSON.stringify(gameinfo.level1),
-		            'state': 1 // 1 = private, 2 = public
+		            'state': state // 0 = private, 1 = public for organization, 2 = public for all
 	            },
 	            url: ajaxUrl
 	        });
 	        ajaxReq.done(function ( data, textStatus, jqXHR ) {
 	        	utils.notify(i18n.t("Game saved"), 'success');
+	        	if(!_.isUndefined(callback)) callback.call(editor);
 	        });
 	        ajaxReq.fail(function (jqXHR, textStatus, errorThrown) {
 	        });
@@ -411,6 +414,8 @@ var editor = {
 	},
 
 	createUIElements: function() {
+		editor.updatePublishBtn();
+
 		editor.definePlatformType();
 		// game mode
 		if(gameinfo.level1.gameMode) {
@@ -574,7 +579,32 @@ var editor = {
 
 	},
 
+	updatePublishBtn: function(state) {
+		if(_.isUndefined(state)) state = gameinfo.state;
+		if(_.isUndefined(state)) state = 0;
+		console.log(state);
+		var publishBtn = $('#publishGame');
+		if(state == 1) {
+			publishBtn.removeClass('private btn-success');
+			publishBtn.addClass('public btn-danger');
+			publishBtn.html(i18n.t("Unpublish"));
+		} else {
+			publishBtn.removeClass('public btn-danger');
+			publishBtn.addClass('private btn-success');
+			publishBtn.html(i18n.t("Publish"));
+		}
+	},
+
 	bindUIClicks: function() {
+		// publish / unpublish
+		$('#publishGame').click(function(e) {
+			if($(this).hasClass('private')) {
+				editor.publishGame(editor.updatePublishBtn);
+			} else {
+				editor.unPublishGame(editor.updatePublishBtn);
+			}
+		});
+
 		// remove match rule
 		editor.bindRemoveMatchRule();
 		// remove fraction task
@@ -1727,14 +1757,20 @@ var editor = {
 	  	}
 	},
 
-		playGame: function(){
-			window.open("game.html?kissa=100")
-		},
-
-	publishGame: function(){
-		this.gameToLocal();	
+	playGame: function(){
+		window.open("game.html?kissa=100")
 	},
-		
+
+	publishGame: function(callback) {
+		gameinfo.state = 1;
+		this.setGame(callback, 1);
+	},
+
+	unPublishGame: function(callback) {
+		gameinfo.state = 0;
+		this.setGame(callback, 0);
+	},
+
 	gameToLocal: function() {
 		// Put the object into storage
 		localStorage.setItem('magosLevel', JSON.stringify(gameinfo));	

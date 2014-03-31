@@ -6,7 +6,7 @@ App.games = {
     init_list: function() {
         console.log('Init games');
         // load magos games as default tab content
-        this.listGames('B', $('.active a')[0].hash , $('.active a'));
+        this.listGames('B', 'private', $('.active a')[0].hash , $('.active a'));
         this.bindGames();
         this.bindPlayEditButtons();
     },
@@ -26,16 +26,17 @@ App.games = {
         // bind tab click
         $('#gamesList li a').click(function (e) {
             e.preventDefault();
-            var gameType = $(this).attr("data-url"); // magos or magos-lite
-            var url = '/game/ajax_list_games/' + $(this).attr("data-url"); 
+            var gameType = $(this).attr("data-type"); // magos or magos-lite
+            var url = $(this).attr("data-url");
+            var state = $(this).attr("data-state");
             var href = this.hash;
             var pane = $(this);
-            self.listGames(gameType, href, pane);
+            self.listGames(gameType, state, href, pane);
         });
     },
-    listGames: function(gameType, target, pane) {
+    listGames: function(gameType, state, target, pane) {
         console.log('Get my games');
-        var url = '/game/ajax_list_games/' + gameType;
+        var url = '/game/ajax_list_games/' + gameType + '/' + state;
         var ajaxReq = $.ajax( {
             dataType : 'html',
             type : 'GET',
