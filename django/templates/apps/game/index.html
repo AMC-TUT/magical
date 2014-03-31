@@ -38,7 +38,7 @@
                             <a href="#my_games" data-state="private" data-type="B" data-url="{% url 'ajax_list_games' gametype='B' %}">{% trans 'My games' %}</a>
                         </li>
                         <li class="">
-                            <a href="#org_games" data-state="org" data-type="B" data-url="{% url 'ajax_list_games' gametype='B' %}">{{ user.userprofile.organization }} {% trans 'games' %}</a>
+                            <a href="#org_games" data-state="org" data-type="B" data-url="{% url 'ajax_list_games' gametype='B' %}">{{ user.userprofile.organization }}</a>
                         </li>
                         <li class="">
                             <a href="#public_games" data-state="public" data-type="B" data-url="{% url 'ajax_list_games' gametype='B' %}">{% trans 'Public games' %}</a>
