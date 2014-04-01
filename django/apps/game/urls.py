@@ -26,6 +26,9 @@ urlpatterns = patterns('',
 
     url(r'^edit/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.edit_game', name="edit_game"),
 
+    url(r'^make/public/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.make_public', name="make_public"),
+    url(r'^make/private/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.make_private', name="make_private"),
+
     url(r'^game-authors/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.game_authors', name="game_authors"),
     url(r'^available-authors/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.available_authors', name="available_authors"),
     url(r'^add-author/(?P<gameslug>[\w.@+-]+)$', 'apps.game.views.add_author', name="add_author"),

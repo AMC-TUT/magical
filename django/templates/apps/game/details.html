@@ -100,8 +100,27 @@
                 
         <hr />
         {% if can_edit %}
-            <a class="btn btn-primary" id="editGame" href="{% url 'edit_game' game.slug %}"><i class="fa fa-pencil"></i> {% trans 'Edit game information' %}</a>
-            <button class="btn btn-danger" id="deleteGame" href="{% url 'delete_game' game.slug %}">{% trans 'Delete game' %}</button>
+            <div>
+                <a class="btn btn-primary" id="editGame" href="{% url 'edit_game' game.slug %}"><i class="fa fa-pencil"></i> {% trans 'Edit game information' %}</a>
+                <button class="btn btn-danger" id="deleteGame" href="{% url 'delete_game' game.slug %}">{% trans 'Delete game' %}</button>
+            </div>
+            
+            <hr />
+            <div class="publish_game">
+                <h4>{% trans 'game visibility'|capfirst %}</h4>
+                <p>{{ game.state_as_text|capfirst }}</p>
+                {% if game.state != 1 %}
+                    <p><blockquote>{% blocktrans %}You can make this game visible for your organization by publishing it in the game editor.{% endblocktrans %}</blockquote></p>
+                {% endif %}
+                {% if game.state == 1 or game.state == 0 %}
+                    <a class="btn btn-primary" id="makePublic" href="{% url 'make_public' game.slug %}">{% trans 'Make game public for all' %}</a>                
+                {% endif %}
+                {% if game.state == 2 %}
+                    <a class="btn btn-primary" id="makePrivate" href="{% url 'make_private' game.slug %}">{% trans 'Make game private' %}</a>
+                {% endif %}
+            </div>
+
+
         {% endif %}
 
     {% endif %}

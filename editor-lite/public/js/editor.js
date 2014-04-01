@@ -73,6 +73,7 @@ var editor = {
 	/* Update game revision */
 	setGame: function(callback, state) {
 		var self = this;
+		if(_.isUndefined(state)) state = gameinfo.state;
 		if(_.isUndefined(state)) state = 0;
 		console.log(state);
 		if(editor.gameSlug) {
@@ -584,7 +585,7 @@ var editor = {
 		if(_.isUndefined(state)) state = 0;
 		console.log(state);
 		var publishBtn = $('#publishGame');
-		if(state == 1) {
+		if(state == 1 || state == 2) {
 			publishBtn.removeClass('private btn-success');
 			publishBtn.addClass('public btn-danger');
 			publishBtn.html(i18n.t("Unpublish"));
@@ -1755,10 +1756,6 @@ var editor = {
 	  		console.log("Sorry! No web storage support..");
 	  		this.storable=false;
 	  	}
-	},
-
-	playGame: function(){
-		window.open("game.html?kissa=100")
 	},
 
 	publishGame: function(callback) {

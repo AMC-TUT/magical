@@ -585,3 +585,11 @@ a.removeTag:hover {
     margin: 15px;
     font-style: italic;
 }
+
+.publish_game {
+    margin-top: 20px;
+}
+
+.draft {
+    background: url('../img/draft-bg.png') repeat;
+}

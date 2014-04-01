@@ -3,13 +3,16 @@
 {% if games %}
 	<ul class="games-list">
 	{% for game in games %}
-        <li>
+        <li{% if game.is_private %} class="draft"{% endif %}>
             {% if game.image %}
                 <img src="{% thumbnail game.image 180x72 crop="smart" %}" alt="" />
             {% else %}
                 <img src="{{ STATIC_URL }}img/empty-game-image.png">
             {% endif %}
-            <h1><a href="/game/details/{{ game.slug }}">{{ game.title }}</a></h1>
+            <h1>
+                {% if game.is_private %}<i class="fa fa-lock"></i> {% endif %}
+                <a href="/game/details/{{ game.slug }}">{{ game.title }}</a>
+            </h1>
             <p>{{ game.description|truncatechars:60 }}</p>
         </li>
     {% endfor %}

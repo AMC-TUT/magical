@@ -544,7 +544,21 @@ class Game(PolymorphicModel):
 
     def get_latest_revision(self):
         return Revision.objects.filter(game=self).latest('inserted')
-    
+
+    def state_as_text(self):
+        msg = _(u'private')
+        if self.state == 1:
+            msg = _(u'public for your organization')
+        elif self.state == 2:
+            msg = _(u'public for all')
+        return msg
+
+    def is_private(self):
+        return (self.state == 0)
+
+    def is_public(self):
+        return (self.state == 1 or self.state == 2)
+
     def __unicode__(self):
         return u"%s" % self.title
 

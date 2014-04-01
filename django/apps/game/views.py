@@ -120,6 +120,42 @@ def delete_game(request, gameslug):
 
     return HttpResponseRedirect(reverse('home'))
 
+
+@login_required
+def make_private(request, gameslug):
+    """Make game private"""
+    return make_public(request, gameslug, private=True)
+
+@login_required
+def make_public(request, gameslug, private=False):
+    """Make game public"""
+    context = RequestContext(request)
+    user = request.user
+    organization = None
+    if user.is_authenticated():
+        organization = user.get_profile().organization
+    else:
+        return HttpResponseRedirect(reverse('home'))
+    try:
+        game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)            
+        game_title = game.title
+        isAuthor = game.author_set.filter(user=user)
+        if isAuthor or user == game.creator:
+            if private:
+                game.state = 0
+                messages.success(request, 'Game %s is now private.' % game_title)
+            else:
+                game.state = 2
+                messages.success(request, 'Game %s is now public for all.' % game_title)
+            game.save()
+    except Game.DoesNotExist:
+        return HttpResponseRedirect(reverse('home'))
+
+    return HttpResponseRedirect(
+        reverse('game_details', args=(game.slug,))
+    )
+
+
 @login_required
 def edit_game(request, gameslug):
     tpl = 'apps/game/edit_game.html'
@@ -767,12 +803,13 @@ def ajax_list_games(request, gametype='A', state='public'):
         # authenticated users
         if game_state == 0:
             # list of their own games
-            games = TypedGame.objects.filter(author__user__userprofile__organization=user.userprofile.organization, state=game_state).distinct()
+            game_ids = user.author_set.all().values_list('game__id', flat=True)
+            games = TypedGame.objects.filter(id__in=game_ids)
         elif game_state == 1:
             # their organizatons games
-            games = TypedGame.objects.filter(author__user__userprofile__organization=user.userprofile.organization, state=game_state).distinct()
+            games = TypedGame.objects.filter(author__user__userprofile__organization=user.userprofile.organization, state__in=[1, 2]).distinct()
         elif game_state == 2:
-            # public games
+            # any public game
             games = TypedGame.objects.filter(state=game_state).distinct()
 
     else:
