@@ -192,6 +192,7 @@ class Language(models.Model):
     class Meta:
         verbose_name = _('language')
         verbose_name_plural = _('languages')
+        unique_together = (('title','slug', 'code'),)
 
     def __unicode__(self):
         return self.title
@@ -210,6 +211,7 @@ class Country(models.Model):
     class Meta:
         verbose_name = _('country')
         verbose_name_plural = _('countries')
+        unique_together = (('name','slug',),)
         #db_table = 'countries'
 
     def __unicode__(self):
@@ -222,6 +224,7 @@ def validate_only_one_public(obj):
     model = obj.__class__
     if (model.objects.filter(public_org=True).count() > 0 and obj.id != model.objects.get(public_org=True).id):
         raise ValidationError("Only one %s can be public" % model.__name__)
+
 
 class Organization(models.Model):
     """Organization model"""

@@ -165,6 +165,17 @@ class MagosAGameForm(BaseGameForm):
         model = MagosAGame
         exclude = ('image', 'creator', 'cloned', 'slug', 'state', 'rows', 'cols',)
 
+    def __init__(self, *args, **kwargs):
+        super(MagosAGameForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'createGameForm'
+        self.helper.form_class = 'magosForm'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'save_create_game_a'
+
+        self.helper.add_input(Submit('submit', _(u'Create'), css_class='btn btn-success', css_id='submitCreateGame'))
+        self.helper.add_input(Button('cancel', _(u'Cancel'), css_class='btn btn-danger', css_id='cancelCreateGame'))
+
 
 class MagosBGameForm(BaseGameForm):
 

@@ -34,6 +34,10 @@ path.append(DJANGO_ROOT)
 ########## DEBUGGING
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
+
+# show development features?
+DEVELOPMENT_FEATURES = True
+
 ########## END DEBUG
 
 
@@ -150,6 +154,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'apps.game.context_processors.user_settings',
     'apps.game.context_processors.include_login_form',
+    'apps.game.context_processors.dev_features',
 )
 
 TEMPLATE_LOADERS = (

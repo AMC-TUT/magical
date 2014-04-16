@@ -227,7 +227,6 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
         """
         put_data = self.DATA
         session_user = request.user
-        print session_user
         if not session_user.is_authenticated():
             response = Response(403, {'statusCode': 403, 'message' : 'Not authorized'})
             return self.render(response)
@@ -257,7 +256,6 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
         if valid_data:
             try:
                 # set state
-                print state
                 game.state = state
                 game.save()
 

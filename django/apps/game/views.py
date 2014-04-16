@@ -431,9 +431,100 @@ def create_game_base(request):
     organization = user.get_profile().organization
     return render(request, tpl, context)
 
-
 @login_required
 def create_game_a(request):
+    tpl = 'apps/game/create.html'
+    context = RequestContext(request)
+    user = request.user
+    organization = user.get_profile().organization
+    GameForm = MagosAGameForm
+    context['gametype_text'] = 'Classic'
+    form = GameForm(organization=organization)
+    context['form'] = form
+    return render(request, tpl, context)
+
+
+
+
+
+@ajax_login_required
+@json_view
+def save_create_game_a(request):
+    user = request.user
+    organization = user.get_profile().organization
+    form = MagosAGameForm(request.POST or None, organization=organization)
+    if form.is_valid():
+        resolution = form.cleaned_data['resolution']
+        resolution = resolution.split('_')
+        cols = 14
+        rows = 10
+        if len(resolution) == 2:
+            cols = int(resolution[0])
+            rows = int(resolution[1])
+        game = form.save()
+        game.creator = user
+        game.rows = rows
+        game.cols = cols
+        game.save()
+        
+        # create initial revision
+        revision_data = {}
+        canvas_data = {
+            "blockSize": game.block_size,
+            "columns": cols,
+            "rows": rows
+        }
+        scenes_data = [
+            {
+                "name" : "intro",
+                "sceneComponents" : [],
+                "gameComponents" : []
+            },
+            {
+                "name" : "game",
+                "sceneComponents" : [],
+                "gameComponents" : []
+            },
+            {
+                "name" : "outro",
+                "sceneComponents" : [],
+                "gameComponents" : []
+            }
+        ]
+        revision_data['canvas'] = canvas_data
+        revision_data['gameComponents'] = []
+        revision_data['scenes'] = scenes_data
+
+        #revision_data = revision_data.strip()
+        revision_data = json.dumps(revision_data)
+        revision = Revision(game=game, data=revision_data)
+        revision.save()
+        # add user as author
+        author = Author(game=game, user=user)
+        author.save()
+
+        # we have to create and save initial game data to Redis
+        redis_game_data = create_game_for_redis(game.slug)
+        jresult = json.dumps(redis_game_data)
+        set_redis_game_data(game.slug, jresult)
+
+        # redirect to newly created game
+        url = '/game/details/%s' % game.slug
+        #return redirect(url)
+        data = {
+            'success': True,
+            'url': url
+        }
+        return data
+
+    form_html = render_crispy_form(form)
+    return {'success': False, 'form_html': form_html}
+
+
+
+
+"""
+
     tpl = 'apps/game/create.html'
     context = RequestContext(request)
     user = request.user
@@ -519,6 +610,10 @@ def create_game_a(request):
         form = GameForm(organization=organization)
     context['form'] = form
     return render(request, tpl, context)
+"""
+
+
+
 
 @ajax_login_required
 @json_view

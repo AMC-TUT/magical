@@ -27,7 +27,6 @@
                     </div>
                 </div>
                 {% endif %}
-
                 <ul class="nav nav-tabs" id="gamesList">
                     {% if not user.is_authenticated %}
                         <li class="active">
@@ -44,7 +43,11 @@
                             <a href="#public_games" data-state="public" data-type="B" data-url="{% url 'ajax_list_games' gametype='B' %}">{% trans 'Public games' %}</a>
                         </li>
                     {% endif %}
-
+                    {% if DEVELOPMENT_FEATURES %}
+                        <li class="">
+                            <a href="#magos_a_games" data-state="private" data-type="A" data-url="{% url 'ajax_list_games' gametype='A' %}">{% trans 'Magos A games' %}</a>
+                        </li>
+                    {% endif %}
                 </ul>
             
                 <div class="tab-content">
@@ -54,6 +57,10 @@
                         <div class="tab-pane active" id="my_games"></div>
                         <div class="tab-pane" id="org_games"></div>
                         <div class="tab-pane" id="public_games"></div>
+                    {% endif %}
+
+                    {% if DEVELOPMENT_FEATURES %}
+                        <div class="tab-pane" id="magos_a_games"></div>
                     {% endif %}
                 </div>
                 

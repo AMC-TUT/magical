@@ -27,23 +27,8 @@ def make_thumbnail(original, width, height):
 
 def get_mime_type(filename):
     """
-       apps.content.utils.get_mime_type uses python magic library to
-       tell what mime type a file actually has.
-
-       We cannot trust the mime type given during
-       browser uploading.
-
-       * About MIME types: http://tools.ietf.org/html/rfc2046
-       * List of MIME types: http://www.iana.org/assignments/media-types/
-
-       :arg filename: Filename of the file of which mime type \
-               you want to find out
-       :type filename: str
-
-       :returns: tuple of main and sub type.
-       :rtype: tuple
-       """
-    #import ipdb;ipdb.set_trace()
+    Get file mime type as tuple of main and sub type.
+    """
 
     if hasattr(magic, 'from_file'):
         # new magic library

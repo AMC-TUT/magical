@@ -12,9 +12,9 @@
             <div id="main-content" class="col-xs-8">
             	<div id="selectGameType">
 	            	<h1>{% trans 'Select game type' %}</h1>
-    				<!--
-                    <button type="button" class="btn btn-primary gameType" id="btn-A">CLASSIC</button>
-                    -->
+                    {% if DEVELOPMENT_FEATURES %}
+                        <button type="button" class="btn btn-primary gameType" id="btn-A">CLASSIC</button>
+                    {% endif %}
     				<button type="button" class="btn btn-info gameType" id="btn-B">LITE</button>
             	</div>
 

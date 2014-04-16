@@ -276,13 +276,27 @@ var game = {
 			}
 
 			if(game.avoidables.length > 0) {
-				var panicBtn = Crafty.e("2D, DOM, Image, Mouse, panic").attr({x: 20, y: 70, z: 1000});					
-				panicBtn.bind('Click', function() {
+				var panicBtn = Crafty.e("2D, DOM, Image, Mouse, Keyboard, panic").attr({x: 20, y: 70, z: 1000});
+				panicBtn.bind('MouseDown', function (e) {
+					//e.stopPropagation();
+					console.log('PANIC');
 					Crafty("avoidable").each(function(i) {
 						game.addExplosion(this.x,this.y);
 						this.destroy();
 					});
 				});
+
+				panicBtn.bind('KeyDown', function (e) { 
+					if (this.isDown('D')) {
+						console.log('PANIC');
+						Crafty("avoidable").each(function(i) {
+							game.addExplosion(this.x,this.y);
+							this.destroy();
+						});					
+					}
+				});
+
+
 			}
 
 			
@@ -316,8 +330,9 @@ var game = {
 			}
 
 			if(gameinfo["level1"].platformType == "air"){
-				player = Crafty.e("2D, Canvas, Multiway,"+playerImg).attr({x: 110, y: 100, z: 1000}).multiway(8, { SPACE: -90});
-			
+				//player = Crafty.e("2D, Canvas, Multiway,"+playerImg).attr({x: 110, y: 100, z: 1000}).multiway(8, { SPACE: -90});
+				player = Crafty.e("2D, Canvas, Multiway,"+playerImg).attr({x: 110, y: 100, z: 1000}).multiway({x:3,y:8}, {SPACE: -90, RIGHT_ARROW: 0, LEFT_ARROW: 180});
+
 				player.bind("EnterFrame", function(frame) {
 					player.y+=game.ymov;
 					if(player.y<10){

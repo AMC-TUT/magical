@@ -50,10 +50,11 @@ var pageRoutes = require('./routes/page');
   	eventRoutes = require('./routes/event');
 	*/
 app.get('/', pageRoutes.index);
-app.get('/game/:slug', pageRoutes.game);
+app.get('/edit/:slug', pageRoutes.game);
+//app.get('/play/:slug', pageRoutes.game);
 
 // redirect other requests to index
-app.get('*', pageRoutes.index);
+//app.get('*', pageRoutes.index);
 
 // Socket communications ***
 io.sockets.on('connection', function(socket) {
