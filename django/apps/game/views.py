@@ -304,10 +304,14 @@ def game_details(request, gameslug):
     editor_url = settings.MAGOS_EDITOR_URL
     play_url = settings.MAGOS_PLAY_URL
     try:
+        game = Game.objects.get(slug=gameslug)
         if not user.is_authenticated():
-            game = Game.objects.get(slug=gameslug, state=2)
+            if not game.state == 2:
+                raise Http404('Game does not exist')
+            #game = Game.objects.get(slug=gameslug, state=2)
         else:
-            game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)            
+            if not game.state == 2:
+                game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)            
         authors = game.author_set.all()
         for author in authors:
             game_authors.append(author.user)
