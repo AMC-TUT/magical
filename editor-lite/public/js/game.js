@@ -377,7 +377,7 @@ var game = {
 				Crafty.addEvent(Crafty.stage.elem, Crafty.stage.elem, "mousedown", Crafty.stage.elem.onMouseDown);
 			} else {
 		       	//player = Crafty.e("2D, Canvas, Physics, Player, Gravity, Keyboard, Collision,"+playerImg).attr({x:110, y:100, z: 1001});
-		       	player = Crafty.e("2D, Canvas, Physics, Player, Gravity, Keyboard, Collision, Multiway,"+playerImg).attr({x:110, y:100, z: 1001}).multiway({x:3}, {RIGHT_ARROW: 0, LEFT_ARROW: 180});
+		       	player = Crafty.e("2D, Canvas, Physics, Player, Gravity, Keyboard, Collision, Multiway,"+playerImg).attr({x:110, y:100, z: 1001}).multiway(3, {RIGHT_ARROW: 0, LEFT_ARROW: 180});
 				player.bind('KeyDown', function (e) { 
 					if (this.isDown('SPACE')) jump();
 				});
