@@ -4,6 +4,10 @@ from base import *
 ########## DEBUG CONFIGURATION
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+
+# show development features?
+DEVELOPMENT_FEATURES = True
+
 ########## END DEBUG CONFIGURATION
 
 

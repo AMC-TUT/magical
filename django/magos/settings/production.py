@@ -1,6 +1,10 @@
 """Production settings and globals."""
 from base import *
 
+# show development features?
+DEVELOPMENT_FEATURES = False
+
+
 ########## URL CONFIGURATION
 BASE_URL = 'http://magos.pori.tut.fi/'
 

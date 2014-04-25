@@ -35,9 +35,6 @@ path.append(DJANGO_ROOT)
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-# show development features?
-DEVELOPMENT_FEATURES = True
-
 ########## END DEBUG
 
 
