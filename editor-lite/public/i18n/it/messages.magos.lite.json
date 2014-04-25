@@ -22,6 +22,7 @@
     "Preview": "Anteprima",
     "Full screen": "A schermo intero",
     "Publish": "Pubblica",
+    "Unpublish": "Nascondere il gioco agli altri",
 
     "Game type and game mode": "Tipo e modalità di gioco",
     "Game type": "Tipo di gioco",
@@ -104,7 +105,7 @@
     "houses far": "case lontane",
     "sea": "mare",
     "forest": "foresta",
-    "Font color": "Colore carattere",
+    "Font color": "Colore del testo",
     "background_info": "Usare questi controlli per costruire lo sfondo del tuo gioco. Dietro l’azione ci sono dei “pannelli” grafici mobili che, sovrapposti uno all’altro, formano insieme la scenografia del gioco. Ne puoi selezionare fino a un massimo di tre. Nel gioco questi sfondi si spostano da destra a sinistra a velocità diverse, creando così l’effetto del movimento in avanti del personaggio-giocatore.",
 
     "Select task type": "tipo di abbinamento",
@@ -201,10 +202,10 @@
     "Save instructions": "Salva le instruzione",
     "instructions_info": "In questo spazio puoi scrivere le istruzioni del tuo gioco. È importante che siano chiare e complete, e che spieghino bene l'obiettivo del gioco.",
 
-    "My games": "My games",
-    "Select game to edit": "Select game to edit",
-    "Change game": "Change game",
-    "my_games_info": "You can change the game you are editing.",
+    "My games": "I miei giochi",
+    "Select game to edit": "Selezionare il gioco su cui lavorare",
+    "Change game": "Cambiare gioco",
+    "my_games_info": "Puoi passare a lavorare su un altro gioco",
 
     "Play": "Gioca",
     "Edit": "Modifica",

@@ -39,6 +39,11 @@
             <p>{% blocktrans with game_creator=game.creator.username %}Game created by {{ game_creator }}.{% endblocktrans %}</p>
         {% endif %}
 
+        <p>
+            <a class="btn btn-primary" id="playGameBtn" href="{{ play_url }}{{ game.slug }}">{% trans 'Play game' %}</a> 
+            {% if can_edit %}
+            <a class="btn btn-warning" id="editGameBtn" href="{{ editor_url }}{{ game.slug }}">{% trans 'Launch game editor' %}</a> {% endif %}
+        </p>
 
         <div id="gameTags">
             <h5>{% trans 'Tags' %}</h5>
@@ -73,11 +78,6 @@
             <div class="reviewInfo">({{ avg_stars }} average, {{ num_reviews }} votes)</div>
             <div id="response"></div>
         {% endif %}
-        <p>
-            <a class="btn btn-primary" id="playGameBtn" href="{{ play_url }}{{ game.slug }}">{% trans 'Play game' %}</a> 
-            {% if can_edit %}
-            <a class="btn btn-warning" id="editGameBtn" href="{{ editor_url }}{{ game.slug }}">{% trans 'Launch game editor' %}</a> {% endif %}
-        </p>
 
         <hr />
 

@@ -593,3 +593,7 @@ a.removeTag:hover {
 .draft {
     background: url('../img/draft-bg.png') repeat;
 }
+
+#addGameTagsForm .asteriskField {
+    display: none;
+}

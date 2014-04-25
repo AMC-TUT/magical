@@ -448,9 +448,6 @@ def create_game_a(request):
     return render(request, tpl, context)
 
 
-
-
-
 @ajax_login_required
 @json_view
 def save_create_game_a(request):
