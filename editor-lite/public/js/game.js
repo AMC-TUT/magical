@@ -947,6 +947,7 @@ var game = {
 					ax = Math.round(event.accelerationIncludingGravity.x*1000);
 					ay = Math.round(event.accelerationIncludingGravity.y*1000);
 					az = Math.round(event.accelerationIncludingGravity.z*1000);
+					event.preventDefault();
 				}
 				setInterval(function() {
 					if(!activated) {						
