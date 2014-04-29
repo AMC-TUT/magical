@@ -144,7 +144,8 @@
     "tomato": "pomodoro",
     "broccoli": "broccolo",
     "eggplant": "melanzane",
-    "diamond": "diamante",    
+    "diamond": "diamante", 
+    "balloon-small": "palloncino",   
     "collectibles_info": "Scegli gli elementi mobili che il giocatore dovrà raccogliere per guadagnare dei punti nel gioco. Per raccoglierli, il giocatore dovrà scontrarli man mano che passano sullo schermo. Oltre a scegliere questi elementi, puoi anche definire la frequenza con cui appariranno nel gioco.",
 
     "Hazard properties": "Proprietà dei pericoli",

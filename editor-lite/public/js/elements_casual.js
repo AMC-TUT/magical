@@ -52,7 +52,7 @@ var textures =  {
 	"cloud": "/editor-lite/static/img/cloud.png",
 	"storm-cloud": "/editor-lite/static/img/cloud-storm.png",
 	"magos-girl": "/editor-lite/static/img/magos-girl.png",
-
+	"clown": "/editor-lite/static/img/clown.png",
 	"sausage-man": "/editor-lite/static/img/sausage-man.png",
 	"skater": "/editor-lite/static/img/skater.png",
 	"chocobar": "/editor-lite/static/img/chocobar.png",
@@ -66,6 +66,7 @@ var textures =  {
 	"broccoli": "/editor-lite/static/img/broccoli.png",
 	"eggplant": "/editor-lite/static/img/eggplant.png",
 	"diamond": "/editor-lite/static/img/diamond.png",
+	"balloon-small": "/editor-lite/static/img/balloon-small.png",
 
 	"gift": "/editor-lite/static/img/gift.png",
 	"sky-small-clouds": "/editor-lite/static/img/sky-small-clouds.png",
@@ -119,7 +120,8 @@ var textureMenu =  {
 		{text:"santa claus", value:"santa"},
 		{text:"rocket", value:"rocket"},
 		{text:"aeroplane", value:"aeroplane"},
-		{text:"sausage man", value:"sausage-man"}
+		{text:"sausage man", value:"sausage-man"},
+		{text:"clown", value:"clown"}		
 	],
 	grounds:[
 		{text:"", value:""},

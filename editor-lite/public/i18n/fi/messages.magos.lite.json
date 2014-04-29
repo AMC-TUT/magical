@@ -145,6 +145,7 @@
     "broccoli": "parsakaali",
     "eggplant": "munakoiso",
     "diamond": "timantti",
+    "balloon-small": "ilmapallo",
     "collectibles_info": "Keräilykohteet ovat pelielementtejä, joita pelaaja yrittää kerätä. Keräilykohteet lähetyvät pelaajaa oikealta. Voit määritellä keräilykohteiden ilmestymistiheyden. Usein pelaaja saa pisteitä keräämällä keräilykohteita.",
 
     "Hazard properties": "Vaarojen asetukset",
