@@ -71,11 +71,12 @@ var authorize = require('./middleware/authorize');
 // Routes ***
 var pageRoutes = require('./routes/page'),
   	editorRoutes = require('./routes/editor'),
-  	playRoutes = require('./routes/play');
+    playRoutes = require('./routes/play'),
+  	previewRoutes = require('./routes/preview');
 app.get('/', pageRoutes.index);
 app.get('/edit/:slug', authenticate, authorize, editorRoutes.index);
 app.get('/play/:slug', play_authenticate, playRoutes.index);
-app.get('/preview/:slug', play_authenticate, playRoutes.index);
+app.get('/preview/:slug', play_authenticate, previewRoutes.index);
 
 // redirect other requests to index
 //app.get('*', pageRoutes.index);

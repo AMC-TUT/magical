@@ -1,5 +1,5 @@
 /**
-* Play routes
+* Preview routes
 */
 var _ = require('underscore')._,
 	config = require("../config");
