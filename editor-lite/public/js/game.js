@@ -69,7 +69,7 @@ var game = {
 
 	/* PLAY game */
 	initPlay: function() {
-		this.preview = false;
+		//this.preview = false;
 		var lang_code = 'en'; 
 		if(this.user) {
 			lang_code = this.user.lang_code;
