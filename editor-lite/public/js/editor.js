@@ -206,8 +206,6 @@ var editor = {
 
 		// ###### EDITOR ############## Preload all media used by the game and the selected level
 		Crafty.scene('editor', function() {
-	        $('input, textarea').prop('disabled', false);
-
 			Crafty.background(gameinfo.level1.bgcolor);
 			editor.getGameData();
 

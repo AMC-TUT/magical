@@ -80,8 +80,6 @@ var game = {
 	
 	/* PREVIEW game */
 	initGame: function() {
-        $('input, textarea').prop('disabled', true);
-
 		if(!this.preview) utils.initAudio();
 
 		if(gameinfo.level1.fontColor) {

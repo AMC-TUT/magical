@@ -13,6 +13,6 @@ module.exports.index = function(req, res) {
 		user: user,
 		lang: user.lang_code,
 		gameSlug: gameSlug,
-		preview: false
+		preview: true
 	});
 };
