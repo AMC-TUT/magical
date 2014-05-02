@@ -1409,8 +1409,8 @@ Crafty.c('ExtraLife', {
 
 
 Crafty.c('TaskLabel', {
-	__w: 120,
-	__h: 40,
+	__w: 280,
+	__h: 130,
 	__z: 1000,
 				
 	taskLabel: function(start_x, start_y, task, tColor) {
