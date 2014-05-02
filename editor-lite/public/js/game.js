@@ -175,9 +175,11 @@ var game = {
 				editBtn.text(i18n.t('Edit'));
 				stage.append(editBtn);
 				editBtn.click(function() {
-					$('#playBtn, #editBtn, #backBtn').remove();
-					$("#editor-stage").show();
-					Crafty.scene('editor');
+					//$('#playBtn, #editBtn, #backBtn').remove();
+					//$("#editor-stage").show();
+					//Crafty.scene('editor');
+					var editorUrl = editor.djangoUrl + '/editor-lite/editor/' + this.gameSlug;
+					window.location = editorUrl;
 				});
 			} else {
 				var backBtn = $('<button>');

@@ -1774,8 +1774,6 @@ var editor = {
 	},
 
 	openGame: function() {
-		//document.getElementById("editor-stage").style.display = "none";
-		//game.initGame();
 		var previewUrl = editor.djangoUrl + '/editor-lite/preview/' + this.gameSlug;
 		window.location = previewUrl;
 	},
