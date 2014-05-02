@@ -80,6 +80,8 @@ var game = {
 	
 	/* PREVIEW game */
 	initGame: function() {
+        $('input, textarea').prop('disabled', true);
+
 		if(!this.preview) utils.initAudio();
 
 		if(gameinfo.level1.fontColor) {
@@ -947,7 +949,7 @@ var game = {
 					ax = Math.round(event.accelerationIncludingGravity.x*1000);
 					ay = Math.round(event.accelerationIncludingGravity.y*1000);
 					az = Math.round(event.accelerationIncludingGravity.z*1000);
-					event.preventDefault();
+					//event.preventDefault();
 				}
 				setInterval(function() {
 					if(!activated) {						
