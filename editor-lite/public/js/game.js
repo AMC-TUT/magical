@@ -303,7 +303,7 @@ var game = {
 			
 			if(gameinfo["level1"].matchRule == "word") {
 				Crafty.e("2D, DOM, Image, sign").attr({x: 190, y: 5, z: 1000});
-				var taskLabel = Crafty.e("TaskLabel").taskLabel(250, 25, i18n.t("task"), '#FFFFFF');
+				var taskLabel = Crafty.e("TaskLabel").taskLabel(195, 10, i18n.t("task"), '#FFFFFF');
 				
 				if(gameinfo["level1"].wordRules.length>0) {
 					createNewWordTask();
@@ -316,14 +316,14 @@ var game = {
 			if(gameinfo["level1"].matchRule == "memory") {
 				console.log("memory");
 				Crafty.e("2D, DOM, Image, sign").attr({x: 190, y: 5, z: 1000});
-				var taskLabel = Crafty.e("TaskLabel").taskLabel(250, 25, gameinfo["level1"].memoryStart, '#FFFFFF');
+				var taskLabel = Crafty.e("TaskLabel").taskLabel(195, 10, gameinfo["level1"].memoryStart, '#FFFFFF');
 				createNewMemoryTask(true);
 				game.wordInterval = setInterval(function(){addMemory()},gameinfo["level1"].wordInterval);
 			}
 
 			if(gameinfo["level1"].matchRule == "fraction") {
 				Crafty.e("2D, DOM, Image, sign").attr({x: 190, y: 5, z: 1000});
-				var taskLabel = Crafty.e("TaskLabel").taskLabel(250, 25, "task", '#FFFFFF');
+				var taskLabel = Crafty.e("TaskLabel").taskLabel(195, 10, "task", '#FFFFFF');
 				if(gameinfo["level1"].fractionRules.length>0) {
 					createNewTask();
 					game.fractionInterval = setInterval(function(){addFraction()},5000);
