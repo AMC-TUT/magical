@@ -178,7 +178,7 @@ var game = {
 					//$('#playBtn, #editBtn, #backBtn').remove();
 					//$("#editor-stage").show();
 					//Crafty.scene('editor');
-					var editorUrl = game.djangoUrl + '/editor-lite/editor/' + game.gameSlug;
+					var editorUrl = game.djangoUrl + '/editor-lite/edit/' + game.gameSlug;
 					window.location = editorUrl;
 				});
 			} else {
