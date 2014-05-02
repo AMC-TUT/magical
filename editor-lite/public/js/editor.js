@@ -1770,12 +1770,14 @@ var editor = {
 
 	gameToLocal: function() {
 		// Put the object into storage
-		localStorage.setItem('magosLevel', JSON.stringify(gameinfo));	
+		localStorage.setItem('magosLevel', JSON.stringify(gameinfo));
 	},
 
 	openGame: function() {
-		document.getElementById("editor-stage").style.display = "none";
-		game.initGame();
+		//document.getElementById("editor-stage").style.display = "none";
+		//game.initGame();
+		var previewUrl = editor.djangoUrl + '/editor-lite/preview/' + this.gameSlug;
+		window.location = previewUrl;
 	},
 
 	// generate random string
