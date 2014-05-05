@@ -126,7 +126,7 @@
     "Increment": "Lisäysnumero",
     "Save rule": "Tallenna sääntö",
     "memory_match_info": "Muistivastaavuuspelissä pelaajan pitää laskea, muistaa ja kerätä oikea kohdenumero. Kohdenumero lasketaan lisäämällä lisäysnumero aloitusnumeroon. Jokaisen oikean vastauksen jälkeen muodostetaan uusi kohdenumero.",
-    "match_info": "Sanatehtävässä tehtävä näkyy ruudun yläreunassa tehtäväalueella. Vastaukset lähetyvät pelaajaa oikealta pilvien mukana. Pelaajan tehtävänä on kerätä pilviä, joissa on tehtävän oikea vastaus.",
+    "match_info": "Tekstitehtävässä tehtävä näkyy ruudun yläreunassa tehtäväalueella. Vastaukset lähetyvät pelaajaa oikealta pilvien mukana. Pelaajan tehtävänä on kerätä pilviä, joissa on tehtävän oikea vastaus.",
     "Either a task or an answer is missing!": "Joko tehtävä tai vastaus puuttuu!",
     "Denominator can not be null!": "Nimittäjä ei voi olla nolla!",
     "Denominator has to be equal or greater than numerator!": "Nimittäjän pitää olla suurempi tai yhtä suuri kuin osoittaja!",
