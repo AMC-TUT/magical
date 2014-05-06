@@ -80,7 +80,7 @@ var game = {
 	
 	/* PREVIEW game */
 	initGame: function() {
-		if(!this.preview) utils.initAudio();
+		utils.initAudio();
 
 		if(gameinfo.level1.fontColor) {
 			this.fontColor = gameinfo.level1.fontColor;			
@@ -277,7 +277,7 @@ var game = {
 				distanceCom = Crafty.e('DistanceMeter').distancemeter();
 			}
 
-			if(game.avoidables.length > 0) {
+			if(gameinfo.level1.platformType != "ground" && game.avoidables.length > 0) {
 				var panicBtn = Crafty.e("2D, DOM, Image, Mouse, Keyboard, panic").attr({x: 20, y: 70, z: 1000});
 				panicBtn.bind('MouseDown', function (e) {
 					//e.stopPropagation();
