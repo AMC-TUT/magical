@@ -135,7 +135,56 @@ utils = {
 			type: msgType || 'alert',
 			timeout: msgTimeout
 		});
-	}
+	},
 
+
+	checkIfMobile: function() {
+		var isMobile = {
+		   Android: function() {
+		       return navigator.userAgent.match(/Android/i);
+		   },
+		   BlackBerry: function() {
+		       return navigator.userAgent.match(/BlackBerry/i);
+		   },
+		   iOS: function() {
+		       return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+		   },
+		   Opera: function() {
+		       return navigator.userAgent.match(/Opera Mini/i);
+		   },
+		   Windows: function() {
+		       return navigator.userAgent.match(/IEMobile/i);
+		   },
+		   any: function() {
+		    	if (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows()) {
+		    		return true;
+		   		}
+		   		return false;
+		   }
+		};
+		isMobile = isMobile.any();
+		return isMobile;
+	},
+
+	toggleFullScreen: function() {
+		if (!document.fullscreenElement &&    // alternative standard method
+			!document.mozFullScreenElement && !document.webkitFullscreenElement) {  // current working methods
+			if (document.documentElement.requestFullscreen) {
+				document.documentElement.requestFullscreen();
+			} else if (document.documentElement.mozRequestFullScreen) {
+				document.documentElement.mozRequestFullScreen();
+			} else if (document.documentElement.webkitRequestFullscreen) {
+				document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+			}
+		} else {
+			if (document.cancelFullScreen) {
+				document.cancelFullScreen();
+			} else if (document.mozCancelFullScreen) {
+				document.mozCancelFullScreen();
+			} else if (document.webkitCancelFullScreen) {
+				document.webkitCancelFullScreen();
+			}
+		}
+	}	
 
 }

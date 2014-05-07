@@ -96,7 +96,7 @@ var editor = {
 	},
 
 	init: function() {
-		this.checkIfMobile();
+		this.isMobile = utils.checkIfMobile();
 		this.bindBackToPortal();
 		utils.i18nInit(this.user.lang_code, this.getGame, editor);
 	},
@@ -119,34 +119,6 @@ var editor = {
 			utils.apiBaseUrl = this.apiBaseUrl;
 			utils.getGameToEdit(this.gameSlug, this.initEditor);
 		}
-	},
-
-	checkIfMobile: function() {
-		var isMobile = {
-		   Android: function() {
-		       return navigator.userAgent.match(/Android/i);
-		   },
-		   BlackBerry: function() {
-		       return navigator.userAgent.match(/BlackBerry/i);
-		   },
-		   iOS: function() {
-		       return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-		   },
-		   Opera: function() {
-		       return navigator.userAgent.match(/Opera Mini/i);
-		   },
-		   Windows: function() {
-		       return navigator.userAgent.match(/IEMobile/i);
-		   },
-		   any: function() {
-		    	if (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows()) {
-		    		return true;
-		   		}
-		   		return false;
-		   }
-		};
-		this.isMobile = isMobile.any();
-		return isMobile;
 	},
 
 	initEditor: function() {
@@ -187,7 +159,7 @@ var editor = {
 		this.hazards = [];
 		this.powerUps = [];
 		this.gameMode = "normal";
-				
+
 		if(this.isMobile) $('#fullScreenBtn').hide();
 
 		// ###### PRELOAD ############## Preload all media used by the game and the selected level
@@ -1791,6 +1763,7 @@ var editor = {
 	         editor.s4() + '-' + editor.s4() + editor.s4() + editor.s4();
 	}
 
+
 } // editor
 
 
@@ -1817,33 +1790,3 @@ function launchFullScreen(element) {
     element.webkitRequestFullScreen();
   }
 }
-
-function toggleFullScreen() {
-       if (!document.fullscreenElement &&    // alternative standard method
-        !document.mozFullScreenElement && !document.webkitFullscreenElement) {  // current working methods
-         if (document.documentElement.requestFullscreen) {
-           document.documentElement.requestFullscreen();
-         } else if (document.documentElement.mozRequestFullScreen) {
-           document.documentElement.mozRequestFullScreen();
-         } else if (document.documentElement.webkitRequestFullscreen) {
-           document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-         }
-       } else {
-          if (document.cancelFullScreen) {
-             document.cancelFullScreen();
-          } else if (document.mozCancelFullScreen) {
-             document.mozCancelFullScreen();
-          } else if (document.webkitCancelFullScreen) {
-            document.webkitCancelFullScreen();
-          }
-       }
-     }
-
-/*function saveTeacherGame(str){
-	console.log("save");
-	$.post("savegame.php", { gameData: str });
-}*/
-
-
-
-

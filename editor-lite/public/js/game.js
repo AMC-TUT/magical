@@ -57,6 +57,7 @@ var game = {
 	isJumping: null,
 	characterGround: null,
 	fontColor: "#000000",
+	isMobile: false,
 
 	getGameToPlay: function() {
 		if(this.gameSlug) {
@@ -80,6 +81,8 @@ var game = {
 	
 	/* PREVIEW game */
 	initGame: function() {
+		this.isMobile = utils.checkIfMobile();
+
 		utils.initAudio();
 
 		if(gameinfo.level1.fontColor) {
@@ -162,6 +165,9 @@ var game = {
 			playBtn.text(i18n.t('Play'));
 			stage.append(playBtn);
 			playBtn.click(function() {
+				if(!this.isMobile) {
+					utils.toggleFullScreen();					
+				}
 				utils.playSound('jippii');
 				$('#playBtn, #editBtn, #backBtn').remove();
 				Crafty.scene('game');
