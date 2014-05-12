@@ -13,7 +13,7 @@ module.exports = function(req, res, next) {
 	rest.get(config.express.djangoUrl + '/api/v1/games/' + gameSlug).on('complete', function(result) {
 	    var game = result;
 	  	if(game.state == 2) {
-		    config.game.publicForAll = true;
+		    req.session.gameIsPublicForAll = true;
 	    	if(_.isUndefined(req.cookies) || _.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
 		    	rest.get(config.express.djangoUrl + '/api/v1/user/create/').on('complete', function(result) {
 		    		if(result) {

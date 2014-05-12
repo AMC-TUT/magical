@@ -48,7 +48,7 @@ module.exports = function(req, res, next) {
 	if(_.isUndefined(session_id)) {
 		session_id = req.session.sessionid;
 	}
-	if(_.isUndefined(req.cookies) || _.isUndefined(session_id) || _.isUndefined(req.cookies.csrftoken)) {
+	if((_.isUndefined(req.cookies) || _.isUndefined(session_id) || _.isUndefined(req.cookies.csrftoken)) && !req.session.gameIsPublicForAll) {
 	    // if no session exists
 	    res.redirect(config.express.djangoUrl + '/game/login?next=/editor-lite' + req.url);
 	    return false;

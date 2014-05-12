@@ -12,10 +12,6 @@ config.redis = {
   ip: process.env.REDIS_HOST || '127.0.0.1'
 };
 
-config.game = {
-	publicForAll: false
-};
-
 /*
 config.mongodb = {
   port: process.env.MONGODB_PORT || 27017,
