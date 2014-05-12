@@ -58,7 +58,8 @@ module.exports = function(req, res, next) {
 		if(!_.isNull(data)) {
 			sessionUser = parseSessionObject(data);
 			console.log(sessionUser);
-			if(_.has(sessionUser, 'userName')) {
+			if(_.has(sessionUser, 'userName') && (!_.isUndefined(sessionUser.userName))) {
+				console.log('Authenticated user');
 				// anonymous can only play games
 				req.session.user = sessionUser;
 				req.session.isAuthenticated = true;
