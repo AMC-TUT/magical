@@ -44,13 +44,17 @@ module.exports = function(req, res, next) {
 	req.session.isAuthenticated = null;
 	var isAuthenticated = false;
 	var sessionUser = null;
-	if(_.isUndefined(req.cookies) || _.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
+	var session_id = (req.cookies.sessionid) ? ;
+	if(_.isUndefined(session_id)) {
+		session_id = req.session.sessionid;
+	}
+	if(_.isUndefined(req.cookies) || _.isUndefined(session_id) || _.isUndefined(req.cookies.csrftoken)) {
 	    // if no session exists
 	    res.redirect(config.express.djangoUrl + '/game/login?next=/editor-lite' + req.url);
 	    return false;
 	}
 	// query django session data from Redis
-	redisClient.get('django_session:' + req.cookies.sessionid, function(err, data) {
+	redisClient.get('django_session:' + session_id, function(err, data) {
 		if(!_.isNull(data)) {
 			sessionUser = parseSessionObject(data);
 			if(_.has(sessionUser, 'userName')) {
