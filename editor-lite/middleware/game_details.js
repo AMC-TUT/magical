@@ -18,7 +18,7 @@ module.exports = function(req, res, next) {
 		    	rest.get(config.express.djangoUrl + '/api/v1/user/create/').on('complete', function(result) {
 		    		if(result) {
 		    			req.session.sessionid = result;
-						res.cookie('sessionid', 'result');
+						//res.cookie('sessionid', 'result');
 		    		}
 					next();
 				});
