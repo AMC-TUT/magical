@@ -44,7 +44,7 @@ module.exports = function(req, res, next) {
 	req.session.isAuthenticated = null;
 	var isAuthenticated = false;
 	var sessionUser = null;
-	var session_id = (req.cookies.sessionid) ? ;
+	var session_id = req.cookies.sessionid;
 	if(_.isUndefined(session_id)) {
 		session_id = req.session.sessionid;
 	}
