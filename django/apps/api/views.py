@@ -1149,10 +1149,7 @@ class AnonUserCreateView(ResponseMixin, View):
  
     def get(self, request):
         session_user = request.user
-        #print session_user
-        #print request.session._session_key
         session_id = request.session._get_or_create_session_key()
-        print session_id
         user_dict = {}
         """
         ses['username'] = 'anonymous'

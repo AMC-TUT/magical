@@ -9,6 +9,7 @@ var _ = require('underscore')._,
 
 module.exports = function(req, res, next) {
 	// query game data from django api
+	req.session.gameIsPublicForAll = false;
 	var gameSlug = req.params.slug;
 	rest.get(config.express.djangoUrl + '/api/v1/games/' + gameSlug).on('complete', function(result) {
 	    var game = result;
