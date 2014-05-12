@@ -7,6 +7,7 @@ var _ = require('underscore')._,
 module.exports.index = function(req, res) {
   res.render('index_view.html', {
     user: req.session.user,
-    title: 'MAGOS'
-  })
+    title: 'MAGOS',
+    state: config.game.publicForAll
+  });
 };

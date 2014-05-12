@@ -14,8 +14,20 @@ module.exports = function(req, res, next) {
 	    var game = result;
 	  	if(game.state == 2) {
 		    config.game.publicForAll = true;
+	    	if(_.isUndefined(req.cookies) || _.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
+		    	rest.get(config.express.djangoUrl + '/api/v1/user/create/').on('complete', function(result) {
+		    		if(result) {
+		    			req.session.sessionid = result;
+						res.cookie('sessionid', 'result');
+		    		}
+					next();
+				});
+			} else {
+				next();
+			}
+	  	} else {
+			next();
 	  	}
-		next();
 	});
 
 

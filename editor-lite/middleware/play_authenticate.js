@@ -51,21 +51,23 @@ module.exports = function(req, res, next) {
 		    return false;
 		}
 	}
-	// query django session data from Redis
-	redisClient.get('django_session:' + req.cookies.sessionid, function(err, data) {
-		if(!_.isNull(data)) {
-			sessionUser = parseSessionObject(data);
-			if(_.has(sessionUser, 'userName')) {
-				// anonymous can only play games
-				req.session.user = sessionUser;
-				req.session.isAuthenticated = true;
-				i18next.setLng(sessionUser.lang_code, function(t) {
-					next();
-				});
+	if(_.isUndefined(req.cookies) || _.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
+		// query django session data from Redis
+		var session_id = (req.cookies.sessionid) ? req.cookies.sessionid: req.session.sessionid;
+
+		if(_.isUndefined(req.cookies.sessionid))
+		redisClient.get('django_session:' + session_id, function(err, data) {
+			if(!_.isNull(data)) {
+				sessionUser = parseSessionObject(data);
+				if(_.has(sessionUser, 'userName')) {
+					// anonymous can only play games
+					req.session.user = sessionUser;
+					req.session.isAuthenticated = true;
+					i18next.setLng(sessionUser.lang_code, function(t) {
+						next();
+					});
+				}
 			}
-		}
-		if(config.game.publicForAll) {
-			next();
-		}
-	});
+		});
+	}
 };

@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, url
 from apps.api.views import UsersListView, UserDetailView, LanguagesListView, HighscoreListView, \
     GameReviewView, ImageView, ImageUpdateView, ImageSearchView, AudioView, AudioUpdateView, \
-    AudioSearchView, GameView, GameDetailView, RevisionView, UsersGamesView
+    AudioSearchView, GameView, GameDetailView, RevisionView, UsersGamesView, AnonUserCreateView
 
 urlpatterns = patterns('',
     # PORTAL
@@ -31,6 +31,9 @@ urlpatterns = patterns('',
     # users
     url(r'^users$', UsersListView.as_view(), name='users-list-view'),
     url(r'^users/(?P<username>[\w.@+-]+)$', UserDetailView.as_view(), name='user-detail-view'),
+
+    url(r'^user/create/$', AnonUserCreateView.as_view(), name='anon-user-create-view'),
+
     # highscores
     url(r'^highscores/(?P<gameslug>[\w.@+-]+)$', HighscoreListView.as_view(), name='highscore-list-view'),
 

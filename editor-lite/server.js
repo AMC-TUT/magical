@@ -75,7 +75,7 @@ var pageRoutes = require('./routes/page'),
   	previewRoutes = require('./routes/preview');
 app.get('/', pageRoutes.index);
 app.get('/edit/:slug', authenticate, authorize, editorRoutes.index);
-app.get('/play/:slug', play_authenticate, playRoutes.index);
+app.get('/play/:slug', game_details, play_authenticate, playRoutes.index);
 app.get('/preview/:slug', play_authenticate, previewRoutes.index);
 
 // redirect other requests to index

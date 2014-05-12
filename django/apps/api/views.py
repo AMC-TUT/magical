@@ -1144,6 +1144,42 @@ class UserDetailView(ResponseMixin, View):
         return super(UserDetailView,self).dispatch(*args,**kwargs)
         
 
+class AnonUserCreateView(ResponseMixin, View):
+    renderers = DEFAULT_RENDERERS
+ 
+    def get(self, request):
+        session_user = request.user
+        #print session_user
+        #print request.session._session_key
+        session_id = request.session._get_or_create_session_key()
+        print session_id
+        user_dict = {}
+        """
+        ses['username'] = 'anonymous'
+        ses['role'] = 'player'
+        ses['lang'] = 'english'
+        ses['lang_code'] = 'en'
+        ses['organization'] = 'magos'
+        ses['firstname'] = 'Magos'
+        ses['lastname'] = 'Player'
+        """
+        #user_dict['userName'] = 'anonymous'
+        request.session['lang_code'] = 'en'
+        request.session['firstName'] = 'Magos'
+        request.session['lastName'] = 'Player'
+        request.session['language'] = 'english'
+        request.session['role'] = 'player'
+
+        request.session.modified = True
+
+        response = Response(200, session_id)
+        return self.render(response)
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self,*args,**kwargs):
+        return super(AnonUserCreateView,self).dispatch(*args,**kwargs)
+
+
 class UsersGamesView(ResponseMixin, View):
     renderers = DEFAULT_RENDERERS
  
