@@ -45,9 +45,11 @@ module.exports = function(req, res, next) {
 	var isAuthenticated = false;
 	var sessionUser = null;
 	var session_id = req.cookies.sessionid;
+	/*
 	if(_.isUndefined(session_id)) {
 		session_id = req.session.sessionid;
 	}
+	*/
 	//if((_.isUndefined(req.cookies) || _.isUndefined(session_id) || _.isUndefined(req.cookies.csrftoken)) && !req.session.gameIsPublicForAll) {
 	if((_.isUndefined(req.cookies) || _.isUndefined(session_id) || _.isUndefined(req.cookies.csrftoken))) {
 	    // if no session exists
