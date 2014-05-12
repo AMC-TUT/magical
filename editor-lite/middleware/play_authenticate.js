@@ -45,9 +45,11 @@ module.exports = function(req, res, next) {
 	var isAuthenticated = false;
 	var sessionUser = null;
 	if(_.isUndefined(req.cookies) || _.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
-	    // if no session exists
-	    res.redirect(config.express.djangoUrl + '/game/login?next=/editor-lite' + req.url);
-	    return false;
+		if(!config.game.publicForAll) {
+	    	// if no session exists
+		    res.redirect(config.express.djangoUrl + '/game/login?next=/editor-lite' + req.url);
+		    return false;
+		}
 	}
 	// query django session data from Redis
 	redisClient.get('django_session:' + req.cookies.sessionid, function(err, data) {
@@ -61,6 +63,9 @@ module.exports = function(req, res, next) {
 					next();
 				});
 			}
+		}
+		if(config.game.publicForAll) {
+			next();
 		}
 	});
 };

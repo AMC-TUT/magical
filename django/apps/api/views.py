@@ -165,6 +165,7 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
     parsers = DEFAULT_PARSERS
  
     def get(self, request, gameslug):
+        #import ipdb;ipdb.set_trace()
         game = None
         try:
             game = Game.objects.get(slug=gameslug)
