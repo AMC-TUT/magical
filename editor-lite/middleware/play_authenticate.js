@@ -57,6 +57,7 @@ module.exports = function(req, res, next) {
 	redisClient.get('django_session:' + session_id, function(err, data) {
 		if(!_.isNull(data)) {
 			sessionUser = parseSessionObject(data);
+			console.log(sessionUser);
 			if(_.has(sessionUser, 'userName')) {
 				// anonymous can only play games
 				req.session.user = sessionUser;
