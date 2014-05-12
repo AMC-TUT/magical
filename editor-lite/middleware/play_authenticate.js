@@ -45,33 +45,22 @@ module.exports = function(req, res, next) {
 	var isAuthenticated = false;
 	var sessionUser = null;
 	if(_.isUndefined(req.cookies) || _.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
-		if(!config.game.publicForAll) {
-	    	// if no session exists
-		    res.redirect(config.express.djangoUrl + '/game/login?next=/editor-lite' + req.url);
-		    return false;
-		}
+	    // if no session exists
+	    res.redirect(config.express.djangoUrl + '/game/login?next=/editor-lite' + req.url);
+	    return false;
 	}
-	if(_.isUndefined(req.cookies) || _.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
-		// query django session data from Redis
-		
-		var session_id = req.cookies.sessionid;
-		if(_.isNull(session_id)) {
-			session_id = req.session.sessionid;	
-		} 
-		console.log(session_id);
-		//if(_.isUndefined(req.cookies.sessionid))
-		redisClient.get('django_session:' + session_id, function(err, data) {
-			if(!_.isNull(data)) {
-				sessionUser = parseSessionObject(data);
-				if(_.has(sessionUser, 'userName')) {
-					// anonymous can only play games
-					req.session.user = sessionUser;
-					req.session.isAuthenticated = true;
-					i18next.setLng(sessionUser.lang_code, function(t) {
-						next();
-					});
-				}
+	// query django session data from Redis
+	redisClient.get('django_session:' + req.cookies.sessionid, function(err, data) {
+		if(!_.isNull(data)) {
+			sessionUser = parseSessionObject(data);
+			if(_.has(sessionUser, 'userName')) {
+				// anonymous can only play games
+				req.session.user = sessionUser;
+				req.session.isAuthenticated = true;
+				i18next.setLng(sessionUser.lang_code, function(t) {
+					next();
+				});
 			}
-		});
-	}
+		}
+	});
 };
