@@ -45,8 +45,9 @@ module.exports = function(req, res, next) {
 	if(req.session.user && req.session.isAuthenticated && gameSlug) {
 		rest.get(config.express.djangoUrl + '/api/v1/games/' + gameSlug).on('complete', function(result) {
 		    var game = result;
-	        var user = _.find(game.authors, function(author) { return author.userName === req.session.user.userName });
-	        if(user || game.state == 2) {
+		    var usr_org = (req.session.user.org) ? req.session.user.org : null;
+		    var user = _.find(game.authors, function(author) { return author.userName === req.session.user.userName });
+	        if(user || game.state == 2 || (game.state == 1 && game.organization == usr_org) ) {
 				console.log('USER AUTHORIZED! %s', gameSlug);
 				next();
 			} else {

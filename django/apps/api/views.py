@@ -193,7 +193,7 @@ class GameDetailView(RequestMixin, ResponseMixin, View):
         authors_list = []
         organization = None
         if authors:
-            organization = authors[0].user.userprofile.organization.name # organization (=author's organization)
+            organization = authors[0].user.userprofile.organization.slug # organization (=author's organization)
         for author in authors:
             author_dict = {}
             author_dict['firstName'] = author.user.first_name
