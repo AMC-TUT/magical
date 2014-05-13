@@ -2,6 +2,7 @@ var textures =  {
 	"aeroplane": "/editor-lite/static/img/aeroplane.png",
 	"zeppelin": "/editor-lite/static/img/zeppelin.png",
 	"bird": "/editor-lite/static/img/bird.png",
+	"dog": "/editor-lite/static/img/dog.png",
 	"rocket": "/editor-lite/static/img/rocket.png",
 	"satellite": "/editor-lite/static/img/satellite.png",
 	"pollution": "/editor-lite/static/img/pollution.png",
@@ -121,7 +122,8 @@ var textureMenu =  {
 		{text:"rocket", value:"rocket"},
 		{text:"aeroplane", value:"aeroplane"},
 		{text:"sausage man", value:"sausage-man"},
-		{text:"clown", value:"clown"}		
+		{text:"clown", value:"clown"},
+		{text:"dog", value:"dog"}
 	],
 	grounds:[
 		{text:"", value:""},
