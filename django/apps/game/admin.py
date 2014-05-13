@@ -36,10 +36,18 @@ admin.site.register(Organization)
 admin.site.register(Disability)
 admin.site.register(Role)
 
+
+class MagosGameAdmin(admin.ModelAdmin):
+    list_display = ('title','state','created','updated','creator',)
+    search_fields = ['title','description','creator',]
+    #list_filter = ('Date Created','Date Updated',)
+    #inlines = [CommentInline,]
+
 admin.site.register(Achievement)
 admin.site.register(AchievementMembership)
-admin.site.register(MagosAGame)
-admin.site.register(MagosBGame)
+admin.site.register(MagosAGame, MagosGameAdmin)
+admin.site.register(MagosBGame, MagosGameAdmin)
+#admin.site.register(MagosBGame)
 admin.site.register(GameType)
 admin.site.register(Author)
 admin.site.register(Revision)
@@ -48,6 +56,7 @@ admin.site.register(Review)
 admin.site.register(Highscore)
 
 admin.site.register(UserSettings)
+
 
 import pprint
 from django.contrib.sessions.models import Session
