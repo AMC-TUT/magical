@@ -39,9 +39,8 @@ admin.site.register(Role)
 
 class MagosGameAdmin(admin.ModelAdmin):
     list_display = ('title','state','created','updated','creator',)
-    search_fields = ['title','description','creator',]
-    #list_filter = ('Date Created','Date Updated',)
-    #inlines = [CommentInline,]
+    search_fields = ['title','description',]
+    list_filter = ('created','updated','state',)
 
 admin.site.register(Achievement)
 admin.site.register(AchievementMembership)
