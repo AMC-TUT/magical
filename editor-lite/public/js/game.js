@@ -166,7 +166,7 @@ var game = {
 			stage.append(playBtn);
 			playBtn.click(function() {
 				if(!this.isMobile) {
-					utils.toggleFullScreen();					
+					utils.requestFullScreen();
 				}
 				utils.playSound('jippii');
 				$('#playBtn, #editBtn, #backBtn').remove();
