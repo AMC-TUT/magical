@@ -45,13 +45,12 @@ module.exports = function(req, res, next) {
 	var isAuthenticated = false;
 	var sessionUser = null;
 	var session_id = req.cookies.sessionid;
-	/*
 	if(_.isUndefined(session_id)) {
 		session_id = req.session.sessionid;
 	}
-	*/
+
 	//if((_.isUndefined(req.cookies) || _.isUndefined(session_id) || _.isUndefined(req.cookies.csrftoken)) && !req.session.gameIsPublicForAll) {
-	if((_.isUndefined(req.cookies) || _.isUndefined(session_id) || _.isUndefined(req.cookies.csrftoken))) {
+	if((_.isUndefined(req.cookies) || _.isUndefined(session_id) || _.isUndefined(req.cookies.csrftoken)) && req.session.gameState != 2) {
 	    // if no session exists
 	    res.redirect(config.express.djangoUrl + '/game/login?next=/editor-lite' + req.url);
 	    return false;
@@ -60,7 +59,7 @@ module.exports = function(req, res, next) {
 	redisClient.get('django_session:' + session_id, function(err, data) {
 		if(!_.isNull(data)) {
 			sessionUser = parseSessionObject(data);
-			//console.log(sessionUser);
+			console.log(sessionUser);
 			if(_.has(sessionUser, 'userName')) {
 				// anonymous can only play games
 				req.session.user = sessionUser;

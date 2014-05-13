@@ -67,6 +67,7 @@ var play_authenticate = require('./middleware/play_authenticate');
 var game_details = require('./middleware/game_details');
 // authorization is used only on selected routes
 var authorize = require('./middleware/authorize');
+var play_authorize = require('./middleware/play_authorize');
 
 // Routes ***
 var pageRoutes = require('./routes/page'),
@@ -75,8 +76,8 @@ var pageRoutes = require('./routes/page'),
   	previewRoutes = require('./routes/preview');
 app.get('/', pageRoutes.index);
 app.get('/edit/:slug', authenticate, authorize, editorRoutes.index);
-app.get('/play/:slug', game_details, play_authenticate, playRoutes.index);
-app.get('/preview/:slug', play_authenticate, previewRoutes.index);
+app.get('/play/:slug', game_details, play_authenticate, play_authorize, playRoutes.index);
+app.get('/preview/:slug', game_details, play_authenticate, authorize, previewRoutes.index);
 
 // redirect other requests to index
 //app.get('*', pageRoutes.index);

@@ -1,5 +1,5 @@
 /**
-* User authorization middleware for editing games in Magos.
+* User authorization middleware for playing games in Magos.
 *
 * Note: User session data is created in Django app and stored in Redis.
 */
@@ -46,10 +46,11 @@ module.exports = function(req, res, next) {
 		rest.get(config.express.djangoUrl + '/api/v1/games/' + gameSlug).on('complete', function(result) {
 		    var game = result;
 	        var user = _.find(game.authors, function(author) { return author.userName === req.session.user.userName });
-	        if(user) {
+	        if(user || game.state == 2) {
 				console.log('USER AUTHORIZED! %s', gameSlug);
 				next();
 			} else {
+				console.log('UNAUTHORIZED USER! %s', gameSlug);
 			    res.redirect('/');
 			    return false;
 			}

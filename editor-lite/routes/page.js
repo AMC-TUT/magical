@@ -8,6 +8,6 @@ module.exports.index = function(req, res) {
   res.render('index_view.html', {
     user: req.session.user,
     title: 'MAGOS',
-    state: config.game.publicForAll
+    state: req.session.gameState
   });
 };

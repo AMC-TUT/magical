@@ -1145,13 +1145,16 @@ class UserDetailView(ResponseMixin, View):
         
 
 class AnonUserCreateView(ResponseMixin, View):
+    """
+    Create session for anonymous user
+    """
     renderers = DEFAULT_RENDERERS
  
     def get(self, request):
         session_user = request.user
         session_id = request.session._get_or_create_session_key()
-        user_dict = {}
-        """
+        ses = request.session
+
         ses['username'] = 'anonymous'
         ses['role'] = 'player'
         ses['lang'] = 'english'
@@ -1159,15 +1162,9 @@ class AnonUserCreateView(ResponseMixin, View):
         ses['organization'] = 'magos'
         ses['firstname'] = 'Magos'
         ses['lastname'] = 'Player'
-        """
-        #user_dict['userName'] = 'anonymous'
-        request.session['lang_code'] = 'en'
-        request.session['firstName'] = 'Magos'
-        request.session['lastName'] = 'Player'
-        request.session['language'] = 'english'
-        request.session['role'] = 'player'
-
-        request.session.modified = True
+        ses['use_uppercase_text'] = False
+        ses.save()
+        ses.modified = True
 
         response = Response(200, session_id)
         return self.render(response)
