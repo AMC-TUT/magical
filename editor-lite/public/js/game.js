@@ -319,7 +319,7 @@ var game = {
 					if(_.isNumber(game.wordInterval)) {
 						game.wordInterval = setInterval(function(){addWord()}, gameinfo["level1"].wordInterval);
 					} else {
-
+						console.log('WORD TASK');
 						if(game.wordInterval == 'manual') {
 							$(document).bind('keydown', function(e) {
 								console.log(e.which);
@@ -351,7 +351,7 @@ var game = {
 				if(_.isNumber(game.wordInterval)) {
 					game.wordInterval = setInterval(function(){addMemory()}, gameinfo["level1"].wordInterval);
 				} else {
-
+					console.log('MEMORY TASK');
 					if(game.wordInterval == 'manual') {
 						$(document).bind('keydown', function(e) {
 							console.log(e.which);
@@ -375,7 +375,7 @@ var game = {
 					if(_.isNumber(game.wordInterval)) {
 						game.fractionInterval = setInterval(function(){addFraction()}, gameinfo["level1"].wordInterval);
 					} else {
-
+						console.log('FRACTION TASK');
 						if(game.wordInterval == 'manual') {
 							$(document).bind('keydown', function(e) {
 								console.log(e.which);
