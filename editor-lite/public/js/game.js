@@ -52,6 +52,9 @@ var game = {
 	curAnswers: null,
 	curTaskEref: null,
 	KEYCODE_UP: null,
+	KEYCODE_COLLECTIBLE : 87, // W
+	KEYCODE_HAZARD : 65, // A 
+	KEYCODE_TASK : 83, // S
 	yVel: null,
 	groundGravity: null,
 	isJumping: null,
@@ -316,13 +319,17 @@ var game = {
 					if(_.isNumber(game.wordInterval)) {
 						game.wordInterval = setInterval(function(){addWord()}, gameinfo["level1"].wordInterval);
 					} else {
+
 						if(game.wordInterval == 'manual') {
-							$(document).bind('keydown', 'S',function (evt){  
-								addWord();
+							$(document).bind('keydown', function(e) {
+								if(e.which == game.KEYCODE_TASK) {
+									// 83 == S
+									addWord();
+								}
 								return false;
 							});
-
 						}
+
 					}					
 					/*
 					game.wordInterval = setInterval(function() {
@@ -343,13 +350,17 @@ var game = {
 				if(_.isNumber(game.wordInterval)) {
 					game.wordInterval = setInterval(function(){addMemory()}, gameinfo["level1"].wordInterval);
 				} else {
+
 					if(game.wordInterval == 'manual') {
-						$(document).bind('keydown', 'S',function (evt){  
-							addMemory();
+						$(document).bind('keydown', function(e) {
+							if(e.which == game.KEYCODE_TASK) {
+								// 83 == S
+								addMemory();
+							}
 							return false;
 						});
-
 					}
+
 				}					
 
 			}
@@ -362,13 +373,17 @@ var game = {
 					if(_.isNumber(game.wordInterval)) {
 						game.fractionInterval = setInterval(function(){addFraction()}, gameinfo["level1"].wordInterval);
 					} else {
+
 						if(game.wordInterval == 'manual') {
-							$(document).bind('keydown', 'S',function (evt){  
-								addFraction();
+							$(document).bind('keydown', function(e) {
+								if(e.which == game.KEYCODE_TASK) {
+									// 83 == S
+									addFraction();
+								}
 								return false;
 							});
-
 						}
+
 					}					
 					//game.fractionInterval = setInterval(function(){addFraction()},5000);
 				}
@@ -484,11 +499,13 @@ var game = {
 						game.collectableInterval = setInterval(function(){addCollectable()},game.itemInterval);
 					} else {
 						if(game.itemInterval == 'manual') {
-							$(document).bind('keydown', 'W',function (evt){  
-								addCollectable();
+							$(document).bind('keydown', function(e) {
+								if(e.which == game. KEYCODE_COLLECTIBLE) {
+									// 87 == W
+									addCollectable();
+								}
 								return false;
 							});
-
 						}
 					}
 				}
@@ -497,11 +514,13 @@ var game = {
 						game.avoidInterval = setInterval(function(){addAvoidable()}, game.hazardInterval);
 					} else {
 						if(game.hazardInterval == 'manual') {
-							$(document).bind('keydown', 'A',function (evt){  
-								addAvoidable();
+							$(document).bind('keydown', function(e) {
+								if(e.which == game.KEYCODE_HAZARD) {
+									// 65 == A
+									addAvoidable();
+								}
 								return false;
 							});
-
 						}
 					}
 				}

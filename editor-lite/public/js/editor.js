@@ -818,7 +818,7 @@ var editor = {
 		$('select#wordIntervalList').change(function() {
     		var valueSelected = this.value;
     		utils.playSound('blop');
-    		gameinfo.level1.wordInterval = parseInt(valueSelected);
+    		gameinfo.level1.wordInterval = valueSelected;
     		editor.setGame();
 		});
 
