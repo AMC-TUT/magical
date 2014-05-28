@@ -1,5 +1,6 @@
 from django.core.files import File
-import re, tempfile, Image, magic, json
+import re, tempfile, magic, json
+from PIL import Image
 from redis import Redis
 from django.conf import settings
 from apps.game.models import Game

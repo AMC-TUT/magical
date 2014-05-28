@@ -442,7 +442,18 @@ var game = {
 				p3tween2=TweenLite.to(p3_2._element, game.p3_speed, {left:"-1200px", ease:Linear.easeNone, onComplete:completeSky2});
 				
 				if(game.collectables.length>0){
-					game.collectableInterval = setInterval(function(){addCollectable()},game.itemInterval);
+					if(_.isNumber(game.itemInterval)) {
+						game.collectableInterval = setInterval(function(){addCollectable()},game.itemInterval);
+					} else {
+						if(game.itemInterval == 'manual') {
+							console.log('MANUAL');
+							$(document).bind('keydown', 'W',function (evt){  
+								addCollectable();
+								return false;
+							});
+
+						}
+					}
 				}
 				if(game.avoidables.length>0){
 					game.avoidInterval = setInterval(function(){addAvoidable()}, game.hazardInterval);
