@@ -313,9 +313,22 @@ var game = {
 				
 				if(gameinfo["level1"].wordRules.length>0) {
 					createNewWordTask();
+					if(_.isNumber(game.wordInterval)) {
+						game.wordInterval = setInterval(function(){addWord()}, gameinfo["level1"].wordInterval);
+					} else {
+						if(game.wordInterval == 'manual') {
+							$(document).bind('keydown', 'S',function (evt){  
+								addWord();
+								return false;
+							});
+
+						}
+					}					
+					/*
 					game.wordInterval = setInterval(function() {
 						addWord();
 					},gameinfo["level1"].wordInterval);
+					*/
 				}
 			}
 
@@ -324,7 +337,21 @@ var game = {
 				Crafty.e("2D, DOM, Image, sign").attr({x: 190, y: 5, z: 1000});
 				var taskLabel = Crafty.e("TaskLabel").taskLabel(195, 10, gameinfo["level1"].memoryStart, '#FFFFFF');
 				createNewMemoryTask(true);
-				game.wordInterval = setInterval(function(){addMemory()},gameinfo["level1"].wordInterval);
+
+				//game.wordInterval = setInterval(function(){addMemory()},gameinfo["level1"].wordInterval);
+
+				if(_.isNumber(game.wordInterval)) {
+					game.wordInterval = setInterval(function(){addMemory()}, gameinfo["level1"].wordInterval);
+				} else {
+					if(game.wordInterval == 'manual') {
+						$(document).bind('keydown', 'S',function (evt){  
+							addMemory();
+							return false;
+						});
+
+					}
+				}					
+
 			}
 
 			if(gameinfo["level1"].matchRule == "fraction") {
@@ -332,7 +359,18 @@ var game = {
 				var taskLabel = Crafty.e("TaskLabel").taskLabel(195, 10, "task", '#FFFFFF');
 				if(gameinfo["level1"].fractionRules.length>0) {
 					createNewTask();
-					game.fractionInterval = setInterval(function(){addFraction()},5000);
+					if(_.isNumber(game.wordInterval)) {
+						game.fractionInterval = setInterval(function(){addFraction()}, gameinfo["level1"].wordInterval);
+					} else {
+						if(game.wordInterval == 'manual') {
+							$(document).bind('keydown', 'S',function (evt){  
+								addFraction();
+								return false;
+							});
+
+						}
+					}					
+					//game.fractionInterval = setInterval(function(){addFraction()},5000);
 				}
 			}
 
@@ -446,7 +484,6 @@ var game = {
 						game.collectableInterval = setInterval(function(){addCollectable()},game.itemInterval);
 					} else {
 						if(game.itemInterval == 'manual') {
-							console.log('MANUAL');
 							$(document).bind('keydown', 'W',function (evt){  
 								addCollectable();
 								return false;
@@ -456,7 +493,17 @@ var game = {
 					}
 				}
 				if(game.avoidables.length>0){
-					game.avoidInterval = setInterval(function(){addAvoidable()}, game.hazardInterval);
+					if(_.isNumber(game.hazardInterval)) {
+						game.avoidInterval = setInterval(function(){addAvoidable()}, game.hazardInterval);
+					} else {
+						if(game.hazardInterval == 'manual') {
+							$(document).bind('keydown', 'A',function (evt){  
+								addAvoidable();
+								return false;
+							});
+
+						}
+					}
 				}
 				if(gameinfo["level1"].extraLife == true){
 					game.extralifeInterval = setInterval(function(){Crafty.e('ExtraLife').extralife();}, 20000);
