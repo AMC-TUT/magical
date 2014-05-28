@@ -372,6 +372,7 @@ var game = {
 				var taskLabel = Crafty.e("TaskLabel").taskLabel(195, 10, "task", '#FFFFFF');
 				if(gameinfo["level1"].fractionRules.length>0) {
 					createNewTask();
+					/*
 					if(_.isNumber(game.wordInterval)) {
 						game.fractionInterval = setInterval(function(){addFraction()}, gameinfo["level1"].wordInterval);
 					} else {
@@ -387,7 +388,8 @@ var game = {
 							});
 						}
 
-					}					
+					}
+					*/					
 					//game.fractionInterval = setInterval(function(){addFraction()},5000);
 				}
 			}
@@ -502,7 +504,7 @@ var game = {
 						game.collectableInterval = setInterval(function(){addCollectable()},game.itemInterval);
 					} else {
 						if(game.itemInterval == 'manual') {
-							$(document).bind('keydown', function(e) {
+							$(document).keydown(function(e) {
 								if(e.which == game.KEYCODE_COLLECTIBLE) {
 									// 87 == W
 									addCollectable();
@@ -517,7 +519,7 @@ var game = {
 						game.avoidInterval = setInterval(function(){addAvoidable()}, game.hazardInterval);
 					} else {
 						if(game.hazardInterval == 'manual') {
-							$(document).bind('keydown', function(e) {
+							$(document).keydown(function(e) {
 								if(e.which == game.KEYCODE_HAZARD) {
 									// 65 == A
 									addAvoidable();
@@ -527,12 +529,42 @@ var game = {
 						}
 					}
 				}
+
 				if(gameinfo["level1"].extraLife == true){
 					game.extralifeInterval = setInterval(function(){Crafty.e('ExtraLife').extralife();}, 20000);
 				}
 				if(gameinfo["level1"].turboSpeed == true){
 					game.turboInterval = setInterval(function(){Crafty.e('TurboSpeed').turbospeed();}, 10000);
 				}					
+
+
+
+				if(gameinfo["level1"].matchRule == "fraction") {
+					//Crafty.e("2D, DOM, Image, sign").attr({x: 190, y: 5, z: 1000});
+					//var taskLabel = Crafty.e("TaskLabel").taskLabel(195, 10, "task", '#FFFFFF');
+					if(gameinfo["level1"].fractionRules.length>0) {
+						//createNewTask();
+							console.log('MANUAL FRACTION TASK');
+							if(game.wordInterval == 'manual') {
+								$(document).bind('keydown', function(e) {
+									console.log(e.which);
+									if(e.which == game.KEYCODE_TASK) {
+										// 83 == S
+										addFraction();
+									}
+									return false;
+								});
+							} else {
+								game.fractionInterval = setInterval(function(){addFraction()}, parseInt(gameinfo["level1"].wordInterval, 10));
+							}
+
+
+					}
+				}
+
+
+
+
 			}
 			function startTurbo(){
 				setTimeout(function(){endTurbo()},10000);
