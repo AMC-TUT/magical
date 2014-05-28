@@ -544,8 +544,7 @@ var game = {
 					//var taskLabel = Crafty.e("TaskLabel").taskLabel(195, 10, "task", '#FFFFFF');
 					if(gameinfo["level1"].fractionRules.length>0) {
 						//createNewTask();
-							console.log('MANUAL FRACTION TASK');
-							if(game.wordInterval == 'manual') {
+							if(gameinfo.level1.wordInterval == 'manual') {
 								$(document).bind('keydown', function(e) {
 									console.log(e.which);
 									if(e.which == game.KEYCODE_TASK) {
