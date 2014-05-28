@@ -319,7 +319,7 @@ var game = {
 					if(_.isNumber(game.wordInterval)) {
 						game.wordInterval = setInterval(function(){addWord()}, gameinfo["level1"].wordInterval);
 					} else {
-						console.log('WORD TASK');
+						console.log('MANUAL WORD TASK');
 						if(game.wordInterval == 'manual') {
 							$(document).bind('keydown', function(e) {
 								console.log(e.which);
@@ -351,7 +351,7 @@ var game = {
 				if(_.isNumber(game.wordInterval)) {
 					game.wordInterval = setInterval(function(){addMemory()}, gameinfo["level1"].wordInterval);
 				} else {
-					console.log('MEMORY TASK');
+					console.log('MANUAL MEMORY TASK');
 					if(game.wordInterval == 'manual') {
 						$(document).bind('keydown', function(e) {
 							console.log(e.which);
@@ -375,7 +375,7 @@ var game = {
 					if(_.isNumber(game.wordInterval)) {
 						game.fractionInterval = setInterval(function(){addFraction()}, gameinfo["level1"].wordInterval);
 					} else {
-						console.log('FRACTION TASK');
+						console.log('MANUAL FRACTION TASK');
 						if(game.wordInterval == 'manual') {
 							$(document).bind('keydown', function(e) {
 								console.log(e.which);
@@ -503,7 +503,7 @@ var game = {
 					} else {
 						if(game.itemInterval == 'manual') {
 							$(document).bind('keydown', function(e) {
-								if(e.which == game. KEYCODE_COLLECTIBLE) {
+								if(e.which == game.KEYCODE_COLLECTIBLE) {
 									// 87 == W
 									addCollectable();
 								}
@@ -1328,6 +1328,7 @@ var game = {
 		game.sky = gameinfo["level1"].sky;
 		game.itemInterval = gameinfo["level1"].itemInterval;
 		game.hazardInterval = gameinfo["level1"].hazardInterval;
+		game.fractionInterval = gameinfo["level1"].wordInterval;
 		
 		game.p1 = gameinfo["level1"].scroll[0].item;
 		game.p2 = gameinfo["level1"].scroll[1].item;
