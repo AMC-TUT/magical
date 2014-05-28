@@ -322,6 +322,7 @@ var game = {
 
 						if(game.wordInterval == 'manual') {
 							$(document).bind('keydown', function(e) {
+								console.log(e.which);
 								if(e.which == game.KEYCODE_TASK) {
 									// 83 == S
 									addWord();
@@ -353,6 +354,7 @@ var game = {
 
 					if(game.wordInterval == 'manual') {
 						$(document).bind('keydown', function(e) {
+							console.log(e.which);
 							if(e.which == game.KEYCODE_TASK) {
 								// 83 == S
 								addMemory();
@@ -376,6 +378,7 @@ var game = {
 
 						if(game.wordInterval == 'manual') {
 							$(document).bind('keydown', function(e) {
+								console.log(e.which);
 								if(e.which == game.KEYCODE_TASK) {
 									// 83 == S
 									addFraction();
