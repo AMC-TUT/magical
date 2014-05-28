@@ -312,31 +312,9 @@ var game = {
 			
 			if(gameinfo["level1"].matchRule == "word") {
 				Crafty.e("2D, DOM, Image, sign").attr({x: 190, y: 5, z: 1000});
-				var taskLabel = Crafty.e("TaskLabel").taskLabel(195, 10, i18n.t("task"), '#FFFFFF');
-				
+				var taskLabel = Crafty.e("TaskLabel").taskLabel(195, 10, i18n.t("task"), '#FFFFFF');				
 				if(gameinfo["level1"].wordRules.length>0) {
 					createNewWordTask();
-					if(_.isNumber(game.wordInterval)) {
-						game.wordInterval = setInterval(function(){addWord()}, gameinfo["level1"].wordInterval);
-					} else {
-						console.log('MANUAL WORD TASK');
-						if(game.wordInterval == 'manual') {
-							$(document).bind('keydown', function(e) {
-								console.log(e.which);
-								if(e.which == game.KEYCODE_TASK) {
-									// 83 == S
-									addWord();
-								}
-								return false;
-							});
-						}
-
-					}					
-					/*
-					game.wordInterval = setInterval(function() {
-						addWord();
-					},gameinfo["level1"].wordInterval);
-					*/
 				}
 			}
 
@@ -347,7 +325,7 @@ var game = {
 				createNewMemoryTask(true);
 
 				//game.wordInterval = setInterval(function(){addMemory()},gameinfo["level1"].wordInterval);
-
+				/*
 				if(_.isNumber(game.wordInterval)) {
 					game.wordInterval = setInterval(function(){addMemory()}, gameinfo["level1"].wordInterval);
 				} else {
@@ -362,9 +340,8 @@ var game = {
 							return false;
 						});
 					}
-
-				}					
-
+				}
+				*/
 			}
 
 			if(gameinfo["level1"].matchRule == "fraction") {
@@ -372,25 +349,6 @@ var game = {
 				var taskLabel = Crafty.e("TaskLabel").taskLabel(195, 10, "task", '#FFFFFF');
 				if(gameinfo["level1"].fractionRules.length>0) {
 					createNewTask();
-					/*
-					if(_.isNumber(game.wordInterval)) {
-						game.fractionInterval = setInterval(function(){addFraction()}, gameinfo["level1"].wordInterval);
-					} else {
-						console.log('MANUAL FRACTION TASK');
-						if(game.wordInterval == 'manual') {
-							$(document).bind('keydown', function(e) {
-								console.log(e.which);
-								if(e.which == game.KEYCODE_TASK) {
-									// 83 == S
-									addFraction();
-								}
-								return false;
-							});
-						}
-
-					}
-					*/					
-					//game.fractionInterval = setInterval(function(){addFraction()},5000);
 				}
 			}
 
@@ -537,31 +495,54 @@ var game = {
 					game.turboInterval = setInterval(function(){Crafty.e('TurboSpeed').turbospeed();}, 10000);
 				}					
 
-
-
+				// add fraction answers
 				if(gameinfo["level1"].matchRule == "fraction") {
-					//Crafty.e("2D, DOM, Image, sign").attr({x: 190, y: 5, z: 1000});
-					//var taskLabel = Crafty.e("TaskLabel").taskLabel(195, 10, "task", '#FFFFFF');
 					if(gameinfo["level1"].fractionRules.length>0) {
-						//createNewTask();
-							if(gameinfo.level1.wordInterval == 'manual') {
-								$(document).bind('keydown', function(e) {
-									console.log(e.which);
-									if(e.which == game.KEYCODE_TASK) {
-										// 83 == S
-										addFraction();
-									}
-									return false;
-								});
-							} else {
-								game.fractionInterval = setInterval(function(){addFraction()}, parseInt(gameinfo["level1"].wordInterval, 10));
-							}
-
-
+						if(gameinfo.level1.wordInterval == 'manual') {
+							$(document).bind('keydown', function(e) {
+								if(e.which == game.KEYCODE_TASK) {
+									// 83 == S
+									addFraction();
+								}
+								return false;
+							});
+						} else {
+							game.fractionInterval = setInterval(function(){addFraction()}, parseInt(gameinfo["level1"].wordInterval, 10));
+						}
 					}
 				}
 
+				// add memory answers
+				if(gameinfo["level1"].matchRule == "memory") {
+					if(gameinfo.level1.wordInterval == 'manual') {
+						$(document).bind('keydown', function(e) {
+							if(e.which == game.KEYCODE_TASK) {
+								// 83 == S
+								addMemory();
+							}
+							return false;
+						});
+					} else {
+						game.wordInterval = setInterval(function(){addMemory()}, parseInt(gameinfo["level1"].wordInterval, 10));
+					}
+				}
 
+				// add word answers
+				if(gameinfo["level1"].matchRule == "word") {
+					if(gameinfo["level1"].wordRules.length>0) {
+						if(gameinfo.level1.wordInterval == 'manual') {
+							$(document).bind('keydown', function(e) {
+								if(e.which == game.KEYCODE_TASK) {
+									// 83 == S
+									addWord();
+								}
+								return false;
+							});
+						} else {
+							game.wordInterval = setInterval(function(){addWord()}, parseInt(gameinfo["level1"].wordInterval, 10));
+						}					
+					}
+				}
 
 
 			}
