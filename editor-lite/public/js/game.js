@@ -458,33 +458,29 @@ var game = {
 				p3tween2=TweenLite.to(p3_2._element, game.p3_speed, {left:"-1200px", ease:Linear.easeNone, onComplete:completeSky2});
 				
 				if(game.collectables.length>0){
-					if(_.isNumber(game.itemInterval)) {
-						game.collectableInterval = setInterval(function(){addCollectable()},game.itemInterval);
+					if(game.itemInterval == 'manual') {
+						$(document).keydown(function(e) {
+							if(e.which == game.KEYCODE_COLLECTIBLE) {
+								// 87 == W
+								addCollectable();
+							}
+							return false;
+						});
 					} else {
-						if(game.itemInterval == 'manual') {
-							$(document).keydown(function(e) {
-								if(e.which == game.KEYCODE_COLLECTIBLE) {
-									// 87 == W
-									addCollectable();
-								}
-								return false;
-							});
-						}
+						game.collectableInterval = setInterval(function(){addCollectable()}, parseInt(game.itemInterval, 10));					
 					}
 				}
 				if(game.avoidables.length>0){
-					if(_.isNumber(game.hazardInterval)) {
-						game.avoidInterval = setInterval(function(){addAvoidable()}, game.hazardInterval);
+					if(game.hazardInterval == 'manual') {
+						$(document).keydown(function(e) {
+							if(e.which == game.KEYCODE_HAZARD) {
+								// 65 == A
+								addAvoidable();
+							}
+							return false;
+						});
 					} else {
-						if(game.hazardInterval == 'manual') {
-							$(document).keydown(function(e) {
-								if(e.which == game.KEYCODE_HAZARD) {
-									// 65 == A
-									addAvoidable();
-								}
-								return false;
-							});
-						}
+						game.avoidInterval = setInterval(function(){addAvoidable()}, parseInt(game.hazardInterval, 10) );
 					}
 				}
 
