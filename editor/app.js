@@ -10,7 +10,7 @@ var fs = require('fs'),
   util = require('util');
 
 var redis = require("redis"),
-  client = redis.createClient(6379, 'localhost');
+  client = redis.createClient(6379, '127.0.0.1');
 
 var app = express(),
   http = require('http'),
@@ -46,7 +46,7 @@ app.use('/editor/user-media', express.static(__dirname + '/user-media'));
 app.use(express.cookieParser());
 
 app.configure('development', function() {
-  app.set('djangoUrl', 'http://localhost:8000/');
+  app.set('djangoUrl', 'http://localhost:8080/');
 
   app.use(express.errorHandler({
     dumpExceptions: true,
@@ -78,6 +78,7 @@ app.param('slug', /[a-zA-Z0-9-]+$/);
 
 app.get('/edit/:slug', function(req, res) {
   var slug = req.params.slug;
+  console.log(slug);
   //var slug = req.url.replace(/^\//, ''); // remove slash, orig: "/super-magos"
   
   /* // 4 dev
@@ -85,6 +86,9 @@ app.get('/edit/:slug', function(req, res) {
   req.cookies.sessionid = 'badaa213e2c71e5be7ecf9a37675c12b',
   req.cookies.csrftoken = 'uc71V2tmsVlCtgXEbQqCMboHiCTrBhCR';
   */
+  console.log('req.cookies ---->');
+  console.log(req.cookies);
+
   // if sessionid or csrftoken equals undefined redirect to login page
   if(_.isUndefined(req.cookies) || _.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
     // if no session exists
@@ -93,6 +97,8 @@ app.get('/edit/:slug', function(req, res) {
   }
   // query django session data from Redis
   client.get('django_session:' + req.cookies.sessionid, function(err, data) {
+    console.log('redis data:');
+    console.log(data);
     if(_.isNull(data)) {
       // if no session info in redis
       res.redirect(app.get('djangoUrl') + 'game/login?next=/editor/edit/' + slug);
@@ -836,6 +842,8 @@ myMagos.logEvent = function(log, sessionid, csrftoken) {
 myMagos.parseSessionObject = function(data) {
   var sessionObj = {},
       json_data = {};
+  console.log('parseSessionObject...');
+  console.log(data);
   if(_.isString(data)) {
     var enc = myMagos.base64Decode(data);
     try {
