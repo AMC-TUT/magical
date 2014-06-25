@@ -4,13 +4,14 @@ var fs = require('fs'),
   express = require('express'),
   params = require('express-params'),
   request = require('request'),
+  config = require("./config"),
   path = require('path'),
   querystring = require('querystring'),
   _ = require('underscore')._,
   util = require('util');
 
 var redis = require("redis"),
-  client = redis.createClient(6379, '127.0.0.1');
+    client = redis.createClient(config.redis.port, config.redis.ip);
 
 var app = express(),
   http = require('http'),
@@ -24,41 +25,17 @@ io.enable('browser client etag');
 io.enable('browser client gzip');
 io.set('log level', 2); // reduce logging
 
-// redis
-client.monitor(function(err, res) {
-  console.log("Entering monitoring mode.");
-});
+app.set('djangoUrl', config.express.djangoUrl);
+app.use(express.favicon());
+app.use(express.logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded());
+app.use(express.methodOverride());
+app.use(express.cookieParser('magos-cookie-2k13'));
+app.use(express.session());
 
-client.on("monitor", function(time, args) {
-  console.log(time + ": " + util.inspect(args));
-});
-
-client.on("error", function(err) {
-  console.log("error event - " + client.host + ":" + client.port + " - " + err);
-});
-
-params.extend(app);
 app.use('/static', express.static(path.join(__dirname, 'static')));
-
-//app.use('/editor/static', express.static(__dirname + '/static'));
 app.use('/editor/user-media', express.static(__dirname + '/user-media'));
-
-app.use(express.cookieParser());
-
-app.configure('development', function() {
-  app.set('djangoUrl', 'http://localhost:8080/');
-
-  app.use(express.errorHandler({
-    dumpExceptions: true,
-    showStack: true
-  }));
-});
-
-app.configure('production', function() {
-  app.set('djangoUrl', 'http://magos.pori.tut.fi/');
-
-  app.use(express.errorHandler());
-});
 
 app.use(function(err, req, res, next) {
   res.send(500, 'Something broke!');
@@ -73,35 +50,25 @@ io.configure(function() {
 /**
  * ROUTES
  */
-
-app.param('slug', /[a-zA-Z0-9-]+$/);
-
 app.get('/edit/:slug', function(req, res) {
   var slug = req.params.slug;
-  console.log(slug);
-  //var slug = req.url.replace(/^\//, ''); // remove slash, orig: "/super-magos"
-  
-  /* // 4 dev
-  req.cookies = {};
-  req.cookies.sessionid = 'badaa213e2c71e5be7ecf9a37675c12b',
-  req.cookies.csrftoken = 'uc71V2tmsVlCtgXEbQqCMboHiCTrBhCR';
-  */
-  console.log('req.cookies ---->');
-  console.log(req.cookies);
-
   // if sessionid or csrftoken equals undefined redirect to login page
   if(_.isUndefined(req.cookies) || _.isUndefined(req.cookies.sessionid) || _.isUndefined(req.cookies.csrftoken)) {
     // if no session exists
-    res.redirect(app.get('djangoUrl') + 'game/login?next=/editor/edit/' + slug);
+    res.redirect(config.express.djangoUrl + '/game/login?next=/editor/' + req.url);
     return false;
   }
   // query django session data from Redis
-  client.get('django_session:' + req.cookies.sessionid, function(err, data) {
-    console.log('redis data:');
-    console.log(data);
+  console.log(req.cookies.sessionid);
+  client.get('django_session:foobar', function(err, data) { 
+    console.log('FOOBAR: ' + data);
+  });
+
+  client.get('django_session:' + req.cookies.sessionid, function(err, data) { 
+    console.log('redis data: ', data);
     if(_.isNull(data)) {
       // if no session info in redis
-      res.redirect(app.get('djangoUrl') + 'game/login?next=/editor/edit/' + slug);
+      res.redirect(config.express.djangoUrl + '/game/login?next=/editor/' + req.url);
       return false;
     }
 
@@ -109,13 +76,14 @@ app.get('/edit/:slug', function(req, res) {
     console.log(sessionObj);
     // if no valid logged in user
     if(_.isUndefined(sessionObj.userName)) {
-      res.redirect(app.get('djangoUrl') + 'game/login?next=/editor/edit/' + slug);
+      res.redirect(config.express.djangoUrl + '/game/login?next=/editor/' + req.url);
       return false;
     }
 
   });
 
   res.sendfile(__dirname + '/index.html');
+
 });
 
 
@@ -128,7 +96,7 @@ app.get('/play/:slug', function(req, res) {
 
 // fallback response
 app.get('/', function(req, res) {
-  res.redirect(app.get('djangoUrl'));
+  res.redirect(config.express.djangoUrl);
 });
 
 
@@ -395,7 +363,7 @@ var editor = io.sockets.on('connection', function(socket) {
 
         // game update request
         request.put({
-          url: app.get('djangoUrl') + 'api/v1/games/' + slug,
+          url: config.express.djangoUrl + '/api/v1/games/' + slug,
           jar: j,
           form: {
             'state': state,
@@ -446,7 +414,7 @@ var editor = io.sockets.on('connection', function(socket) {
         var j = myMagos.createCookieJar(sessionid, csrftoken);
         // get game request
         request.get({
-          url: app.get('djangoUrl') + 'api/v1/games/' + slug,
+          url: config.express.djangoUrl + '/api/v1/games/' + slug,
           jar: j
         }, function(error, response, body) {
           if(!error && response.statusCode == 200) {
@@ -610,9 +578,9 @@ var editor = io.sockets.on('connection', function(socket) {
 
     // get images request
     var result = [];
-    console.log(app.get('djangoUrl'));
+    console.log(config.express.djangoUrl);
     request.get({
-      url: app.get('djangoUrl') + 'api/v1/images',
+      url: config.express.djangoUrl + '/api/v1/images',
       jar: j,
       qs: data
     }, function(error, response, body) {
@@ -827,7 +795,7 @@ myMagos.logEvent = function(log, sessionid, csrftoken) {
 
   // game update request
   request.put({
-    url: app.get('djangoUrl') + 'api/v1/logs/' + slug,
+    url: config.express.djangoUrl + '/api/v1/logs/' + slug,
     jar: j,
     form: data
   }, function(error, response, body) {
