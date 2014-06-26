@@ -734,7 +734,7 @@ Signals functions
 def create_user_profile(sender, instance, created, **kwargs):
     profile = None
     default_country, country_created = Country.objects.get_or_create(name='Suomi', slug='finland')
-    default_lang, lang_created = Language.objects.get_or_create(code='fi', title='suomi', slug='finnish')
+    default_lang, lang_created = Language.objects.get_or_create(code='fi', title='suomi')
     default_role, role_created = Role.objects.get_or_create(name='student', permission_level=1)
     default_organization, organization_created = Organization.objects.get_or_create(name='TTY', slug='tty', language=default_lang, country=default_country)
     default_gender = None
