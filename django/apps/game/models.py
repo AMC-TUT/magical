@@ -745,7 +745,16 @@ def create_user_profile(sender, instance, created, **kwargs):
         lang_created = True
 
     default_role, role_created = Role.objects.get_or_create(name='student', permission_level=1)
-    default_organization, organization_created = Organization.objects.get_or_create(name='TTY', slug='tty', language=default_lang, country=default_country)
+    #default_organization, organization_created = Organization.objects.get_or_create(name='TTY', slug='tty', language=default_lang, country=default_country)
+    default_organization = None
+    organization_created = False
+    default_organization = Organization.objects.filter(slug='tty')
+    if default_organization:
+        default_organization = default_organization[0]
+    else:
+        default_organization = Organization.objects.create(name='TTY', slug='tty', language=default_lang, country=default_country)
+        organization_created = True
+
     default_gender = None
     try:
         default_gender = Gender.objects.get(abbr='M')
