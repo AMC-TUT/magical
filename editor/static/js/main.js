@@ -549,7 +549,6 @@ $(function() {
       properties: null,
       active: false,
       icon: function() {
-        //return '/editor/user-media/images/' + this.get('properties.sprite') + '.png';
         var file_uuid = this.getPath('properties.file'),
           ext = this.get('extension'),
           canvas = App.gameController.get('content').get('revision').canvas,
@@ -597,8 +596,6 @@ $(function() {
         return _.isObject(collisions) ? collisions.filterProperty('text') : false;
       }.property('properties'),
       filteredDialogEvents: function() {
-        //var collisions = this.get('properties.collisions');
-        //return _.isObject(collisions) ? collisions.filterProperty('text') : false;
         return false;
       }.property('properties')
     });
@@ -614,11 +611,6 @@ $(function() {
 
     App.gameComponentsController = Em.ArrayController.create({
       contentBinding: 'App.gameController.content.revision.gameComponents',
-      //selectedScoreTargetBinding: 'App.selectedScoreTargetController.option',
-      //selectedScoreTarget: null,
-      //selectedScoreTarget: this.scoreCollisionTargets.get('firstObject'),
-      //selectedScoreEventBinding: 'App.selectedScoreEventController.option',
-      //selectedScoreEvent: null,
 
       removeItem: function(propName, value) {
         var obj = this.findProperty(propName, value);
@@ -1129,12 +1121,6 @@ $(function() {
       }
     }).appendTo('body');
 
-/*
-    App.selectedScoreTargetController = Em.Object.create({
-      content: null,
-      scoreTargetBinding: 'App.sceneComponentsController.content'
-    });
-*/
     /**************************
      * Selected Component
      * This can be either sceneComponent or gameComponent
@@ -1289,13 +1275,6 @@ $(function() {
         // update magoses to other instances
         var user = this.get('user'),
             magos = this.get('magos');
-        /*
-        App.dataSource.userChangedMagos(user, magos, function(data) {
-          console.log('emit (user changed magos)');
-        });
-        */
-
-        //App.magosesController.set('content', Em.copy(App.magosesController.get('content'), true));
 
         setTimeout(function() {
           Em.run.next(function() {
@@ -1319,8 +1298,6 @@ $(function() {
             item = App.Magos.create(newItem),
             idx = this.indexOf(obj);
         this.replaceContent(idx, 1, [item]);
-        // update instances in the canvas w/ the new graphic
-        //$('.canvas-pane').find("[data-slug='" + slug + "']").attr('src', src);
       },
       populate: function() {
         var controller = this;
@@ -1361,64 +1338,7 @@ $(function() {
           } else {
             alert('There are no free roles.');
           }
-
-
-
         }
-        //Em.run.sync();
-
-        /*
-        App.dataSource.getSkillsets(function(data) {
-          // set content
-          controller.set('content', data);
-          // set selected
-          var user = App.usersController.get('user');
-
-          var magoses = controller.get('content');
-          _.each(magoses, function(obj) {
-            var magosName = obj.get('magos');
-            console.log(obj.get('magos'));
-            console.log(obj.get('user'));
-          });
-          Em.run.sync();
-          // get free magoses in the room (not in use)
-          var freeMagoses = App.roomController.get('content').get('magoses').filterProperty('user', null);
-          //var freeMagoses = App.roomController.get('content').get('magoses').filter(function(obj) { return !obj.user });
-          //var freeRoomMagoses = _.where(roomMagoses, {inUse: false});
-          //var freeMagosNames = _.pluck(freeRoomMagoses, 'name');
-          console.log('freeMagoses');
-          console.log(freeMagoses);
-
-
-          var freeMagos = null;
-          //var freeMagoses = App.magosesController.get('content').filterProperty('user', null);
-
-          // take the first free magos and set it as users role magos
-          //var freeMagos = controller.get('content').findProperty('user', null);
-          var freeMagos = freeMagoses[0];
-          //var freeMagos = controller.get('content').findProperty('magos', 'physicus');
-          //var freeMagos = controller.get('content').findProperty('magos', 'artifex');
-
-          if(_.isObject(freeMagos)) {
-            Em.run.sync(); // room controller's magoses are not autosynced for some reason
-            console.log('Set user to ' + freeMagos.magos);
-            freeMagos.set('user', user);
-            App.roomController.get('content').get('magoses').findProperty('magos', freeMagos.magos).set('inUse', true);
-
-            App.dataSource.userChangedMagos(user, freeMagos.magos, function(data) {
-              console.log('emit (user changed magos on login)');
-            });
-
-          } else {
-            alert('there are no free roles. this should have never happened!');
-          }
-
-          // set special class for dragging action
-          if(freeMagos.get('magos') === 'arcitectus') {
-            $('.chest-container').addClass('arcitectus-magos');
-          }
-        });
-        */
       },
       selectedObserver: function() {
         var controller = this;
@@ -1476,20 +1396,7 @@ $(function() {
           });
         });
       }.observes('content.@each.busy'),
-      selectedObserver: function() {
-
-        /*
-        console.log('selectedObserver: function() {');
-
-        App.magosesController.set('content', App.magosesController.get('content'));
-        Em.run.next(function() {
-          //
-          refreshSidebar( $('.sortable-sidearea') );
-        });
-        */
-
-      }.observes('content.selected')
-
+      selectedObserver: function() { }.observes('content.selected')
     });
 
     /* VIEW FOR POTION PROPERTY FORMS */
@@ -2496,9 +2403,7 @@ $(function() {
       if(_.isObject(game)) {
         console.log(game);
         console.log(game.revision);
-        //App.gameController.get('content').set('revision', App.Revision.create(game.revision));
-        //var revision = App.Revision.create(game.revision);
-        //console.log(revision);
+
         var revision = game.revision;
 
         if(_.isString(revision)) {
@@ -2561,20 +2466,16 @@ $(function() {
           'gameComponents': gameComponentsA
         };
 
-        //console.log(rev);
         App.gameController.get('content').set('revision', App.Revision.create(rev));
         populateScenes(); // redraw game components
 
       }
     });
 
-    // (function init() {
-    // })();
     /**************************
      * jQuery UI parts
      **************************/
 
-    // $(".game-item").draggable({ helper: "clone" });
     // show/hide grid button TODO replace with ember object
     $(document).on('click tap', '.btn-grid', function(event) {
       event.preventDefault();
@@ -2916,7 +2817,7 @@ $(function() {
           });
 
           // size class to chests
-          $('.scene-chest').addClass(sizeClass)
+          $('.scene-chest').addClass(sizeClass);
           $('.item-chest').addClass(sizeClass);
 
           // add size class and dom nodes game canvas
@@ -3219,8 +3120,8 @@ $(function() {
         // filename = filename.substring(0, 25);
         // return ready string
         return filename;
-      }
+      };
 
   }(window.App = window.App || Em.Application.create(), jQuery, window.Em));
 
-}); // $(function() {
+});
