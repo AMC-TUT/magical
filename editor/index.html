@@ -422,19 +422,7 @@
       <a class="btn btn-info active" data-theme="dark" href="#">Dark</a>
     </div>
 
-    {{#view App.LanguageSelectionView class="btn-group btn-group-language"}}
 
-    <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#">
-      <img {{bindAttr src="content.flag"}} />&nbsp;&nbsp;<span class="caret"></span>
-    </a>
-    <ul class="dropdown-menu">
-    {{#each App.languagesController}}
-      {{#view App.LangList tagName="li" languageBinding="this"}}
-      <a href="#"><img {{bindAttr src="language.flag"}} class="icon-flag">&nbsp;&nbsp;{{language.title}}</a>
-      {{/view}}
-    {{/each}}
-    </ul>
-    {{/view}}
 
     <div class="btn-group btn-group-help">
       <button class="btn btn-warning"><i class="icon-question-sign icon-white"></i></button>

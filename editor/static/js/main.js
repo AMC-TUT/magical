@@ -7,7 +7,7 @@ $(function() {
     App.VERSION = '0.0.1',
 
     App.settings = {
-      djangoUri : 'http://localhost:8000/'
+      djangoUri : 'http://10.0.1.5:8000/' // localhost
       //djangoUri : 'http://magos.pori.tut.fi/'
     };
 
@@ -1612,7 +1612,8 @@ $(function() {
         var strength = gravitationStrengthVal.val();
         var gravitation = {
           'strength' : strength
-        }
+        };
+
         App.selectedComponentController.setPath('content.properties.gravitation', gravitation);
 
         var selectedComponent = App.selectedComponentController.get('content');
@@ -1724,7 +1725,7 @@ $(function() {
           App.potionsController.set('hideJumpHeight', true);
         } else {
           App.potionsController.set('hideJumpHeight', false);
-          this.set
+          //this.set
         }
       }.observes('controlsMethod'),
 
@@ -1852,47 +1853,6 @@ $(function() {
 
     });
 
-    /**************************
-     * Language
-     **************************/
-
-    App.Language = Em.Object.extend({
-      title: null,
-      slug: null,
-      code: null,
-      flag: function() {
-        return '/editor/static/img/flags/' + this.get('code') + '.png';
-      }.property('code')
-    });
-
-    App.languagesController = Em.ArrayController.create({
-      content: [],
-      selected: null,
-      populate: function() {
-        var controller = this;
-
-        App.dataSource.getLanguages(function(data) {
-          // set content
-          controller.set('content', data);
-          // set as default language, updated when user preferences loaded
-          controller.set('selected', controller.objectAt(0));
-        });
-      },
-      selectedObserver: function() {
-        // TODO save language preference
-      }.observes('selected')
-    });
-
-    App.LangList = Em.View.extend({
-      click: function(event) {
-        App.languagesController.set('selected', this.get('language'));
-      }
-    });
-
-    App.LanguageSelectionView = Em.View.extend({
-      classNames: ['btn-group'],
-      contentBinding: 'App.languagesController.selected'
-    });
 
     /**************************
      * Game Component Types
@@ -2416,7 +2376,6 @@ $(function() {
       // populate after socket connection is established
       App.sceneComponentsController.populate();
       App.gameController.populate();
-      App.languagesController.populate();
     });
 
 
