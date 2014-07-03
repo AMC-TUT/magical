@@ -114,12 +114,12 @@ $(function() {
               emMagos.set('potions', potions);
               App.magosesController.get('content').pushObject(emMagos);
             });
-            
+
             // add user to other instances also
             App.dataSource.addUser(activeUser, function(data) {
               console.log('emit (add user AGAIN)');
             });
-            
+
             App.magosesController.populate();
           } else {
             // user has no access to room
@@ -156,7 +156,7 @@ $(function() {
       populate: function() {
         var controller = this;
         // set user credentials
-        App.dataSource.setUserCredentials(function(data) {          
+        App.dataSource.setUserCredentials(function(data) {
           if(data) {
             var gameSlug = data.slug;
             var currentUser = App.User.create({
@@ -183,7 +183,7 @@ $(function() {
               controller.set('content', data);
               App.roomController.populate(data);
 
-            });            
+            });
           }
 
         });
@@ -332,7 +332,7 @@ $(function() {
             rows = parseInt(canvas.rows, 10),
             cols = parseInt(canvas.columns, 10);
         // block size for block
-        var width = blockSize, 
+        var width = blockSize,
             height = blockSize;
         if(this.get('type') == 2) {
           // block size for background
@@ -558,7 +558,7 @@ $(function() {
           cols = parseInt(canvas.columns, 10);
         console.log(ext);
         // block size for block
-        var width = blockSize, 
+        var width = blockSize,
           height = blockSize;
         return App.settings.djangoUri + 'game/image/' + file_uuid + '_' + width + 'x' + height + '.' + ext;
         //return '/editor/' + this.get('properties.file');
@@ -579,7 +579,7 @@ $(function() {
         }
 
       }.property('properties.controls.grid'),
-            
+
       collisions: function() {
         var collisions = this.getPath('properties.collisions');
         return collisions;
@@ -626,7 +626,7 @@ $(function() {
         // force game data save
         App.dataSource.saveGame(0, function(data) {
           console.log('save (remove game component)');
-        });          
+        });
       },
 
       refreshCollisionTargets: function() {
@@ -641,10 +641,10 @@ $(function() {
         if(currentComponent) {
           currentSlug = App.selectedComponentController.get('content').slug;
         }
-        _.each(App.gameComponentsController.get('content'), function(obj) { 
-          if( obj.properties.type.toLowerCase() == 'collectible' || 
-              obj.properties.type.toLowerCase() == 'player' || 
-              obj.properties.type.toLowerCase() == 'pushable' || 
+        _.each(App.gameComponentsController.get('content'), function(obj) {
+          if( obj.properties.type.toLowerCase() == 'collectible' ||
+              obj.properties.type.toLowerCase() == 'player' ||
+              obj.properties.type.toLowerCase() == 'pushable' ||
               obj.properties.type.toLowerCase() == 'decoration') {
             if(obj.slug.toLowerCase() != currentSlug) {
               targets.push(
@@ -682,9 +682,9 @@ $(function() {
             slugNames.push(obj.target.slug);
             if( _.isNull(selectedScoreTarget) || _.isUndefined(selectedScoreTarget) ) {
               //controller.set('selectedScoreTarget', colTarget[0]);
-              //App.selectedScoreTargetController.set('option', colTarget[0]);              
+              //App.selectedScoreTargetController.set('option', colTarget[0]);
               console.log('2. ---->>> selectedScoreTarget: ' + controller.get('selectedScoreTarget'));
-              //console.log('2. ---->>> selectedScoreTarget: ' + App.selectedScoreTargetController.get('option')); 
+              //console.log('2. ---->>> selectedScoreTarget: ' + App.selectedScoreTargetController.get('option'));
             }
             targets.push(
               App.GameComponent.create(colTarget[0])
@@ -888,7 +888,7 @@ $(function() {
                 }
                 if(potion == 'gravitation') {
                   activateGravitationSlider();
-                } 
+                }
             });
           }
         });
@@ -1051,7 +1051,7 @@ $(function() {
 
         } else {
           // component w/ same name already exists
-          App.setFlash('error', 'Item name is already in use. Please choose a different name.');        
+          App.setFlash('error', 'Item name is already in use. Please choose a different name.');
           return false;
         }
 
@@ -1089,7 +1089,7 @@ $(function() {
           App.selectedComponentController.setPath('content.properties.sprite', sprite);
           App.selectedComponentController.setPath('content.properties.file', file);
           App.selectedComponentController.setPath('content.properties.ext', ext);
-          
+
           var selectedComponent = App.selectedComponentController.get('content');
 
           var slugName = App.selectedComponentController.getPath('content.slug');
@@ -1108,7 +1108,7 @@ $(function() {
 
           App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
             console.log('emit (update game component)');
-          });          
+          });
 
           $modal.modal('hide');
           $modal.find('.ui-selected').removeClass('.ui-selected');
@@ -1149,7 +1149,7 @@ $(function() {
         var selected = this.get('content');
         var sceneItems = $('.scene-chest').find('li');
         var gameItems = $('.item-chest').find('li');
-        
+
         App.gameComponentsController.refreshCollisionTargets();
         App.gameComponentsController.refreshScoreCollisionTargets();
 
@@ -1171,7 +1171,7 @@ $(function() {
         var sceneComponents = this.get('sceneComponents');
         var gameComponents = this.get('gameComponents');
         var items = sceneComponents.concat(gameComponents);
-        
+
         _.each(items, function(item) {
           item.set('active', false);
         });
@@ -1388,7 +1388,7 @@ $(function() {
           //var freeMagosNames = _.pluck(freeRoomMagoses, 'name');
           console.log('freeMagoses');
           console.log(freeMagoses);
-          
+
 
           var freeMagos = null;
           //var freeMagoses = App.magosesController.get('content').filterProperty('user', null);
@@ -1477,7 +1477,7 @@ $(function() {
         });
       }.observes('content.@each.busy'),
       selectedObserver: function() {
-        
+
         /*
         console.log('selectedObserver: function() {');
 
@@ -1487,7 +1487,7 @@ $(function() {
           refreshSidebar( $('.sortable-sidearea') );
         });
         */
-        
+
       }.observes('content.selected')
 
     });
@@ -1512,7 +1512,7 @@ $(function() {
       collisionScoreBinding: 'collision.score', // collision
 
       strengthBinding: 'gravitation.strength', // gravitation
-      
+
       compTypeBinding:  'compTypes.title', // compType
 
       familyBinding: 'fonts.family', // font
@@ -1563,7 +1563,7 @@ $(function() {
           // inform others of property change
           App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
             console.log('emit (update game component score properties)');
-          });          
+          });
         }
       },
 
@@ -1572,7 +1572,7 @@ $(function() {
         event.preventDefault();
         var col_target = App.gameComponentsController.get('selectedCollisionTarget');
         console.log(App.potionsController.get('controls').method.method);
-        
+
         var col_event = App.gameComponentsController.get('selectedCollisionEvent');
         var targetSlug = (col_target) ? col_target.slug : null;
         var simple_target = {
@@ -1624,7 +1624,7 @@ $(function() {
         // inform others of property change
         App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
           console.log('emit (update game component properties)');
-        });          
+        });
 
       },
 
@@ -1654,14 +1654,14 @@ $(function() {
         // inform others of property change
         App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
           console.log('emit (update game component properties)');
-        });          
+        });
 
       },
 
       submitCompTypeProperties: function(event) {
         event.preventDefault();
         var typeTitle = this.getPath('compType.title');
-        
+
         App.selectedComponentController.setPath('content.properties.type', typeTitle);
 
         var selectedComponent = App.selectedComponentController.get('content');
@@ -1678,7 +1678,7 @@ $(function() {
       },
 
 
-      
+
       submitControlsProperties: function(event) {
         event.preventDefault();
         var controlsMethod = this.getPath('controlsMethod.method');
@@ -1686,8 +1686,8 @@ $(function() {
         var jumpHeight = this.getPath('jumpHeight');
         //var grid = this.getPath('grid');
         // get values from the form
-        var controls = { 
-          'method' : controlsMethod, 
+        var controls = {
+          'method' : controlsMethod,
           'speed' : speed,
           //'grid' : grid,
           'jumpHeight' : jumpHeight
@@ -1721,7 +1721,7 @@ $(function() {
       controlsMethodObserver: function() {
         // hide jump height for fourway and multiway
         if(this.getPath('controlsMethod.method') != 'twoway') {
-          App.potionsController.set('hideJumpHeight', true);          
+          App.potionsController.set('hideJumpHeight', true);
         } else {
           App.potionsController.set('hideJumpHeight', false);
           this.set
@@ -1788,7 +1788,7 @@ $(function() {
         // inform others of property change
         App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
           console.log('emit (update game component properties)');
-        });          
+        });
       }
     });
     App.InfoBoxGravitationView = Em.View.extend({
@@ -2081,7 +2081,7 @@ $(function() {
       joinRoom: function(gameData, callback) {
         socket.emit('joinRoom', gameData, function(data) {
           callback(data);
-        });        
+        });
       },
 
       shout: function(shout, callback) {
@@ -2158,7 +2158,7 @@ $(function() {
           callback(data);
         });
       },
-      
+
       saveGame: function(mode, callback) {
         // get game
         var game = App.gameController.get('content'); // JSON.stringify(this.get('content'));
@@ -2393,7 +2393,7 @@ $(function() {
 
     /**************************
      * Init Magos
-     **************************/    
+     **************************/
 
     var pathname = window.location.pathname;
     var slug = pathname.replace(/^\/editor\//, '').replace(/\/$/, '');
@@ -2448,33 +2448,33 @@ $(function() {
       App.gameComponentsController.removeItem('slug', slug);
     });
 
-    socket.on('updateGameComponent', function(slug, selectedComponent) {      
+    socket.on('updateGameComponent', function(slug, selectedComponent) {
       console.log('>>> SOCKET REQUEST: updateGameComponent');
       App.gameComponentsController.updateItem('slug', slug, selectedComponent);
     });
 
 
     // add game component to game canvas
-    socket.on('saveGameComponentToCanvas', function(component, sceneName) {      
+    socket.on('saveGameComponentToCanvas', function(component, sceneName) {
       console.log('>>> SOCKET REQUEST: saveGameComponentToCanvas');
       addGameComponentToCavas(component, sceneName);
     });
 
     // remove game component from game canvas
-    socket.on('removeGameComponentFromCanvas', function(component, sceneName) {      
+    socket.on('removeGameComponentFromCanvas', function(component, sceneName) {
       console.log('>>> SOCKET REQUEST: removeGameComponentFromCanvas');
       removeGameComponentFromCanvas(component, sceneName);
     });
 
 
     // add scene component to game canvas
-    socket.on('saveSceneComponentToCanvas', function(component, sceneName) {      
+    socket.on('saveSceneComponentToCanvas', function(component, sceneName) {
       console.log('>>> SOCKET REQUEST: saveSceneComponentToCanvas');
       addSceneComponentToCavas(component, sceneName);
     });
 
     // remove scene component from game canvas
-    socket.on('removeSceneComponentFromCanvas', function(component, sceneName) {      
+    socket.on('removeSceneComponentFromCanvas', function(component, sceneName) {
       console.log('>>> SOCKET REQUEST: removeSceneComponentFromCanvas');
       removeSceneComponentFromCanvas(component, sceneName);
     });
@@ -2492,7 +2492,7 @@ $(function() {
 
     socket.on('disconnectUser', function(data) {
       // remove user
-      var userName = data.userName, 
+      var userName = data.userName,
           userMagos = data.magos;
       console.log('>>> SOCKET REQUEST: disconnectUser');
       console.log(userName);
@@ -2505,7 +2505,7 @@ $(function() {
       }
     });
 
-    socket.on('userChangedMagos', function(data) {     
+    socket.on('userChangedMagos', function(data) {
       console.log('>>> SOCKET REQUEST: userChangedMagos');
       var user = data.user,
           newMagos = data.newMagos,
@@ -2792,7 +2792,7 @@ $(function() {
               }
 
             });
-        
+
           }
         });
 
@@ -2888,10 +2888,10 @@ $(function() {
             var cssRow = row + 1,
               cssColumn = column + 1;
             // append to scene
-            $scene.find('tr:nth-child(' + cssRow + ')').find('td:nth-child(' + cssColumn + ')').append($img);          
+            $scene.find('tr:nth-child(' + cssRow + ')').find('td:nth-child(' + cssColumn + ')').append($img);
           }
         }); // each gameComponents
-        
+
 
         _.each(sceneComponents, function(sceneComponent) {
           var top = sceneComponent.position.top,
@@ -2984,7 +2984,7 @@ $(function() {
       var $canvas = $('.canvas-pane'),
         ratio = $canvas.height() / $canvas.width();
     }
-    
+
 
     // remove game component from game canvas (after socket message)
     function removeSceneComponentFromCanvas(sceneComponent, sceneName) {
@@ -3017,18 +3017,18 @@ $(function() {
     function removeGameComponentFromCanvas(gameComponent, sceneName) {
       var itemType = 'gameComponents';
       var itemClass = (itemType == 'gameComponents') ? 'canvas-game-component' : 'canvas-scene-component';
-        
+
       var $scene = $('.canvas-' + sceneName);
       var row = gameComponent.position.row,
         column = gameComponent.position.column;
       var cssRow = row + 1,
         cssColumn = column + 1;
-      
+
       // append to scene
       var $tgt = $scene.find('tr:nth-child(' + cssRow + ')').find('td:nth-child(' + cssColumn + ') img');
-      var oid = gameComponent.oid;        
+      var oid = gameComponent.oid;
       var item = App.scenesController.get('content').findProperty('name', sceneName).get('gameComponents').findProperty('oid', oid);
-      
+
       App.scenesController.get('content').findProperty('name', sceneName).get('gameComponents').removeObject(item);
       $tgt.remove();
 
@@ -3059,7 +3059,7 @@ $(function() {
         file = null,
         ext = null,
         apiPath = null;
-      
+
       if(App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug)) {
         sprite = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).get('properties.sprite');
         file = App.gameController.getPath('content.revision.gameComponents').findProperty('slug', slug).get('properties.file');
@@ -3092,7 +3092,7 @@ $(function() {
             return false;
           }
 
-          var $draggable = $(ui.draggable), 
+          var $draggable = $(ui.draggable),
             $img = '';
 
           var slug = $draggable.data('slug');
@@ -3123,7 +3123,7 @@ $(function() {
           $tgt.append($img);
 
           App.dataSource.saveGame(0, function(data) {
-            // game component            
+            // game component
             console.log('save game component (drop)');
             var sceneName = App.scenesController.get('selected').get('name');
             App.dataSource.saveGameComponentToCanvas(obj, sceneName, function(data) {
