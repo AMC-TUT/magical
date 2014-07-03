@@ -2476,7 +2476,7 @@ $(function() {
      * jQuery UI parts
      **************************/
 
-    // show/hide grid button TODO replace with ember object
+    // show/hide grid button
     $(document).on('click tap', '.btn-grid', function(event) {
       event.preventDefault();
       var $tgt = $(event.target).closest('.btn');
@@ -2484,7 +2484,7 @@ $(function() {
       $tgt.toggleClass('active');
     });
 
-    // theme switcher TODO replace with ember object
+    // theme switcher
     $(document).on('click tap', '.btn-group-theme .btn', function(event) {
       event.preventDefault();
       var $tgt = $(event.target).closest('.btn');
@@ -2545,18 +2545,6 @@ $(function() {
 
       $modal.modal();
 
-    });
-
-    $(document).on('click tap', '.btn-gameinfo', function(event) {
-      event.preventDefault();
-
-      var $modal = $('#dialog-info');
-
-      $modal.find('button').on('click tap', function(event) {
-        $modal.modal('hide');
-      });
-
-      $modal.modal();
     });
 
     $(document).on('click tap', '.btn-back-potion', function(event) {
