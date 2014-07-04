@@ -969,7 +969,6 @@ $(function() {
           console.log(ext);
           var selectedImageAsset = App.imageAssetsController.get('content').findProperty('file', file);
 
-          // TODO: If we are updating sceneComponents, should we update potions instead of properties...
           App.selectedComponentController.setPath('content.properties.sprite', sprite);
           App.selectedComponentController.setPath('content.properties.file', file);
           App.selectedComponentController.setPath('content.properties.ext', ext);
@@ -1015,7 +1014,6 @@ $(function() {
 
     /**************************
      * Selected Component
-     * This can be gameComponent
      **************************/
 
     App.selectedComponentController = Em.Object.create({
@@ -1043,6 +1041,8 @@ $(function() {
         });
 
         selected.set('active', true);
+        console.log('CONTENT');
+        console.log(selected.get('properties'));
       }.observes('content')
 
     });

@@ -18,7 +18,7 @@
   <script type="text/x-handlebars" data-template-name="infobox-view">
       {{! InfoBox }}
       <div class="magos-infobox well">
-        <div class="navbar">
+        <div class="navbar" style="margin-bottom: 0;">
           <div class="navbar-inner navbar-inner-in-well">
             <div class="container">
 
@@ -34,19 +34,9 @@
 
                 <div class="row-fluid">
 
-                  <div class="span4 infobox-span">
+                  <div class="span12" style="padding-bottom: 20px;">
 
-                    <div class="infobox-skillset infobox-physicus">
-
-                      {{#unless App.selectedComponentController.content.properties.controls}}
-                        {{#unless App.selectedComponentController.content.properties.collisions}}
-                          {{#unless App.selectedComponentController.content.properties.gravitation}}
-                            {{#unless App.selectedComponentController.content.properties.type}}
-                              {{view App.EmptySettingsView templateName="emptySettings"}}
-                            {{/unless}}
-                          {{/unless}}
-                        {{/unless}}
-                      {{/unless}}
+                    <div class="infobox-skillset">
 
                       {{#if App.selectedComponentController.content.properties.type}}
                         <h4>Element Type</h4>
@@ -85,7 +75,6 @@
 
                         {{/view}}
                       {{/if}}
-
 
                       {{#if App.selectedComponentController.content.properties.collisions}}
                         <h4>Collisions</h4>
@@ -126,21 +115,9 @@
                       {{/if}}
 
                     </div>
-                  </div><!--/span-->
 
-                  <div class="span4">
 
-                    <div class="infobox-skillset infobox-principes">
-
-                      {{#unless App.selectedComponentController.content.filteredScoreEvents}}
-                        {{#unless App.selectedComponentController.content.properties.font}}
-                          {{#unless App.selectedComponentController.content.filteredDialogEvents}}
-                            {{#unless App.selectedComponentController.content.filteredTextEvents}}
-                              {{view App.EmptySettingsView templateName="emptySettings"}}
-                            {{/unless}}
-                          {{/unless}}
-                        {{/unless}}
-                      {{/unless}}
+                    <div class="infobox-skillset">
 
                       {{#if App.selectedComponentController.content.filteredScoreEvents}}
                         <h4>Score</h4>
@@ -196,17 +173,9 @@
                       {{/if}}
 
                     </div>
-                  </div><!--/span-->
 
-                  <div class="span4">
 
-                    <div class="infobox-skillset infobox-artifex">
-
-                      {{#unless App.selectedComponentController.content.icon}}
-                        {{#unless App.selectedComponentController.content.animation}}
-                          {{view App.EmptySettingsView templateName="emptySettings"}}
-                        {{/unless}}
-                      {{/unless}}
+                    <div class="infobox-skillset">
 
                       {{#if App.selectedComponentController.content.icon}}
                         <h4>Image</h4>
@@ -233,11 +202,7 @@
 
                     </div>
 
-                    <div class="infobox-skillset infobox-arcitectus">
-
-                      {{#unless App.selectedComponentController.content.filteredAudioEvents}}
-                        {{view App.EmptySettingsView templateName="emptySettings"}}
-                      {{/unless}}
+                    <div class="infobox-skillset">
 
                       {{#if App.selectedComponentController.content.filteredAudioEvents}}
                         <h4>Audio</h4>
@@ -262,7 +227,7 @@
                       {{/if}}
 
                     </div>
-                  </div><!--/span-->
+                  </div>
 
                   <div class="clearfix"></div>
                 </div>
@@ -276,7 +241,7 @@
 
       <script type="text/x-handlebars" data-template-name="shoutbox-view">
         <div class="magos-shoutbox well">
-          <div class="navbar">
+          <div class="navbar" style="margin-bottom: 0;">
             <div class="navbar-inner navbar-inner-in-well">
               <div class="container">
 
