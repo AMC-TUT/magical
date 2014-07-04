@@ -1,11 +1,19 @@
-/* Bootstrap v2.0.4 */
-
-// CSS Reset
-@import "reset.less";
+/*!
+ * Bootstrap v2.3.2
+ *
+ * Copyright 2013 Twitter, Inc
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Designed and built with all the love in the world by @mdo and @fat.
+ */
 
 // Core variables and mixins
 @import "variables.less"; // Modify this for custom colors, font-sizes, etc
 @import "mixins.less";
+
+// CSS Reset
+@import "reset.less";
 
 // Grid system and page structure
 @import "scaffolding.less";
@@ -44,11 +52,59 @@
 
 // Components: Misc
 @import "thumbnails.less";
+@import "media.less";
 @import "labels-badges.less";
 @import "progress-bars.less";
 @import "accordion.less";
 @import "carousel.less";
 @import "hero-unit.less";
+
+
+// Magos colors
+// -------------------------
+
+@whitesmoke:            whitesmoke;
+@physicus:              #095766;
+@arcitectus:            #090D66;
+@artifex:               #40B83D;
+@principes:             #621283;
+
+@yellow:                gold;
+@brown:                 #9E6C02;
+@sidebarColor:          #08C;
+
+@atomicSize:            4px;
+@baseMargin:            @atomicSize * 2;
+
+// Scaffolding
+// -------------------------
+@bodyBackground:        #111;
+@textColor:             @grayDark;
+
+@sansFontFamily:        "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+// Well
+// -------------------------
+@wellBackground:        #2C2929;
+
+// Navbar
+// -------------------------
+@navbarHeight:                    45px;
+@navbarBackground:                @grayDarker;
+@navbarBackgroundHighlight:       @grayDark;
+
+@navbarText:                      @grayLight;
+@navbarLinkColor:                 @grayLight;
+@navbarLinkColorHover:            @white;
+@navbarLinkColorActive:           @navbarLinkColorHover;
+@navbarLinkBackgroundHover:       transparent;
+@navbarLinkBackgroundActive:      @navbarBackground;
+
+@navbarSearchBackground:          lighten(@navbarBackground, 25%);
+@navbarSearchBackgroundFocus:     @white;
+@navbarSearchBorder:              darken(@navbarSearchBackground, 30%);
+@navbarSearchPlaceholderColor:    #ccc;
+@navbarBrandColor:                @yellow; //navbarLinkColor;
 
 // Magos stuff
 @import "magos.less";
@@ -56,31 +112,32 @@
 // Utility classes
 @import "utilities.less"; // Has to be last to override when necessary
 
-// For phone and tablet devices
-// -------------------------------------------------------------
-
 // REPEAT VARIABLES & MIXINS
 // -------------------------
 // Required since we compile the responsive stuff separately
-// @import "variables.less"; // Modify this for custom colors, font-sizes, etc
-// @import "mixins.less";
+
+@import "variables.less"; // Modify this for custom colors, font-sizes, etc
+@import "mixins.less";
+
 
 // RESPONSIVE CLASSES
 // ------------------
 
 @import "responsive-utilities.less";
 
+
 // MEDIA QUERIES
 // ------------------
 
-// Phones to portrait tablets and narrow desktops
-@import "responsive-767px-max.less";
+// Large desktops
+@import "responsive-1200px-min.less";
 
 // Tablets to regular desktops
 @import "responsive-768px-979px.less";
 
-// Large desktops
-@import "responsive-1200px-min.less";
+// Phones to portrait tablets and narrow desktops
+@import "responsive-767px-max.less";
+
 
 // RESPONSIVE NAVBAR
 // ------------------
@@ -90,4 +147,97 @@
 
 // magos responsive special stuff
 @import "responsive-magos.less";
+
+/* Bootstrap v2.0.4 */
+
+// // CSS Reset
+// @import "reset.less";
+
+// // Core variables and mixins
+// @import "variables.less"; // Modify this for custom colors, font-sizes, etc
+// @import "mixins.less";
+
+// // Grid system and page structure
+// @import "scaffolding.less";
+// @import "grid.less";
+// @import "layouts.less";
+
+// // Base CSS
+// @import "type.less";
+// @import "code.less";
+// @import "forms.less";
+// @import "tables.less";
+
+// // Components: common
+// @import "sprites.less";
+// @import "dropdowns.less";
+// @import "wells.less";
+// @import "component-animations.less";
+// @import "close.less";
+
+// // Components: Buttons & Alerts
+// @import "buttons.less";
+// @import "button-groups.less";
+// @import "alerts.less"; // Note: alerts share common CSS with buttons and thus have styles in buttons.less
+
+// // Components: Nav
+// @import "navs.less";
+// @import "navbar.less";
+// @import "breadcrumbs.less";
+// @import "pagination.less";
+// @import "pager.less";
+
+// // Components: Popovers
+// @import "modals.less";
+// @import "tooltip.less";
+// @import "popovers.less";
+
+// // Components: Misc
+// @import "thumbnails.less";
+// @import "labels-badges.less";
+// @import "progress-bars.less";
+// @import "accordion.less";
+// @import "carousel.less";
+// @import "hero-unit.less";
+
+// // Magos stuff
+// @import "magos.less";
+
+// // Utility classes
+// @import "utilities.less"; // Has to be last to override when necessary
+
+// // For phone and tablet devices
+// // -------------------------------------------------------------
+
+// // REPEAT VARIABLES & MIXINS
+// // -------------------------
+// // Required since we compile the responsive stuff separately
+// // @import "variables.less"; // Modify this for custom colors, font-sizes, etc
+// // @import "mixins.less";
+
+// // RESPONSIVE CLASSES
+// // ------------------
+
+// @import "responsive-utilities.less";
+
+// // MEDIA QUERIES
+// // ------------------
+
+// // Phones to portrait tablets and narrow desktops
+// @import "responsive-767px-max.less";
+
+// // Tablets to regular desktops
+// @import "responsive-768px-979px.less";
+
+// // Large desktops
+// @import "responsive-1200px-min.less";
+
+// // RESPONSIVE NAVBAR
+// // ------------------
+
+// // From 979px and below, show a button to toggle navbar contents
+// @import "responsive-navbar.less";
+
+// // magos responsive special stuff
+// @import "responsive-magos.less";
 

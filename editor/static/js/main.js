@@ -2791,11 +2791,6 @@ $(function() {
 
           var slug = $draggable.data('slug');
 
-          if(slug == 'background') {
-            // apply background image to canvas background
-
-          }
-
           if($draggable.hasClass('cloned')) {
             $img = $draggable;
           } else {
@@ -2837,7 +2832,6 @@ $(function() {
       });
     } // /function
 
-
     // main area sortable elements (shoutbox, infobox)
     $('.sortable-mainarea').sortable({
       placeholder: "sortable-highlight",
@@ -2849,7 +2843,6 @@ $(function() {
     });
     $('.sortable-mainarea').disableSelection();
 
-    // help TODO replace with ember object
     $(document).on('click tap', '.btn-group-help .btn', function(event) {
       event.preventDefault();
       var $tgt = $(event.target).closest('.btn');
@@ -2857,9 +2850,6 @@ $(function() {
 
       $('body').toggleClass('help');
 
-      // TODO .touch action for tablets
-      // $('body').find('.help-popover').each(function(index) { });
-      // TODO <a class="close" href="#">&times;</a>
       $('body').popover({
         selector: '.help .help-popover',
         'placement': 'bottom',

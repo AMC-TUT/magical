@@ -1,4 +1,8 @@
 
+body {
+  margin: 80px 0 20px;
+}
+
 .wiz {
   position: absolute;
   height: 133px;
@@ -14,7 +18,6 @@
   margin-bottom: @baseMargin;
   .border-radius(6px);
   background-color: @brown;
-  .magos-gradient();
 
   .chest {
     margin: 0;
@@ -56,35 +59,12 @@
       background: #EEA200;
     }
 
-/*
-
-*/
-/*
-    .item-chest-active{
-      background-color:#2AFF00;
-    }
-    */
   }
 }
 
-.scene-chest-container {
-  background-color: @principes;
-  .magos-gradient();
-
-  .scene-chest {
-    .ui-state-active, .ui-selected {
-      background: #C73DFF;
-    }
-
-    .game-chest-hover{
-      background-color:rgba(27,158,2,0.42);
-    }
-
-    .game-chest-active{
-      background-color:rgba(27,158,2,1);
-    }
-  }
-
+h3 {
+  color: #FFF;
+  text-shadow: 0 2px 6px #000;
 }
 
 .magos-shoutbox input[type=text] {
@@ -94,7 +74,7 @@
   border-color:#2C2929;
   color:#444;
 
-  .calc-width(~"100% - 81px");
+  //.calc-width(100% - 81px);
 }
 
 .magos-shoutbox-log {
@@ -163,27 +143,6 @@
 
   .infobox-skillset.infobox-arcitectus {
     margin-top:@baseMargin;
-  }
-
-  .infobox-physicus {
-    background-color: @physicus;
-  }
-
-  .infobox-principes {
-    background-color: @principes;
-  }
-
-  .infobox-arcitectus {
-    background-color: @arcitectus;
-  }
-
-  .infobox-artifex {
-    background-color: @artifex;
-  }
-
-  .infobox-physicus, .infobox-principes,
-  .infobox-arcitectus, .infobox-artifex {
-    .magos-gradient();
   }
 
   .font-preview {
@@ -263,7 +222,6 @@
     margin-top: @baseMargin;
     color: @white;
     .border-radius(4px);
-    .magos-gradient();
 
     &.selected-magos {
       .draggable-item {
@@ -536,3 +494,62 @@
       margin: 0 9px 9px;
     }
   }
+
+
+
+.game-preview-view {
+    height: 100%;
+}
+
+#gravitation-controls {
+  position: relative;
+}
+
+.slider-tooltip {
+  position: absolute;
+  display: block;
+  width: 40px;
+  margin-left: -20px;
+  top: -30px;
+  height: 20px;
+  color: #fff;
+  text-align: center;
+  font: 10pt Tahoma, Arial, sans-serif ;
+  border-radius: 3px;
+  border: 1px solid #333;
+    box-shadow:  1px 1px 2px 0px rgba(0, 0, 0, .3);
+  background-color: rgba(0,0,0,.6);
+}
+
+.gravitation-strength {
+  display: inline-block;
+  background-image: url("../img/icons/gravitation-arrows.png");
+  width: 20px;
+  height: 20px;
+}
+
+.gravitation-strength.high {
+  background-position: -20px 0;
+}
+
+#gravitationStrength {
+  display: inline-block;
+  width: 160px;
+}
+
+.infobox .btn{
+  display:inline-block;
+  padding:2px 5px;
+  margin:0;
+  line-height:14px;
+}
+
+.magos-infobox .table tr td.alignRight {
+  text-align: right;
+  width: 20%;
+}
+
+.magos-infobox .table tr td.oneOf3 {
+  width: 40% !important;
+}
+
