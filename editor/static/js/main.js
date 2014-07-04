@@ -423,114 +423,6 @@ $(function() {
 
     });
 
-    App.sceneComponentsController = Em.ArrayController.create({
-      content: [],
-      selectedSceneBinding: 'App.scenesController.selected.sceneComponents',
-      // NOT IN USE
-      selectedSceneNameBinding: 'App.scenesController.selected.name',
-      populate: function() {
-        var controller = this;
-
-        App.dataSource.getSceneComponents(function(data) {
-          // set content
-          controller.set('content', data);
-        });
-      },
-      available: function() {
-        var components = this.get('content');
-        var selectedSceneName = this.get('selectedSceneName');
-        var array = [];
-
-        _.each(components, function(component) {
-          var str = component.scenes.join(' ');
-          var reg = new RegExp(selectedSceneName);
-
-          if(str.match(reg)) array.push(component);
-        });
-
-        return array;
-
-      }.property('content', 'selectedSceneName')
-    });
-
-    App.SceneComponentsView = Em.View.extend({
-      contentBinding: 'App.sceneComponentsController.content',
-      classNameBindings: ['uiSelected'],
-      uiSelected: false,
-      alwaysTrue: true,
-      didInsertElement: function() {
-        var $li = this.$();
-
-        $li.find('> img').tooltip({
-          delay: {
-            show: 500,
-            hide: 100
-          },
-          placement: 'top'
-        });
-
-        var scene = this.get('scene');
-
-        this.$("> img").draggable({
-          helper: "clone",
-          //snap: ".canvas-cell:empty",
-          // grid: [32, 32],
-          snapMode: "inner",
-          start: function() {
-            var view = Em.View.views[$(this).parent().attr('id')];
-
-            var selected = view.get('item');
-            // set selected component
-            App.selectedComponentController.set('content', selected);
-          }
-
-        });
-
-        $li.droppable({
-          greedy: true,
-          accept: ".potion-icon",
-          activeClass: "ui-state-target",
-          hoverClass: "ui-state-active",
-          drop: function(event, ui) {
-            var $tgt = $(this),
-              view = Em.View.views[$tgt.attr('id')],
-              selected = view.get('item');
-
-            // set selected component
-            App.selectedComponentController.set('content', selected);
-            // set user busy
-            App.usersController.setPath('user.busy', true);
-
-            var $draggable = $(ui.draggable),
-              $container = $draggable.closest('.magos-potions'),
-              potion = $draggable.data('potion');
-
-            $container.hide("slide", {
-              direction: "right"
-            }, 250, function() {
-              $container.siblings('.magos-potions.' + potion).show('slide', {
-                direction: "left"
-              }, 250);
-            });
-          }
-        });
-        // ---
-      },
-      eventManager: Em.Object.create({
-        click: function(event, view) {
-          var selected = view.get('item');
-          // set selected component
-          App.selectedComponentController.set('content', selected);
-          // if user busy, set not busy
-          if(App.usersController.getPath('user.busy')) {
-            App.usersController.setPath('user.busy', false);
-          }
-          // if potion form open
-          closePotionForm();
-        }
-      })
-    });
-
     /**************************
      * GameComponent
      **************************/
@@ -1123,29 +1015,19 @@ $(function() {
 
     /**************************
      * Selected Component
-     * This can be either sceneComponent or gameComponent
+     * This can be gameComponent
      **************************/
 
     App.selectedComponentController = Em.Object.create({
       content: null,
-      sceneComponentsBinding: 'App.sceneComponentsController.content',
       gameComponentsBinding: 'App.gameComponentsController.content',
 
       contentObserver: function() {
         var selected = this.get('content');
-        var sceneItems = $('.scene-chest').find('li');
         var gameItems = $('.item-chest').find('li');
 
         App.gameComponentsController.refreshCollisionTargets();
         App.gameComponentsController.refreshScoreCollisionTargets();
-
-        //console.log(JSON.stringify(this.get('content')));
-        // loop elements and remove ui-selected class
-        _.each(sceneItems, function(item) {
-          var view = Em.View.views[$(item).attr('id')];
-          var component = view.get('item');
-          view.set('uiSelected', component === selected ? true : false);
-        });
 
         _.each(gameItems, function(item) {
           var view = Em.View.views[$(item).attr('id')];
@@ -1153,18 +1035,14 @@ $(function() {
           view.set('uiSelected', component === selected ? true : false);
         });
 
-        //
-        var sceneComponents = this.get('sceneComponents');
         var gameComponents = this.get('gameComponents');
-        var items = sceneComponents.concat(gameComponents);
+        var items = gameComponents;
 
         _.each(items, function(item) {
           item.set('active', false);
         });
 
         selected.set('active', true);
-        //console.log('new selected component:');
-        //console.log(this.get('content.properties.sprite'));
       }.observes('content')
 
     });
@@ -2281,7 +2159,6 @@ $(function() {
     socket.on('connect', function() {
       console.log('websocket connected (editor)');
       // populate after socket connection is established
-      App.sceneComponentsController.populate();
       App.gameController.populate();
     });
 
@@ -2330,19 +2207,6 @@ $(function() {
     socket.on('removeGameComponentFromCanvas', function(component, sceneName) {
       console.log('>>> SOCKET REQUEST: removeGameComponentFromCanvas');
       removeGameComponentFromCanvas(component, sceneName);
-    });
-
-
-    // add scene component to game canvas
-    socket.on('saveSceneComponentToCanvas', function(component, sceneName) {
-      console.log('>>> SOCKET REQUEST: saveSceneComponentToCanvas');
-      addSceneComponentToCavas(component, sceneName);
-    });
-
-    // remove scene component from game canvas
-    socket.on('removeSceneComponentFromCanvas', function(component, sceneName) {
-      console.log('>>> SOCKET REQUEST: removeSceneComponentFromCanvas');
-      removeSceneComponentFromCanvas(component, sceneName);
     });
 
     socket.on('addUser', function(user) {
@@ -2423,17 +2287,6 @@ $(function() {
         var scenes = [];
         _.each(game.revision.scenes, function(scene) {
 
-          var sceneArray = [];
-          _.each(scene.sceneComponents, function(component) {
-            // sceneArray.push( App.SceneComponent.create({ title: component.title, slug: component.slug, sprite: component.sprite, properties: component.properties }) );
-            sceneArray.push(App.CanvasComponent.create({
-              slug: component.slug,
-              position: component.position,
-              properties: component.properties
-            }));
-            // TODO component properties
-          });
-
           var gameArray = [];
           _.each(scene.gameComponents, function(component) {
             // gameArray.push( App.GameComponent.create({ title: component.title, slug: component.slug, properties: component.properties }) );
@@ -2448,7 +2301,7 @@ $(function() {
           //
           var obj = App.Scene.create({
             name: scene.name,
-            sceneComponents: sceneArray,
+            sceneComponents: [],
             gameComponents: gameArray
           });
           //
@@ -2665,27 +2518,15 @@ $(function() {
         console.log(item);
         App.scenesController.getPath('selected.'+ itemType).removeObject(item);
         $tgt.remove();
-        if(itemType === 'sceneComponents') {
-          if(slug === 'background') {
-            $scene.css('background-image', 'none');
-          }
-        }
 
         App.dataSource.saveGame(0, function(data) {
           console.log('save (click)');
           // emit removal via socket
           var sceneName = App.scenesController.get('selected').get('name');
-          if(itemType == 'gameComponents') {
             // emit game component removal
             App.dataSource.removeGameComponentFromCanvas(item, sceneName, function(data) {
               console.log('emit (remove game component from game canvas');
             });
-          } else {
-            // emit scene component removal
-            App.dataSource.removeSceneComponentFromCanvas(item, sceneName, function(data) {
-              console.log('emit (remove scene component from game canvas');
-            });
-          }
         });
       });
     }
@@ -2711,7 +2552,6 @@ $(function() {
 
       _.each(scenes, function(scene) {
         var gameComponents = scene.get('gameComponents'),
-          sceneComponents = scene.get('sceneComponents'),
           $scene = $('.canvas-' + scene.name);
 
         _.each(gameComponents, function(gameComponent) {
@@ -2739,33 +2579,11 @@ $(function() {
             $scene.find('tr:nth-child(' + cssRow + ')').find('td:nth-child(' + cssColumn + ')').append($img);
           }
         }); // each gameComponents
-
-
-        _.each(sceneComponents, function(sceneComponent) {
-          var top = sceneComponent.position.top,
-            left = sceneComponent.position.left,
-            slug = sceneComponent.slug,
-            oid = sceneComponent.oid,
-            properties = sceneComponent.properties;
-
-          var img = '<img src="/editor/static/img/icons/icon-' + slug + '.png" id="' + oid + '" data-slug="' + slug + '" data-oid="' + oid + '" class="canvas-item canvas-scene-component" style="position:absolute;left:' + left + 'px;top:' + top + 'px;">';
-          var $img = $(img);
-
-          if(slug === 'background' && _.isObject(sceneComponent.properties) && _.isString(properties.sprite)) {
-            var backgroundImage = '/editor/user-media/images/' + properties.sprite + '.png';
-            $scene.css('background-image', 'url(' + backgroundImage + ')');
-          }
-          // append to scene
-          $scene.append($img);
-        }); // each sceneComponents
-
       }); // each scenes
 
       // bind events
       bindClickToRemove('gameComponents');
-      bindClickToRemove('sceneComponents');
     }
-
 
     function createGameTableCanvases() {
 
@@ -2833,34 +2651,6 @@ $(function() {
         ratio = $canvas.height() / $canvas.width();
     }
 
-
-    // remove game component from game canvas (after socket message)
-    function removeSceneComponentFromCanvas(sceneComponent, sceneName) {
-      var $scene = $('.canvas-' + sceneName);
-      $scene.find('img.canvas-scene-component#'+ sceneComponent.oid).remove();
-
-    }
-
-    // add scene component to game canvas (after socket message)
-    function addSceneComponentToCavas(sceneComponent, sceneName) {
-      var $scene = $('.canvas-' + sceneName);
-      var top = sceneComponent.position.top,
-        left = sceneComponent.position.left,
-        slug = sceneComponent.slug,
-        oid = sceneComponent.oid,
-        properties = sceneComponent.properties;
-      var img = '<img src="/editor/static/img/icons/icon-' + slug + '.png" id="' + oid + '" data-slug="' + slug + '" data-oid="' + oid + '" class="canvas-item canvas-scene-component" style="position:absolute;left:' + left + 'px;top:' + top + 'px;">';
-      var $img = $(img);
-
-      if(slug === 'background' && _.isObject(sceneComponent.properties) && _.isString(properties.sprite)) {
-        var backgroundImage = '/editor/user-media/images/' + properties.sprite + '.png';
-        $scene.css('background-image', 'url(' + backgroundImage + ')');
-      }
-      // append to scene
-      $scene.append($img);
-    }
-
-
     // remove game component from game canvas (after socket message)
     function removeGameComponentFromCanvas(gameComponent, sceneName) {
       var itemType = 'gameComponents';
@@ -2880,11 +2670,6 @@ $(function() {
       App.scenesController.get('content').findProperty('name', sceneName).get('gameComponents').removeObject(item);
       $tgt.remove();
 
-      if(itemType === 'sceneComponents') {
-        if(slug === 'background') {
-          $scene.css('background-image', 'none');
-        }
-      }
     }
 
     // add game component to game canvas (after socket message)

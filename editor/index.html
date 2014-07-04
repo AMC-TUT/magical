@@ -475,19 +475,7 @@
 
       <script type="text/x-handlebars">
         <div class="row-fluid">
-
-          <div class="span3 chest-container scene-chest-container">
-            <ul class="chest scene-chest">
-              {{#each App.sceneComponentsController}}
-                {{#view App.SceneComponentsView tagName="li" itemBinding="this" classNameBindings="uiSelected"}}
-                <img {{bindAttr class="item.active item.potionsStr item.scenesStr alwaysTrue:scene-item"}} {{bindAttr src="item.icon"}} {{bindAttr alt="item.title"}} {{bindAttr title="item.title"}} {{bindAttr data-slug="item.slug"}} /></li>
-                {{/view}}
-              {{/each}}
-            </ul>
-            <div class="clearfix"></div>
-          </div>
-
-          <div class="span9 chest-container game-container">
+          <div class="span12 chest-container game-container">
             <ul class="chest item-chest">
               {{#each App.gameComponentsController}}
                 {{#view App.GameComponentsView tagName="li" itemBinding="this" classNameBindings="uiSelected"}}
@@ -502,11 +490,9 @@
               {{#view App.RemoveGameComponentView tagName="li" itemBinding="this" class="remove-item" title="Remove Item"}}
                 <img class="action-item" src="/editor/static/img/icons/icon-trash.png" alt="Remove Item" title="Remove Item">
               {{/view}}
-
             </ul>
             <div class="clearfix"></div>
           </div>
-
         </div>
       </script>
 
