@@ -393,15 +393,6 @@
     </div>
 
     <div class="btn-toolbar pull-right game-toolbar">
-
-      <div class="btn-group btn-group-scene">
-      {{#each App.scenesController}}
-        {{#view App.SelectSceneBtn tagName="button" sceneBinding="this"}}
-          {{scene.name}}
-        {{/view}}
-      {{/each}}
-      </div>
-
       <div class="btn-group btn-group-preview help-popover" data-placement="bottom" title="Preview" data-content="Play your game as it is now. Use this to test that everything works the way you wanted.">
         <button class="btn btn-success btn-preview">Preview</button>
       </div>
@@ -425,17 +416,9 @@
       <script type="text/x-handlebars">
       <div class="row-fluid canvas-container">
         <div class="canvas well">
-
-          <!-- intro -->
           <div class="canvas-pane canvas-div canvas-intro"></div>
-
-          <!-- table -->
           <table class="canvas-pane canvas-table canvas-game" style="display:none;"></table>
-
-          <!-- outro -->
-          <div class="canvas-pane canvas-div canvas-outro" style="display:none;"></div>
-
-        </div><!-- canvas well -->
+        </div>
       </div>
       </script>
 

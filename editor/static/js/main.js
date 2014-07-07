@@ -238,6 +238,16 @@ $(function() {
       init: function() {
         Em.run.next(function() {
           createGameTableCanvases();
+
+          setTimeout(function() {
+            var scenes = App.revisionController.getPath('content.scenes');
+            var scene = _.find(scenes, function(scene) {
+              if (scene.get('name') == 'game') return scene;
+            });
+
+            App.scenesController.set('selected', scene);
+          }, 300);
+
         });
       },
       selectedObserver: function() {
@@ -246,19 +256,13 @@ $(function() {
         var sceneName = this.getPath('selected.name');
         var selected = controller.get('selected');
         var items = controller.get('content');
-        if(selected) console.log(selected.name);
 
         _.each(items, function(item) {
           item.set('active', false);
         });
 
         if(!_.isNull(selected)) selected.set('active', true);
-
-        if(sceneName !== 'intro' && sceneName !== 'outro') {
           $('body').addClass('game-scene');
-        } else {
-          $('body').removeClass('game-scene');
-        }
 
         if(this.get('firstRun') < 0) {
           Em.run.next(function() {
@@ -269,7 +273,7 @@ $(function() {
           });
         }
 
-        this.set('firstRun', this.get('firstRun') - 1); // TODO ugly first b/e runs twice at first so make false after second run
+        this.set('firstRun', this.get('firstRun') - 1);
       }.observes('selected')
     });
 
@@ -305,15 +309,6 @@ $(function() {
 
       }
     });
-
-    App.SelectSceneBtn = Em.View.extend({
-      classNames: ['btn', 'btn-primary'],
-      classNameBindings: ['scene.active'],
-      click: function(event) {
-        App.scenesController.set('selected', this.get('scene'));
-      }
-    });
-
 
     /**************************
      * Image Assets
