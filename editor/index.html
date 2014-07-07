@@ -397,10 +397,10 @@
         <button class="btn btn-success btn-preview">Preview</button>
       </div>
 
-      {{#view App.PublishedView}}
-        <button {{bindAttr class="privateState:active alwaysTrue:btn alwaysTrue:btn-success"}}>Public</button>
-        <button {{bindAttr class="publicState:active alwaysTrue:btn alwaysTrue:btn-success"}}>Private</button>
-      {{/view}}
+      <div class="btn-group btn-group-state">
+        <a class="btn btn-success" data-state="public" href="#">Public</a>
+        <a class="btn btn-success" data-state="private" href="#">Private</a>
+      </div>
 
       </div>
 

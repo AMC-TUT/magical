@@ -1,5 +1,7 @@
 /* Magos Editor */
 
+var DEV = true;
+
 $(function() {
 
   (function(App, $, Em, undefined) {
@@ -81,8 +83,11 @@ $(function() {
       content: null,
       populate: function(gameData) {
         var controller = this;
+        if(DEV) {
         console.log('POPULATE ROOM');
         console.log(gameData);
+        }
+
         App.dataSource.joinRoom(gameData, function(data) {
           console.log(data);
           if(_.isObject(data)) {
@@ -150,7 +155,6 @@ $(function() {
 
     });
 
-    // replace this Object with ObjectProxy in 1.0
     App.gameController = Em.Object.create({
       content: null,
       populate: function() {
@@ -1792,7 +1796,7 @@ $(function() {
     App.ImageAssetsView = Em.View.extend({
       tagName: 'ul',
       classNames: ['assets-list']
-    })
+    });
 
     /**************************
      * Data Source
@@ -2125,9 +2129,6 @@ $(function() {
       store: App.store
     });
 
-    /**************************
-     * Data Store (tulossa 1.0 versioon, tätä ei käytetä vielä)
-     **************************/
 
     App.Store = Em.ArrayProxy.extend({});
 
@@ -2345,6 +2346,28 @@ $(function() {
       var href = "/editor/static/css/" + theme + ".css";
       $(document).find('#theme').attr('href', href);
     });
+
+    // state switcher
+    $(document).on('click tap', '.btn-group-state .btn', function(event) {
+      event.preventDefault();
+      var $tgt = $(event.target).closest('.btn');
+
+      $tgt.siblings().removeClass("active");
+      $tgt.addClass("active");
+
+      var state = $tgt.data('state');
+      var bool = state == 'public' ? 1 : 0;
+      App.gameController.setPath('content.state', bool);
+    });
+
+    setTimeout(function() {
+      var state = App.gameController.getPath('content.state');
+      if(state) {
+        $('.btn-group-state .btn:first').addClass('active');
+      } else {
+        $('.btn-group-state .btn:last').addClass('active');
+      }
+    }, 200);
 
     // play button for infobox audio play button
     $(document).on('click tap', '.btn-play', function(event) {
