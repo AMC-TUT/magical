@@ -2128,8 +2128,6 @@ $(function() {
     App.dataSource = App.DataSource.create({
       store: App.store
     });
-
-
     App.Store = Em.ArrayProxy.extend({});
 
     /**************************
