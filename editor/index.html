@@ -384,8 +384,6 @@
       <a class="btn btn-info active" data-theme="dark" href="#">Dark</a>
     </div>
 
-
-
     <div class="btn-group btn-group-help">
       <button class="btn btn-warning"><i class="icon-question-sign icon-white"></i></button>
     </div>
@@ -447,51 +445,37 @@
 
       </div><!--/ left side-->
 
+      <!-- assign busy tag with tool -->
 
       <div class="span3">
+        <div class="well">  <!-- <div  { {b in d Attr class=":sortable-item :well activeUser:active-user"}}> -->
+
           <script type="text/x-handlebars">
           {{#view App.MagosView}}
+
+            <div class="navbar" style="margin-bottom: 0;">
+            <div class="magos-potions navbar-inner">
+              <h3 style="margin-top: 0; margin-left: 15px;">Potions</h3>
+              <table class="table">
+                <tbody>
+                {{#each content}}
+                  {{#each potions}}
+                  <tr>
+                    <td>
+                      {{view App.PotionView contentBinding="this"}}
+                    </td>
+                    <td class="capitalize">
+                      {{title}}
+                    </td>
+                  </tr>
+                  {{/each}}
+                {{/each}}
+                </tbody>
+              </table>
+            </div>
+            </div>
+
             {{#each content}}
-              <div {{bindAttr class=":sortable-item :well activeUser:active-user"}}>
-              {{#if user}}
-                <h3 class="sortable-handle">{{user.userName}}</h3>
-
-                {{#if user.busy}}
-                  <img src="/editor/static/img/icons/icon-busy.png" class="busy-icon" title="User is busy right now" />
-                {{else}}
-                  <img src="/editor/static/img/icons/icon-available.png" class="busy-icon" title="You can change the roles with the user" />
-                {{/if}}
-
-              {{else}}
-                <h3 class="capitalize sortable-handle">{{magos}}</h3>
-                <img src="/editor/static/img/icons/icon-available.png" class="busy-icon" title="You can change the roles with the user" style="opacity: 0.4;" />
-              {{/if}}
-
-              <div {{bindAttr class="magos:magos-potions magos activeUser:selected-magos"}}>
-                  <div class="inner-shadow skillset">
-                    <!-- todo convert skillset icon to view -->
-                    <img class="skillset-icon" {{bindAttr data-magos="magos"}} {{bindAttr src="icon"}} />
-                  </div>
-                  <table class="table">
-                    <tbody>
-                      {{#each potions}}
-                      <tr>
-                        <td>
-                          {{view App.PotionView contentBinding="this"}}
-                        </td>
-                        <td class="capitalize">
-                          {{title}}
-                        </td>
-                      </tr>
-                      {{/each}}
-                    </tbody>
-                  </table>
-                </div>
-
-                {{#if activeUser}}
-
-                {{#if isArcitectus}}
-
                 <div {{bindAttr class="magos:magos-potions magos:magos-potion-form magos magos:rules magos:hide"}} style="display:none;">
                 <form class="form-vertical">
                   <fieldset>
@@ -536,10 +520,6 @@
                   </form>
                 </div>
 
-                {{/if}}
-
-                {{#if isArtifex}}
-
                 <div {{bindAttr class="magos:magos-potions magos:magos-potion-form magos magos:image magos:hide"}} style="display:none;">
                 <form class="form-vertical">
                   <fieldset>
@@ -551,7 +531,6 @@
                       </div>
                     </div>
 
-
                     <div class="form-actions">
                       <button class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
                       <button class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
@@ -561,10 +540,6 @@
                     </fieldset>
                   </form>
                 </div>
-
-                {{/if}}
-
-                {{#if isPhysicus}}
 
                 <div {{bindAttr class="magos:magos-potions magos:magos-potion-form magos magos:controls magos:hide"}} style="display:none;">
                 <form class="form-vertical">
@@ -705,14 +680,6 @@
                 </div>
 
 
-
-
-                {{/if}}
-
-                {{#if isPrincipes}}
-
-
-
                 <div {{bindAttr class="magos:magos-potions magos:magos-potion-form magos magos:font magos:hide"}} style="display:none;">
                 <form class="form-vertical">
                   <fieldset>
@@ -809,11 +776,6 @@
 
 
 
-                {{/if}}
-
-              {{/if}}
-
-              </div>
             {{/each}}
 
           {{/view}}

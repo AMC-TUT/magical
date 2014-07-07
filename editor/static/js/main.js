@@ -1250,17 +1250,7 @@ $(function() {
     App.MagosView = Em.View.extend({
       contentBinding: 'App.magosesController.content',
       classNames: ['sidebar', 'sortable-sidearea'],
-
-      didInsertElement: function() {
-        var $sortableArea = this.$();
-        $sortableArea.sortable();
-
-        Em.run.next(function() {
-
-          refreshSidebar($sortableArea);
-        });
-      },
-      busyObserver: function() { // TODO
+      busyObserver: function() {
         return Em.run.next(function() {
           return Em.run.next(function() {
             $('.busy-icon').tooltip({
