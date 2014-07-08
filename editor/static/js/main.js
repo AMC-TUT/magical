@@ -689,14 +689,18 @@ $(function() {
                 var $draggable = $(ui.draggable),
                   $container = $draggable.closest('.magos-potions'),
                   potion = $draggable.data('potion');
+console.log(potion);
                 // play sound
                 var sound = document.querySelector('#potion-sound');
                 sound.play();
 
+console.log('KESÄRENKAAT !!!');
+console.log($container);
+
                 $container.hide("slide", {
                   direction: "right"
                 }, 250, function() {
-                  $container.siblings('.magos-potions.' + potion).show('slide', {
+                  $container.parent().siblings('.magos-potions.' + potion).show('slide', {
                     direction: "left"
                   }, 250);
                   // in case of image potion, open modal window on drop
@@ -1049,16 +1053,6 @@ $(function() {
       }.observes('content')
 
     });
-
-    /**************************
-     * Potion
-     **************************/
-    /*
-    App.Potion = Em.Object.extend({
-      magos: null,
-      potions: []
-    });
-    */
 
     /**************************
      * Potions Controller
