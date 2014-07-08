@@ -9,7 +9,7 @@ $(function() {
     App.VERSION = '0.0.1',
 
     App.settings = {
-      djangoUri : 'http://10.0.1.5:8000/' // localhost
+      djangoUri : 'http://10.0.1.6:8000/' // localhost
       //djangoUri : 'http://magos.pori.tut.fi/'
     };
 
@@ -759,6 +759,10 @@ $(function() {
               $container = $draggable.closest('.magos-potions'),
               potion = $draggable.data('potion');
 
+              console.log('BLAABLAALAAALAA');
+              console.log($container);
+              console.log($container.siblings('.magos-potions.' + potion));
+
             $container.hide("slide", {
               direction: "right"
             }, 250, function() {
@@ -798,7 +802,7 @@ $(function() {
         $('#dialog-new-item').modal().on('show', function() {
           $(this).find('input').val('');
           $(this).find('.control-group').removeClass('error');
-        })
+        });
       },
       didInsertElement: function() { // TODO Screenshot
         this.$('> img').tooltip({
@@ -2443,74 +2447,16 @@ $(function() {
 
 
     function refreshSidebar($sortableArea) {
-      // sortable well
-      $sortableArea.sortable({
-        placeholder: "sortable-highlight",
-        items: "> .sortable-item",
-        handle: "h3",
-        axis: "y",
-        opacity: 0.8,
-        forceHelperSize: true
-      });
-
       $sortableArea.disableSelection();
 
       // small delay required to make this work
       setTimeout(function() {
-
         // potions
-        $('.potion-icon').draggable('destroy');
-        $('.selected-magos .potion-icon').draggable({
+        $('.potion-icon').draggable({
           helper: 'clone'
         });
 
-        // droppable skillset
-        var $droppable = $sortableArea.find('.magos-potions:not(.selected-magos)').find('.skillset');
-
-        $droppable.droppable({
-          greedy: true,
-          accept: ".skillset-icon",
-          activeClass: "ui-state-hover",
-          hoverClass: "ui-state-active",
-          drop: function(event, ui) {
-            var $tgt = $(event.target),
-              $draggable = $(ui.draggable),
-              magos = $draggable.data('magos'),
-              tgtMagos = $tgt.find('.skillset-icon').data('magos');
-
-            var user = App.usersController.get('user');
-            // inform other authors of the change
-            var gameSlug = App.gameController.getPath('content.slug');
-            App.dataSource.canUserChangeMagos(gameSlug, user, tgtMagos, function(data) {
-              console.log('emit (can user change magos)');
-              if(data) {
-                console.log('can change magos');
-                // change user magos
-                App.magosesController.set('selected', tgtMagos);
-                App.usersController.set('user.magos', tgtMagos);
-
-                App.dataSource.userChangedMagos(user, tgtMagos, function(data) {
-                  console.log('emit (user changed magos)');
-                });
-              } else {
-                // not allowed to change magos
-                console.log('cannot change magos');
-                App.setFlash('error', 'Can not change Magos');
-              }
-
-            });
-
-          }
-        });
-
-        // draggable skillset-icon
-        var $draggable = $sortableArea.find('.magos-potions.selected-magos').find('.skillset').find('.skillset-icon');
-        $draggable.draggable({
-          helper: 'clone',
-          cursor: 'move',
-          zIndex: 9999
-        });
-
+        $('.potion-icon.busy').draggable('destroy');
       }, 400);
     }
 
