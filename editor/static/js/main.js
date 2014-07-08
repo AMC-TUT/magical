@@ -90,38 +90,63 @@ $(function() {
 
         App.dataSource.joinRoom(gameData, function(data) {
           console.log(data);
+
           if(_.isObject(data)) {
             console.log('User joined room.');
             var room = App.Room.create(data);
             controller.set('content', room);
-            var activeUser = App.usersController.get('user');
-            // convert magoses to Ember objects
-            _.each(data.magoses, function(obj) {
-              var emMagos = App.Magos.create(obj);
-              if(emMagos.get('user')) {
-                //console.log(obj.magos);
-                //console.log(obj.user);
-                if(activeUser.userName == emMagos.get('user').userName) {
-                  console.log('Set magos ' + emMagos.get('magos') + ' for active user ' + activeUser.userName);
-                  //App.usersController.get('user').set('magos', obj.magos);
-                  activeUser.set('magos', emMagos.get('magos'));
-                }
-                var emUser = App.User.create(obj.user);
-                emMagos.set('user', emUser);
-              }
-              // Emberify potions
-              var potions = [];
-              _.each(obj.potions, function(potion) {
-                var emPotion = App.Potion.create(potion);
-                potions.push(emPotion);
-                App.potionsController.get('content').pushObject(emPotion);
-              });
-              emMagos.set('potions', potions);
-              App.magosesController.get('content').pushObject(emMagos);
+            var user = App.usersController.get('user');
+
+            var magos = App.Magos.create({
+              magos: 'magos',
+              user: user
             });
 
+            var potions = [];
+            _.each(data.magoses, function(obj) {
+              _.each(obj.potions, function(potion) {
+                var pot = App.Potion.create(potion);
+
+                potions.push(pot);
+                App.potionsController.get('content').pushObject(pot);
+              });
+            });
+
+            magos.set('potions', potions);
+            App.magosesController.get('content').pushObject(magos);
+
+            // // convert magoses to Ember objects
+            // _.each(data.magoses, function(obj) {
+
+            //   obj.magos = 'magos';
+            //   var emMagos = App.Magos.create(obj);
+            //   if(emMagos.get('user')) {
+
+            //     console.log(obj.magos);
+            //     console.log(obj.user);
+
+            //     if(activeUser.userName == emMagos.get('user').userName) {
+            //       console.log('Set magos ' + emMagos.get('magos') + ' for active user ' + activeUser.userName);
+            //       //App.usersController.get('user').set('magos', obj.magos);
+            //       activeUser.set('magos', emMagos.get('magos'));
+            //     }
+            //     var emUser = App.User.create(obj.user);
+            //     emMagos.set('user', emUser);
+            //   }
+// console.log(JSON.stringify(obj));
+              // var potions = [];
+              // _.each(obj.potions, function(potion) {
+
+              //   var emPotion = App.Potion.create(potion);
+              //   potions.push(emPotion);
+              //   App.potionsController.get('content').pushObject(emPotion);
+              // });
+              // emMagos.set('potions', potions);
+              // App.magosesController.get('content').pushObject(emMagos);
+        //    });
+
             // add user to other instances also
-            App.dataSource.addUser(activeUser, function(data) {
+            App.dataSource.addUser(user, function(data) {
               console.log('emit (add user AGAIN)');
             });
 
@@ -182,8 +207,8 @@ $(function() {
             App.dataSource.joinGame(function(data) {
               // set content to game controller
               data.slug = gameSlug;
-              console.log('GAME data:');
-              console.log(data);
+              // console.log('GAME data:');
+              // console.log(data);
               controller.set('content', data);
               App.roomController.populate(data);
 
@@ -217,7 +242,6 @@ $(function() {
         var controller = this;
         var canvas = controller.getPath('content.canvas');
         if(canvas) {
-          //App.magosesController.populate();
           App.imageAssetsController.populate();
         }
       }.observes('content')
@@ -351,6 +375,11 @@ $(function() {
           console.log(data);
           controller.set('content', data);
         });
+
+        setTimeout(function() {
+          // run init for sidebar jquery ui droppable
+          refreshSidebar($('.sortable-sidearea'));
+        }, 200);
       },
       // image assets of type 'block'
       blocks: Em.computed(function() {
@@ -446,7 +475,7 @@ $(function() {
           blockSize = parseInt(canvas.blockSize, 10),
           rows = parseInt(canvas.rows, 10),
           cols = parseInt(canvas.columns, 10);
-        console.log(ext);
+
         // block size for block
         var width = blockSize,
           height = blockSize;
@@ -524,11 +553,18 @@ $(function() {
         if(currentComponent) {
           currentSlug = App.selectedComponentController.get('content').slug;
         }
+
         _.each(App.gameComponentsController.get('content'), function(obj) {
-          if( obj.properties.type.toLowerCase() == 'collectible' ||
-              obj.properties.type.toLowerCase() == 'player' ||
-              obj.properties.type.toLowerCase() == 'pushable' ||
-              obj.properties.type.toLowerCase() == 'decoration') {
+          console.log(obj);
+          var type = obj.getPath('properties.type');
+
+          if(_.isUndefined(type)) {
+            console.log('ERROR: obj properties type not defined');
+          } else {
+            type = type.toLowerCase();
+          }
+
+          if( !_.isUndefined(type) && /^(collectible|player|pushable|decoration|block)$/.test(type) ) {
             if(obj.slug.toLowerCase() != currentSlug) {
               targets.push(
                 App.GameComponent.create(obj)
@@ -600,8 +636,9 @@ $(function() {
         var currentComponent = App.selectedComponentController.get('content');
         var selectedScoreTarget = this.get('selectedScoreTarget');
         var selectedScoreEvent = this.get('selectedScoreEvent');
+
         if(currentComponent) {
-          var collisions = currentComponent.getPath('properties.collisions');
+          collisions = currentComponent.getPath('properties.collisions');
         }
         //console.log(collisions);
         _.each(collisions, function(obj) {
@@ -689,13 +726,10 @@ $(function() {
                 var $draggable = $(ui.draggable),
                   $container = $draggable.closest('.magos-potions'),
                   potion = $draggable.data('potion');
-console.log(potion);
+
                 // play sound
                 var sound = document.querySelector('#potion-sound');
                 sound.play();
-
-console.log('KESÄRENKAAT !!!');
-console.log($container);
 
                 $container.hide("slide", {
                   direction: "right"
@@ -762,10 +796,6 @@ console.log($container);
             var $draggable = $(ui.draggable),
               $container = $draggable.closest('.magos-potions'),
               potion = $draggable.data('potion');
-
-              console.log('BLAABLAALAAALAA');
-              console.log($container);
-              console.log($container.siblings('.magos-potions.' + potion));
 
             $container.hide("slide", {
               direction: "right"
@@ -973,7 +1003,7 @@ console.log($container);
               sprite = $item.data('sprite'),
               file = $item.data('file'),
               ext = $item.data('ext');
-          console.log(ext);
+
           var selectedImageAsset = App.imageAssetsController.get('content').findProperty('file', file);
 
           App.selectedComponentController.setPath('content.properties.sprite', sprite);
@@ -1086,7 +1116,6 @@ console.log($container);
         var components = this.get('content').findProperty('title', 'font').get('properties');
         return Em.Object.create(components);
       }).property('content')
-
     });
 
     /**************************
@@ -1117,33 +1146,33 @@ console.log($container);
 
     App.Magos = Em.Object.extend({
       user: null,
-      magos: null,
+      magos: 'magos', // null,
       potions: [],
       userActiveBinding: 'App.usersController.user',
       busy: function() {
         return this.getPath('user.busy');
       }.property('user'),
-      icon: function() {
-        var magos = this.get('magos');
-        return '/editor/static/img/icons/' + magos + '.png';
-      }.property('magos'),
+      // icon: function() {
+      //   var magos = this.get('magos');
+      //   return '/editor/static/img/icons/' + magos + '.png';
+      // }.property('magos'),
       activeUser: function() {
         var user = this.get('user');
         var active = this.get('userActive');
         return Em.isEqual(user, active);
       }.property('user', 'userActive'),
-      isArcitectus: function() {
-        return this.get('magos') === 'arcitectus' ? true : false;
-      }.property('magos'),
-      isArtifex: function() {
-        return this.get('magos') === 'artifex' ? true : false;
-      }.property('magos'),
-      isPhysicus: function() {
-        return this.get('magos') === 'physicus' ? true : false;
-      }.property('magos'),
-      isPrincipes: function() {
-        return this.get('magos') === 'principes' ? true : false;
-      }.property('magos'),
+      // isArcitectus: function() {
+      //   return this.get('magos') === 'arcitectus' ? true : false;
+      // }.property('magos'),
+      // isArtifex: function() {
+      //   return this.get('magos') === 'artifex' ? true : false;
+      // }.property('magos'),
+      // isPhysicus: function() {
+      //   return this.get('magos') === 'physicus' ? true : false;
+      // }.property('magos'),
+      // isPrincipes: function() {
+      //   return this.get('magos') === 'principes' ? true : false;
+      // }.property('magos'),
       magosObserver: function() {
 
         console.log('magos changes');
@@ -1151,11 +1180,13 @@ console.log($container);
         var user = this.get('user'),
             magos = this.get('magos');
 
-        setTimeout(function() {
-          Em.run.next(function() {
-            refreshSidebar($('.sortable-sidearea'));
-          });
-        }, 500);
+        //refreshSidebar($('.sortable-sidearea'));
+
+        // setTimeout(function() {
+        //   Em.run.next(function() {
+        //     refreshSidebar($('.sortable-sidearea'));
+        //   });
+        // }, 500);
         //
       }.observes('user.magos')
     });
@@ -1177,8 +1208,8 @@ console.log($container);
       populate: function() {
         var controller = this;
         var user = App.usersController.get('user');
-        var userMagos = user.get('magos');
-        if(userMagos) {
+        var userMagos = 'magos'; // user.get('magos');
+        //if(userMagos) {
           // user has Magos role already
           console.log('User has magos: ' + userMagos);
           var userMagosObj = controller.get('content').findProperty('magos', userMagos);
@@ -1188,80 +1219,80 @@ console.log($container);
             console.log('emit (user has a magos on login)');
           });
 
-        } else {
-          // user has no magos role yet, assign a free one
-          var freeMagoses = controller.get('content').filterProperty('user', null);
-          //console.log(freeMagoses);
-          var freeMagos = null;
-          if(freeMagoses.length > 0) {
-            freeMagos = freeMagoses[0];
-            //var freeMagosObj = controller.get('content').findProperty('magos', freeMagos.magos);
-            var freeMagosObj = App.Magos.create(freeMagos);
-            console.log(freeMagosObj);
-            console.log('Set user to ' + freeMagos.magos);
-            freeMagosObj.set('user', user);
-            //controller.get('content').findProperty('magos', freeMagos.magos).set('magos', freeMagosObj);
-            controller.updateItem('magos', freeMagos.magos, freeMagosObj);
-            App.dataSource.userChangedMagos(user, freeMagos.magos, function(data) {
-              console.log('emit (user assigned a magos on login)');
-            });
-            // set special class for dragging action
-            if(freeMagos.magos === 'arcitectus') {
-              $('.chest-container').addClass('arcitectus-magos');
-            }
+        // } else {
+        //   // user has no magos role yet, assign a free one
+        //   var freeMagoses = controller.get('content').filterProperty('user', null);
+        //   //console.log(freeMagoses);
+        //   var freeMagos = null;
+        //   if(freeMagoses.length > 0) {
+        //     freeMagos = freeMagoses[0];
+        //     //var freeMagosObj = controller.get('content').findProperty('magos', freeMagos.magos);
+        //     var freeMagosObj = App.Magos.create(freeMagos);
+        //     console.log(freeMagosObj);
+        //     console.log('Set user to ' + freeMagos.magos);
+        //     freeMagosObj.set('user', user);
+        //     //controller.get('content').findProperty('magos', freeMagos.magos).set('magos', freeMagosObj);
+        //     controller.updateItem('magos', freeMagos.magos, freeMagosObj);
+        //     App.dataSource.userChangedMagos(user, freeMagos.magos, function(data) {
+        //       console.log('emit (user assigned a magos on login)');
+        //     });
+        //     // set special class for dragging action
+        //     if(freeMagos.magos === 'arcitectus') {
+        //       $('.chest-container').addClass('arcitectus-magos');
+        //     }
 
-          } else {
-            alert('There are no free roles.');
-          }
-        }
+        //   } else {
+        //     alert('There are no free roles.');
+        //   }
+        // }
       },
       selectedObserver: function() {
         var controller = this;
-        var magos = this.get('selected'),
-            user = App.usersController.get('user');
+        var magos = controller.get('selected');
+            // user = App.usersController.get('user');
 
-        var prevMagos = controller.get('content').findProperty('user', user);
-        if(prevMagos) {
-          console.log('Previous MAGOS found: ' + prevMagos.magos);
-          prevMagos.set('user', null);
-        }
+        // var prevMagos = controller.get('content').findProperty('user', user);
+        // if(prevMagos) {
+        //   console.log('Previous MAGOS found: ' + prevMagos.magos);
+        //   prevMagos.set('user', null);
+        // }
 
-        if(magos) {
+        // if(magos) {
           console.log('Change user magos to: ' + magos);
-          var newMagos = controller.get('content').findProperty('magos', magos);
-          console.log('newMagos:');
-          console.log(newMagos);
-          if (newMagos) {
-            newMagos.set('user', user);
-          }
-          App.usersController.set('user.magos', magos);
-        }
+        //   var newMagos = controller.get('content').findProperty('magos', magos);
+        //   console.log('newMagos:');
+        //   console.log(newMagos);
+        //   if (newMagos) {
+        //     newMagos.set('user', user);
+        //   }
+        //   App.usersController.set('user.magos', magos);
+        // }
 
-        if(magos !== 'arcitectus') {
-          $('.chest-container').removeClass('arcitectus-magos');
-        } else {
-          $('.chest-container').addClass('arcitectus-magos');
-        }
+        // if(magos !== 'arcitectus') {
+        //   $('.chest-container').removeClass('arcitectus-magos');
+        // } else {
+        //   $('.chest-container').addClass('arcitectus-magos');
+        // }
       }.observes('selected')
     });
 
     App.MagosView = Em.View.extend({
       contentBinding: 'App.magosesController.content',
       classNames: ['sidebar', 'sortable-sidearea'],
-      busyObserver: function() {
-        return Em.run.next(function() {
-          return Em.run.next(function() {
-            $('.busy-icon').tooltip({
-              delay: {
-                show: 500,
-                hide: 100
-              },
-              placement: 'left'
-            });
-          });
-        });
-      }.observes('content.@each.busy'),
-      selectedObserver: function() { }.observes('content.selected')
+      // busyObserver: function() {
+      //   return Em.run.next(function() {
+      //     return Em.run.next(function() {
+      //       $('.busy-icon').tooltip({
+      //         delay: {
+      //           show: 500,
+      //           hide: 100
+      //         },
+      //         placement: 'left'
+      //       });
+      //     });
+      //   });
+      // }.observes('content.@each.busy'),
+      // selectedObserver: function() { }.observes('content.selected')
     });
 
     /* VIEW FOR POTION PROPERTY FORMS */
@@ -1375,7 +1406,6 @@ console.log($container);
           console.log('emit (update game component properties)');
         });
       },
-
 
       submitGravitationProperties: function(event) {
         event.preventDefault();
@@ -2010,7 +2040,7 @@ console.log($container);
 
             var game = App.Game.create();
             // debug
-            console.log(data);
+            //console.log(data);
 
             game.set('title', data.title);
             game.set('slug', data.slug);
@@ -2027,7 +2057,7 @@ console.log($container);
                 'userName': author.userName,
                 'firstName': author.firstName,
                 'lastName': author.lastName,
-                'magos': author.magos
+                'magos': 'magos' // author.magos,
               });
               //
               authors.push(obj);
@@ -2042,8 +2072,8 @@ console.log($container);
 
             var gameComponentsA = [];
             _.each(revision.gameComponents, function(component) {
-              console.log(component);
-              console.log(component.properties);
+              // console.log(component);
+              // console.log(component.properties);
               gameComponentsA.push(App.GameComponent.create({
                 title: component.title,
                 slug: component.slug,
@@ -2056,26 +2086,22 @@ console.log($container);
 
               var sceneArray = [];
               _.each(scene.sceneComponents, function(component) {
-                console.log(component.oid);
-                // sceneArray.push( App.SceneComponent.create({ title: component.title, slug: component.slug, sprite: component.sprite, properties: component.properties }) );
+                // console.log(component.oid);
                 sceneArray.push(App.CanvasComponent.create({
                   slug: component.slug,
                   position: component.position,
                   oid: component.oid,
                   properties: component.properties
                 }));
-                // TODO component properties
               });
 
               var gameArray = [];
               _.each(scene.gameComponents, function(component) {
-                // gameArray.push( App.GameComponent.create({ title: component.title, slug: component.slug, properties: component.properties }) );
                 gameArray.push(App.CanvasComponent.create({
                   slug: component.slug,
                   position: component.position,
                   oid: component.oid
                 }));
-                // TODO component properties
               });
 
               //
@@ -2204,46 +2230,42 @@ console.log($container);
 
     socket.on('disconnectUser', function(data) {
       // remove user
-      var userName = data.userName,
-          userMagos = data.magos;
       console.log('>>> SOCKET REQUEST: disconnectUser');
-      console.log(userName);
-      console.log(userMagos);
-      App.usersController.removeItem('userName', userName);
-      var userMagos = App.magosesController.get('content').findProperty('magos', userMagos);
-      console.log(userMagos);
-      if(_.isObject(userMagos)) {
-        userMagos.set('user', null);
-      }
+      App.usersController.removeItem('userName', data.userName);
+      // var userMagos = App.magosesController.get('content').findProperty('magos', userMagos);
+      // console.log(userMagos);
+      // if(_.isObject(userMagos)) {
+      //   userMagos.set('user', null);
+      // }
     });
 
-    socket.on('userChangedMagos', function(data) {
-      console.log('>>> SOCKET REQUEST: userChangedMagos');
-      var user = data.user,
-          newMagos = data.newMagos,
-          oldMagos = data.oldMagos;
-      console.log(data);
+    // socket.on('userChangedMagos', function(data) {
+    //   console.log('>>> SOCKET REQUEST: userChangedMagos');
+    //   var user = data.user,
+    //       newMagos = data.newMagos,
+    //       oldMagos = data.oldMagos;
+    //   console.log(data);
 
-      // remove user from old magos
-      if(!_.isNull(oldMagos) && oldMagos != newMagos) {
-        var prevMagos = App.magosesController.get('content').findProperty('magos', oldMagos);
-        if(_.isObject(prevMagos)) {
-          console.log('Old magos removed from user');
-          prevMagos.set('user', null);
-        }
-      }
+    //   // remove user from old magos
+    //   if(!_.isNull(oldMagos) && oldMagos != newMagos) {
+    //     var prevMagos = App.magosesController.get('content').findProperty('magos', oldMagos);
+    //     if(_.isObject(prevMagos)) {
+    //       console.log('Old magos removed from user');
+    //       prevMagos.set('user', null);
+    //     }
+    //   }
 
-      // set user to new magos
-      var tgtMagos = App.magosesController.get('content').findProperty('magos', newMagos);
-      console.log(tgtMagos.user);
-      if(!tgtMagos.user) {
-        tgtMagos.set('user', user);
-        console.log('new magos ' + newMagos + ' assigned to ' + user.userName);
-      } else {
-        console.log('magos already in use');
-      }
+    //   // set user to new magos
+    //   var tgtMagos = App.magosesController.get('content').findProperty('magos', newMagos);
+    //   console.log(tgtMagos.user);
+    //   if(!tgtMagos.user) {
+    //     tgtMagos.set('user', user);
+    //     console.log('new magos ' + newMagos + ' assigned to ' + user.userName);
+    //   } else {
+    //     console.log('magos already in use');
+    //   }
 
-    });
+    // });
 
     socket.on('refreshRevision', function(game) {
       if(_.isObject(game)) {
@@ -2407,9 +2429,9 @@ console.log($container);
     $(document).on('click tap', '.btn-back-potion', function(event) {
       event.preventDefault();
       // if user busy, set not busy
-      if(App.usersController.getPath('user.busy')) {
-        App.usersController.setPath('user.busy', false);
-      }
+      // if(App.usersController.getPath('user.busy')) {
+      //   App.usersController.setPath('user.busy', false);
+      // }
       // if potion form open
       closePotionForm();
     });
@@ -2443,15 +2465,21 @@ console.log($container);
     function refreshSidebar($sortableArea) {
       $sortableArea.disableSelection();
 
-      // small delay required to make this work
-      setTimeout(function() {
-        // potions
+      Em.run.next(function() {
         $('.potion-icon').draggable({
           helper: 'clone'
         });
+      });
 
-        $('.potion-icon.busy').draggable('destroy');
-      }, 400);
+      // small delay required to make this work
+      // setTimeout(function() {
+      //   // potions
+      //   $('.potion-icon').draggable({
+      //     helper: 'clone'
+      //   });
+
+      //   //$('.potion-icon.busy').draggable('destroy');
+      // }, 600);
     }
 
     function bindClickToRemove(itemType) {
@@ -2481,7 +2509,7 @@ console.log($container);
       // close potion form
       var $magos = $('.selected-magos');
       if($magos.is(':hidden')) {
-        $magos.siblings('.magos-potion-form:visible').hide('slide', {
+        $magos.parent().siblings('.magos-potion-form:visible').hide('slide', {
           direction: 'left'
         }, 250, function() {
           $magos.show('slide', {
