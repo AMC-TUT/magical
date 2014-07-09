@@ -1,24 +1,10 @@
 [
   {
-    "magos": "arcitectus",
+    "magos": "magos",
     "potions": [
       {
         "title": "rules",
         "properties": {}
-      }
-    ]
-  },
-  {
-    "magos": "principes",
-    "potions": [
-      {
-        "title": "font",
-        "properties": {
-            "family": "Arial",
-            "size": 14,
-            "color": "#000000",
-            "background": "#FFFFFF"
-        }
       },
       {
         "title": "score",
@@ -27,22 +13,6 @@
           "score": 0
         }
       },
-      {
-        "title": "dialog",
-        "properties": {}
-      },
-      {
-        "title": "text",
-        "properties": {
-          "events": [],
-          "text": null
-        }
-      }
-    ]
-  },
-  {
-    "magos": "physicus",
-    "potions": [
       {
         "title": "controls",
         "properties": {
@@ -93,12 +63,7 @@
             }
           ]
         }
-      }
-    ]
-  },
-  {
-    "magos": "artifex",
-    "potions": [
+      },
       {
         "title": "image",
         "properties": {

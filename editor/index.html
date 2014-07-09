@@ -129,51 +129,6 @@
                         </div>
                       {{/if}}
 
-                      {{#if App.selectedComponentController.content.properties.font}}
-                      <div class="infobox-skillset">
-                        <h4>Font</h4>
-                        {{#view App.InfoBoxFontView}}
-                          <div {{bindAttr style="cssBgColor"}}>
-                            <div {{bindAttr style="cssColor"}}>
-                              <div {{bindAttr style="cssSize"}}>
-                                <div {{bindAttr style="cssFamily"}}>
-                                  {{family}}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        {{/view}}
-                        </div>
-                      {{/if}}
-
-                      {{#if App.selectedComponentController.content.filterDialogEvents}}
-                        <div class="infobox-skillset">
-                        <h4>Dialog</h4>
-                        {{#view App.InfoBoxDialogView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-dialog"}}
-                          <tr>
-                            <th>Action</th><th>Participants</th>
-                          </tr>
-                          <tr><td> ---</td><td> ---</td></tr>
-                        {{/view}}
-                        </div>
-                      {{/if}}
-
-                      {{#if App.selectedComponentController.content.filterTextEvents}}
-                        <div class="infobox-skillset">
-                        <h4>Text</h4>
-                        {{#view App.InfoBoxTextView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-text"}}
-                          <tr>
-                            <th>Action</th><th>Text</th>
-                          </tr>
-                          {{#each content.filteredTextEvents}}
-                            <tr>
-                              <td>Collision {{target}}</td><td class="ellipsis">{{text.text}}</td>
-                            </tr>
-                          {{/each}}
-                        {{/view}}
-                        </div>
-                      {{/if}}
-
                       {{#if App.selectedComponentController.content.icon}}
                       <div class="infobox-skillset">
                         <h4>Image</h4>
@@ -666,53 +621,6 @@
 
                     </fieldset>
                   </form>
-
-                </div>
-
-
-                <div {{bindAttr class="magos:magos-potions magos:magos-potion-form magos:font magos:hide"}} style="display:none;">
-                <form class="form-vertical">
-                  <fieldset>
-                    <legend>Font</legend>
-                    {{#view App.MagosComponentPropertyView}}
-                      <div class="action-group">
-
-                        <div class="control-group">
-                          <label class="control-label">Family</label>
-                          <div class="controls">
-                            {{view Ember.TextField type="text" class="input" valueBinding="view.family" }}
-                          </div>
-                        </div>
-
-                        <div class="control-group">
-                          <label class="control-label">Size</label>
-                          <div class="controls">
-                            {{view App.NumberField valueBinding="view.fontSize" class="input" min="8" max="40"}}
-                          </div>
-                        </div>
-
-                        <div class="control-group">
-                          <label class="control-label">Color</label>
-                          <div class="controls">
-                            {{view App.ColorField valueBinding="view.fontColor" class="input"}}
-                          </div>
-                        </div>
-
-                        <div class="control-group">
-                          <label class="control-label">Background color</label>
-                          <div class="controls">
-                            {{view App.ColorField valueBinding="view.fontBackground" class="input"}}
-                          </div>
-                        </div>
-
-                      </div>
-
-                      <div class="form-actions">
-                        <button {{action "submitFontProperties"}} class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
-                        <button class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
-                      </div>
-
-                    {{/view}}
 
                 </div>
 

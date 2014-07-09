@@ -513,13 +513,6 @@ $(function() {
       filteredAudioEvents: function() {
         var collisions = this.getPath('properties.collisions');
         return _.isObject(collisions) ? collisions.filterProperty('audio') : false;
-      }.property('properties'),
-      filteredTextEvents: function() {
-        var collisions = this.getPath('properties.collisions');
-        return _.isObject(collisions) ? collisions.filterProperty('text') : false;
-      }.property('properties'),
-      filteredDialogEvents: function() {
-        return false;
       }.property('properties')
     });
 
@@ -1305,7 +1298,6 @@ $(function() {
       gravitationBinding: 'App.potionsController.gravitation',
       collisionBinding: 'App.potionsController.collision',
       compTypesBinding: 'App.potionsController.compTypes',
-      fontsBinding: 'App.potionsController.fonts',
       scoreBinding: 'App.potionsController.score',
       // field bindings
       controlsMethodBinding:  'App.potionsController.controls.method', // controls
@@ -1320,11 +1312,6 @@ $(function() {
       strengthBinding: 'gravitation.strength', // gravitation
 
       compTypeBinding:  'compTypes.title', // compType
-
-      familyBinding: 'fonts.family', // font
-      fontSizeBinding: 'fonts.size', // font
-      fontColorBinding: 'fonts.color', // font
-      fontBackgroundBinding: 'fonts.background', // font
 
       // selection bindings
       selectedCollisionTarget: null,
@@ -1434,36 +1421,6 @@ $(function() {
 
       },
 
-
-      submitFontProperties: function(event) {
-        event.preventDefault();
-        // get values from the form
-        var family = this.getPath('family');
-        var size = this.getPath('fontSize');
-        var fontColor = this.getPath('fontColor');
-        var fontBackground = this.getPath('fontBackground');
-        // TODO: var background = this.get();
-        var font = {
-          'size' : size,
-          'family' : family,
-          'color' : fontColor,
-          'background' : fontBackground
-        }
-        App.selectedComponentController.setPath('content.properties.font', font);
-
-        var selectedComponent = App.selectedComponentController.get('content');
-        var slugName = App.selectedComponentController.getPath('content.slug');
-        // save game
-        App.dataSource.saveGame(0, function(data) {
-          console.log('save (edit properties)');
-        });
-        // inform others of property change
-        App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
-          console.log('emit (update game component properties)');
-        });
-
-      },
-
       submitCompTypeProperties: function(event) {
         event.preventDefault();
         var typeTitle = this.getPath('compType.title');
@@ -1482,8 +1439,6 @@ $(function() {
         });
 
       },
-
-
 
       submitControlsProperties: function(event) {
         event.preventDefault();
@@ -1614,50 +1569,10 @@ $(function() {
       }
     });
     App.InfoBoxScoreView = Em.View.extend();
-    App.InfoBoxDialogView = Em.View.extend();
-    // disabled App.InfoBoxTextView = Em.View.extend();
     App.InfoBoxSpriteView = Em.View.extend();
     App.InfoBoxAnimationView = Em.View.extend();
     App.InfoBoxAudioView = Em.View.extend();
     App.InfoBoxTypeView = Em.View.extend();
-
-    App.InfoBoxFontView = Em.View.extend({
-      tagName: 'div',
-      classNames: ['font-preview'],
-      contentBinding: 'App.selectedComponentController.content',
-      familyBinding: 'App.selectedComponentController.content.properties.font.family',
-      sizeBinding: 'App.selectedComponentController.content.properties.font.size',
-      colorBinding: 'App.selectedComponentController.content.properties.font.color',
-      bgColorBinding: 'App.selectedComponentController.content.properties.font.background',
-      cssFamily: '',
-      cssSize: '',
-      cssColor: '',
-      cssBgColor: '',
-
-      attributeBindings: ['style'],
-      familyObserver: function() {
-        //
-        this.set('cssFamily', 'font-family:' + this.get('family') + ';');
-
-      }.observes('family'),
-      sizeObserver: function() {
-        //
-        this.set('cssSize', 'font-size:' + this.get('size') + 'px;');
-
-      }.observes('size'),
-      colorObserver: function() {
-        //
-        this.set('cssColor', 'color:' + this.get('color') + ';');
-
-      }.observes('color'),
-      bgcolorObserver: function() {
-        //
-        this.set('cssBgColor', 'background-color:' + this.get('bgColor') + ';');
-
-      }.observes('bgColor')
-
-    });
-
 
     /**************************
      * Game Component Types
