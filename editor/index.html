@@ -269,8 +269,7 @@
               <li class="active">
                 <a href="#images-tab" data-toggle="tab">Images</a>
               </li>
-              <li class="disabled"><a href="#">Animations</a></li>
-              <li><a href="#backgrounds-tab" data-toggle="tab">Backgrounds</a></li>
+              <!--<li><a href="#backgrounds-tab" data-toggle="tab">Backgrounds</a></li>-->
             </ul>
             <div class="tab-content">
               <div class="tab-pane active" id="images-tab">
@@ -283,7 +282,7 @@
                 </ul>
               </div>
 
-              <div class="tab-pane" id="backgrounds-tab">
+              <!--<div class="tab-pane" id="backgrounds-tab">
                 <ul class="assets-list">
                 {{#view App.ImageAssetsView contentBinding="App.imageAssetsController.backgrounds"}}
                   {{#each content}}
@@ -291,7 +290,7 @@
                   {{/each}}
                 {{/view}}
                 </ul>
-              </div>
+              </div>-->
 
             </div> <!-- /* tab-content */ -->
 
@@ -429,21 +428,18 @@
                     {{#view App.MagosComponentPropertyView contentBinding="this"}}
                     <div class="finish-action action-group">
                       <div class="control-group">
-
                         <div class="control-group">
                           <label class="control-label">Checkpoints</label>
                           <div class="controls">
                             {{view App.NumberField class="input" min="0" max="1000"}}
                           </div>
                         </div>
-
                         <div class="control-group">
                           <label class="control-label">Scores</label>
                           <div class="controls">
                             {{view App.NumberField class="input" min="0" max="1000"}}
                           </div>
                         </div>
-
                         <div class="control-group">
                           <label class="control-label">Collision</label>
                           <div class="controls">
@@ -451,16 +447,13 @@
                             {{/view}}
                           </div>
                         </div>
-
                       </div>
                     </div>
-
                     <div class="form-actions">
                       <button class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
                       <button class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
                     </div>
                     {{/view}}
-
                     </fieldset>
                   </form>
                 </div>
@@ -475,13 +468,11 @@
                         <button {{action "openImageAssetsDialog"}} class="btn btn-success borrow-image-button icon-white" style="width: 47%;padding-bottom: 3px;padding-top: 3px;height: 26px;"><i class="icon-folder-open icon-white"></i> Borrow</button>
                       </div>
                     </div>
-
                     <div class="form-actions">
                       <button class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
                       <button class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
                     </div>
                     {{/view}}
-
                     </fieldset>
                   </form>
                 </div>
@@ -498,7 +489,6 @@
                             {{view Ember.Select contentBinding="App.potionsController.controls.methods" optionLabelPath="content.method" optionValuePath="content.method" selectionBinding="controlsMethod" class="input-xlarge" }}
                           </div>
                         </div>
-
                         <div class="control-group">
                           <label class="control-label">Speed</label>
                           <div class="controls">
@@ -513,10 +503,7 @@
                           </div>
                         </div>
                         {{/unless}}
-
-
                       </div>
-
                       <div class="form-actions">
                         <button {{action "submitControlsProperties"}} class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
                         <button {{action "cancelFormSubmit"}} class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
@@ -535,30 +522,25 @@
                     <legend>Collision</legend>
                     {{#view App.MagosComponentPropertyView}}
                       <div class="action-group">
-
                         <div class="control-group">
                           <label class="control-label">When this element hits</label>
                           <div class="controls">
                             {{view Ember.Select contentBinding="App.gameComponentsController.collisionTargets" optionLabelPath="content.title" optionValuePath="content.slug" selectionBinding="App.gameComponentsController.selectedCollisionTarget" class="input-xlarge" }}
                           </div>
                         </div>
-
                         <div class="control-group">
                           <label class="control-label">then</label>
                           <div class="controls">
                             {{view Ember.Select contentBinding="App.potionsController.collision.events" optionLabelPath="content.title" optionValuePath="content.event" selectionBinding="App.gameComponentsController.selectedCollisionEvent" class="input-xlarge" }}
                           </div>
                         </div>
-
                       </div>
-
                       <div class="form-actions">
                         {{#if App.gameComponentsController.collisionTargets}}
                         <button {{action "submitCollisionProperties"}} class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
                         {{/if}}
                         <button {{action "cancelFormSubmit"}} class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
                       </div>
-
                     {{/view}}
                     </fieldset>
                   </form>
@@ -571,7 +553,6 @@
                     <legend>Gravitation</legend>
                     {{#view App.MagosComponentPropertyView}}
                       <div class="action-group">
-
                         <div class="control-group">
                           <label class="control-label">Strength</label>
                           <div class="controls" id="gravitation-controls" style="position:relative;">
@@ -583,10 +564,7 @@
                             {{view App.HiddenDecimalNumberField valueBinding="view.strength" class="input gravitationStrengthVal" min="0.0" max="1.0" step="0.1" }}
                           </div>
                         </div>
-
-
                       </div>
-
                       <div class="form-actions">
                         <button {{action "submitGravitationProperties"}} class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
                         <button {{action "cancelFormSubmit"}} class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
@@ -608,45 +586,36 @@
                           <div class="controls">
                             {{view Ember.Select contentBinding="App.potionsController.compTypes.types" optionLabelPath="content.title" optionValuePath="content.title" selectionBinding="view.curCompType" class="input-xlarge" }}
                           </div>
-
                         </div>
-
                       </div>
-
                       <div class="form-actions">
                         <button {{action "submitCompTypeProperties"}} class="btn btn-success btn-back-potion"><i class="icon-ok icon-white"></i></button>
                         <button {{action "cancelFormSubmit"}} class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
                       </div>
                     {{/view}}
-
                     </fieldset>
                   </form>
-
                 </div>
 
                 <div {{bindAttr class="magos:magos-potions magos:magos-potion-form magos:score magos:hide"}} style="display:none;">
                 <form class="form-vertical">
                   <fieldset>
                     <legend>Scores</legend>
-
                       {{#view App.MagosComponentPropertyView}}
                       {{#if App.gameComponentsController.scoreCollisionTargets}}
                         <div class="action-group">
-
                           <div class="control-group">
                             <label class="control-label">When this element hits</label>
                             <div class="controls">
                             {{view Ember.Select contentBinding="App.gameComponentsController.scoreCollisionTargets" optionLabelPath="content.title" optionValuePath="content.slug" selectionBinding="App.gameComponentsController.selectedScoreTarget" class="input-xlarge"}}
                             </div>
                           </div>
-
                           <div class="control-group">
                             <label class="control-label">with action</label>
                             <div class="controls">
                               {{view Ember.Select contentBinding="App.gameComponentsController.scoreCollisionEvents" optionLabelPath="content.title" optionValuePath="content.slug" selectionBinding="App.gameComponentsController.selectedScoreEvent" class="input-xlarge" }}
                             </div>
                           </div>
-
                           <div class="control-group">
                             <label class="control-label">Score</label>
                             <div class="controls">
@@ -664,15 +633,10 @@
                           <button {{action "cancelFormSubmit"}} class="btn btn-info btn-reset-action pull-right"><i class="icon-remove icon-white"></i></button>
                         </div>
                       {{/if}}
-
                       {{/view}}
-
-
                     </fieldset>
                   </form>
                 </div>
-
-
 
             {{/each}}
 
@@ -713,28 +677,6 @@
   </div>
   </script>
 
-  <!-- info not in use -->
-  <script type="text/x-handlebars">
-  <div class="modal fade hide" id="dialog-info">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal">×</button>
-      <h3>Game Info</h3>
-    </div>
-    <div class="modal-body">
-      <p>Snippet: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-          consequat.</p>
-      <p>Duis aute irure dolor in reprehenderit in voluptate velit esse
-          cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-          proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-info btn-close" type="submit">Close</button>
-    </div>
-  </div>
-  </script>
-
   <script type="text/x-handlebars" data-template-name="magos-potion">
     <h1>Potion</h2>
 
@@ -755,7 +697,6 @@
   <script type="text/javascript">
   ENV = {
     CP_DEFAULT_CACHEABLE: true,
-    // VIEW_PRESERVES_CONTEXT: true,
     RAISE_ON_DEPRECATION: true
   };
   </script>

@@ -105,10 +105,12 @@ $(function() {
             var potions = [];
             _.each(data.magoses, function(obj) {
               _.each(obj.potions, function(potion) {
-                var pot = App.Potion.create(potion);
+                if( /^(rules|score|controls|collision|gravitation|type|image|audio)$/.test(potion.title) ) {
+                  var pot = App.Potion.create(potion);
 
-                potions.push(pot);
-                App.potionsController.get('content').pushObject(pot);
+                  potions.push(pot);
+                  App.potionsController.get('content').pushObject(pot);
+                }
               });
             });
 
@@ -1850,20 +1852,22 @@ $(function() {
       },
       getSkillsets: function(callback) {
         socket.emit('getSkillsets', '', function(data) {
-          var components = [], allPotions = [];
+          var components = [], allPotions = [], potions = [];
 
           _.each(data, function(obj) {
-
-            var potions = [];
             _.each(obj.potions, function(potion) {
-              var p = App.Potion.create({
-                'title': potion.title,
-                'properties': potion.properties
-              });
-              App.potionsController.get('content').pushObject(p);
-              allPotions.push(p);
-              potions.push(p);
+              if( /^(rules|score|controls|collision|gravitation|type|image|audio)$/.test(potion.title) ) {
+                var pot = App.Potion.create({
+                  'title': potion.title,
+                  'properties': potion.properties
+                });
+
+                App.potionsController.get('content').pushObject(pot);
+                allPotions.push(pot);
+                potions.push(pot);
+              }
             });
+
             components.push(
             App.Magos.create({
               "magos": obj.magos,
@@ -2505,7 +2509,7 @@ $(function() {
           });
 
           // size class to chests
-          $('.scene-chest').addClass(sizeClass);
+          //$('.scene-chest').addClass(sizeClass);
           $('.item-chest').addClass(sizeClass);
 
           // add size class and dom nodes game canvas
@@ -2699,7 +2703,7 @@ $(function() {
             }
           };
 
-          console.log(obj);
+          //console.log(obj);
           App.scenesController.getPath('selected.sceneComponents').pushObject(obj);
           App.dataSource.saveGame(1, function(data) {
             // scene component

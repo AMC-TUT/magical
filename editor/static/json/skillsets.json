@@ -1,83 +1,90 @@
-[
-  {
-    "magos": "magos",
-    "potions": [
-      {
-        "title": "rules",
-        "properties": {}
-      },
-      {
-        "title": "score",
-        "properties": {
-          "events": [],
-          "score": 0
-        }
-      },
-      {
-        "title": "controls",
-        "properties": {
-            "methods": [{"method":"twoway"}, {"method":"fourway"}, {"method":"multiway"}],
-            "speed": 4,
-            "jumpHeight": 14,
-            "grid": true,
-            "snapToGrid": false
-        }
-      },
-      {
-        "title": "collision",
-        "properties": {
-            "events": [{"event":"destroySelf", "title": "Destroy self"}, {"event":"destroyTarget", "title": "Destroy target"}, {"event":"reduceHitpoints", "title": "Reduce hitpoints"}, {"event":"addHitpoints", "title": "Add hitpoints"}, {"event":"startDialog", "title": "Start dialog"}, {"event":"createElement", "title": "Create element"}],
-            "score": 10,
-            "target": null
-        }
-      },
-      {
-        "title": "gravitation",
-        "properties": {
-            "strength": 0.2
-        }
-      },
-      {
-        "title": "type",
-        "properties": {
-          "types": [
-            {
-              "title": "block",
-              "properties": []
-            },
-            {
-              "title": "collectible",
-              "properties": []
-            },
-            {
-              "title": "pushable",
-              "properties": []
-            },
-            {
-              "title": "decoration",
-              "properties": []
-            },
-            {
-              "title": "player",
-              "properties": []
-            }
-          ]
-        }
-      },
-      {
-        "title": "image",
-        "properties": {
-            "sprite": null
-        }
-      },
-      {
-        "title": "audio",
-        "properties": {
-            "events": [],
-            "audio": null,
-            "plays": 0
-        }
-      }
-    ]
-  }
-]
+[{
+  "magos": "magos",
+  "potions": [{
+    "title": "rules",
+    "properties": {}
+  }, {
+    "title": "score",
+    "properties": {
+      "events": [],
+      "score": 0
+    }
+  }, {
+    "title": "controls",
+    "properties": {
+      "methods": [{
+        "method": "twoway"
+      }, {
+        "method": "fourway"
+      }, {
+        "method": "multiway"
+      }],
+      "speed": 4,
+      "jumpHeight": 14,
+      "grid": true,
+      "snapToGrid": false
+    }
+  }, {
+    "title": "collision",
+    "properties": {
+      "events": [{
+        "event": "destroySelf",
+        "title": "Destroy self"
+      }, {
+        "event": "destroyTarget",
+        "title": "Destroy target"
+      }, {
+        "event": "reduceHitpoints",
+        "title": "Reduce hitpoints"
+      }, {
+        "event": "addHitpoints",
+        "title": "Add hitpoints"
+      }, {
+        "event": "startDialog",
+        "title": "Start dialog"
+      }, {
+        "event": "createElement",
+        "title": "Create element"
+      }],
+      "score": 10,
+      "target": null
+    }
+  }, {
+    "title": "gravitation",
+    "properties": {
+      "strength": 0.2
+    }
+  }, {
+    "title": "type",
+    "properties": {
+      "types": [{
+        "title": "block",
+        "properties": []
+      }, {
+        "title": "collectible",
+        "properties": []
+      }, {
+        "title": "pushable",
+        "properties": []
+      }, {
+        "title": "decoration",
+        "properties": []
+      }, {
+        "title": "player",
+        "properties": []
+      }]
+    }
+  }, {
+    "title": "image",
+    "properties": {
+      "sprite": null
+    }
+  }, {
+    "title": "audio",
+    "properties": {
+      "events": [],
+      "audio": null,
+      "plays": 0
+    }
+  }]
+}]
