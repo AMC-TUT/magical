@@ -274,7 +274,7 @@ $(function() {
             });
 
             App.scenesController.set('selected', scene);
-          }, 300);
+          }, 600);
 
         });
       },
@@ -289,8 +289,11 @@ $(function() {
           item.set('active', false);
         });
 
-        if(!_.isNull(selected)) selected.set('active', true);
-          $('body').addClass('game-scene');
+        if(!_.isNull(selected) && !_.isUndefined(selected)) {
+          selected.set('active', true);
+        }
+
+        $('body').addClass('game-scene');
 
         if(this.get('firstRun') < 0) {
           Em.run.next(function() {
@@ -792,7 +795,7 @@ $(function() {
             App.selectedComponentController.set('content', selected);
             // set user busy
             App.usersController.setPath('user.busy', true);
-
+            console.log('MITÄS TÄMÄ ON');
             var $draggable = $(ui.draggable),
               $container = $draggable.closest('.magos-potions'),
               potion = $draggable.data('potion');
@@ -1612,7 +1615,7 @@ $(function() {
     });
     App.InfoBoxScoreView = Em.View.extend();
     App.InfoBoxDialogView = Em.View.extend();
-    App.InfoBoxTextView = Em.View.extend();
+    // disabled App.InfoBoxTextView = Em.View.extend();
     App.InfoBoxSpriteView = Em.View.extend();
     App.InfoBoxAnimationView = Em.View.extend();
     App.InfoBoxAudioView = Em.View.extend();
@@ -2426,7 +2429,7 @@ $(function() {
 
     });
 
-    $(document).on('click tap', '.btn-back-potion', function(event) {
+    $(document).on('click tap', '.btn-back-potion, .btn-reset-action', function(event) {
       event.preventDefault();
       // if user busy, set not busy
       // if(App.usersController.getPath('user.busy')) {
@@ -2470,16 +2473,6 @@ $(function() {
           helper: 'clone'
         });
       });
-
-      // small delay required to make this work
-      // setTimeout(function() {
-      //   // potions
-      //   $('.potion-icon').draggable({
-      //     helper: 'clone'
-      //   });
-
-      //   //$('.potion-icon.busy').draggable('destroy');
-      // }, 600);
     }
 
     function bindClickToRemove(itemType) {
