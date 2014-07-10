@@ -2,19 +2,26 @@
 
 (function($) {
 
- // "use strict";
+ "use strict";
+
+
+console.log('Running game.js');
+
+// game slug
+var slug = location.pathname.split("/").pop();
+
+//var win = document.getElementById("preview").contentWindow;
+window.postMessage(slug, window.location.protocol + "//" + window.location.host);
 
  // Parser.getGame('super-magos', socket);
 
   window.onmessage = function(e) {
 
     // socket.io
-    var address = 'http://10.0.1.6:8000'; // + window.location.hostname;
-    //var socket = io.connect(address);
+    var address = 'http://' + window.location.hostname;
     var socket = io.connect(address, {
       resource: 'editor/socket.io'
     });
-
 
     var sessionid = $.cookie('sessionid');
     var csrftoken = $.cookie('csrftoken');

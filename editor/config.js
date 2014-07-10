@@ -4,7 +4,7 @@ var PRODUCTION = process.env.NODE_ENV === "production";
 config.express = {
   port: process.env.EXPRESS_PORT || 9001,
   ip: process.env.EXPRESS_HOST || '127.0.0.1',
-  djangoUrl: 'http://localhost:8080'
+  djangoUrl: 'http://localhost'
 };
 
 config.redis = {
@@ -13,6 +13,6 @@ config.redis = {
 };
 
 if (PRODUCTION) {
-  	//use different mongodb in production here, for example
+  //use different mongodb in production here, for example
 	config.express.djangoUrl = 'http://magos.pori.tut.fi';
 }

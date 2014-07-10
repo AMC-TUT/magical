@@ -269,7 +269,6 @@
               <li class="active">
                 <a href="#images-tab" data-toggle="tab">Images</a>
               </li>
-              <!--<li><a href="#backgrounds-tab" data-toggle="tab">Backgrounds</a></li>-->
             </ul>
             <div class="tab-content">
               <div class="tab-pane active" id="images-tab">
@@ -658,7 +657,7 @@
     </div>
     <div class="modal-body">
       {{#view App.GameView}}
-        <iframe id="preview" {{bindAttr src="playPath"}} seamless></iframe>
+        <iframe id="preview"  seamless></iframe> <!-- {{bindAttr src="playPath"}} -->
       {{/view}}
     </div>
     <div class="modal-footer">
@@ -669,7 +668,6 @@
 
   <script type="text/x-handlebars" data-template-name="magos-potion">
     <h1>Potion</h2>
-
   </script>
 
 

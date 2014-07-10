@@ -109,7 +109,7 @@ def delete_game(request, gameslug):
     else:
         return HttpResponseRedirect(reverse('home'))
     try:
-        game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)            
+        game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)
         game_title = game.title
         isAuthor = game.author_set.filter(user=user)
         if isAuthor or user == game.creator:
@@ -137,7 +137,7 @@ def make_public(request, gameslug, private=False):
     else:
         return HttpResponseRedirect(reverse('home'))
     try:
-        game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)            
+        game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)
         game_title = game.title
         isAuthor = game.author_set.filter(user=user)
         if isAuthor or user == game.creator:
@@ -245,7 +245,7 @@ def delete_game_image(request, gameslug):
     else:
         return HttpResponseRedirect(reverse('home'))
     try:
-        game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)            
+        game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)
         game_title = game.title
         isAuthor = game.author_set.filter(user=user)
         if isAuthor or user == game.creator:
@@ -265,7 +265,7 @@ def delete_game_tag(request, gameslug, tagslug):
     else:
         return HttpResponseRedirect(reverse('home'))
     try:
-        game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)            
+        game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)
         game_title = game.title
         isAuthor = game.author_set.filter(user=user)
         if isAuthor or user == game.creator:
@@ -311,7 +311,7 @@ def game_details(request, gameslug):
             #game = Game.objects.get(slug=gameslug, state=2)
         else:
             if not game.state == 2:
-                game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)            
+                game = Game.objects.filter(author__user__userprofile__organization=organization).distinct().get(slug=gameslug)
         authors = game.author_set.all()
         for author in authors:
             game_authors.append(author.user)
@@ -345,10 +345,10 @@ def game_details(request, gameslug):
             None,
             initial={
                 'game_slug': game.slug,
-            } 
+            }
         )
         context['image_form'] = image_form
-    
+
     tags_form = GameTagsForm()
     context['tags_form'] = tags_form
 
@@ -378,7 +378,7 @@ def game_details(request, gameslug):
                 #game.save()
                 return redirect('game_details', gameslug=game.slug)
 
-    if game.get_real_instance_class() == MagosBGame:        
+    if game.get_real_instance_class() == MagosBGame:
         editor_url = settings.MAGOS_LITE_EDITOR_URL
         play_url = settings.MAGOS_LITE_PLAY_URL
     # set context variables
@@ -467,7 +467,7 @@ def save_create_game_a(request):
         game.rows = rows
         game.cols = cols
         game.save()
-        
+
         # create initial revision
         revision_data = {}
         canvas_data = {
@@ -549,7 +549,7 @@ def save_create_game_a(request):
             game.rows = rows
             game.cols = cols
             game.save()
-            
+
             # create initial revision
             revision_data = {}
             canvas_data = {
@@ -626,10 +626,10 @@ def save_create_game_b(request):
         game = form.save()
         game.creator = user
         game.save()
-        
+
         # create initial revision
         revision_data = {}
-        
+
         scroll_data = [
             {
                 "item" : None,
@@ -651,7 +651,7 @@ def save_create_game_b(request):
         revision_data['title'] = game.title
         revision_data['instructions'] = ""
         revision_data['platformType'] = "air"
-        revision_data['playerImg'] = "magos-girl" 
+        revision_data['playerImg'] = "magos-girl"
         revision_data['itemInterval'] = 4000
         revision_data['hazardInterval'] = 5000
         revision_data['wordInterval'] = 4000
@@ -673,19 +673,19 @@ def save_create_game_b(request):
         revision_data['bgcolor'] = "#F2F2F2"
         revision_data['fontColor'] = "#000000"
         revision_data['star3limit'] = 2000
-        revision_data['star2limit'] = 1000 
+        revision_data['star2limit'] = 1000
         revision_data['star1limit'] = 500
-        revision_data['memoryIncrease'] = 0 
+        revision_data['memoryIncrease'] = 0
         revision_data['memoryStart'] = 0
         revision_data['matchPointsRight'] = 0
-        revision_data['matchPointsWrong'] = 0 
+        revision_data['matchPointsWrong'] = 0
         revision_data['hazardEffect'] = 0
-        revision_data['sliceAmount'] = 0 
-        revision_data['pieceAmount'] = 0 
-        revision_data['pizzaRules'] = [] 
-        revision_data['jumpPower'] = -24 
-        revision_data['bonustimelimit'] = 220 
-        revision_data['sensitivity'] = sensitivity_data 
+        revision_data['sliceAmount'] = 0
+        revision_data['pieceAmount'] = 0
+        revision_data['pizzaRules'] = []
+        revision_data['jumpPower'] = -24
+        revision_data['bonustimelimit'] = 220
+        revision_data['sensitivity'] = sensitivity_data
 
         revision_data = json.dumps(revision_data)
 
@@ -726,7 +726,7 @@ def create_game_b(request):
     return render(request, tpl, context)
 
 
-@ajax_login_required    
+@ajax_login_required
 def rate_game(request, game_pk, stars):
     """
     Rate game 1-5
@@ -921,9 +921,9 @@ def login_user(request):
     context = RequestContext(request)
     form = LoginForm(request.POST or None)
     next = None
-    if request.GET:  
+    if request.GET:
         next = request.GET.get('next' or None)
-    if request.POST:  
+    if request.POST:
         next = request.POST.get('next' or None)
     if next:
         context['next'] = next
@@ -942,7 +942,7 @@ def logout_user(request):
     logout(request)
     # redirect to home
     return redirect(home)
-    
+
 
 def register_user(request):
     tpl = 'apps/game/register_user.html'

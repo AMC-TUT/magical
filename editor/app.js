@@ -573,6 +573,7 @@ var editor = io.sockets.on('connection', function(socket) {
       jar: j,
       qs: data
     }, function(error, response, body) {
+      console.log('TEEEEEEEEEEMUUUUUUUUUUUUUU');
       console.log(error);
       console.log(response);
       console.log(body);
@@ -879,7 +880,6 @@ myMagos.getUserMagos = function(roomData, userName) {
   });
   return magos;
 };
-
 
 // Remove user from magos
 myMagos.removeUserFromMagos = function(roomData, userName) {

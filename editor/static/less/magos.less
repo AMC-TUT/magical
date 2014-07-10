@@ -537,14 +537,23 @@ input[type="number"] {
       padding: @baseMargin;
       .border-radius(@atomicSize);
 
+      text-align: center;
+
       &.ui-selecting, &:hover, &:focus { background: @wellBackground; }
       &.ui-selected { background: #eee; color: @grayDark; }
 
       span {
+        color: #fff;
         display: block;
         text-align: center;
         margin-top: @atomicSize;
       }
+
+    &.ui-selected {
+      span {
+        color: #111;
+      }
+    }
     }
   }
 

@@ -1,50 +1,50 @@
 function capitaliseFirstLetter(string) {
-    string = string.toLowerCase();
-    return string.charAt(0).toUpperCase() + string.slice(1);
+  string = string.toLowerCase();
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function changeHitpoints(amount) {
   Parser.settings.hitPoints += amount;
-  Crafty("hitPoints").each(function () { 
-    this.text(Parser.settings.hitPoints + " hits") 
+  Crafty("hitPoints").each(function() {
+    this.text(Parser.settings.hitPoints + " hits");
   });
-  if(Parser.settings.hitPoints == 0) {
+  if (Parser.settings.hitPoints === 0) {
     Crafty.scene('outro');
   }
 }
 
 function changeScore(amount) {
   Parser.settings.score += amount;
-  Crafty("score").each(function () { 
-    this.text('Score: ' + Parser.settings.score) 
+  Crafty("score").each(function() {
+    this.text('Score: ' + Parser.settings.score);
   });
 }
 
 function handleCollision(collider, collides, score) {
-    _.each(collider.collisions, function(collision) {
-      if(collision.target.slug == collides.slug) {
-        var eventName = collision.event.event;
-        var col_score = (!_.isNull(collision.score) && !_.isUndefined(collision.score)) ? parseInt(collision.score) : 0;
-        if(eventName === "destroySelf") {
-            collider.destroy();
-        } else if (eventName === "destroyTarget") {
-            collides.destroy();
-            //Crafty.scene('outro'); // TODO reduce hitpoints, don't die immediately
-        } else if (eventName === "startDialog") {
-            console.log('Collision: Init dialog');
-        } else if (eventName === "createElement") {
-            console.log('Collision: Create element');
-        } else if (eventName === "addHitpoints") {
-            //collider.destroy();
-            changeHitpoints(10);
-        } else if (eventName === "reduceHitpoints") {
-            //collider.destroy();
-            changeHitpoints(-10);
-        }  
-        // handle score
-        if(col_score) changeScore(col_score);
+  _.each(collider.collisions, function(collision) {
+    if (collision.target.slug == collides.slug) {
+      var eventName = collision.event.event;
+      var col_score = (!_.isNull(collision.score) && !_.isUndefined(collision.score)) ? parseInt(collision.score, 10) : 0;
+      if (eventName === "destroySelf") {
+        collider.destroy();
+      } else if (eventName === "destroyTarget") {
+        collides.destroy();
+        //Crafty.scene('outro'); // TODO reduce hitpoints, don't die immediately
+      } else if (eventName === "startDialog") {
+        console.log('Collision: Init dialog');
+      } else if (eventName === "createElement") {
+        console.log('Collision: Create element');
+      } else if (eventName === "addHitpoints") {
+        //collider.destroy();
+        changeHitpoints(10);
+      } else if (eventName === "reduceHitpoints") {
+        //collider.destroy();
+        changeHitpoints(-10);
       }
-    });
+      // handle score
+      if (col_score) changeScore(col_score);
+    }
+  });
 }
 
 
@@ -63,21 +63,33 @@ Crafty.c("Controls", {
 Crafty.c("GameOver", {
   init: function() {
     this.requires('2D, DOM, Text, gameOver');
-    this.attr({x:10, y:25, w: 300});
+    this.attr({
+      x: 10,
+      y: 25,
+      w: 300
+    });
   }
 });
 
 Crafty.c("HitPoints", {
   init: function() {
     this.requires('2D, DOM, Text, hitPoints');
-    this.attr({x:10, y:25, w: 300});
+    this.attr({
+      x: 10,
+      y: 25,
+      w: 300
+    });
   }
 });
 
 Crafty.c("Score", {
   init: function() {
     this.requires('2D, DOM, Text, score');
-    this.attr({x:10, y:25, w: 300});
+    this.attr({
+      x: 10,
+      y: 25,
+      w: 300
+    });
   }
 });
 
@@ -86,10 +98,10 @@ var Parser = {
   socket: null,
   blockSize: null,
   settings: {
-      djangoUri: 'http://localhost:8000/',
-      //djangoUri: 'http://magos.pori.tut.fi/',
-      score: 0,
-      hitPoints: 100
+    djangoUri: 'http://localhost/', // localhost
+    //djangoUri: 'http://magos.pori.tut.fi/',
+    score: 0,
+    hitPoints: 100
   },
 
   parseGame: function(game) {
@@ -144,7 +156,8 @@ var Parser = {
     _.each(audios, function(audio) {
       var obj = {},
         array = [
-        path + '/mp3/' + slug + '.mp3', path + '/ogg/' + slug + '.ogg', path + '/wav/' + slug + '.wav'];
+          path + '/mp3/' + slug + '.mp3', path + '/ogg/' + slug + '.ogg', path + '/wav/' + slug + '.wav'
+        ];
 
       obj[slug] = array;
 
@@ -199,16 +212,16 @@ var Parser = {
           Crafty.background("url(" + backgroundImage + ")");
         }
 
-        if(scene.name == 'outro') {
-            Crafty.e('GameOver').attr({
-              x: 100,
-              y: 100,
-              w: 400,
-              h: 100
-            }).text("Game Over");
+        if (scene.name == 'outro') {
+          Crafty.e('GameOver').attr({
+            x: 100,
+            y: 100,
+            w: 400,
+            h: 100
+          }).text("Game Over");
         }
 
-        if(scene.name == 'game') {
+        if (scene.name == 'game') {
           Parser.settings.hitPoints = 100;
           Parser.settings.score = 0;
 
@@ -342,7 +355,7 @@ var Parser = {
           // position
           var x_ = comp.position.column * Parser.blockSize;
           var y_ = comp.position.row * Parser.blockSize;
-          
+
           Crafty.e(comp.slug).attr({
             x: x_,
             y: y_,
@@ -394,7 +407,7 @@ var Parser = {
       //Crafty.scene("intro");
 
       Crafty.load(
-        assets, 
+        assets,
         function() {
           setTimeout(function() {
             Crafty.scene("intro");
@@ -402,7 +415,7 @@ var Parser = {
         },
         function(e) {
           $('.loader-procent').text(Math.round(e.percent) + "%");
-        }, 
+        },
         function(e) {
           //console.log(e)
           //console.log('Error loading ' + e.src + ' while loading game assets (loaded ' + e.loaded + ' of ' + e.total + ')');
@@ -410,7 +423,7 @@ var Parser = {
         }
       );
 
-      
+
     });
 
     return true;
@@ -451,7 +464,7 @@ var Parser = {
 
             // twoway === platform
             if (props.controls.method.toLowerCase() === 'twoway') {
-              var jumpHeight = !_.isNull(props.controls.jumpHeight) ? parseInt(props.controls.jumpHeight) : 12;              
+              var jumpHeight = !_.isNull(props.controls.jumpHeight) ? parseInt(props.controls.jumpHeight) : 12;
               this_.addComponent('Twoway', 'Keyboard', 'Gravity', 'Collision');
               this_.twoway(speed, jumpHeight);
               this_.gravity('platform');
@@ -466,7 +479,12 @@ var Parser = {
             // multiway
             if (props.controls.method.toLowerCase() === 'multiway') {
               this_.addComponent('Multiway', 'Keyboard');
-              this_.multiway(speed, {UP_ARROW: -90, DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180});
+              this_.multiway(speed, {
+                UP_ARROW: -90,
+                DOWN_ARROW: 90,
+                RIGHT_ARROW: 0,
+                LEFT_ARROW: 180
+              });
             }
 
           }
@@ -475,24 +493,24 @@ var Parser = {
           if (_.isString(props.type)) {
             this_.addComponent(props.type);
 
-            if(props.type.toLowerCase() === "platform") {
+            if (props.type.toLowerCase() === "platform") {
               this_.addComponent('platform');
             }
 
-            if(props.type.toLowerCase() === 'block') {
+            if (props.type.toLowerCase() === 'block') {
               this_.addComponent('platform');
               this_.addComponent('Solid');
               this_.addComponent("Collision");
             }
 
-            if(props.type.toLowerCase() === "pushable") {
+            if (props.type.toLowerCase() === "pushable") {
               this_.addComponent('platform');
               this_.addComponent('Solid');
               this_.addComponent("Collision");
               this_.addComponent("Pushable");
             }
 
-            if(props.type.toLowerCase() === "player") {
+            if (props.type.toLowerCase() === "player") {
               this_.addComponent('Player');
               this_.addComponent("Collision");
               this_.direction = '';
@@ -500,20 +518,20 @@ var Parser = {
           }
 
           // gravity
-          if ( ( !_.isUndefined(props.gravitation) && !_.isNull(props.gravitation) ) && !_.isNull(props.gravitation.strength) ) {
-              //var sign = props.gravitation.direction ? 1 : -1; // gravity direction
-              this_.addComponent("Gravity");              
-              this_.gravity("platform");
-              this_.gravityConst(parseFloat(props.gravitation.strength));
+          if ((!_.isUndefined(props.gravitation) && !_.isNull(props.gravitation)) && !_.isNull(props.gravitation.strength)) {
+            //var sign = props.gravitation.direction ? 1 : -1; // gravity direction
+            this_.addComponent("Gravity");
+            this_.gravity("platform");
+            this_.gravityConst(parseFloat(props.gravitation.strength));
           }
 
           // bind events
           this_.bind("EnterFrame", function(frame) {
 
-              //destroy if it goes out of bounds
-              if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
-                
-                /*
+            //destroy if it goes out of bounds
+            if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
+
+              /*
                 this.destroy();
 
                 if(this.has('Player')) {
@@ -522,25 +540,25 @@ var Parser = {
                   }, 500);
                 }
                 */
-              }
+            }
 
 
-              // stop item on viewport bounds
-              if(this._x > Crafty.viewport.width - Parser.blockSize) {
-                  this.x = Crafty.viewport.width - Parser.blockSize;
-              }
-              if(this._x < 0) {
-                  this.x =  0;
-              }
-              if(this._y > Crafty.viewport.height - Parser.blockSize) {
-                  this.y = Crafty.viewport.height - Parser.blockSize;
-              }
-              if(this._y < 0) {
-                  this.y = 0;
-              }
+            // stop item on viewport bounds
+            if (this._x > Crafty.viewport.width - Parser.blockSize) {
+              this.x = Crafty.viewport.width - Parser.blockSize;
+            }
+            if (this._x < 0) {
+              this.x = 0;
+            }
+            if (this._y > Crafty.viewport.height - Parser.blockSize) {
+              this.y = Crafty.viewport.height - Parser.blockSize;
+            }
+            if (this._y < 0) {
+              this.y = 0;
+            }
 
-              // TODO: move item to the opposite side of viewport
-              /*
+            // TODO: move item to the opposite side of viewport
+            /*
               if(this._x > Crafty.viewport.width) {
                   this.x = 0;
               }
@@ -557,26 +575,24 @@ var Parser = {
 
 
 
-
-
           });
 
           // TODO implement startDialog and createElement
           // TODO handle scores
-          if(_.isArray(props.collisions)) {
+          if (_.isArray(props.collisions)) {
             console.log(props.collisions);
             this_.addComponent('Collision');
             this_.collisions = props.collisions;
             _.each(props.collisions, function(collision) {
-                if (_.isObject(props.collisions[0]) ) {
-                  var col_target = collision.target;
-                  var col_event = collision.event;
-                  this_.onHit(col_target.slug, function(ent) {
-                    var target = ent[0].obj;
-                    console.log(col_target.slug + ' HIT ' + this_.slug);
-                    handleCollision(this_, target);
-                  });
-                }
+              if (_.isObject(props.collisions[0])) {
+                var col_target = collision.target;
+                var col_event = collision.event;
+                this_.onHit(col_target.slug, function(ent) {
+                  var target = ent[0].obj;
+                  console.log(col_target.slug + ' HIT ' + this_.slug);
+                  handleCollision(this_, target);
+                });
+              }
             });
 
             /*
@@ -605,13 +621,13 @@ var Parser = {
                         col_score = parseInt(col_score);
                         console.log('Score: ' + col_score);
                     }
-             
+
                   }
 
               });
 
             });
-            */
+*/
 
           }
 
@@ -622,7 +638,7 @@ var Parser = {
               var hitPushable = this.hit('Pushable');
 
               // hit pushable
-              if(hitPushable) {
+              if (hitPushable) {
                 // platformer
                 var dir = this._x > from.x ? 'left' : 'right';
                 //console.log(dir);
@@ -631,32 +647,36 @@ var Parser = {
                 var rightX = leftX + widthThis;
 
                 _.each(hitPushable, function(pushable) {
-                    var tgt = pushable.obj;
-                    if(dir == 'left') {
-                        // push from left to right
-                        var posObj = rightX - tgt._x;
-                        tgt.attr({ x: tgt._x + posObj });
-                    } else {
-                        // push from right to left
-                        var posObj = (tgt._x + tgt._w) - leftX;
-                        tgt.attr({ x: tgt._x - posObj });
-                    }
-                    // TODO: push top/down?
+                  var tgt = pushable.obj;
+                  if (dir == 'left') {
+                    // push from left to right
+                    var posObj = rightX - tgt._x;
+                    tgt.attr({
+                      x: tgt._x + posObj
+                    });
+                  } else {
+                    // push from right to left
+                    var posObj = (tgt._x + tgt._w) - leftX;
+                    tgt.attr({
+                      x: tgt._x - posObj
+                    });
+                  }
+                  // TODO: push top/down?
                 });
 
-              } 
+              }
 
               // hit solid
-              if(this.hit('Solid')) {
-                  console.log("HIT SOLID");
-                  /*
+              if (this.hit('Solid')) {
+                console.log("HIT SOLID");
+                /*
                   var target = this.hit('Solid')[0].obj;
                   console.log(target);
                   */
-                  this.attr({
-                    x: from.x,
-                    y: from.y
-                  });
+                this.attr({
+                  x: from.x,
+                  y: from.y
+                });
               }
 
 
@@ -773,7 +793,7 @@ var Parser = {
     });
   },
   getGame: function(slug, webSocket) {
-    console.log('GET GAME:' +slug);
+    console.log('GET GAME:' + slug);
     socket = webSocket;
     socket.emit('joinGame', function(data) {
       console.log('websocket getGame (game)');

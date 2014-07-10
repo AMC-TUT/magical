@@ -9,7 +9,7 @@ $(function() {
     App.VERSION = '0.0.1',
 
     App.settings = {
-      djangoUri : 'http://10.0.1.6:8000/' // localhost
+      djangoUri : 'http://localhost/' // localhost
       //djangoUri : 'http://magos.pori.tut.fi/'
     };
 
@@ -177,7 +177,7 @@ $(function() {
       revision: null,
       href: null,
       playPath: function() {
-        return '/play/' + this.get('slug');
+        return '/editor/play/' + this.get('slug');
       }.property('playPath')
 
     });
@@ -1939,7 +1939,12 @@ $(function() {
         socket.emit('getImageAssets', filter, width, height, limit, offset, function(data) {
           //console.log(data);
           var imageAssets = [];
+          console.log('imageassetdata');
+          console.log(data.length);
+
           _.each(data, function(obj) {
+            console.log(obj);
+            console.log('getImageAssets obj');
             imageAssets.push(
               App.ImageAsset.create({
                 'name': obj.name,
@@ -2310,6 +2315,7 @@ $(function() {
 
     $(document).on('click tap', '.btn-preview', function(event) {
       event.preventDefault();
+
       var $modal = $('#dialog-preview');
 
       if(!$modal.hasClass('styled')) {
