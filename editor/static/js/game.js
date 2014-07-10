@@ -2,11 +2,6 @@
 
 (function($) {
 
- "use strict";
-
-
-console.log('Running game.js');
-
 // game slug
 var slug = location.pathname.split("/").pop();
 
@@ -58,7 +53,6 @@ window.postMessage(slug, window.location.protocol + "//" + window.location.host)
       return;
     }
 
-
   };
 
   $(document).on('click tap', '.volume-button', function(event) {
@@ -75,11 +69,6 @@ window.postMessage(slug, window.location.protocol + "//" + window.location.host)
     }
 
     // do something with sound
-  });
-
-  $(document).on('click tap', '.start-button', function(event) {
-    // open game scene
-    Crafty.scene('game');
   });
 
 })(jQuery);

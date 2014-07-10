@@ -1,3 +1,6 @@
+
+var isiPad = navigator.userAgent.match(/iPad/i) !== null;
+
 function capitaliseFirstLetter(string) {
   string = string.toLowerCase();
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -47,52 +50,6 @@ function handleCollision(collider, collides, score) {
   });
 }
 
-
-Crafty.c("Controls", {
-  init: function() {
-    this.requires('Twoway');
-    this.enableControl();
-  },
-
-  Controls: function(speed, jump) {
-    this.twoway(speed, jump);
-    return this;
-  }
-});
-
-Crafty.c("GameOver", {
-  init: function() {
-    this.requires('2D, DOM, Text, gameOver');
-    this.attr({
-      x: 10,
-      y: 25,
-      w: 300
-    });
-  }
-});
-
-Crafty.c("HitPoints", {
-  init: function() {
-    this.requires('2D, DOM, Text, hitPoints');
-    this.attr({
-      x: 10,
-      y: 25,
-      w: 300
-    });
-  }
-});
-
-Crafty.c("Score", {
-  init: function() {
-    this.requires('2D, DOM, Text, score');
-    this.attr({
-      x: 10,
-      y: 25,
-      w: 300
-    });
-  }
-});
-
 var Parser = {
   game: null,
   socket: null,
@@ -141,11 +98,29 @@ var Parser = {
     var width = canvas.blockSize * canvas.columns;
     // set global var
     Parser.blockSize = canvas.blockSize;
-    Crafty.init(width, height);
+    // Crafty.init(width, height);
     // obj for some magos vars
+
+    Crafty.init(width, height).canvas.init();
+
+    Crafty.background("#FFF");
+
     Crafty.magos = {};
-    Crafty.magos.audio = {}; // = true;
+    Crafty.magos.audio = {};
     Crafty.magos.audio.mute = false;
+    Crafty.magos.width = width;
+    Crafty.magos.height = height;
+
+    Crafty.viewport.bounds = {
+      min: {
+        x: 0,
+        y: 0
+      },
+      max: {
+        x: width,
+        y: height
+      }
+    };
 
     return true;
   },
@@ -205,12 +180,67 @@ var Parser = {
         backgroundImage = path + backgroundComp.properties.sprite + ext;
       }
 
+      var fontStyleTitle = {
+            font: 'Architects Daughter',
+            size: 30,
+            color: '#111111'
+      };
+
+      var fontStyleDescription = {
+            font: 'Open Sans',
+            size: 14,
+            color: '#111111'
+      };
+
       // create Crafty scene
       Crafty.scene(scene.name, function() {
         // background
         if (!_.isNull(backgroundImage)) {
           Crafty.background("url(" + backgroundImage + ")");
         }
+
+        if( /^(intro|outro)$/.test(scene.name) ) {
+          Crafty.background("#F2F2F2");
+          // Crafty.background("url(http://magos.pori.tut.fi/static/img/noise-pattern.png)");
+        }
+
+        if(scene.name == 'intro') {
+
+          var title = Crafty.e('2D, DOM, Text2')
+            .text('Lorem ipsum dolor sit')
+            .setStyle(fontStyleTitle)
+            .setAlign('center')
+            .attr({
+              x: 0,
+              y: 30,
+              w: Crafty.magos.width
+            });
+
+          var description = Crafty.e('2D, DOM, Text2')
+            .text('Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam fugiat, laudantium, aspernatur non illo harum unde, doloribus a possimus maiores eum nemo iure voluptatum atque, fuga quo! Labore, natus repellat! Dolore totam.')
+            .setStyle(fontStyleDescription)
+            .setAlign('center')
+            .attr({
+              x: 20,
+              y: 100,
+              w: Crafty.magos.width - 40,
+            });
+
+          var startButton = Crafty.e('Button, Text2, StartButton')
+            .text('Start')
+            .setStyle(fontStyleTitle)
+            .setAlign('center')
+            .button(function() {
+              Crafty.scene("game");
+            })
+            .attr({
+              w: 200,
+              h: 50,
+              x: (Crafty.magos.width/2) - 100,
+              y: Crafty.magos.height - 80
+            });
+
+        } // intro
 
         if (scene.name == 'outro') {
           Crafty.e('GameOver').attr({
@@ -222,6 +252,22 @@ var Parser = {
         }
 
         if (scene.name == 'game') {
+
+
+          var tmpButton = Crafty.e('Button, Text2, StartButton')
+            .text('Continue')
+            .setStyle(fontStyleTitle)
+            .setAlign('center')
+            .button(function() {
+              Crafty.scene("outro");
+            })
+            .attr({
+              w: 200,
+              h: 50,
+              x: (Crafty.magos.width/2) - 100,
+              y: Crafty.magos.height - 80
+            });
+
           Parser.settings.hitPoints = 100;
           Parser.settings.score = 0;
 
@@ -364,16 +410,12 @@ var Parser = {
           });
 
         });
-
-        // game on Yeah!
       });
-
     });
 
     // static magos loader scene
     Crafty.scene("loading", function() {
-
-      $('#cr-stage').css('background', '#111');
+      $('#cr-stage').css('background', '#F2F2F2');
 
       // canvas size
       var width = Parser.game.revision.canvas.columns * Parser.game.revision.canvas.blockSize;
@@ -388,23 +430,17 @@ var Parser = {
       // game comps
       _.each(Parser.game.revision.gameComponents, function(comp) {
         if (!_.isUndefined(comp.properties.file) && _.isString(comp.properties.file)) {
-          //assets.push(componentsPath + comp.properties.file);
           assets.push(Parser.settings.djangoUri + 'game/image/' + comp.properties.file + '_' + Parser.blockSize + 'x' + Parser.blockSize + '.' + comp.properties.ext);
         }
       });
       // scene comps
       _.each(scenes, function(scene) {
-        console.log('SCENE COMPS:');
-        console.log(scene.sceneComponents);
         _.each(scene.sceneComponents, function(comp) {
           if (!_.isUndefined(comp.sprite) && _.isString(comp.sprite)) {
             assets.push(path + comp.sprite + ext);
           }
         });
       });
-      console.log(assets);
-      // TODO audio assets
-      //Crafty.scene("intro");
 
       Crafty.load(
         assets,
@@ -417,8 +453,6 @@ var Parser = {
           $('.loader-procent').text(Math.round(e.percent) + "%");
         },
         function(e) {
-          //console.log(e)
-          //console.log('Error loading ' + e.src + ' while loading game assets (loaded ' + e.loaded + ' of ' + e.total + ')');
           alert('Error loading ' + e.src + ' while loading game assets (loaded ' + e.loaded + ' of ' + e.total + ')');
         }
       );
