@@ -9,7 +9,7 @@
   window.onmessage = function(e) {
 
     // socket.io
-    var address = 'http://' + window.location.hostname;
+    var address = 'http://10.0.1.6:8000'; // + window.location.hostname;
     //var socket = io.connect(address);
     var socket = io.connect(address, {
       resource: 'editor/socket.io'
@@ -26,7 +26,7 @@
       csrftoken: csrftoken,
       slug: slug
     };
-    
+
     socket.emit('setUserCredentials', credentials, function(data) {
       Parser.getGame(e.data, socket);
     });
@@ -51,7 +51,7 @@
       return;
     }
 
-    
+
   };
 
   $(document).on('click tap', '.volume-button', function(event) {
