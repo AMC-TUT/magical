@@ -9,7 +9,7 @@ $(function() {
     App.VERSION = '0.0.1',
 
     App.settings = {
-      djangoUri : 'http://localhost/' // localhost
+      djangoUri : 'http://192.168.43.232/' // localhost
       //djangoUri : 'http://magos.pori.tut.fi/'
     };
 
@@ -44,7 +44,7 @@ $(function() {
       userName: null,
       firstName: null,
       lastName: null,
-      magos: null,
+      magos: 'magos',
       busy: false,
       role: 'student'
     });
@@ -373,8 +373,6 @@ $(function() {
       populate: function() {
         var controller = this;
         App.dataSource.getImageAssets(function(data) {
-          console.log('. . . . image assets data:');
-          console.log(data);
           controller.set('content', data);
         });
 
@@ -716,7 +714,7 @@ $(function() {
                 // set selected component
                 App.selectedComponentController.set('content', selected);
                 // set user busy
-                App.usersController.setPath('user.busy', true);
+                //App.usersController.setPath('user.busy', true);
 
                 var $draggable = $(ui.draggable),
                   $container = $draggable.closest('.magos-potions'),
@@ -816,9 +814,9 @@ $(function() {
           // set selected component
           App.selectedComponentController.set('content', selected);
           // if user busy, set not busy
-          if(App.usersController.getPath('user.busy')) {
-            App.usersController.setPath('user.busy', false);
-          }
+          // if(App.usersController.getPath('user.busy')) {
+          //   App.usersController.setPath('user.busy', false);
+          // }
           // if potion form open
           closePotionForm();
         }
@@ -1011,10 +1009,6 @@ $(function() {
 
           var src = selectedImageAsset.get('apiPath');
           $('.item-chest').find("[data-slug='" + slugName + "']").attr('src', src);
-
-          console.log(src);
-          console.log($('.item-chest').find("[data-slug='" + slugName + "']"));
-
           $('.canvas-pane').find("[data-slug='" + slugName + "']").attr('src', src);
 
           App.dataSource.saveGame(0, function(data) {
@@ -1033,7 +1027,7 @@ $(function() {
           $modal.find('.ui-selected').removeClass('.ui-selected');
         }
         // return back to potions view
-        closePotionForm();
+        closePotionForm(); // TAALLA
       },
       didInsertElement: function() {
         Em.run.next(function() {
@@ -1934,14 +1928,9 @@ $(function() {
         }
 
         socket.emit('getImageAssets', filter, width, height, limit, offset, function(data) {
-          //console.log(data);
           var imageAssets = [];
-          console.log('imageassetdata');
-          console.log(data.length);
 
           _.each(data, function(obj) {
-            console.log(obj);
-            console.log('getImageAssets obj');
             imageAssets.push(
               App.ImageAsset.create({
                 'name': obj.name,
@@ -2422,6 +2411,7 @@ $(function() {
     }
 
     function closePotionForm() {
+      console.log( 'closePotionForm()' );
       // close potion form
       var $magos = $('.selected-magos');
       if($magos.is(':hidden')) {
