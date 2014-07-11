@@ -222,10 +222,7 @@ $(function() {
       }
     });
 
-    App.GameView = Em.View.extend({
-      classNames: ['game-preview-view'],
-      playPathBinding: 'App.gameController.content.playPath'
-    });
+
 
     /**************************
      * Revision
@@ -2339,15 +2336,16 @@ $(function() {
         $modal.addClass('styled');
       }
 
+      var slug = location.pathname.split("/").pop();
+      var frame = '<iframe id="preview" seamless src="/editor/play/' + slug + '"></iframe>';
+
       $modal.one('show', function() {
-        var win = document.getElementById("preview").contentWindow;
-        win.postMessage(slug, window.location.protocol + "//" + window.location.host);
+        $modal.find('.game-preview-view').empty().append(frame);
       });
 
       $modal.find('button').on('click tap', function(event) {
         $modal.modal('hide');
-        // can't do reload, socket disconnects...
-        //document.getElementById("preview").contentWindow.location.reload(true);
+        $modal.find('.game-preview-view').empty();
       });
 
       $modal.modal();
