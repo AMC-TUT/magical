@@ -105,7 +105,7 @@ $(function() {
             var potions = [];
             _.each(data.magoses, function(obj) {
               _.each(obj.potions, function(potion) {
-                if( /^(rules|score|controls|collision|gravitation|type|image|audio)$/.test(potion.title) ) {
+                if( /^(rules|score|controls|collision|gravitation|type|image)$/.test(potion.title) ) {
                   var pot = App.Potion.create(potion);
 
                   potions.push(pot);
@@ -506,10 +506,6 @@ $(function() {
       filteredScoreEvents: function() {
         var collisions = this.getPath('properties.collisions');
         return _.isObject(collisions) ? collisions.filterProperty('score') : false;
-      }.property('properties'),
-      filteredAudioEvents: function() {
-        var collisions = this.getPath('properties.collisions');
-        return _.isObject(collisions) ? collisions.filterProperty('audio') : false;
       }.property('properties')
     });
 
@@ -1564,7 +1560,6 @@ $(function() {
     App.InfoBoxScoreView = Em.View.extend();
     App.InfoBoxSpriteView = Em.View.extend();
     App.InfoBoxAnimationView = Em.View.extend();
-    App.InfoBoxAudioView = Em.View.extend();
     App.InfoBoxTypeView = Em.View.extend();
 
     /**************************
@@ -1847,7 +1842,7 @@ $(function() {
 
           _.each(data, function(obj) {
             _.each(obj.potions, function(potion) {
-              if( /^(rules|score|controls|collision|gravitation|type|image|audio)$/.test(potion.title) ) {
+              if( /^(rules|score|controls|collision|gravitation|type|image)$/.test(potion.title) ) {
                 var pot = App.Potion.create({
                   'title': potion.title,
                   'properties': potion.properties
@@ -2027,14 +2022,12 @@ $(function() {
               scenes.push(obj);
             });
 
-            var audios = [];
             var sprites = [];
 
             var rev = App.Revision.create({
               //'authors': authors,
               'canvas': revision.canvas,
               'scenes': scenes,
-              'audios': audios,
               'sprites': sprites,
               'gameComponents': gameComponentsA
             });
@@ -2225,13 +2218,11 @@ $(function() {
           scenes.push(obj);
         });
 
-        var audios = [];
         var sprites = [];
 
         var rev = {
           'canvas': game.revision.canvas,
           'scenes': scenes,
-          'audios': game.audios,
           'sprites': game.sprites,
           'gameComponents': gameComponentsA
         };
