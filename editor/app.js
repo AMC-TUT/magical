@@ -59,13 +59,13 @@ app.get('/edit/:slug', function(req, res) {
     return false;
   }
   // query django session data from Redis
-  console.log(req.cookies.sessionid);
+  //console.log(req.cookies.sessionid);
   client.get('django_session:foobar', function(err, data) {
-    console.log('FOOBAR: ' + data);
+    //console.log('FOOBAR: ' + data);
   });
 
   client.get('django_session:' + req.cookies.sessionid, function(err, data) {
-    console.log('redis data: ', data);
+    //console.log('redis data: ', data);
     if(_.isNull(data)) {
       // if no session info in redis
       res.redirect(config.express.djangoUrl + '/game/login?next=/editor/' + req.url);
@@ -73,7 +73,7 @@ app.get('/edit/:slug', function(req, res) {
     }
 
     var sessionObj = myMagos.parseSessionObject(data);
-    console.log(sessionObj);
+    //console.log(sessionObj);
     // if no valid logged in user
     if(_.isUndefined(sessionObj.userName)) {
       res.redirect(config.express.djangoUrl + '/game/login?next=/editor/' + req.url);
@@ -116,7 +116,7 @@ var editor = io.sockets.on('connection', function(socket) {
       maxAuthors = 4;
 
   socket.on('connect', function(data) {
-    console.log('client connected, client id: ' + socket.id);
+    //console.log('client connected, client id: ' + socket.id);
     //myMagos.connect(socket, data);
   });
 
@@ -151,7 +151,7 @@ var editor = io.sockets.on('connection', function(socket) {
       credentials.firstName = globalSessionObj.firstName;
       credentials.lastName = globalSessionObj.lastName;
 
-      //console.log(globalSessionObj);
+      ////console.log(globalSessionObj);
       fn(credentials);
     } else {
       fn(false);
@@ -169,9 +169,9 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   socket.on('addGameComponent', function(item, fn) {
-    console.log('SOCKET: addGameComponent');
+    //console.log('SOCKET: addGameComponent');
     socket.get('slug', function(err, slug) {
-      console.log(item);
+      //console.log(item);
       if(_.isObject(item)) {
         socket.broadcast.in(slug).emit('addGameComponent', item);
         fn(item);
@@ -180,8 +180,8 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   socket.on('removeGameComponent', function(componentSlug, fn) {
-    console.log('SOCKET: removeGameComponent');
-    console.log(componentSlug);
+    //console.log('SOCKET: removeGameComponent');
+    //console.log(componentSlug);
     socket.get('slug', function(err, slug) {
       socket.broadcast.in(slug).emit('removeGameComponent', componentSlug);
       fn(componentSlug);
@@ -189,9 +189,9 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   socket.on('updateGameComponent', function(componentSlug, gameComponent, fn) {
-    console.log('SOCKET: updateGameComponent');
-    console.log(componentSlug);
-    console.log(gameComponent);
+    //console.log('SOCKET: updateGameComponent');
+    //console.log(componentSlug);
+    //console.log(gameComponent);
     socket.get('slug', function(err, slug) {
       socket.broadcast.in(slug).emit('updateGameComponent', componentSlug, gameComponent);
       fn(componentSlug);
@@ -199,8 +199,8 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   socket.on('addUser', function(user, fn) {
-    console.log('SOCKET: addUser');
-    console.log(user);
+    //console.log('SOCKET: addUser');
+    //console.log(user);
     socket.get('slug', function(err, slug) {
       socket.broadcast.in(slug).emit('addUser', user);
       fn(user);
@@ -208,9 +208,9 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   socket.on('saveGameComponentToCanvas', function(component, sceneName, fn) {
-    console.log('SOCKET: saveGameComponentToCanvas');
-    console.log(component);
-    console.log(sceneName);
+    //console.log('SOCKET: saveGameComponentToCanvas');
+    //console.log(component);
+    //console.log(sceneName);
     socket.get('slug', function(err, slug) {
       socket.broadcast.in(slug).emit('saveGameComponentToCanvas', component, sceneName);
       fn(component, sceneName);
@@ -218,9 +218,9 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   socket.on('removeGameComponentFromCanvas', function(component, sceneName, fn) {
-    console.log('SOCKET: removeGameComponentFromCanvas');
-    console.log(component);
-    console.log(sceneName);
+    //console.log('SOCKET: removeGameComponentFromCanvas');
+    //console.log(component);
+    //console.log(sceneName);
     socket.get('slug', function(err, slug) {
       socket.broadcast.in(slug).emit('removeGameComponentFromCanvas', component, sceneName);
       fn(component, sceneName);
@@ -230,9 +230,9 @@ var editor = io.sockets.on('connection', function(socket) {
 
 
   socket.on('saveSceneComponentToCanvas', function(component, sceneName, fn) {
-    console.log('SOCKET: saveSceneComponentToCanvas');
-    console.log(component);
-    console.log(sceneName);
+    //console.log('SOCKET: saveSceneComponentToCanvas');
+    //console.log(component);
+    //console.log(sceneName);
     socket.get('slug', function(err, slug) {
       socket.broadcast.in(slug).emit('saveSceneComponentToCanvas', component, sceneName);
       fn(component, sceneName);
@@ -240,9 +240,9 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   socket.on('removeSceneComponentFromCanvas', function(component, sceneName, fn) {
-    console.log('SOCKET: removeSceneComponentFromCanvas');
-    console.log(component);
-    console.log(sceneName);
+    //console.log('SOCKET: removeSceneComponentFromCanvas');
+    //console.log(component);
+    //console.log(sceneName);
     socket.get('slug', function(err, slug) {
       socket.broadcast.in(slug).emit('removeSceneComponentFromCanvas', component, sceneName);
       fn(component, sceneName);
@@ -252,7 +252,7 @@ var editor = io.sockets.on('connection', function(socket) {
 
 
   socket.on('userChangedMagos', function(user, newMagos, fn) {
-    console.log('SOCKET: userChangedMagos');
+    //console.log('SOCKET: userChangedMagos');
     socket.get('slug', function(err, slug) {
 
       client.get('room:' + slug, function(err, roomData) {
@@ -269,7 +269,7 @@ var editor = io.sockets.on('connection', function(socket) {
           'newMagos' : newMagos,
           'oldMagos' : oldMagos
         };
-        console.log(data);
+        //console.log(data);
         socket.broadcast.in(slug).emit('userChangedMagos', data);
         fn(data);
       });
@@ -278,8 +278,8 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   socket.on('canUserChangeMagos', function(gameSlug, user, magos, fn) {
-    console.log('SOCKET: canUserChangeMagos');
-    console.log('User ' + user.userName + ' requests change from ' + user.magos + ' to ' + magos);
+    //console.log('SOCKET: canUserChangeMagos');
+    //console.log('User ' + user.userName + ' requests change from ' + user.magos + ' to ' + magos);
 
     var sessionid = '';
     socket.get('sessionid', function(err, name) {
@@ -289,15 +289,15 @@ var editor = io.sockets.on('connection', function(socket) {
     client.get('room:' + gameSlug, function(err, roomData) {
       // is target magos in use?
       roomData = JSON.parse(roomData);
-      console.log('We have room data: ' + JSON.stringify(roomData));
+      //console.log('We have room data: ' + JSON.stringify(roomData));
       var magosUser = myMagos.getMagosUser(roomData, magos);
 
       if(!magosUser) {
-        console.log('MAGOS IS FREE TO USE');
+        //console.log('MAGOS IS FREE TO USE');
         // presist change
         fn(true);
       } else {
-        console.log('MAGOS IS TAKEN, HAVE TO GET PERMISSION');
+        //console.log('MAGOS IS TAKEN, HAVE TO GET PERMISSION');
         // ask permission
 
         var targetUser = _.find(roomData.authors, function (author) { return magosUser.userName == author.userName; });
@@ -319,11 +319,11 @@ var editor = io.sockets.on('connection', function(socket) {
   socket.on('saveGame', function(mode, game, fn) {
     var result = false;
 
-    console.log('----- GAME:');
-    console.log(game);
+    //console.log('----- GAME:');
+    //console.log(game);
 
     socket.get('slug', function(err, slug) {
-      console.log('----- SAVEGAME _____:' + slug);
+      //console.log('----- SAVEGAME _____:' + slug);
       // game in json format
       var json = JSON.stringify(game);
       //socket.broadcast.in(slug).emit('refreshRevision', game);
@@ -370,7 +370,7 @@ var editor = io.sockets.on('connection', function(socket) {
 
 
   socket.on('joinGame', function(fn) {
-    console.log('JOIN GAME');
+    //console.log('JOIN GAME');
 
     var slug = '',
       sessionid = '',
@@ -408,7 +408,7 @@ var editor = io.sockets.on('connection', function(socket) {
         }, function(error, response, body) {
           if(!error && response.statusCode == 200) {
             game = JSON.parse(body);
-            console.log(game);
+            //console.log(game);
             if(_.isObject(game)) {
               game.revision = myMagos.checkGameRevision(game.revision);
               var json = JSON.stringify(game);
@@ -423,12 +423,12 @@ var editor = io.sockets.on('connection', function(socket) {
         });
 
       } else {
-        console.log('GAME DATA:');
-        console.log(data);
+        //console.log('GAME DATA:');
+        //console.log(data);
         game = JSON.parse(data);
-        console.log(game);
+        //console.log(game);
 
-        console.log('role: ' + role);
+        //console.log('role: ' + role);
 
         if(role === 'teacher') {
           // join or make a room with slug name
@@ -439,8 +439,8 @@ var editor = io.sockets.on('connection', function(socket) {
 
           var user = _.find(game.authors, function(author) { return author.userName === userName });
 
-          console.log('user:');
-          console.log(user);
+          //console.log('user:');
+          //console.log(user);
 
           // join or make a room with slug name
           socket.join(slug);
@@ -454,23 +454,23 @@ var editor = io.sockets.on('connection', function(socket) {
 
 
   socket.on('joinRoom', function(gameData, fn) {
-    console.log('-- JOIN ROOM');
+    //console.log('-- JOIN ROOM');
     if(!_.isNull(gameData)){
       //var gameData = JSON.parse(data);
       if(_.isObject(gameData)) {
-        console.log('>>>>');
-        console.log(gameData);
-        console.log('<<<<');
+        //console.log('>>>>');
+        //console.log(gameData);
+        //console.log('<<<<');
 
         // is user an author of this game?
         // TODO: what to do with teachers?
         var isTeacher = (globalSessionObj.role == 'teacher') ? true : false;
-        console.log(isTeacher);
+        //console.log(isTeacher);
         var authorUserNames = _.pluck(gameData.authors, 'userName');
-        console.log(authorUserNames);
+        //console.log(authorUserNames);
         var isAuthorized = (_.contains(authorUserNames, globalSessionObj.userName)) ? true : false;
         if(isAuthorized) {
-          console.log('User "' + globalSessionObj.userName + '" authorized.');
+          //console.log('User "' + globalSessionObj.userName + '" authorized.');
 
           client.get('room:' + gameData.slug, function(err, roomData) {
             if(_.isNull(roomData)) {
@@ -478,13 +478,13 @@ var editor = io.sockets.on('connection', function(socket) {
               var skillsetsJson = fs.readFileSync(__dirname + '/static/json/skillsets.json', 'utf8');
               // parse obj's
               var skillsetsResult = JSON.parse(skillsetsJson);
-              console.log(skillsetsResult);
+              //console.log(skillsetsResult);
               var magoses = [];
               _.each(skillsetsResult, function(obj) {
                 obj.user = null;
                 magoses.push(obj);
               });
-              console.log(magoses);
+              //console.log(magoses);
               var roomData = {
                 slug: gameData.slug,
                 authors: [],
@@ -497,24 +497,24 @@ var editor = io.sockets.on('connection', function(socket) {
                 // TRY TO ADD MAGOS TO AUTHOR
                 var roomData = myMagos.addAuthorToRoom(roomData, socket.id);
                 var roomData = myMagos.addMagosToAuthor(roomData);
-                console.log('AFTER NULL data: ');
-                console.log(roomData);
+                //console.log('AFTER NULL data: ');
+                //console.log(roomData);
               }
               var jsonRoomData = JSON.stringify(roomData);
-              console.log(jsonRoomData);
+              //console.log(jsonRoomData);
               client.set('room:' + gameData.slug, jsonRoomData, redis.print);
 
             } else {
               // room data exists
               roomData = JSON.parse(roomData);
-              console.log('We have room data: ' + JSON.stringify(roomData));
+              //console.log('We have room data: ' + JSON.stringify(roomData));
 
               if (isTeacher) {
-                console.log("SHOULD ADD TEACHER");
+                //console.log("SHOULD ADD TEACHER");
                 if(!_.contains(roomData.teachers, globalSessionObj.userName)) {
                   // add teacher
                   roomData.teachers.push(globalSessionObj.userName);
-                  console.log('Teacher added to room.');
+                  //console.log('Teacher added to room.');
                 }
               } else {
                 // TRY TO ADD MAGOS TO AUTHOR
@@ -529,7 +529,7 @@ var editor = io.sockets.on('connection', function(socket) {
 
 
         } else {
-          console.log('User "' + globalSessionObj.userName + '" not authorized!');
+          //console.log('User "' + globalSessionObj.userName + '" not authorized!');
           fn(false);
         }
       }
@@ -556,7 +556,7 @@ var editor = io.sockets.on('connection', function(socket) {
 
     // set session cookies for request
     var j = myMagos.createCookieJar(sessionid, csrftoken);
-    console.log('>> FILTER: ' + filter);
+    //console.log('>> FILTER: ' + filter);
     var data = {
       'filter': filter || null,
       'width': width || null,
@@ -567,16 +567,16 @@ var editor = io.sockets.on('connection', function(socket) {
 
     // get images request
     var result = [];
-    console.log(config.express.djangoUrl);
+    //console.log(config.express.djangoUrl);
     request.get({
       url: config.express.djangoUrl + '/api/v1/images',
       jar: j,
       qs: data
     }, function(error, response, body) {
-      console.log('TEEEEEEEEEEMUUUUUUUUUUUUUU');
-      console.log(error);
-      console.log(response);
-      console.log(body);
+      //console.log('TEEEEEEEEEEMUUUUUUUUUUUUUU');
+      //console.log(error);
+      //console.log(response);
+      //console.log(body);
       if(!error && response.statusCode == 200) {
 
         var assets = JSON.parse(body);
@@ -652,7 +652,7 @@ var editor = io.sockets.on('connection', function(socket) {
     var json = fs.readFileSync(__dirname + '/static/json/skillsets.json', 'utf8');
     // parse obj's
     var result = JSON.parse(json);
-    console.log(result);
+    //console.log(result);
     // return components
     fn(result);
   });
@@ -683,7 +683,7 @@ var editor = io.sockets.on('connection', function(socket) {
           roomData = myMagos.removeUserFromMagos(roomData, globalSessionObj.userName);
           roomData = myMagos.removeUserFromAuthors(roomData);
           //socket.broadcast.in(slug).emit('disconnectUser', globalSessionObj.userName, userMagos);
-          console.log('DISCONNECT FROM ROOM: ' + roomName);
+          //console.log('DISCONNECT FROM ROOM: ' + roomName);
           io.sockets.in(roomName).emit('disconnectUser', {
             userName : globalSessionObj.userName,
             magos: userMagos
@@ -710,8 +710,8 @@ var editor = io.sockets.on('connection', function(socket) {
 var myMagos = myMagos || {};
 
 myMagos.connect = function(socket, data) {
-  console.log('CONNECT SOCKET');
-  console.log(data);
+  //console.log('CONNECT SOCKET');
+  //console.log(data);
 };
 
 
@@ -754,8 +754,8 @@ myMagos.logEvent = function(log, sessionid, csrftoken) {
 myMagos.parseSessionObject = function(data) {
   var sessionObj = {},
       json_data = {};
-  console.log('parseSessionObject...');
-  console.log(data);
+  //console.log('parseSessionObject...');
+  //console.log(data);
   if(_.isString(data)) {
     var enc = myMagos.base64Decode(data);
     try {
@@ -772,7 +772,7 @@ myMagos.parseSessionObject = function(data) {
       };
 
     } catch(e) {
-      console.log('There was an error when parsing session data. ' + e.message);
+      //console.log('There was an error when parsing session data. ' + e.message);
     }
 
   }
@@ -784,33 +784,33 @@ myMagos.parseSessionObject = function(data) {
 
 myMagos.addAuthorToRoom = function(roomData, socket_id) {
   var roomAuthors = _.pluck(roomData.authors, 'userName');
-  //console.log(roomAuthors);
-  //console.log('ADD AUTHOR TO ROOM FUNCTION: ' + _.indexOf(roomAuthors, globalSessionObj.userName));
+  ////console.log(roomAuthors);
+  ////console.log('ADD AUTHOR TO ROOM FUNCTION: ' + _.indexOf(roomAuthors, globalSessionObj.userName));
   if(_.indexOf(roomAuthors, globalSessionObj.userName) == -1 && roomAuthors.length < 4) {
     // add new authorized user if there's room
     roomData.authors.push({'userName': globalSessionObj.userName, 'socket_id': socket_id });
-    console.log('Author ' + globalSessionObj.userName + ' added to room.');
-    //console.log(roomData);
+    //console.log('Author ' + globalSessionObj.userName + ' added to room.');
+    ////console.log(roomData);
   } else if(_.indexOf(roomAuthors, globalSessionObj.userName) != -1) {
     // update existing user information
     roomData.authors = _(roomData.authors).reject(function(el) { return el.userName === globalSessionObj.userName; });
     roomData.authors.push({'userName': globalSessionObj.userName, 'socket_id': socket_id });
-    console.log('Author ' + globalSessionObj.userName + ' room information updated.');
-    //console.log(roomData);
+    //console.log('Author ' + globalSessionObj.userName + ' room information updated.');
+    ////console.log(roomData);
   }
   return roomData;
 }
 
 myMagos.changeUserMagos = function(roomData, user, targetMagos) {
-  console.log('CHANGE USER MAGOS');
-  console.log('OLD ROOM DATA:');
-  console.log(roomData);
+  //console.log('CHANGE USER MAGOS');
+  //console.log('OLD ROOM DATA:');
+  //console.log(roomData);
   // release old magos
   roomData = myMagos.removeUserFromMagos(roomData, user.userName);
   // set new magos to user
   roomData = myMagos.addUserToMagos(roomData, user, targetMagos);
-  console.log('NEW ROOM DATA:');
-  console.log(roomData);
+  //console.log('NEW ROOM DATA:');
+  //console.log(roomData);
   return roomData;
 }
 
@@ -822,7 +822,7 @@ myMagos.addMagosToAuthor = function(roomData) {
     }
   });
   if( !userHasMagos ) {
-    console.log('Trying to add free magos role to user.');
+    //console.log('Trying to add free magos role to user.');
     // allocate new magos to user
     var freeMagoses = [], reservedMagoses = [];
     _.each(roomData.magoses, function(obj) {
@@ -832,17 +832,17 @@ myMagos.addMagosToAuthor = function(roomData) {
         reservedMagoses.push(obj);
       }
     });
-    console.log('freeMagoses:' + freeMagoses.length);
-    console.log('reservedMagoses:' + reservedMagoses.length);
+    //console.log('freeMagoses:' + freeMagoses.length);
+    //console.log('reservedMagoses:' + reservedMagoses.length);
     if(freeMagoses.length) {
       freeMagoses[0].user = globalSessionObj;
-      console.log('Magos ' + freeMagoses[0].magos + ' was set to user ' + globalSessionObj.userName);
+      //console.log('Magos ' + freeMagoses[0].magos + ' was set to user ' + globalSessionObj.userName);
       roomData.magoses = _.union(freeMagoses, reservedMagoses);
     } else {
-      console.log('No free Magos roles.');
+      //console.log('No free Magos roles.');
     }
   } else {
-    console.log('User already has magos role.');
+    //console.log('User already has magos role.');
   }
   return roomData;
 };
@@ -850,27 +850,27 @@ myMagos.addMagosToAuthor = function(roomData) {
 // find magos user
 myMagos.getMagosUser = function(roomData, magos) {
   var magosUser = null;
-  console.log('GET MAGOS USER');
+  //console.log('GET MAGOS USER');
   _.each(roomData.magoses, function(obj) {
-    console.log('--------->');
-    console.log(obj);
-    console.log('<---------');
+    //console.log('--------->');
+    //console.log(obj);
+    //console.log('<---------');
     if(obj.magos == magos) {
-      console.log(magos + ' found');
+      //console.log(magos + ' found');
       if(obj.user) {
-        console.log('magos user ' + obj.user.userName);
+        //console.log('magos user ' + obj.user.userName);
         magosUser = obj.user;
       }
     }
   });
-  console.log(magosUser);
+  //console.log(magosUser);
   return magosUser;
 };
 
 // find users magos
 myMagos.getUserMagos = function(roomData, userName) {
   var magos = null;
-  console.log('GET USER MAGOS');
+  //console.log('GET USER MAGOS');
   _.each(roomData.magoses, function(obj) {
     if(obj.user) {
       if(obj.user.userName == userName) {
@@ -883,14 +883,14 @@ myMagos.getUserMagos = function(roomData, userName) {
 
 // Remove user from magos
 myMagos.removeUserFromMagos = function(roomData, userName) {
-  console.log('Trying to remove user from magos...');
+  //console.log('Trying to remove user from magos...');
   var freeMagoses = [], reservedMagoses = [];
   _.each(roomData.magoses, function(obj) {
     if(obj.user) {
       if(obj.user.userName == userName) {
         obj.user = null;
         freeMagoses.push(obj);
-        console.log('...removed');
+        //console.log('...removed');
       } else {
         reservedMagoses.push(obj);
       }
@@ -898,8 +898,8 @@ myMagos.removeUserFromMagos = function(roomData, userName) {
       freeMagoses.push(obj);
     }
   });
-  console.log('freeMagoses:' + freeMagoses.length);
-  console.log('reservedMagoses:' + reservedMagoses.length);
+  //console.log('freeMagoses:' + freeMagoses.length);
+  //console.log('reservedMagoses:' + reservedMagoses.length);
   roomData.magoses = _.union(freeMagoses, reservedMagoses);
   return roomData;
 };
@@ -909,7 +909,7 @@ myMagos.addUserToMagos = function(roomData, user, targetMagos) {
     if(obj.magos == targetMagos) {
       user.magos = targetMagos;
       obj.user = user;
-      console.log('added user ' + user.userName + ' to magos ' + obj.magos);
+      //console.log('added user ' + user.userName + ' to magos ' + obj.magos);
     }
   });
   return roomData;
@@ -957,8 +957,8 @@ myMagos.checkGameRevision = function(revision) {
     revision = JSON.parse(revision);
   }
 
-  console.log("::::REVISON:::::");
-  console.log(revision);
+  //console.log("::::REVISON:::::");
+  //console.log(revision);
 
   if(!_.isObject(revision.canvas)) {
     // fallback 4 dev
@@ -995,8 +995,8 @@ myMagos.checkGameRevision = function(revision) {
       'fonts': []
     };
   }
-  console.log("REVISION:");
-  console.log(revision);
+  //console.log("REVISION:");
+  //console.log(revision);
 
   return revision;
 };

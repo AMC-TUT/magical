@@ -9,7 +9,7 @@ $(function() {
     App.VERSION = '0.0.1',
 
     App.settings = {
-      djangoUri : 'http://192.168.43.232/' // localhost
+      djangoUri : 'http://10.0.1.6/' // localhost
       //djangoUri : 'http://magos.pori.tut.fi/'
     };
 
@@ -116,36 +116,6 @@ $(function() {
 
             magos.set('potions', potions);
             App.magosesController.get('content').pushObject(magos);
-
-            // // convert magoses to Ember objects
-            // _.each(data.magoses, function(obj) {
-
-            //   obj.magos = 'magos';
-            //   var emMagos = App.Magos.create(obj);
-            //   if(emMagos.get('user')) {
-
-            //     console.log(obj.magos);
-            //     console.log(obj.user);
-
-            //     if(activeUser.userName == emMagos.get('user').userName) {
-            //       console.log('Set magos ' + emMagos.get('magos') + ' for active user ' + activeUser.userName);
-            //       //App.usersController.get('user').set('magos', obj.magos);
-            //       activeUser.set('magos', emMagos.get('magos'));
-            //     }
-            //     var emUser = App.User.create(obj.user);
-            //     emMagos.set('user', emUser);
-            //   }
-// console.log(JSON.stringify(obj));
-              // var potions = [];
-              // _.each(obj.potions, function(potion) {
-
-              //   var emPotion = App.Potion.create(potion);
-              //   potions.push(emPotion);
-              //   App.potionsController.get('content').pushObject(emPotion);
-              // });
-              // emMagos.set('potions', potions);
-              // App.magosesController.get('content').pushObject(emMagos);
-        //    });
 
             // add user to other instances also
             App.dataSource.addUser(user, function(data) {
@@ -1134,45 +1104,17 @@ $(function() {
       magos: 'magos', // null,
       potions: [],
       userActiveBinding: 'App.usersController.user',
-      busy: function() {
-        return this.getPath('user.busy');
-      }.property('user'),
-      // icon: function() {
-      //   var magos = this.get('magos');
-      //   return '/editor/static/img/icons/' + magos + '.png';
-      // }.property('magos'),
       activeUser: function() {
         var user = this.get('user');
         var active = this.get('userActive');
         return Em.isEqual(user, active);
       }.property('user', 'userActive'),
-      // isArcitectus: function() {
-      //   return this.get('magos') === 'arcitectus' ? true : false;
-      // }.property('magos'),
-      // isArtifex: function() {
-      //   return this.get('magos') === 'artifex' ? true : false;
-      // }.property('magos'),
-      // isPhysicus: function() {
-      //   return this.get('magos') === 'physicus' ? true : false;
-      // }.property('magos'),
-      // isPrincipes: function() {
-      //   return this.get('magos') === 'principes' ? true : false;
-      // }.property('magos'),
       magosObserver: function() {
 
         console.log('magos changes');
         // update magoses to other instances
         var user = this.get('user'),
             magos = this.get('magos');
-
-        //refreshSidebar($('.sortable-sidearea'));
-
-        // setTimeout(function() {
-        //   Em.run.next(function() {
-        //     refreshSidebar($('.sortable-sidearea'));
-        //   });
-        // }, 500);
-        //
       }.observes('user.magos')
     });
 
@@ -1203,81 +1145,17 @@ $(function() {
           App.dataSource.userChangedMagos(user, userMagos, function(data) {
             console.log('emit (user has a magos on login)');
           });
-
-        // } else {
-        //   // user has no magos role yet, assign a free one
-        //   var freeMagoses = controller.get('content').filterProperty('user', null);
-        //   //console.log(freeMagoses);
-        //   var freeMagos = null;
-        //   if(freeMagoses.length > 0) {
-        //     freeMagos = freeMagoses[0];
-        //     //var freeMagosObj = controller.get('content').findProperty('magos', freeMagos.magos);
-        //     var freeMagosObj = App.Magos.create(freeMagos);
-        //     console.log(freeMagosObj);
-        //     console.log('Set user to ' + freeMagos.magos);
-        //     freeMagosObj.set('user', user);
-        //     //controller.get('content').findProperty('magos', freeMagos.magos).set('magos', freeMagosObj);
-        //     controller.updateItem('magos', freeMagos.magos, freeMagosObj);
-        //     App.dataSource.userChangedMagos(user, freeMagos.magos, function(data) {
-        //       console.log('emit (user assigned a magos on login)');
-        //     });
-        //     // set special class for dragging action
-        //     if(freeMagos.magos === 'arcitectus') {
-        //       $('.chest-container').addClass('arcitectus-magos');
-        //     }
-
-        //   } else {
-        //     alert('There are no free roles.');
-        //   }
-        // }
       },
       selectedObserver: function() {
         var controller = this;
         var magos = controller.get('selected');
-            // user = App.usersController.get('user');
-
-        // var prevMagos = controller.get('content').findProperty('user', user);
-        // if(prevMagos) {
-        //   console.log('Previous MAGOS found: ' + prevMagos.magos);
-        //   prevMagos.set('user', null);
-        // }
-
-        // if(magos) {
-          console.log('Change user magos to: ' + magos);
-        //   var newMagos = controller.get('content').findProperty('magos', magos);
-        //   console.log('newMagos:');
-        //   console.log(newMagos);
-        //   if (newMagos) {
-        //     newMagos.set('user', user);
-        //   }
-        //   App.usersController.set('user.magos', magos);
-        // }
-
-        // if(magos !== 'arcitectus') {
-        //   $('.chest-container').removeClass('arcitectus-magos');
-        // } else {
-        //   $('.chest-container').addClass('arcitectus-magos');
-        // }
+        console.log('Change user magos to: ' + magos);
       }.observes('selected')
     });
 
     App.MagosView = Em.View.extend({
       contentBinding: 'App.magosesController.content',
       classNames: ['sidebar', 'sortable-sidearea'],
-      // busyObserver: function() {
-      //   return Em.run.next(function() {
-      //     return Em.run.next(function() {
-      //       $('.busy-icon').tooltip({
-      //         delay: {
-      //           show: 500,
-      //           hide: 100
-      //         },
-      //         placement: 'left'
-      //       });
-      //     });
-      //   });
-      // }.observes('content.@each.busy'),
-      // selectedObserver: function() { }.observes('content.selected')
     });
 
     /* VIEW FOR POTION PROPERTY FORMS */
