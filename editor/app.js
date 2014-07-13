@@ -218,21 +218,20 @@ var editor = io.sockets.on('connection', function(socket) {
   });
 
   socket.on('removeGameComponentFromCanvas', function(component, sceneName, fn) {
-    //console.log('SOCKET: removeGameComponentFromCanvas');
-    //console.log(component);
-    //console.log(sceneName);
     socket.get('slug', function(err, slug) {
       socket.broadcast.in(slug).emit('removeGameComponentFromCanvas', component, sceneName);
       fn(component, sceneName);
     });
   });
 
-
+  socket.on('potionBusy', function(potion, busy, fn) {
+    socket.get('slug', function(err, slug) {
+      socket.broadcast.in(slug).emit('potionBusy', potion, busy);
+      fn(potion);
+    });
+  });
 
   socket.on('saveSceneComponentToCanvas', function(component, sceneName, fn) {
-    //console.log('SOCKET: saveSceneComponentToCanvas');
-    //console.log(component);
-    //console.log(sceneName);
     socket.get('slug', function(err, slug) {
       socket.broadcast.in(slug).emit('saveSceneComponentToCanvas', component, sceneName);
       fn(component, sceneName);

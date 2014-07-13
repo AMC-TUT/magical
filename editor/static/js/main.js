@@ -45,6 +45,7 @@ $(function() {
       firstName: null,
       lastName: null,
       magos: 'magos',
+      potion: null,
       busy: false,
       role: 'student'
     });
@@ -686,6 +687,19 @@ $(function() {
                   $container = $draggable.closest('.magos-potions'),
                   potion = $draggable.data('potion');
 
+                // set potion busy
+                var busy = true;
+                App.dataSource.potionBusy(potion, busy, function(data) {
+                  var potion = App.potionsController.find( function(potion) {
+                    return potion.title == data;
+                  });
+
+                  if(_.isObject(potion)) {
+                    potion.set('busy', busy);
+                    App.usersController.setPath('content.potion', potion.title);
+                  }
+                });
+
                 // play sound
                 var sound = document.querySelector('#potion-sound');
                 sound.play();
@@ -1040,7 +1054,7 @@ $(function() {
     });
 
     /**************************
-     * Potions Controller
+     * Potions
      **************************/
 
     App.potionsController = Em.ArrayController.create({
@@ -1066,34 +1080,6 @@ $(function() {
         var components = this.get('content').findProperty('title', 'type').get('properties');
         return Em.Object.create(components);
       }).property('content'),
-
-      fonts: Em.computed(function() {
-        var components = this.get('content').findProperty('title', 'font').get('properties');
-        return Em.Object.create(components);
-      }).property('content')
-    });
-
-    /**************************
-     * Potion
-     **************************/
-
-    App.Potion = Em.Object.extend({
-      title: null,
-      properties: null,
-      potionIcon: true,
-      busy: false,
-      active: function() {
-        var busy = this.get('busy');
-        return !busy;
-      }.property('busy'),
-      icon: function() {
-        var icon = this.get('title');
-        return '/editor/static/img/icons/icon-' + icon + '.png';
-      }.property('title')
-    });
-
-    App.PotionView = Em.View.extend({
-      content: null,
       busyObserver: function() {
         return Em.run.next(function() {
           $('.potion-icon').draggable('destroy');
@@ -1102,8 +1088,24 @@ $(function() {
           });
         });
       }.observes('content.@each.busy')
-      // selectedObserver: function() { }.observes('content.selected')
     });
+
+    App.Potion = Em.Object.extend({
+      title: null,
+      properties: null,
+      potionIcon: true,
+      busy: false,
+      active: Em.computed(function() {
+        var busy = this.get('busy');
+        return !busy;
+      }).property('busy'),
+      icon: function() {
+        var icon = this.get('title');
+        return '/editor/static/img/icons/icon-' + icon + '.png';
+      }.property('title')
+    });
+
+    App.PotionView = Em.View.extend({});
 
     /**************************
      * Magos
@@ -1695,30 +1697,25 @@ $(function() {
       },
 
       userChangedMagos: function(user, magos, callback) {
-        console.log('EMIT USER CHANGED MAGOS');
-        console.log(user);
-        console.log(user.get('magos'));
-        console.log(magos);
         socket.emit('userChangedMagos', user, magos, function(data) {
           callback(data);
         });
       },
 
-      canUserChangeMagos: function(gameSlug, user, magos, callback) {
-        console.log('EMIT CAN USER CHANGE MAGOS');
-        console.log(user);
-        console.log(magos);
+      potionBusy: function(potion, busy, callback) {
+        socket.emit('potionBusy', potion, busy, function(data) {
+          callback(potion, busy);
+        });
+      },
 
+      canUserChangeMagos: function(gameSlug, user, magos, callback) {
         socket.emit('canUserChangeMagos', gameSlug, user, magos, function(data) {
           callback(data);
         });
       },
 
       saveGame: function(mode, callback) {
-        // get game
-        var game = App.gameController.get('content'); // JSON.stringify(this.get('content'));
-        //var gameObj = JSON.parse(gameJson);
-        // save it
+        var game = App.gameController.get('content');
         socket.emit('saveGame', mode, game, function(data) {
           callback(data);
         });
@@ -2254,15 +2251,8 @@ $(function() {
       });
     }
 
-
     function refreshSidebar($sortableArea) {
       $sortableArea.disableSelection();
-
-      // Em.run.next(function() {
-      //   $('.potion-icon').draggable({
-      //     helper: 'clone'
-      //   });
-      // });
     }
 
     function bindClickToRemove(itemType) {
@@ -2301,6 +2291,21 @@ $(function() {
           }, 250);
         });
       }
+
+      // set potion free
+      var busy = false;
+      var potion = App.usersController.getPath('content.potion');
+      App.dataSource.potionBusy(potion, busy, function(data) {
+        var potion = App.potionsController.find( function(potion) {
+          return potion.get('title') == data;
+        });
+
+        if(_.isObject(potion)) {
+          potion.set('busy', busy);
+          App.usersController.setPath('content.potion', potion.title);
+        }
+      });
+
     }
 
     function populateScenes() {
@@ -2614,6 +2619,15 @@ $(function() {
         'delay': {
           show: 500,
           hide: 100
+        }
+      });
+
+      // run on exit
+      $(window).bind('unload', function(event){
+        // make potion free to use
+        var potion = App.usersController.getPath('content.potion');
+        if(_.isString(potion)) {
+          App.dataSource.potionBusy(potion, false, function(data) { });
         }
       });
 

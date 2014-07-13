@@ -389,7 +389,7 @@
                   <tr>
                     <td>
                       {{#view App.PotionView contentBinding="this"}}
-                        <img {{bindAttr src="content.icon"}} {{bindAttr data-potion="content.title"}} {{bindAttr alt="title"}} {{bindAttr class="content.potionIcon:potion-icon content.active:active"}} />
+                        <img {{bindAttr src="content.icon"}} {{bindAttr data-potion="content.title"}} {{bindAttr alt="title"}} {{bindAttr class="content.potionIcon:potion-icon content.potionIcon:draggable-item content.active:active"}} />
                       {{/view}}
                     </td>
                     <td class="capitalize">
