@@ -218,6 +218,17 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
+    "\/js\/vendor\/flash_controller.js" : {
+      "ignoreWasSetByUser" : 1,
+      "ignore" : 1,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/js\/vendor\/flash_controller.js",
+      "outputStyle" : 1,
+      "syntaxCheckerStyle" : 0,
+      "outputAbbreviatedPath" : "\/js\/vendor\/flash_controller.min.js",
+      "fileType" : 64
+    },
     "\/less\/buttons.less" : {
       "ieCompatibility" : 1,
       "inputAbbreviatedPath" : "\/less\/buttons.less",
@@ -251,17 +262,6 @@
       "outputStyle" : 1,
       "fileType" : 1,
       "debugStyle" : 0
-    },
-    "\/js\/vendor\/flash_controller.js" : {
-      "ignoreWasSetByUser" : 1,
-      "ignore" : 1,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/js\/vendor\/flash_controller.js",
-      "outputStyle" : 1,
-      "syntaxCheckerStyle" : 0,
-      "outputAbbreviatedPath" : "\/js\/vendor\/flash_controller.min.js",
-      "fileType" : 64
     },
     "\/less\/accordion.less" : {
       "ieCompatibility" : 1,
@@ -453,22 +453,14 @@
       "outputAbbreviatedPath" : "\/js\/vendor\/rsvp.min.js",
       "fileType" : 64
     },
-    "\/less\/responsive-magos.less" : {
-      "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/responsive-magos.less",
-      "outputAbbreviatedPath" : "\/css\/responsive-magos.css",
-      "outputPathIsSetByUser" : 0,
-      "strictUnits" : 0,
-      "relativeURLS" : 0,
-      "ignore" : 1,
-      "strictImports" : 0,
+    "\/css\/light.css" : {
       "ignoreWasSetByUser" : 0,
-      "shouldRunBless" : 0,
-      "hidden" : 0,
-      "strictMath" : 0,
-      "outputStyle" : 1,
-      "fileType" : 1,
-      "debugStyle" : 0
+      "ignore" : 1,
+      "hidden" : 1,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/css\/light.css",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 16
     },
     "\/less\/close.less" : {
       "ieCompatibility" : 1,
@@ -486,6 +478,34 @@
       "outputStyle" : 1,
       "fileType" : 1,
       "debugStyle" : 0
+    },
+    "\/less\/responsive-magos.less" : {
+      "ieCompatibility" : 1,
+      "inputAbbreviatedPath" : "\/less\/responsive-magos.less",
+      "outputAbbreviatedPath" : "\/css\/responsive-magos.css",
+      "outputPathIsSetByUser" : 0,
+      "strictUnits" : 0,
+      "relativeURLS" : 0,
+      "ignore" : 1,
+      "strictImports" : 0,
+      "ignoreWasSetByUser" : 0,
+      "shouldRunBless" : 0,
+      "hidden" : 0,
+      "strictMath" : 0,
+      "outputStyle" : 1,
+      "fileType" : 1,
+      "debugStyle" : 0
+    },
+    "\/ico\/apple-touch-icon-114-precomposed.png" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/ico\/apple-touch-icon-114-precomposed.png",
+      "processed" : 1,
+      "outputAbbreviatedPath" : "\/ico\/apple-touch-icon-114-precomposed.png",
+      "initialSize" : 6043,
+      "fileType" : 8192
     },
     "\/less\/forms.less" : {
       "ieCompatibility" : 1,
@@ -514,26 +534,6 @@
       "outputAbbreviatedPath" : "\/img\/icons\/arcitectus.png",
       "initialSize" : 5975,
       "fileType" : 8192
-    },
-    "\/ico\/apple-touch-icon-114-precomposed.png" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/ico\/apple-touch-icon-114-precomposed.png",
-      "processed" : 1,
-      "outputAbbreviatedPath" : "\/ico\/apple-touch-icon-114-precomposed.png",
-      "initialSize" : 6043,
-      "fileType" : 8192
-    },
-    "\/css\/light.css" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 1,
-      "hidden" : 1,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/css\/light.css",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 16
     },
     "\/js\/crafty-components.min.js" : {
       "ignoreWasSetByUser" : 0,
@@ -891,17 +891,6 @@
       "outputAbbreviatedPath" : "\/js\/vendor\/crafty.min.js",
       "fileType" : 64
     },
-    "\/img\/icons\/gravitation-arrows.png" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/img\/icons\/gravitation-arrows.png",
-      "processed" : 1,
-      "outputAbbreviatedPath" : "\/img\/icons\/gravitation-arrows.png",
-      "initialSize" : 236,
-      "fileType" : 8192
-    },
     "\/css\/vendor\/images\/ui-bg_glass_65_ffffff_1x400.png" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -912,6 +901,15 @@
       "outputAbbreviatedPath" : "\/css\/vendor\/images\/ui-bg_glass_65_ffffff_1x400.png",
       "initialSize" : 105,
       "fileType" : 8192
+    },
+    "\/css\/dark.css" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 1,
+      "hidden" : 1,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/css\/dark.css",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 16
     },
     "\/less\/main.less" : {
       "ieCompatibility" : 1,
@@ -930,14 +928,16 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
-    "\/css\/dark.css" : {
+    "\/img\/icons\/gravitation-arrows.png" : {
       "ignoreWasSetByUser" : 0,
-      "ignore" : 1,
-      "hidden" : 1,
+      "ignore" : 0,
+      "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/css\/dark.css",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 16
+      "inputAbbreviatedPath" : "\/img\/icons\/gravitation-arrows.png",
+      "processed" : 1,
+      "outputAbbreviatedPath" : "\/img\/icons\/gravitation-arrows.png",
+      "initialSize" : 236,
+      "fileType" : 8192
     },
     "\/js\/vendor\/flash_message.js" : {
       "ignoreWasSetByUser" : 1,
@@ -1361,16 +1361,16 @@
       "initialSize" : 178,
       "fileType" : 8192
     },
-    "\/js\/vendor\/ember.min.js" : {
+    "\/img\/icons\/icon-rules.png" : {
       "ignoreWasSetByUser" : 0,
-      "ignore" : 1,
+      "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/js\/vendor\/ember.min.js",
-      "outputStyle" : 1,
-      "syntaxCheckerStyle" : 0,
-      "outputAbbreviatedPath" : "\/js\/vendor\/ember.min.min.js",
-      "fileType" : 64
+      "inputAbbreviatedPath" : "\/img\/icons\/icon-rules.png",
+      "processed" : 1,
+      "outputAbbreviatedPath" : "\/img\/icons\/icon-rules.png",
+      "initialSize" : 1898,
+      "fileType" : 8192
     },
     "\/img\/wiz-head.png" : {
       "ignoreWasSetByUser" : 0,
@@ -1383,16 +1383,14 @@
       "initialSize" : 17575,
       "fileType" : 8192
     },
-    "\/img\/icons\/icon-rules.png" : {
+    "\/css\/main.css" : {
       "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
+      "ignore" : 1,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/img\/icons\/icon-rules.png",
-      "processed" : 1,
-      "outputAbbreviatedPath" : "\/img\/icons\/icon-rules.png",
-      "initialSize" : 1898,
-      "fileType" : 8192
+      "inputAbbreviatedPath" : "\/css\/main.css",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 16
     },
     "\/less\/responsive-1200px-min.less" : {
       "ieCompatibility" : 1,
@@ -1411,14 +1409,16 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
-    "\/css\/main.css" : {
+    "\/js\/vendor\/ember.min.js" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 1,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/css\/main.css",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 16
+      "inputAbbreviatedPath" : "\/js\/vendor\/ember.min.js",
+      "outputStyle" : 1,
+      "syntaxCheckerStyle" : 0,
+      "outputAbbreviatedPath" : "\/js\/vendor\/ember.min.min.js",
+      "fileType" : 64
     },
     "\/js\/crafty-scenes.min.js" : {
       "ignoreWasSetByUser" : 0,
@@ -1442,16 +1442,22 @@
       "outputAbbreviatedPath" : "\/js\/vendor\/flash_queue.min.js",
       "fileType" : 64
     },
-    "\/img\/start-button.png" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
+    "\/less\/modals.less" : {
+      "ieCompatibility" : 1,
+      "inputAbbreviatedPath" : "\/less\/modals.less",
+      "outputAbbreviatedPath" : "\/css\/modals.css",
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/img\/start-button.png",
-      "processed" : 1,
-      "outputAbbreviatedPath" : "\/img\/start-button.png",
-      "initialSize" : 1672,
-      "fileType" : 8192
+      "strictUnits" : 0,
+      "relativeURLS" : 0,
+      "ignore" : 1,
+      "strictImports" : 0,
+      "ignoreWasSetByUser" : 0,
+      "shouldRunBless" : 0,
+      "hidden" : 0,
+      "strictMath" : 0,
+      "outputStyle" : 1,
+      "fileType" : 1,
+      "debugStyle" : 0
     },
     "\/less\/breadcrumbs.less" : {
       "ieCompatibility" : 1,
@@ -1470,22 +1476,16 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
-    "\/less\/modals.less" : {
-      "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/modals.less",
-      "outputAbbreviatedPath" : "\/css\/modals.css",
-      "outputPathIsSetByUser" : 0,
-      "strictUnits" : 0,
-      "relativeURLS" : 0,
-      "ignore" : 1,
-      "strictImports" : 0,
+    "\/img\/start-button.png" : {
       "ignoreWasSetByUser" : 0,
-      "shouldRunBless" : 0,
+      "ignore" : 0,
       "hidden" : 0,
-      "strictMath" : 0,
-      "outputStyle" : 1,
-      "fileType" : 1,
-      "debugStyle" : 0
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/img\/start-button.png",
+      "processed" : 1,
+      "outputAbbreviatedPath" : "\/img\/start-button.png",
+      "initialSize" : 1672,
+      "fileType" : 8192
     },
     "\/img\/icons\/icon-trash.png" : {
       "ignoreWasSetByUser" : 0,
