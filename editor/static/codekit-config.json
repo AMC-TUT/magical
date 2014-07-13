@@ -69,10 +69,10 @@
       "outputAbbreviatedPath" : "\/js\/vendor\/flash_view.min.js",
       "fileType" : 64
     },
-    "\/less\/pagination.less" : {
+    "\/less\/magos.less" : {
       "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/pagination.less",
-      "outputAbbreviatedPath" : "\/css\/pagination.css",
+      "inputAbbreviatedPath" : "\/less\/magos.less",
+      "outputAbbreviatedPath" : "\/css\/magos.css",
       "outputPathIsSetByUser" : 0,
       "strictUnits" : 0,
       "relativeURLS" : 0,
@@ -86,10 +86,10 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
-    "\/less\/magos.less" : {
+    "\/less\/pagination.less" : {
       "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/magos.less",
-      "outputAbbreviatedPath" : "\/css\/magos.css",
+      "inputAbbreviatedPath" : "\/less\/pagination.less",
+      "outputAbbreviatedPath" : "\/css\/pagination.css",
       "outputPathIsSetByUser" : 0,
       "strictUnits" : 0,
       "relativeURLS" : 0,
@@ -114,10 +114,10 @@
       "initialSize" : 2260,
       "fileType" : 8192
     },
-    "\/less\/component-animations.less" : {
+    "\/less\/type.less" : {
       "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/component-animations.less",
-      "outputAbbreviatedPath" : "\/css\/component-animations.css",
+      "inputAbbreviatedPath" : "\/less\/type.less",
+      "outputAbbreviatedPath" : "\/css\/type.css",
       "outputPathIsSetByUser" : 0,
       "strictUnits" : 0,
       "relativeURLS" : 0,
@@ -131,10 +131,10 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
-    "\/less\/type.less" : {
+    "\/less\/component-animations.less" : {
       "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/type.less",
-      "outputAbbreviatedPath" : "\/css\/type.css",
+      "inputAbbreviatedPath" : "\/less\/component-animations.less",
+      "outputAbbreviatedPath" : "\/css\/component-animations.css",
       "outputPathIsSetByUser" : 0,
       "strictUnits" : 0,
       "relativeURLS" : 0,
@@ -218,17 +218,6 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
-    "\/js\/vendor\/flash_controller.js" : {
-      "ignoreWasSetByUser" : 1,
-      "ignore" : 1,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/js\/vendor\/flash_controller.js",
-      "outputStyle" : 1,
-      "syntaxCheckerStyle" : 0,
-      "outputAbbreviatedPath" : "\/js\/vendor\/flash_controller.min.js",
-      "fileType" : 64
-    },
     "\/less\/buttons.less" : {
       "ieCompatibility" : 1,
       "inputAbbreviatedPath" : "\/less\/buttons.less",
@@ -262,6 +251,17 @@
       "outputStyle" : 1,
       "fileType" : 1,
       "debugStyle" : 0
+    },
+    "\/js\/vendor\/flash_controller.js" : {
+      "ignoreWasSetByUser" : 1,
+      "ignore" : 1,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/js\/vendor\/flash_controller.js",
+      "outputStyle" : 1,
+      "syntaxCheckerStyle" : 0,
+      "outputAbbreviatedPath" : "\/js\/vendor\/flash_controller.min.js",
+      "fileType" : 64
     },
     "\/less\/accordion.less" : {
       "ieCompatibility" : 1,
@@ -453,15 +453,6 @@
       "outputAbbreviatedPath" : "\/js\/vendor\/rsvp.min.js",
       "fileType" : 64
     },
-    "\/css\/light.css" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 1,
-      "hidden" : 1,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/css\/light.css",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 16
-    },
     "\/less\/responsive-magos.less" : {
       "ieCompatibility" : 1,
       "inputAbbreviatedPath" : "\/less\/responsive-magos.less",
@@ -479,16 +470,22 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
-    "\/ico\/apple-touch-icon-114-precomposed.png" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
+    "\/less\/close.less" : {
+      "ieCompatibility" : 1,
+      "inputAbbreviatedPath" : "\/less\/close.less",
+      "outputAbbreviatedPath" : "\/css\/close.css",
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/ico\/apple-touch-icon-114-precomposed.png",
-      "processed" : 1,
-      "outputAbbreviatedPath" : "\/ico\/apple-touch-icon-114-precomposed.png",
-      "initialSize" : 6043,
-      "fileType" : 8192
+      "strictUnits" : 0,
+      "relativeURLS" : 0,
+      "ignore" : 1,
+      "strictImports" : 0,
+      "ignoreWasSetByUser" : 0,
+      "shouldRunBless" : 0,
+      "hidden" : 0,
+      "strictMath" : 0,
+      "outputStyle" : 1,
+      "fileType" : 1,
+      "debugStyle" : 0
     },
     "\/less\/forms.less" : {
       "ieCompatibility" : 1,
@@ -518,22 +515,25 @@
       "initialSize" : 5975,
       "fileType" : 8192
     },
-    "\/less\/close.less" : {
-      "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/close.less",
-      "outputAbbreviatedPath" : "\/css\/close.css",
-      "outputPathIsSetByUser" : 0,
-      "strictUnits" : 0,
-      "relativeURLS" : 0,
-      "ignore" : 1,
-      "strictImports" : 0,
+    "\/ico\/apple-touch-icon-114-precomposed.png" : {
       "ignoreWasSetByUser" : 0,
-      "shouldRunBless" : 0,
+      "ignore" : 0,
       "hidden" : 0,
-      "strictMath" : 0,
-      "outputStyle" : 1,
-      "fileType" : 1,
-      "debugStyle" : 0
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/ico\/apple-touch-icon-114-precomposed.png",
+      "processed" : 1,
+      "outputAbbreviatedPath" : "\/ico\/apple-touch-icon-114-precomposed.png",
+      "initialSize" : 6043,
+      "fileType" : 8192
+    },
+    "\/css\/light.css" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 1,
+      "hidden" : 1,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/css\/light.css",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 16
     },
     "\/js\/crafty-components.min.js" : {
       "ignoreWasSetByUser" : 0,
@@ -880,16 +880,16 @@
       "initialSize" : 17868,
       "fileType" : 8192
     },
-    "\/css\/vendor\/images\/ui-bg_glass_65_ffffff_1x400.png" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
+    "\/js\/vendor\/crafty.js" : {
+      "ignoreWasSetByUser" : 1,
+      "ignore" : 1,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/css\/vendor\/images\/ui-bg_glass_65_ffffff_1x400.png",
-      "processed" : 1,
-      "outputAbbreviatedPath" : "\/css\/vendor\/images\/ui-bg_glass_65_ffffff_1x400.png",
-      "initialSize" : 105,
-      "fileType" : 8192
+      "inputAbbreviatedPath" : "\/js\/vendor\/crafty.js",
+      "outputStyle" : 1,
+      "syntaxCheckerStyle" : 0,
+      "outputAbbreviatedPath" : "\/js\/vendor\/crafty.min.js",
+      "fileType" : 64
     },
     "\/img\/icons\/gravitation-arrows.png" : {
       "ignoreWasSetByUser" : 0,
@@ -902,16 +902,16 @@
       "initialSize" : 236,
       "fileType" : 8192
     },
-    "\/js\/vendor\/crafty.js" : {
-      "ignoreWasSetByUser" : 1,
-      "ignore" : 1,
+    "\/css\/vendor\/images\/ui-bg_glass_65_ffffff_1x400.png" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/js\/vendor\/crafty.js",
-      "outputStyle" : 1,
-      "syntaxCheckerStyle" : 0,
-      "outputAbbreviatedPath" : "\/js\/vendor\/crafty.min.js",
-      "fileType" : 64
+      "inputAbbreviatedPath" : "\/css\/vendor\/images\/ui-bg_glass_65_ffffff_1x400.png",
+      "processed" : 1,
+      "outputAbbreviatedPath" : "\/css\/vendor\/images\/ui-bg_glass_65_ffffff_1x400.png",
+      "initialSize" : 105,
+      "fileType" : 8192
     },
     "\/less\/main.less" : {
       "ieCompatibility" : 1,

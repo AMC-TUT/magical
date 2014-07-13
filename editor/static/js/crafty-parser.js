@@ -54,8 +54,8 @@ var Parser = {
   socket: null,
   blockSize: null,
   settings: {
-    djangoUri: 'http://10.0.1.6/', // localhost
-    //djangoUri: 'http://magos.pori.tut.fi/',
+    //djangoUri: 'http://10.0.1.6/', // localhost
+    djangoUri: 'http://magos.pori.tut.fi/',
     score: 0,
     hitPoints: 100
   },
