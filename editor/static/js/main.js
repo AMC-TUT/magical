@@ -9,8 +9,8 @@ $(function() {
     App.VERSION = '0.0.1',
 
     App.settings = {
-      djangoUri : 'http://10.0.1.6/' // localhost
-      //djangoUri : 'http://magos.pori.tut.fi/'
+      //djangoUri : 'http://10.0.1.6/' // localhost
+      djangoUri : 'http://magos.pori.tut.fi/'
     };
 
     /**************************
