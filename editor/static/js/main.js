@@ -519,7 +519,9 @@ $(function() {
           var type = obj.getPath('properties.type');
 
           if(_.isUndefined(type)) {
-            console.log('ERROR: obj properties type not defined');
+            console.log('ERROR: obj (' + obj.slug + ') properties type not defined, fallback to block');
+            // fallback
+            type = 'block';
           } else {
             type = type.toLowerCase();
           }
@@ -551,6 +553,7 @@ $(function() {
         if(currentComponent) {
           var collisions = currentComponent.getPath('properties.collisions');
         }
+
         var selectedScoreTarget = this.get('selectedScoreTarget');
         console.log('1. ====>>> selectedScoreTarget: ' + selectedScoreTarget);
         //console.log('1. ====>>> selectedScoreTarget: ' + App.selectedScoreTargetController.get('option'));
@@ -1967,6 +1970,23 @@ $(function() {
 
     });
 
+    socket.on('potionBusy', function(potion, busy) {
+      console.log(potion)
+      console.log(busy)
+      if(_.isString(potion) && _.isBoolean(busy)) {
+        var potion = App.potionsController.find( function(p) {
+          return p.title == potion;
+        });
+        potion.set('busy', busy);
+      }
+      console.log('-------------------');
+      console.log(potion);
+      console.log(busy);
+      console.log('-------------------');
+      // if(_.isObject(shout)) {
+      //   App.shoutsController.get('content').pushObject(App.Shout.create(shout));
+      // }
+    });
 
     // receive shout
     socket.on('shout', function(shout) {
@@ -2019,43 +2039,9 @@ $(function() {
     });
 
     socket.on('disconnectUser', function(data) {
-      // remove user
       console.log('>>> SOCKET REQUEST: disconnectUser');
       App.usersController.removeItem('userName', data.userName);
-      // var userMagos = App.magosesController.get('content').findProperty('magos', userMagos);
-      // console.log(userMagos);
-      // if(_.isObject(userMagos)) {
-      //   userMagos.set('user', null);
-      // }
     });
-
-    // socket.on('userChangedMagos', function(data) {
-    //   console.log('>>> SOCKET REQUEST: userChangedMagos');
-    //   var user = data.user,
-    //       newMagos = data.newMagos,
-    //       oldMagos = data.oldMagos;
-    //   console.log(data);
-
-    //   // remove user from old magos
-    //   if(!_.isNull(oldMagos) && oldMagos != newMagos) {
-    //     var prevMagos = App.magosesController.get('content').findProperty('magos', oldMagos);
-    //     if(_.isObject(prevMagos)) {
-    //       console.log('Old magos removed from user');
-    //       prevMagos.set('user', null);
-    //     }
-    //   }
-
-    //   // set user to new magos
-    //   var tgtMagos = App.magosesController.get('content').findProperty('magos', newMagos);
-    //   console.log(tgtMagos.user);
-    //   if(!tgtMagos.user) {
-    //     tgtMagos.set('user', user);
-    //     console.log('new magos ' + newMagos + ' assigned to ' + user.userName);
-    //   } else {
-    //     console.log('magos already in use');
-    //   }
-
-    // });
 
     socket.on('refreshRevision', function(game) {
       if(_.isObject(game)) {
