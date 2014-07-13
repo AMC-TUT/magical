@@ -1074,16 +1074,18 @@ $(function() {
     });
 
     /**************************
-     * Potions Views
-     **************************/
-
-    /**************************
      * Potion
      **************************/
 
     App.Potion = Em.Object.extend({
       title: null,
       properties: null,
+      potionIcon: true,
+      busy: false,
+      active: function() {
+        var busy = this.get('busy');
+        return !busy;
+      }.property('busy'),
       icon: function() {
         var icon = this.get('title');
         return '/editor/static/img/icons/icon-' + icon + '.png';
@@ -1092,7 +1094,15 @@ $(function() {
 
     App.PotionView = Em.View.extend({
       content: null,
-      template: Em.Handlebars.compile('<img {{bindAttr src="content.icon"}} {{bindAttr data-potion="content.title"}} {{bindAttr alt="title"}} class="potion-icon inner-shadow draggable-item" />')
+      busyObserver: function() {
+        return Em.run.next(function() {
+          $('.potion-icon').draggable('destroy');
+          $('.potion-icon.active').draggable({
+            helper: 'clone'
+          });
+        });
+      }.observes('content.@each.busy')
+      // selectedObserver: function() { }.observes('content.selected')
     });
 
     /**************************
@@ -1110,7 +1120,6 @@ $(function() {
         return Em.isEqual(user, active);
       }.property('user', 'userActive'),
       magosObserver: function() {
-
         console.log('magos changes');
         // update magoses to other instances
         var user = this.get('user'),
@@ -2249,11 +2258,11 @@ $(function() {
     function refreshSidebar($sortableArea) {
       $sortableArea.disableSelection();
 
-      Em.run.next(function() {
-        $('.potion-icon').draggable({
-          helper: 'clone'
-        });
-      });
+      // Em.run.next(function() {
+      //   $('.potion-icon').draggable({
+      //     helper: 'clone'
+      //   });
+      // });
     }
 
     function bindClickToRemove(itemType) {
