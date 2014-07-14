@@ -87,11 +87,15 @@ body {
     }
 
     .ui-state-target, .ui-state-hover {
-      background-color: #1FBE00;
+      background-color: #1FBE00 !important;
     }
 
     .ui-state-active, .ui-selected {
       background: #EEA200;
+    }
+
+    .ui-state-active {
+      border: 2px solid #F90;
     }
 
   }
@@ -187,6 +191,10 @@ h3 {
     border-radius: 5px;
     padding: 0 10px 10px;
     margin-bottom: 10px;
+
+    .infobox-type {
+      text-transform: capitalize;
+    }
   }
 
   .infobox-collapse .row-fluid {
@@ -354,41 +362,41 @@ legend {
 
 }
 
-.magos-potions.principes {
-  background-color: @principes;
-  border: 1px solid darken(@principes, 10%);
+// .magos-potions.principes {
+//   background-color: @principes;
+//   border: 1px solid darken(@principes, 10%);
 
-  & .ui-state-active {
-    background-color: lighten(@principes, 20%);
-  }
-}
+//   & .ui-state-active {
+//     background-color: lighten(@principes, 20%);
+//   }
+// }
 
-.magos-potions.physicus {
-  background-color: @physicus;
-  border: 1px solid darken(@physicus, 10%);
+// .magos-potions.physicus {
+//   background-color: @physicus;
+//   border: 1px solid darken(@physicus, 10%);
 
-  & .ui-state-active {
-    background-color: lighten(@physicus, 10%);
-  }
-}
+//   & .ui-state-active {
+//     background-color: lighten(@physicus, 10%);
+//   }
+// }
 
-.magos-potions.artifex {
-  background-color: @artifex;
-  border: 1px solid darken(@artifex, 20%);
+// .magos-potions.artifex {
+//   background-color: @artifex;
+//   border: 1px solid darken(@artifex, 20%);
 
-  & .ui-state-active {
-    background-color: lighten(@artifex, 10%);
-  }
-}
+//   & .ui-state-active {
+//     background-color: lighten(@artifex, 10%);
+//   }
+// }
 
-.magos-potions.arcitectus {
-  background-color: @arcitectus;
-  border: 1px solid darken(@arcitectus, 2%);
+// .magos-potions.arcitectus {
+//   background-color: @arcitectus;
+//   border: 1px solid darken(@arcitectus, 2%);
 
-  & .ui-state-active {
-    background-color: lighten(@arcitectus, 12%);
-  }
-}
+//   & .ui-state-active {
+//     background-color: lighten(@arcitectus, 12%);
+//   }
+// }
 
 .form-vertical {
   margin-bottom:0;
@@ -573,6 +581,7 @@ input[type="number"] {
 
   #gravitation-controls {
     position: relative;
+    white-space: nowrap;
   }
 
   .slider-tooltip {
@@ -604,7 +613,7 @@ input[type="number"] {
 
   #gravitationStrength {
     display: inline-block;
-    width: 160px;
+    width: 78%;
   }
 
   .infobox .btn{
