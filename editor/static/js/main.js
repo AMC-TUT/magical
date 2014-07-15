@@ -838,7 +838,7 @@ $(function() {
             slug: safeSlug,
             properties: {
               sprite: 'empty1',
-              file: 'cc7ec50c-b014-4363-850e-35a8c5e30a6c', // uuid of empty icon
+              file: '226c8293-f7f2-416b-8138-ee9659c689dd', //'cc7ec50c-b014-4363-850e-35a8c5e30a6c', // uuid of empty icon
               ext: 'png',
               type: compType
             }
