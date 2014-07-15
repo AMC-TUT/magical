@@ -218,17 +218,6 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
-    "\/js\/vendor\/flash_controller.js" : {
-      "ignoreWasSetByUser" : 1,
-      "ignore" : 1,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/js\/vendor\/flash_controller.js",
-      "outputStyle" : 1,
-      "syntaxCheckerStyle" : 0,
-      "outputAbbreviatedPath" : "\/js\/vendor\/flash_controller.min.js",
-      "fileType" : 64
-    },
     "\/less\/buttons.less" : {
       "ieCompatibility" : 1,
       "inputAbbreviatedPath" : "\/less\/buttons.less",
@@ -262,6 +251,17 @@
       "outputStyle" : 1,
       "fileType" : 1,
       "debugStyle" : 0
+    },
+    "\/js\/vendor\/flash_controller.js" : {
+      "ignoreWasSetByUser" : 1,
+      "ignore" : 1,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/js\/vendor\/flash_controller.js",
+      "outputStyle" : 1,
+      "syntaxCheckerStyle" : 0,
+      "outputAbbreviatedPath" : "\/js\/vendor\/flash_controller.min.js",
+      "fileType" : 64
     },
     "\/less\/accordion.less" : {
       "ieCompatibility" : 1,
@@ -442,17 +442,6 @@
       "outputAbbreviatedPath" : "\/js\/crafty-scenes.min.js",
       "fileType" : 64
     },
-    "\/js\/vendor\/rsvp.js" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/js\/vendor\/rsvp.js",
-      "outputStyle" : 1,
-      "syntaxCheckerStyle" : 0,
-      "outputAbbreviatedPath" : "\/js\/vendor\/rsvp.min.js",
-      "fileType" : 64
-    },
     "\/css\/light.css" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 1,
@@ -462,10 +451,10 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 16
     },
-    "\/less\/close.less" : {
+    "\/less\/responsive-magos.less" : {
       "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/close.less",
-      "outputAbbreviatedPath" : "\/css\/close.css",
+      "inputAbbreviatedPath" : "\/less\/responsive-magos.less",
+      "outputAbbreviatedPath" : "\/css\/responsive-magos.css",
       "outputPathIsSetByUser" : 0,
       "strictUnits" : 0,
       "relativeURLS" : 0,
@@ -518,10 +507,10 @@
       "initialSize" : 5975,
       "fileType" : 8192
     },
-    "\/less\/responsive-magos.less" : {
+    "\/less\/close.less" : {
       "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/responsive-magos.less",
-      "outputAbbreviatedPath" : "\/css\/responsive-magos.css",
+      "inputAbbreviatedPath" : "\/less\/close.less",
+      "outputAbbreviatedPath" : "\/css\/close.css",
       "outputPathIsSetByUser" : 0,
       "strictUnits" : 0,
       "relativeURLS" : 0,
@@ -546,10 +535,10 @@
       "outputAbbreviatedPath" : "\/js\/crafty-components.min.min.js",
       "fileType" : 64
     },
-    "\/less\/mixins.less" : {
+    "\/less\/responsive-767px-max.less" : {
       "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/mixins.less",
-      "outputAbbreviatedPath" : "\/css\/mixins.css",
+      "inputAbbreviatedPath" : "\/less\/responsive-767px-max.less",
+      "outputAbbreviatedPath" : "\/css\/responsive-767px-max.css",
       "outputPathIsSetByUser" : 0,
       "strictUnits" : 0,
       "relativeURLS" : 0,
@@ -563,10 +552,10 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
-    "\/less\/responsive-767px-max.less" : {
+    "\/less\/mixins.less" : {
       "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/responsive-767px-max.less",
-      "outputAbbreviatedPath" : "\/css\/responsive-767px-max.css",
+      "inputAbbreviatedPath" : "\/less\/mixins.less",
+      "outputAbbreviatedPath" : "\/css\/mixins.css",
       "outputPathIsSetByUser" : 0,
       "strictUnits" : 0,
       "relativeURLS" : 0,
@@ -1324,15 +1313,6 @@
       "initialSize" : 4369,
       "fileType" : 8192
     },
-    "\/css\/responsive.css" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 1,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/css\/responsive.css",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 16
-    },
     "\/less\/labels-badges.less" : {
       "ieCompatibility" : 1,
       "inputAbbreviatedPath" : "\/less\/labels-badges.less",
@@ -1349,6 +1329,15 @@
       "outputStyle" : 1,
       "fileType" : 1,
       "debugStyle" : 0
+    },
+    "\/css\/responsive.css" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 1,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/css\/responsive.css",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 16
     },
     "\/css\/vendor\/images\/ui-bg_flat_75_ffffff_40x100.png" : {
       "ignoreWasSetByUser" : 0,
@@ -1383,17 +1372,6 @@
       "initialSize" : 17575,
       "fileType" : 8192
     },
-    "\/img\/icons\/icon-rules.png" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/img\/icons\/icon-rules.png",
-      "processed" : 1,
-      "outputAbbreviatedPath" : "\/img\/icons\/icon-rules.png",
-      "initialSize" : 1898,
-      "fileType" : 8192
-    },
     "\/css\/main.css" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 1,
@@ -1419,6 +1397,17 @@
       "outputStyle" : 1,
       "fileType" : 1,
       "debugStyle" : 0
+    },
+    "\/img\/icons\/icon-rules.png" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/img\/icons\/icon-rules.png",
+      "processed" : 1,
+      "outputAbbreviatedPath" : "\/img\/icons\/icon-rules.png",
+      "initialSize" : 1898,
+      "fileType" : 8192
     },
     "\/js\/crafty-scenes.min.js" : {
       "ignoreWasSetByUser" : 0,
@@ -1453,10 +1442,10 @@
       "initialSize" : 1672,
       "fileType" : 8192
     },
-    "\/less\/modals.less" : {
+    "\/less\/breadcrumbs.less" : {
       "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/modals.less",
-      "outputAbbreviatedPath" : "\/css\/modals.css",
+      "inputAbbreviatedPath" : "\/less\/breadcrumbs.less",
+      "outputAbbreviatedPath" : "\/css\/breadcrumbs.css",
       "outputPathIsSetByUser" : 0,
       "strictUnits" : 0,
       "relativeURLS" : 0,
@@ -1470,10 +1459,10 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
-    "\/less\/breadcrumbs.less" : {
+    "\/less\/modals.less" : {
       "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/breadcrumbs.less",
-      "outputAbbreviatedPath" : "\/css\/breadcrumbs.css",
+      "inputAbbreviatedPath" : "\/less\/modals.less",
+      "outputAbbreviatedPath" : "\/css\/modals.css",
       "outputPathIsSetByUser" : 0,
       "strictUnits" : 0,
       "relativeURLS" : 0,
