@@ -535,44 +535,12 @@ $(function() {
             return colEvents;
           }.property('content.@each'),
 
-          updateItem: function(propName, value, newItem) {
-            console.log(',,,,,,,,,,,');
-            console.log(value);
-            console.log(newItem);
-            console.log(',,,,,,,,,,,');
-
+          updateItem: function(propName, value, source) {
             var component = App.gameComponentsController.find( function(c) {
               return c.slug == value;
             });
 
-            var source = newItem;
-
-            if(source.ext) component.setPath('properties.ext', source.ext);
-            if(source.file) component.set('properties.file', source.file);
-            if(source.sprite) component.setPath('properties.sprite', source.sprite);
-            if(source.gravitation && source.gravitation.strength) component.setPath('properties.gravitation.strength', source.gravitation.strength);
-            if(source.type) {
-              component.setPath('properties.type', source.type);
-              console.log(source.type);
-              console.log(component.getPath('properties.type'));
-            }
-
-            // replace old gameComponent with a new one when properties change
-            //
-            // newItem.active = false;
-            // var obj = this.findProperty(propName, value),
-            //   src = newItem.properties.file,
-            //   slug = newItem.slug,
-            //   item = App.GameComponent.create(newItem),
-            //   idx = this.indexOf(obj);
-
-            // var emCollisions = [];
-            // _.each(newItem.properties.collisions, function(collision) {
-            //   var emCollision = App.Collision.create(collision);
-            //   emCollisions.push(emCollision);
-            // });
-            // item.getPath('properties.collisions').set(emCollisions);
-            // this.replaceContent(idx, 1, [item]);
+            component.set('properties', source.properties);
 
             // update instances in the canvas w/ the new graphic
             $('.canvas-pane').find("[data-slug='" + source.slug + "']").attr('src', component.get('icon'));
