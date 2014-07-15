@@ -43,7 +43,7 @@ app.use(function(err, req, res, next) {
 
 io.configure(function() {
   // connection types
-  io.set('transports', ['websocket', 'flashsocket', 'xhr-polling']);
+  io.set('transports', ['websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']);
 });
 
 
