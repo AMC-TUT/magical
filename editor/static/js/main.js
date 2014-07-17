@@ -9,8 +9,8 @@ $(function() {
     App.VERSION = '0.0.1',
 
     App.settings = {
-      //djangoUri: 'http://10.0.1.6/' // localhost
-      djangoUri : 'http://magos.pori.tut.fi/'
+      djangoUri: 'http://192.168.43.232/' // localhost
+      //djangoUri : 'http://magos.pori.tut.fi/'
     };
 
     /**************************
@@ -100,8 +100,8 @@ $(function() {
 
             var potions = [];
             _.each(data.magoses, function(obj) {
-              _.each(obj.potions, function(potion) {
-                if (/^(rules|score|controls|collision|gravitation|type|image)$/.test(potion.title)) {
+              _.each(obj.potions, function(potion) { // rules|
+                if (/^(score|controls|collision|gravitation|type|image)$/.test(potion.title)) {
                   var pot = App.Potion.create(potion);
 
                   potions.push(pot);
@@ -474,18 +474,13 @@ $(function() {
         }
 
         var selectedScoreTarget = this.get('selectedScoreTarget');
-        //console.log('1. ====>>> selectedScoreTarget: ' + selectedScoreTarget);
 
         _.each(collisions, function(obj) {
           var colTarget = App.gameComponentsController.get('content').filterProperty('slug', obj.target.slug);
           // we don't want duplicates
           if (_.indexOf(slugNames, obj.target.slug) == -1) {
             slugNames.push(obj.target.slug);
-            if (_.isNull(selectedScoreTarget) || _.isUndefined(selectedScoreTarget)) {
-              //controller.set('selectedScoreTarget', colTarget[0]);
-              //App.selectedScoreTargetController.set('option', colTarget[0]);
-              //console.log('2. ---->>> selectedScoreTarget: ' + controller.get('selectedScoreTarget'));
-            }
+
             targets.push(
               App.GameComponent.create(colTarget[0])
             );
@@ -495,11 +490,8 @@ $(function() {
       }.property('content.@each'),
 
       selectedScoreTargetObserver: function() {
-        // console.log('SELECTED SCORE TARGET CHANGED');
         var selectedScoreTarget = this.get('selectedScoreTarget');
-        //var selectedScoreTarget = App.selectedScoreTargetController.get('option');
         if (!_.isUndefined(selectedScoreTarget) && !_.isNull(selectedScoreTarget)) {
-          // console.log('=> CHANGE SCORE TARGET');
           this.refreshScoreCollisionEvents();
         }
       }.observes('selectedScoreTarget'),
@@ -513,7 +505,7 @@ $(function() {
         var colEvents = [],
           collisions = [],
           controller = this;
-        //this.set('selectedScoreTarget', null);
+
         var currentComponent = App.selectedComponentController.get('content');
         var selectedScoreTarget = this.get('selectedScoreTarget');
         var selectedScoreEvent = this.get('selectedScoreEvent');
@@ -521,7 +513,7 @@ $(function() {
         if (currentComponent)  {
           collisions = currentComponent.getPath('properties.collisions');
         }
-        //console.log(collisions);
+
         _.each(collisions, function(obj) {
           if (!_.isUndefined(selectedScoreTarget) && obj.target.slug == selectedScoreTarget.slug) {
             if (_.isNull(selectedScoreEvent) || _.isUndefined(selectedScoreEvent) || selectedScoreEvent.event != obj.event.title) {
@@ -539,7 +531,7 @@ $(function() {
         var component = App.gameComponentsController.find(function(c) {
           return c.slug == value;
         });
-        console.log(source);
+
         component.set('properties', source.properties);
 
         // update instances in the canvas w/ the new graphic
@@ -1643,8 +1635,8 @@ $(function() {
             potions = [];
 
           _.each(data, function(obj) {
-            _.each(obj.potions, function(potion) {
-              if (/^(rules|score|controls|collision|gravitation|type|image)$/.test(potion.title)) {
+            _.each(obj.potions, function(potion) { // rules|
+              if (/^(score|controls|collision|gravitation|type|image)$/.test(potion.title)) {
                 var pot = App.Potion.create({
                   'title': potion.title,
                   'properties': potion.properties

@@ -17,13 +17,13 @@ DEVELOPMENT_FEATURES = True
 
 
 ########## URL CONFIGURATION
-BASE_URL = 'http://localhost:8080/'
+BASE_URL = 'http://192.168.43.2320/'
 
-MAGOS_EDITOR_URL = 'http://localhost:8080/editor/edit/'
-MAGOS_PLAY_URL = 'http://localhost:8080/editor/play/'
+MAGOS_EDITOR_URL = 'http://192.168.43.232/editor/edit/'
+MAGOS_PLAY_URL = 'http://192.168.43.232/editor/play/'
 
-MAGOS_LITE_EDITOR_URL = 'http://localhost:8080/editor-lite/edit/'
-MAGOS_LITE_PLAY_URL = 'http://localhost:8080/editor-lite/play/'
+MAGOS_LITE_EDITOR_URL = 'http://192.168.43.232/editor-lite/edit/'
+MAGOS_LITE_PLAY_URL = 'http://192.168.43.232/editor-lite/play/'
 
 ########## END URL CONFIGURATION
 
