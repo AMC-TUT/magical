@@ -135,6 +135,8 @@ var Parser = {
         if (scene.name == 'intro') {
           Crafty.background("#F2F2F2");
 
+          Parser.settings.score = 0;
+
           var title = Crafty.e('2D, DOM, Text2, TitleText')
             .text(Parser.game.title)
             .setStyle(fontStyleTitle)
@@ -168,7 +170,6 @@ var Parser = {
               x: (Crafty.magos.width / 2) - 100,
               y: Crafty.magos.height - 80
             });
-
         } // intro
 
         if (scene.name == 'outro') {
@@ -211,7 +212,7 @@ var Parser = {
         }
 
         if (scene.name == 'game') {
-          Crafty.background("#F2F2F2");
+          Crafty.background("#111111");
 
           var tmpButton = Crafty.e('Button, Text2, StartButton, XButton')
             .text('x')
@@ -227,8 +228,6 @@ var Parser = {
               y: 2
             });
 
-          Parser.settings.score = 0;
-
           var scorePoints = Crafty.e('2D, DOM, Text2, ScorePoints, GameText')
             .text('Score: ' + Parser.settings.score)
             .setStyle(fontStyleGame)
@@ -239,51 +238,6 @@ var Parser = {
               y: 2
             });
         }
-
-        // scene comps
-        _.each(scene.sceneComponents, function(comp) {
-          // position
-          var x_ = comp.position.left;
-          var y_ = comp.position.top;
-
-          if (comp.slug === 'volume') {
-            Crafty.e(comp.slug).attr({
-              x: x_,
-              y: y_
-            });
-          }
-
-          if (comp.slug === 'highscore') {
-
-            var ent = Crafty.e(comp.slug).attr({
-              x: x_,
-              y: y_
-            });
-
-            if (_.isObject(comp.properties) && _.isObject(comp.properties.font)) {
-              var font = comp.properties.font;
-              // font color
-              if (!_.isUndefined(font.color)) {
-                ent.css('color', font.color);
-              }
-              // font family
-              if (!_.isUndefined(font.family)) {
-                ent.css('font-family', font.family);
-              }
-              // font size
-              if (!_.isUndefined(font.size)) {
-                ent.css('font-size', font.size);
-              }
-              // text background
-              if (!_.isUndefined(font.background)) {
-                ent.css('background-color', font.background);
-                ent.css('text-shadow', '1px 1px 1px ' + font.background);
-                ent.css('border', '1px solid ' + font.background);
-              }
-            } // /font
-          } // /highscore
-
-        });
 
         // create game component entities
         _.each(scene.gameComponents, function(comp) {
