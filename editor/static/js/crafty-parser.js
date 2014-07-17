@@ -68,10 +68,10 @@ var Parser = {
     // init Crafty
     var init = Parser.initGame(game.revision.canvas);
 
-    // load sprite assests
+    // create sprites
     var sprites = Parser.loadSprites(game.revision.gameComponents);
 
-    // create game components
+    // create components
     var gameComps = Parser.createGameComponents(game.revision.gameComponents);
 
     // create scenes
@@ -116,7 +116,7 @@ var Parser = {
 
       if (sprite.length) {
         var obj = {};
-        obj[sprite + '-sprite'] = [0, 0];
+        obj[component.slug + 'Sprite'] = [0, 0];
         Crafty.sprite(Parser.blockSize, path + sprite + spriteSize + ext, obj);
       }
     });
@@ -284,149 +284,140 @@ var Parser = {
   createGameComponents: function(components) {
     // if (/^(intro|outro)$/.test(scene.name)) { }
     _.each(components, function(component) {
-      //console.log(component);
-      var props = component.properties;
-      //console.log(props);
-      var sprite = _.isString(props.file) ? props.file : false;
+      var props = component.properties,
+        sprite = _.isString(props.file) ? props.file : false;
 
-      var gcComp = Crafty.c(component.slug, {
+      var comp = Crafty.c(component.slug, {
         init: function() {
-          var this_ = this;
-          // for all game comps
-          this_.addComponent('2D', 'Canvas', 'Image');
-          //this_.addComponent('2D', 'DOM', 'Image');
-          this_.slug = component.slug;
-          var cTitle = capitaliseFirstLetter(component.slug);
-          this_.addComponent(cTitle);
+          var _this = this;
 
-          // sprite
-          if (sprite && !sprite.match(/^empty/)) {
-            this_.addComponent(sprite + "-sprite");
-            // sprite impl. exists and works. uncomment previous
-            // line and comment out next line to use sprite impl.
-            //this_.image('/editor/' + sprite);
-          }
+          // basic comps
+          _this.addComponent('2D', 'Canvas', 'SpriteAnimation');
+          // helper
+          _this.slug = component.slug;
+          // component name
+          _this.addComponent(capitaliseFirstLetter(component.slug));
+          // sprite as comp image
+          _this.addComponent(_this.slug + "Sprite");
 
           // controls
           if (!_.isUndefined(props.controls)) {
             var speed = _.isNumber(props.controls.speed) ? props.controls.speed : 4;
 
-            // if controllapble then place on top in z-level
-            this_.attr({
-              z: 100
-            });
+            // set on top
+            _this.z = 100;
 
-            // twoway === platform
-            if (props.controls.method.toLowerCase() === 'twoway') {
-              var jumpHeight = !_.isNull(props.controls.jumpHeight) ? parseInt(props.controls.jumpHeight) : 12;
-              this_.addComponent('Twoway', 'Keyboard', 'Gravity', 'Collision');
-              this_.twoway(speed, jumpHeight);
-              this_.gravity('platform');
-            }
+            // // twoway === platform
+            // if (props.controls.method.toLowerCase() === 'twoway') {
+            //   var jumpHeight = !_.isNull(props.controls.jumpHeight) ? parseInt(props.controls.jumpHeight) : 12;
+            //   this_.addComponent('Twoway', 'Keyboard', 'Gravity', 'Collision');
+            //   this_.twoway(speed, jumpHeight);
+            //   this_.gravity('platform');
+            // }
 
-            // fourway
-            if (props.controls.method.toLowerCase() === 'fourway') {
-              this_.addComponent('Fourway', 'Keyboard');
-              this_.fourway(speed);
-            }
+            // // fourway
+            // if (props.controls.method.toLowerCase() === 'fourway') {
+            //   this_.addComponent('Fourway', 'Keyboard');
+            //   this_.fourway(speed);
+            // }
 
-            // multiway
-            if (props.controls.method.toLowerCase() === 'multiway') {
-              this_.addComponent('Multiway', 'Keyboard');
-              this_.multiway(speed, {
-                UP_ARROW: -90,
-                DOWN_ARROW: 90,
-                RIGHT_ARROW: 0,
-                LEFT_ARROW: 180
-              });
-            }
+            // // multiway
+            // if (props.controls.method.toLowerCase() === 'multiway') {
+            //   this_.addComponent('Multiway', 'Keyboard');
+            //   this_.multiway(speed, {
+            //     UP_ARROW: -90,
+            //     DOWN_ARROW: 90,
+            //     RIGHT_ARROW: 0,
+            //     LEFT_ARROW: 180
+            //   });
+            //}
 
           }
 
-          // component type
-          if (_.isString(props.type)) {
-            this_.addComponent(props.type);
+          // // component type
+          // if (_.isString(props.type)) {
+          //   this_.addComponent(props.type);
 
-            if (props.type.toLowerCase() === "platform") {
-              this_.addComponent('platform');
-            }
+          //   if (props.type.toLowerCase() === "platform") {
+          //     this_.addComponent('platform');
+          //   }
 
-            if (props.type.toLowerCase() === 'block') {
-              this_.addComponent('platform');
-              this_.addComponent('Solid');
-              this_.addComponent("Collision");
-            }
+          //   if (props.type.toLowerCase() === 'block') {
+          //     this_.addComponent('platform');
+          //     this_.addComponent('Solid');
+          //     this_.addComponent("Collision");
+          //   }
 
-            if (props.type.toLowerCase() === "pushable") {
-              this_.addComponent('platform');
-              this_.addComponent('Solid');
-              this_.addComponent("Collision");
-              this_.addComponent("Pushable");
-            }
+          //   if (props.type.toLowerCase() === "pushable") {
+          //     this_.addComponent('platform');
+          //     this_.addComponent('Solid');
+          //     this_.addComponent("Collision");
+          //     this_.addComponent("Pushable");
+          //   }
 
-            if (props.type.toLowerCase() === "player") {
-              this_.addComponent('Player');
-              this_.addComponent("Collision");
-              this_.direction = '';
-            }
-          }
+          //   if (props.type.toLowerCase() === "player") {
+          //     this_.addComponent('Player');
+          //     this_.addComponent("Collision");
+          //     this_.direction = '';
+          //   }
+         // }
 
           // gravity
-          if ((!_.isUndefined(props.gravitation) && !_.isNull(props.gravitation)) && !_.isNull(props.gravitation.strength)) {
-            //var sign = props.gravitation.direction ? 1 : -1; // gravity direction
-            this_.addComponent("Gravity");
-            this_.gravity("platform");
-            this_.gravityConst(parseFloat(props.gravitation.strength));
-          }
+          // if ((!_.isUndefined(props.gravitation) && !_.isNull(props.gravitation)) && !_.isNull(props.gravitation.strength)) {
+          //   //var sign = props.gravitation.direction ? 1 : -1; // gravity direction
+          //   this_.addComponent("Gravity");
+          //   this_.gravity("platform");
+          //   this_.gravityConst(parseFloat(props.gravitation.strength));
+          // }
 
           // bind events
-          this_.bind("EnterFrame", function(frame) {
+          // this_.bind("EnterFrame", function(frame) {
 
-            //destroy if it goes out of bounds
-            if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
+          //   //destroy if it goes out of bounds
+          //   if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
 
-              /*
-                this.destroy();
+          //     /*
+          //       this.destroy();
 
-                if(this.has('Player')) {
-                  setTimeout(function() {
-                    Crafty.scene('outro');
-                  }, 500);
-                }
-                */
-            }
+          //       if(this.has('Player')) {
+          //         setTimeout(function() {
+          //           Crafty.scene('outro');
+          //         }, 500);
+          //       }
+          //       */
+          //   }
 
-            // stop item on viewport bounds
-            if (this._x > Crafty.viewport.width - Parser.blockSize) {
-              this.x = Crafty.viewport.width - Parser.blockSize;
-            }
-            if (this._x < 0) {
-              this.x = 0;
-            }
-            if (this._y > Crafty.viewport.height - Parser.blockSize) {
-              this.y = Crafty.viewport.height - Parser.blockSize;
-            }
-            if (this._y < 0) {
-              this.y = 0;
-            }
-          });
+          //   // stop item on viewport bounds
+          //   if (this._x > Crafty.viewport.width - Parser.blockSize) {
+          //     this.x = Crafty.viewport.width - Parser.blockSize;
+          //   }
+          //   if (this._x < 0) {
+          //     this.x = 0;
+          //   }
+          //   if (this._y > Crafty.viewport.height - Parser.blockSize) {
+          //     this.y = Crafty.viewport.height - Parser.blockSize;
+          //   }
+          //   if (this._y < 0) {
+          //     this.y = 0;
+          //   }
+          // });
 
-          // TODO handle scores
-          if (_.isArray(props.collisions)) {
-            //console.log(props.collisions);
-            this_.addComponent('Collision');
-            this_.collisions = props.collisions;
-            _.each(props.collisions, function(collision) {
-              if (_.isObject(props.collisions[0])) {
-                var col_target = collision.target;
-                var col_event = collision.event;
-                this_.onHit(col_target.slug, function(ent) {
-                  var target = ent[0].obj;
-                  //console.log(col_target.slug + ' HIT ' + this_.slug);
-                  handleCollision(this_, target);
-                });
-              }
-            });
+          // // TODO handle scores
+          // if (_.isArray(props.collisions)) {
+          //   //console.log(props.collisions);
+          //   this_.addComponent('Collision');
+          //   this_.collisions = props.collisions;
+          //   _.each(props.collisions, function(collision) {
+          //     if (_.isObject(props.collisions[0])) {
+          //       var col_target = collision.target;
+          //       var col_event = collision.event;
+          //       this_.onHit(col_target.slug, function(ent) {
+          //         var target = ent[0].obj;
+          //         //console.log(col_target.slug + ' HIT ' + this_.slug);
+          //         handleCollision(this_, target);
+          //       });
+          //     }
+          //   });
 
             /*
             this_.onHit("Player", function(ent) {
@@ -462,60 +453,60 @@ var Parser = {
             });
 */
 
-          }
+      //    }
 
-          this_.bind('Moved', function(from) {
+          // this_.bind('Moved', function(from) {
 
-            if (this.has('Collision')) {
+          //   if (this.has('Collision')) {
 
-              var hitPushable = this.hit('Pushable');
+          //     var hitPushable = this.hit('Pushable');
 
-              // hit pushable
-              if (hitPushable) {
-                // platformer
-                var dir = this._x > from.x ? 'left' : 'right';
-                ////console.log(dir);
-                var leftX = this._x;
-                var widthThis = this._w;
-                var rightX = leftX + widthThis;
+          //     // hit pushable
+          //     if (hitPushable) {
+          //       // platformer
+          //       var dir = this._x > from.x ? 'left' : 'right';
+          //       ////console.log(dir);
+          //       var leftX = this._x;
+          //       var widthThis = this._w;
+          //       var rightX = leftX + widthThis;
 
-                _.each(hitPushable, function(pushable) {
-                  var tgt = pushable.obj;
-                  if (dir == 'left') {
-                    // push from left to right
-                    var posObj = rightX - tgt._x;
-                    tgt.attr({
-                      x: tgt._x + posObj
-                    });
-                  } else {
-                    // push from right to left
-                    var posObj = (tgt._x + tgt._w) - leftX;
-                    tgt.attr({
-                      x: tgt._x - posObj
-                    });
-                  }
-                  // TODO: push top/down?
-                });
+          //       _.each(hitPushable, function(pushable) {
+          //         var tgt = pushable.obj;
+          //         if (dir == 'left') {
+          //           // push from left to right
+          //           var posObj = rightX - tgt._x;
+          //           tgt.attr({
+          //             x: tgt._x + posObj
+          //           });
+          //         } else {
+          //           // push from right to left
+          //           var posObj = (tgt._x + tgt._w) - leftX;
+          //           tgt.attr({
+          //             x: tgt._x - posObj
+          //           });
+          //         }
+          //         // TODO: push top/down?
+          //       });
 
-              }
+          //     }
 
-              // hit solid
-              if (this.hit('Solid')) {
-                //console.log("HIT SOLID");
-                /*
-                  var target = this.hit('Solid')[0].obj;
-                  //console.log(target);
-                  */
-                this.attr({
-                  x: from.x,
-                  y: from.y
-                });
-              }
+          //     // hit solid
+          //     if (this.hit('Solid')) {
+          //       //console.log("HIT SOLID");
+          //       /*
+          //         var target = this.hit('Solid')[0].obj;
+          //         //console.log(target);
+          //         */
+          //       this.attr({
+          //         x: from.x,
+          //         y: from.y
+          //       });
+          //     }
 
 
-            } // if collision
+          //   } // if collision
 
-          });
+          // });
 
         } // init
       });
