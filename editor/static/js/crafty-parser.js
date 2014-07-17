@@ -48,11 +48,7 @@ var Parser = {
 
     // load sprite assests
     var sprites = Parser.loadSprites(game.revision.gameComponents);
-    //console.log('sprites:' + sprites);
-
-    // load audio assets
-    var audios = Parser.loadAudios(game.revision.audios);
-    //console.log('audios:' + audios);
+    console.log('sprites:' + sprites);
 
     // create game components
     var gameComps = Parser.createGameComponents(game.revision.gameComponents);
@@ -70,21 +66,15 @@ var Parser = {
 
   },
   initGame: function(canvas) {
-    // {"blockSize":48,"rows":6,"columns":14};
     var height = canvas.blockSize * canvas.rows;
     var width = canvas.blockSize * canvas.columns;
     // set global var
     Parser.blockSize = canvas.blockSize;
-    // Crafty.init(width, height);
-    // obj for some magos vars
 
     Crafty.init(width, height).canvas.init();
-
     Crafty.background("#FFF");
 
     Crafty.magos = {};
-    Crafty.magos.audio = {};
-    Crafty.magos.audio.mute = false;
     Crafty.magos.width = width;
     Crafty.magos.height = height;
 
@@ -99,22 +89,6 @@ var Parser = {
       }
     };
 
-    return true;
-  },
-  loadAudios: function(audios) {
-    // images path
-    var path = '/static/game/audios';
-
-    _.each(audios, function(audio) {
-      var obj = {},
-        array = [
-          path + '/mp3/' + slug + '.mp3', path + '/ogg/' + slug + '.ogg', path + '/wav/' + slug + '.wav'
-        ];
-
-      obj[slug] = array;
-
-      Crafty.audio.add(obj);
-    }); // each
     return true;
   },
   loadSprites: function(components) {
