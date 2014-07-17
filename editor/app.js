@@ -422,12 +422,7 @@ var editor = io.sockets.on('connection', function(socket) {
         });
 
       } else {
-        //console.log('GAME DATA:');
-        //console.log(data);
         game = JSON.parse(data);
-        //console.log(game);
-
-        //console.log('role: ' + role);
 
         if(role === 'teacher') {
           // join or make a room with slug name
@@ -435,11 +430,7 @@ var editor = io.sockets.on('connection', function(socket) {
           roomName = slug;
 
         } else if(role === 'student') {
-
-          var user = _.find(game.authors, function(author) { return author.userName === userName });
-
-          //console.log('user:');
-          //console.log(user);
+          var user = _.find(game.authors, function(author) { return author.userName === userName; });
 
           // join or make a room with slug name
           socket.join(slug);
@@ -451,16 +442,11 @@ var editor = io.sockets.on('connection', function(socket) {
     });
   });
 
-
   socket.on('joinRoom', function(gameData, fn) {
     //console.log('-- JOIN ROOM');
     if(!_.isNull(gameData)){
       //var gameData = JSON.parse(data);
       if(_.isObject(gameData)) {
-        //console.log('>>>>');
-        //console.log(gameData);
-        //console.log('<<<<');
-
         // is user an author of this game?
         // TODO: what to do with teachers?
         var isTeacher = (globalSessionObj.role == 'teacher') ? true : false;

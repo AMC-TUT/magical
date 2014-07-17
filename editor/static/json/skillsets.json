@@ -33,18 +33,6 @@
       }, {
         "event": "destroyTarget",
         "title": "Destroy target"
-      }, {
-        "event": "reduceHitpoints",
-        "title": "Reduce hitpoints"
-      }, {
-        "event": "addHitpoints",
-        "title": "Add hitpoints"
-      }, {
-        "event": "startDialog",
-        "title": "Start dialog"
-      }, {
-        "event": "createElement",
-        "title": "Create element"
       }],
       "score": 10,
       "target": null
@@ -78,13 +66,6 @@
     "title": "image",
     "properties": {
       "sprite": null
-    }
-  }, {
-    "title": "audio",
-    "properties": {
-      "events": [],
-      "audio": null,
-      "plays": 0
     }
   }]
 }]

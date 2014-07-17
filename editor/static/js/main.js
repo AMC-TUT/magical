@@ -830,7 +830,7 @@ $(function() {
             slug: safeSlug,
             properties: {
               sprite: 'empty1',
-              file: '226c8293-f7f2-416b-8138-ee9659c689dd', //'cc7ec50c-b014-4363-850e-35a8c5e30a6c', // uuid of empty icon
+              file: '3a798b81-8973-48ff-b2c3-a198edaf1284c', // uuid of empty icon
               ext: 'png',
               type: compType
             }
@@ -1828,7 +1828,7 @@ $(function() {
           } else {
             // game by that slug was not found
             console.log('Game not found.');
-            window.location.replace("http://magos.pori.tut.fi");
+            window.location.replace("http://192.168.43.232/");
           }
         });
       }
