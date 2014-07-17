@@ -28,6 +28,30 @@ function handleCollision(collider, collides, score) {
   });
 }
 
+var fontStyleTitle = {
+  font: 'Architects Daughter',
+  size: 30,
+  color: '#111111'
+};
+
+var fontStyleGame = {
+  font: 'Architects Daughter',
+  size: 20,
+  color: '#3276b1'
+};
+
+var fontStyleOutro = {
+  font: 'Architects Daughter',
+  size: 30,
+  color: '#3276b1'
+};
+
+var fontStyleDescription = {
+  font: 'Open Sans',
+  size: 14,
+  color: '#111111'
+};
+
 var Parser = {
   game: null,
   socket: null,
@@ -39,20 +63,16 @@ var Parser = {
   },
 
   parseGame: function(game) {
-    // set global vars
     Parser.game = game;
 
     // init Crafty
     var init = Parser.initGame(game.revision.canvas);
-    //console.log('init: ' + init);
 
     // load sprite assests
     var sprites = Parser.loadSprites(game.revision.gameComponents);
-    console.log('sprites:' + sprites);
 
     // create game components
     var gameComps = Parser.createGameComponents(game.revision.gameComponents);
-    //console.log('gameComps:' + gameComps);
 
     // create scene components
     var sceneComps = Parser.createSceneComponents(game.revision.scenes);
@@ -109,59 +129,11 @@ var Parser = {
     return true;
   },
   createScenes: function(scenes) {
-
     _.each(scenes, function(scene) {
-
-      // background
-      var backgroundComp = _.find(scene.sceneComponents, function(comp) {
-        return comp.slug === 'background';
-      });
-
-      var backgroundImage = null,
-        path = '/editor/user-media/images/',
-        ext = '.png';
-
-      if (_.isObject(backgroundComp) && _.isObject(backgroundComp.properties) && _.isString(backgroundComp.properties.sprite)) {
-        backgroundImage = path + backgroundComp.properties.sprite + ext;
-      }
-
-      var fontStyleTitle = {
-        font: 'Architects Daughter',
-        size: 30,
-        color: '#111111'
-      };
-
-      var fontStyleGame = {
-        font: 'Architects Daughter',
-        size: 20,
-        color: '#3276b1'
-      };
-
-      var fontStyleOutro = {
-        font: 'Architects Daughter',
-        size: 30,
-        color: '#3276b1'
-      };
-
-      var fontStyleDescription = {
-        font: 'Open Sans',
-        size: 14,
-        color: '#111111'
-      };
-
-      // create Crafty scene
       Crafty.scene(scene.name, function() {
-        // background
-        if (!_.isNull(backgroundImage)) {
-          Crafty.background("url(" + backgroundImage + ")");
-        }
-
-        if (/^(intro|outro)$/.test(scene.name)) {
-          Crafty.background("#F2F2F2");
-          // Crafty.background("url(http://magos.pori.tut.fi/static/img/noise-pattern.png)");
-        }
-
+        // if (/^(intro|outro)$/.test(scene.name)) { }
         if (scene.name == 'intro') {
+          Crafty.background("#F2F2F2");
 
           var title = Crafty.e('2D, DOM, Text2, TitleText')
             .text(Parser.game.title)
@@ -200,6 +172,7 @@ var Parser = {
         } // intro
 
         if (scene.name == 'outro') {
+          Crafty.background("#F2F2F2");
 
           var gameOver = Crafty.e('2D, DOM, Text2, TitleText')
             .text('Game Over')
@@ -238,6 +211,7 @@ var Parser = {
         }
 
         if (scene.name == 'game') {
+          Crafty.background("#F2F2F2");
 
           var tmpButton = Crafty.e('Button, Text2, StartButton, XButton')
             .text('x')
