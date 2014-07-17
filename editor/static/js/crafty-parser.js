@@ -5,16 +5,6 @@ function capitaliseFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function changeHitpoints(amount) {
-  Parser.settings.hitPoints += amount;
-  Crafty("hitPoints").each(function() {
-    this.text(Parser.settings.hitPoints + " hits");
-  });
-  if (Parser.settings.hitPoints === 0) {
-    Crafty.scene('outro');
-  }
-}
-
 function changeScore(amount) {
   Parser.settings.score += amount;
   Crafty("score").each(function() {
@@ -31,17 +21,6 @@ function handleCollision(collider, collides, score) {
         collider.destroy();
       } else if (eventName === "destroyTarget") {
         collides.destroy();
-        //Crafty.scene('outro'); // TODO reduce hitpoints, don't die immediately
-      } else if (eventName === "startDialog") {
-        //console.log('Collision: Init dialog');
-      } else if (eventName === "createElement") {
-        //console.log('Collision: Create element');
-      } else if (eventName === "addHitpoints") {
-        //collider.destroy();
-        changeHitpoints(10);
-      } else if (eventName === "reduceHitpoints") {
-        //collider.destroy();
-        changeHitpoints(-10);
       }
       // handle score
       if (col_score) changeScore(col_score);
@@ -56,8 +35,7 @@ var Parser = {
   settings: {
     djangoUri: 'http://192.168.43.232/', // localhost
     //djangoUri: 'http://magos.pori.tut.fi/',
-    score: 0,
-    hitPoints: 100
+    score: 0
   },
 
   parseGame: function(game) {
@@ -307,18 +285,7 @@ var Parser = {
               y: 2
             });
 
-          Parser.settings.hitPoints = 100;
           Parser.settings.score = 0;
-
-          var hitPoints = Crafty.e('2D, DOM, Text2, HitPoints, GameText')
-            .text('Hit Points: ' + Parser.settings.hitPoints)
-            .setStyle(fontStyleGame)
-            .attr({
-              h: 20,
-              w: 150,
-              x: 155,
-              y: 2
-            });
 
           var scorePoints = Crafty.e('2D, DOM, Text2, ScorePoints, GameText')
             .text('Score: ' + Parser.settings.score)
