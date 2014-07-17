@@ -57,7 +57,7 @@ var Parser = {
   socket: null,
   blockSize: null,
   settings: {
-    djangoUri: 'http://192.168.43.232/', // localhost
+    djangoUri: 'http://192.168.43.232/',
     //djangoUri: 'http://magos.pori.tut.fi/',
     score: 0
   },
@@ -76,15 +76,14 @@ var Parser = {
 
     // create scenes
     var scenes = Parser.createScenes(game.revision.scenes);
-    //console.log('scenes:' + scenes);
 
+    // show first scene
     Crafty.scene("loading");
-
   },
   initGame: function(canvas) {
     var height = canvas.blockSize * canvas.rows;
     var width = canvas.blockSize * canvas.columns;
-    // set global var
+
     Parser.blockSize = canvas.blockSize;
 
     Crafty.init(width, height).canvas.init();
@@ -127,7 +126,6 @@ var Parser = {
   createScenes: function(scenes) {
     _.each(scenes, function(scene) {
       Crafty.scene(scene.name, function() {
-        // if (/^(intro|outro)$/.test(scene.name)) { }
         if (scene.name == 'intro') {
           Crafty.background("#F2F2F2");
 
@@ -247,7 +245,7 @@ var Parser = {
       });
     });
 
-    // static magos loader scene
+    // run loading scene to show user something while loading assets
     Crafty.scene("loading", function() {
       Crafty.background("#F2F2F2");
 
@@ -284,6 +282,7 @@ var Parser = {
     return true;
   },
   createGameComponents: function(components) {
+    // if (/^(intro|outro)$/.test(scene.name)) { }
     _.each(components, function(component) {
       //console.log(component);
       var props = component.properties;
