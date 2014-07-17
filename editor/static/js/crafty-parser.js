@@ -529,13 +529,9 @@ var Parser = {
     return true;
   },
   getGame: function(slug, webSocket) {
-    //console.log('GET GAME:' + slug);
     socket = webSocket;
     socket.emit('joinGame', function(data) {
-      //console.log('websocket getGame (game)');
-      //console.log(data);
       Parser.parseGame(data);
     });
-
   }
 };
