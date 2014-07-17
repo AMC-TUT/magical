@@ -241,17 +241,12 @@ var Parser = {
 
         // create game component entities
         _.each(scene.gameComponents, function(comp) {
-          // position
-          var x_ = comp.position.column * Parser.blockSize;
-          var y_ = comp.position.row * Parser.blockSize;
-
           Crafty.e(comp.slug).attr({
-            x: x_,
-            y: y_,
+            x: comp.position.column * Parser.blockSize,
+            y: comp.position.row * Parser.blockSize,
             w: Parser.blockSize,
             h: Parser.blockSize
           });
-
         });
       });
     });
