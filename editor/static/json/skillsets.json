@@ -46,19 +46,22 @@
     "title": "type",
     "properties": {
       "types": [{
-        "title": "block",
+        "title": "Block",
         "properties": []
       }, {
-        "title": "collectible",
+        "title": "Collectible",
         "properties": []
       }, {
-        "title": "pushable",
+        "title": "Pushable",
         "properties": []
       }, {
-        "title": "decoration",
+        "title": "Decoration",
         "properties": []
       }, {
-        "title": "player",
+        "title": "Player",
+        "properties": []
+      }, {
+        "title": "Goal",
         "properties": []
       }]
     }

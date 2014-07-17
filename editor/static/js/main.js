@@ -443,7 +443,7 @@ $(function() {
           var type = obj.getPath('properties.type');
           type = type.toLowerCase();
 
-          if (!_.isUndefined(type) && /^(collectible|player|pushable|decoration|block)$/.test(type)) {
+          if (!_.isUndefined(type) && /^(collectible|player|pushable|goal|decoration|block)$/.test(type)) {
             if (obj.slug.toLowerCase() != currentSlug) {
               targets.push(
                 App.GameComponent.create(obj)
@@ -1373,6 +1373,8 @@ $(function() {
           'name': 'Pushable'
         }), App.ComponentType.create({
           'name': 'Decoration'
+        }), App.ComponentType.create({
+          'name': 'Goal'
         })
       ]
     });
