@@ -92,26 +92,20 @@ var Parser = {
     return true;
   },
   loadSprites: function(components) {
-    // images path
-    //var path = '/editor/',
     var path = Parser.settings.djangoUri + 'game/image/',
-      //ext = '.png',
       spriteSize = '_' + Parser.blockSize + 'x' + Parser.blockSize;
 
     _.each(components, function(component) {
-      // vars
       var ext = '.' + component.properties.ext;
-      //var sprite = (!_.isUndefined(component.properties.sprite) && _.isString(component.properties.sprite)) ? component.properties.sprite : '';
       var sprite = (!_.isUndefined(component.properties.file) && _.isString(component.properties.file)) ? component.properties.file : '';
-      //console.log(sprite);
-      // if exists
+
       if (sprite.length) {
-        ////console.log(Parser.settings.djangoUri + 'game/image/' + sprite + '/' + Parser.blockSize + 'x' + Parser.blockSize);
         var obj = {};
         obj[sprite + '-sprite'] = [0, 0];
         Crafty.sprite(Parser.blockSize, path + sprite + spriteSize + ext, obj);
       }
-    }); // each
+    });
+
     return true;
   },
   createScenes: function(scenes) {
