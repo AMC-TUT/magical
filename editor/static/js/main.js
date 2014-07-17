@@ -227,16 +227,13 @@ $(function() {
       gameScenes: [],
       firstRun: 1,
       init: function() {
+        var _this = this;
+
         Em.run.next(function() {
           createGameTableCanvases();
 
           setTimeout(function() {
-            var scenes = App.revisionController.getPath('content.scenes');
-            var scene = _.find(scenes, function(scene) {
-              if (scene.get('name') == 'game') return scene;
-            });
-
-            App.scenesController.set('selected', scene);
+            _this.set('selected', _this.get('content').findProperty('name', 'game'));
           }, 600);
 
         });
