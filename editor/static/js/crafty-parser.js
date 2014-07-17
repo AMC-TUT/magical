@@ -528,28 +528,6 @@ var Parser = {
 
     return true;
   },
-  getHighscores: function() {
-    var slug = Parser.game.slug;
-
-    socket.emit('getHighscore', slug, function(data) {
-
-      if (_.isObject(data)) {
-
-        var el = '<h2>TOP5</h2>';
-        el += '<ol>';
-
-        _.each(data.results, function(result) {
-          el += '<li>' + result.score + ' ' + result.firstName + ' ' + result.lastName + '</li>';
-        });
-
-        el += '</ol>';
-
-        $('#cr-stage').find('.highscore').empty().append(el);
-
-      }
-
-    });
-  },
   getGame: function(slug, webSocket) {
     //console.log('GET GAME:' + slug);
     socket = webSocket;
@@ -559,18 +537,5 @@ var Parser = {
       Parser.parseGame(data);
     });
 
-  },
-  getAnimation: function(events, key) {
-    var event = _.find(events, function(event) {
-      return event.key === key;
-    });
-    return event.animation;
-  },
-  setAnimation: function(self, animation) {
-    self.addComponent(animation.id);
-    self.animate(id, 0, 0, 0); //setup animation
-    self.animate(id, 15, 1); // start animation
-    return self;
   }
-
 };
