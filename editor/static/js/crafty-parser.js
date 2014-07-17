@@ -74,10 +74,6 @@ var Parser = {
     // create game components
     var gameComps = Parser.createGameComponents(game.revision.gameComponents);
 
-    // create scene components
-    var sceneComps = Parser.createSceneComponents(game.revision.scenes);
-    //console.log('sceneComps:' + sceneComps);
-
     // create scenes
     var scenes = Parser.createScenes(game.revision.scenes);
     //console.log('scenes:' + scenes);
@@ -208,7 +204,7 @@ var Parser = {
               h: 50,
               x: (Crafty.magos.width / 2) - 100,
               y: Crafty.magos.height - 80
-          });
+            });
         }
 
         if (scene.name == 'game') {
@@ -527,49 +523,6 @@ var Parser = {
           });
 
         } // init
-      });
-    });
-
-    return true;
-  },
-
-
-  createSceneComponents: function(scenes) {
-
-    var path = '/static/img/icons/',
-      ext = '.png';
-
-    _.each(scenes, function(scene) {
-      _.each(scene.sceneComponents, function(comp) {
-
-        // volume button
-        if (comp.slug === 'volume') {
-          Crafty.c(comp.slug, {
-            init: function() {
-              var this_ = this;
-              var off = _.isUndefined(Crafty.magos.volume) || Crafty.magos.volume ? '' : '-off';
-
-              this_.addComponent('2D', 'DOM', 'Image');
-              this_.image(path + 'icon-' + comp.slug + off + ext);
-              this_.addComponent('volume-button'); // class for click event and styling
-            }
-          });
-        }
-
-        // highscore
-        if (comp.slug === 'highscore') {
-          Crafty.c(comp.slug, {
-            init: function() {
-              var this_ = this;
-
-              this_.addComponent('2D', 'DOM');
-              // trigger event to do more and append list in right place
-              //$(document).trigger('getHighscores');
-              Parser.getHighscores();
-            }
-          });
-        }
-
       });
     });
 
