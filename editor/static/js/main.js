@@ -993,9 +993,7 @@ $(function() {
           $('.potion-icon').draggable('destroy');
           $('.potion-icon.active').draggable({
             helper: 'clone',
-            start: function(event, ui) {
-
-            }
+            cursorAt: { left: 10, top: 5 }
           });
         });
       }.observes('content.@each.busy')

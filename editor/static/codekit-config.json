@@ -159,17 +159,6 @@
       "outputAbbreviatedPath" : "\/js\/vendor\/ember.min.js",
       "fileType" : 64
     },
-    "\/img\/icons\/icon-title.png" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/img\/icons\/icon-title.png",
-      "processed" : 1,
-      "outputAbbreviatedPath" : "\/img\/icons\/icon-title.png",
-      "initialSize" : 1968,
-      "fileType" : 8192
-    },
     "\/css\/vendor\/images\/ui-bg_glass_95_fef1ec_1x400.png" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -179,6 +168,17 @@
       "processed" : 1,
       "outputAbbreviatedPath" : "\/css\/vendor\/images\/ui-bg_glass_95_fef1ec_1x400.png",
       "initialSize" : 119,
+      "fileType" : 8192
+    },
+    "\/img\/icons\/icon-title.png" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/img\/icons\/icon-title.png",
+      "processed" : 1,
+      "outputAbbreviatedPath" : "\/img\/icons\/icon-title.png",
+      "initialSize" : 1968,
       "fileType" : 8192
     },
     "\/img\/icons\/icon-highscore.png" : {
@@ -198,7 +198,7 @@
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/css\/game.css",
-      "outputAbbreviatedPath" : "No Output Path",
+      "outputAbbreviatedPath" : "\/No Output Path",
       "fileType" : 16
     },
     "\/less\/navbar.less" : {
@@ -403,22 +403,16 @@
       "initialSize" : 1269,
       "fileType" : 8192
     },
-    "\/less\/layouts.less" : {
-      "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/layouts.less",
-      "outputAbbreviatedPath" : "\/css\/layouts.css",
-      "outputPathIsSetByUser" : 0,
-      "strictUnits" : 0,
-      "relativeURLS" : 0,
-      "ignore" : 1,
-      "strictImports" : 0,
+    "\/img\/icons\/arcitectus.png" : {
       "ignoreWasSetByUser" : 0,
-      "shouldRunBless" : 0,
+      "ignore" : 0,
       "hidden" : 0,
-      "strictMath" : 0,
-      "outputStyle" : 1,
-      "fileType" : 1,
-      "debugStyle" : 0
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/img\/icons\/arcitectus.png",
+      "processed" : 1,
+      "outputAbbreviatedPath" : "\/img\/icons\/arcitectus.png",
+      "initialSize" : 5975,
+      "fileType" : 8192
     },
     "\/img\/icons\/principes.png" : {
       "ignoreWasSetByUser" : 0,
@@ -451,21 +445,10 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 16
     },
-    "\/ico\/apple-touch-icon-114-precomposed.png" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/ico\/apple-touch-icon-114-precomposed.png",
-      "processed" : 1,
-      "outputAbbreviatedPath" : "\/ico\/apple-touch-icon-114-precomposed.png",
-      "initialSize" : 6043,
-      "fileType" : 8192
-    },
-    "\/less\/close.less" : {
+    "\/less\/responsive-magos.less" : {
       "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/close.less",
-      "outputAbbreviatedPath" : "\/css\/close.css",
+      "inputAbbreviatedPath" : "\/less\/responsive-magos.less",
+      "outputAbbreviatedPath" : "\/css\/responsive-magos.css",
       "outputPathIsSetByUser" : 0,
       "strictUnits" : 0,
       "relativeURLS" : 0,
@@ -496,21 +479,38 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
-    "\/img\/icons\/arcitectus.png" : {
+    "\/ico\/apple-touch-icon-114-precomposed.png" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/img\/icons\/arcitectus.png",
+      "inputAbbreviatedPath" : "\/ico\/apple-touch-icon-114-precomposed.png",
       "processed" : 1,
-      "outputAbbreviatedPath" : "\/img\/icons\/arcitectus.png",
-      "initialSize" : 5975,
+      "outputAbbreviatedPath" : "\/ico\/apple-touch-icon-114-precomposed.png",
+      "initialSize" : 6043,
       "fileType" : 8192
     },
-    "\/less\/responsive-magos.less" : {
+    "\/less\/layouts.less" : {
       "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/responsive-magos.less",
-      "outputAbbreviatedPath" : "\/css\/responsive-magos.css",
+      "inputAbbreviatedPath" : "\/less\/layouts.less",
+      "outputAbbreviatedPath" : "\/css\/layouts.css",
+      "outputPathIsSetByUser" : 0,
+      "strictUnits" : 0,
+      "relativeURLS" : 0,
+      "ignore" : 1,
+      "strictImports" : 0,
+      "ignoreWasSetByUser" : 0,
+      "shouldRunBless" : 0,
+      "hidden" : 0,
+      "strictMath" : 0,
+      "outputStyle" : 1,
+      "fileType" : 1,
+      "debugStyle" : 0
+    },
+    "\/less\/close.less" : {
+      "ieCompatibility" : 1,
+      "inputAbbreviatedPath" : "\/less\/close.less",
+      "outputAbbreviatedPath" : "\/css\/close.css",
       "outputPathIsSetByUser" : 0,
       "strictUnits" : 0,
       "relativeURLS" : 0,
@@ -535,10 +535,10 @@
       "outputAbbreviatedPath" : "\/js\/crafty-components.min.min.js",
       "fileType" : 64
     },
-    "\/less\/responsive-767px-max.less" : {
+    "\/less\/mixins.less" : {
       "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/responsive-767px-max.less",
-      "outputAbbreviatedPath" : "\/css\/responsive-767px-max.css",
+      "inputAbbreviatedPath" : "\/less\/mixins.less",
+      "outputAbbreviatedPath" : "\/css\/mixins.css",
       "outputPathIsSetByUser" : 0,
       "strictUnits" : 0,
       "relativeURLS" : 0,
@@ -552,10 +552,10 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
-    "\/less\/mixins.less" : {
+    "\/less\/responsive-767px-max.less" : {
       "ieCompatibility" : 1,
-      "inputAbbreviatedPath" : "\/less\/mixins.less",
-      "outputAbbreviatedPath" : "\/css\/mixins.css",
+      "inputAbbreviatedPath" : "\/less\/responsive-767px-max.less",
+      "outputAbbreviatedPath" : "\/css\/responsive-767px-max.css",
       "outputPathIsSetByUser" : 0,
       "strictUnits" : 0,
       "relativeURLS" : 0,
@@ -869,16 +869,16 @@
       "initialSize" : 17868,
       "fileType" : 8192
     },
-    "\/js\/vendor\/crafty.js" : {
-      "ignoreWasSetByUser" : 1,
-      "ignore" : 1,
+    "\/css\/vendor\/images\/ui-bg_glass_65_ffffff_1x400.png" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/js\/vendor\/crafty.js",
-      "outputStyle" : 1,
-      "syntaxCheckerStyle" : 0,
-      "outputAbbreviatedPath" : "\/js\/vendor\/crafty.min.js",
-      "fileType" : 64
+      "inputAbbreviatedPath" : "\/css\/vendor\/images\/ui-bg_glass_65_ffffff_1x400.png",
+      "processed" : 1,
+      "outputAbbreviatedPath" : "\/css\/vendor\/images\/ui-bg_glass_65_ffffff_1x400.png",
+      "initialSize" : 105,
+      "fileType" : 8192
     },
     "\/img\/icons\/gravitation-arrows.png" : {
       "ignoreWasSetByUser" : 0,
@@ -891,16 +891,14 @@
       "initialSize" : 236,
       "fileType" : 8192
     },
-    "\/css\/vendor\/images\/ui-bg_glass_65_ffffff_1x400.png" : {
+    "\/css\/dark.css" : {
       "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
+      "ignore" : 1,
+      "hidden" : 1,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/css\/vendor\/images\/ui-bg_glass_65_ffffff_1x400.png",
-      "processed" : 1,
-      "outputAbbreviatedPath" : "\/css\/vendor\/images\/ui-bg_glass_65_ffffff_1x400.png",
-      "initialSize" : 105,
-      "fileType" : 8192
+      "inputAbbreviatedPath" : "\/css\/dark.css",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 16
     },
     "\/less\/main.less" : {
       "ieCompatibility" : 1,
@@ -919,14 +917,16 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
-    "\/css\/dark.css" : {
-      "ignoreWasSetByUser" : 0,
+    "\/js\/vendor\/crafty.js" : {
+      "ignoreWasSetByUser" : 1,
       "ignore" : 1,
-      "hidden" : 1,
+      "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/css\/dark.css",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 16
+      "inputAbbreviatedPath" : "\/js\/vendor\/crafty.js",
+      "outputStyle" : 1,
+      "syntaxCheckerStyle" : 0,
+      "outputAbbreviatedPath" : "\/js\/vendor\/crafty.min.js",
+      "fileType" : 64
     },
     "\/js\/vendor\/flash_message.js" : {
       "ignoreWasSetByUser" : 1,
@@ -1313,15 +1313,6 @@
       "initialSize" : 4369,
       "fileType" : 8192
     },
-    "\/css\/responsive.css" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 1,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/css\/responsive.css",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 16
-    },
     "\/less\/labels-badges.less" : {
       "ieCompatibility" : 1,
       "inputAbbreviatedPath" : "\/less\/labels-badges.less",
@@ -1339,6 +1330,26 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
+    "\/css\/responsive.css" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 1,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/css\/responsive.css",
+      "outputAbbreviatedPath" : "\/No Output Path",
+      "fileType" : 16
+    },
+    "\/css\/vendor\/images\/ui-bg_flat_75_ffffff_40x100.png" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/css\/vendor\/images\/ui-bg_flat_75_ffffff_40x100.png",
+      "processed" : 1,
+      "outputAbbreviatedPath" : "\/css\/vendor\/images\/ui-bg_flat_75_ffffff_40x100.png",
+      "initialSize" : 178,
+      "fileType" : 8192
+    },
     "\/js\/vendor\/ember.min.js" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 1,
@@ -1349,17 +1360,6 @@
       "syntaxCheckerStyle" : 0,
       "outputAbbreviatedPath" : "\/js\/vendor\/ember.min.min.js",
       "fileType" : 64
-    },
-    "\/img\/icons\/icon-rules.png" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/img\/icons\/icon-rules.png",
-      "processed" : 1,
-      "outputAbbreviatedPath" : "\/img\/icons\/icon-rules.png",
-      "initialSize" : 1898,
-      "fileType" : 8192
     },
     "\/img\/wiz-head.png" : {
       "ignoreWasSetByUser" : 0,
@@ -1372,14 +1372,16 @@
       "initialSize" : 17575,
       "fileType" : 8192
     },
-    "\/css\/main.css" : {
+    "\/img\/icons\/icon-rules.png" : {
       "ignoreWasSetByUser" : 0,
-      "ignore" : 1,
+      "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/css\/main.css",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 16
+      "inputAbbreviatedPath" : "\/img\/icons\/icon-rules.png",
+      "processed" : 1,
+      "outputAbbreviatedPath" : "\/img\/icons\/icon-rules.png",
+      "initialSize" : 1898,
+      "fileType" : 8192
     },
     "\/less\/responsive-1200px-min.less" : {
       "ieCompatibility" : 1,
@@ -1398,16 +1400,14 @@
       "fileType" : 1,
       "debugStyle" : 0
     },
-    "\/css\/vendor\/images\/ui-bg_flat_75_ffffff_40x100.png" : {
+    "\/css\/main.css" : {
       "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
+      "ignore" : 1,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/css\/vendor\/images\/ui-bg_flat_75_ffffff_40x100.png",
-      "processed" : 1,
-      "outputAbbreviatedPath" : "\/css\/vendor\/images\/ui-bg_flat_75_ffffff_40x100.png",
-      "initialSize" : 178,
-      "fileType" : 8192
+      "inputAbbreviatedPath" : "\/css\/main.css",
+      "outputAbbreviatedPath" : "\/No Output Path",
+      "fileType" : 16
     },
     "\/js\/crafty-scenes.min.js" : {
       "ignoreWasSetByUser" : 0,
@@ -1759,8 +1759,8 @@
       "trailing" : 1,
       "nonew" : 1,
       "es3" : 0,
-      "freeze" : 1,
       "yui" : 0,
+      "freeze" : 1,
       "mootools" : 0,
       "proto" : 0,
       "boss" : 0,
