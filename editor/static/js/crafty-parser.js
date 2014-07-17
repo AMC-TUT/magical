@@ -208,7 +208,7 @@ var Parser = {
         }
 
         if (scene.name == 'game') {
-          Crafty.background("#111111");
+          Crafty.background("#222222");
 
           var tmpButton = Crafty.e('Button, Text2, StartButton, XButton')
             .text('x')
@@ -249,23 +249,20 @@ var Parser = {
 
     // static magos loader scene
     Crafty.scene("loading", function() {
-      $('#cr-stage').css('background', '#F2F2F2');
+      Crafty.background("#F2F2F2");
 
-      // canvas size
-      var width = Parser.game.revision.canvas.columns * Parser.game.revision.canvas.blockSize;
-
-      Crafty.e("HTML").append('<div style="width:' + width + 'px;" class="loader">' + ' <img src="' + Parser.settings.djangoUri + 'static/img/magos-m-black.png" class="loader-logo" />' + ' <p class="loader-procent" style="color: #000;">0%</p>' + ' </div>');
+      Crafty.e("HTML").append('<div style="width:' + Crafty.magos.width + 'px;" class="loader">' + ' <img src="' + Parser.settings.djangoUri + 'static/img/magos-m-black.png" class="loader-logo" />' + ' <p class="loader-procent" style="color: #000;">0%</p>' + ' </div>');
 
       var assets = [],
-        componentsPath = '/editor/',
-        path = '/editor/user-media/images/',
-        ext = '.png';
+        components = Parser.game.revision.gameComponents,
+        path = Parser.settings.djangoUri + 'game/image/',
+        spriteSize = '_' + Parser.blockSize + 'x' + Parser.blockSize;
 
-      // game comps
-      _.each(Parser.game.revision.gameComponents, function(comp) {
-        if (!_.isUndefined(comp.properties.file) && _.isString(comp.properties.file)) {
-          assets.push(Parser.settings.djangoUri + 'game/image/' + comp.properties.file + '_' + Parser.blockSize + 'x' + Parser.blockSize + '.' + comp.properties.ext);
-        }
+      _.each(components, function(component) {
+        var ext = '.' + component.properties.ext;
+        var sprite = (!_.isUndefined(component.properties.file) && _.isString(component.properties.file)) ? component.properties.file : '';
+
+        assets.push(path + sprite + spriteSize + ext);
       });
 
       Crafty.load(
@@ -415,7 +412,6 @@ var Parser = {
             }
           });
 
-          // TODO implement startDialog and createElement
           // TODO handle scores
           if (_.isArray(props.collisions)) {
             //console.log(props.collisions);
