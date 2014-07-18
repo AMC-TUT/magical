@@ -1,5 +1,7 @@
 // @codekit-prepend "/vendor/crafty-0.4.8.js"
 
+var player;
+
 (function($) {
 
 // game slug

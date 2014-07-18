@@ -294,6 +294,8 @@ var Parser = {
           _this.addComponent('2D', 'Canvas', 'SpriteAnimation');
           // helper
           _this.slug = component.slug;
+          // name
+          _this.setName(component.title);
           // component name
           _this.addComponent(capitaliseFirstLetter(component.slug));
           // sprite as comp image
@@ -309,7 +311,7 @@ var Parser = {
             _this.z = 100;
 
             if (/^twoway$/i.test(props.controls.method)) {
-              _this.addComponent('Twoway', 'Keyboard', 'Collision');
+              _this.addComponent('Twoway', 'Keyboard');
               _this.twoway(speed, jump);
               _this.gravity('Platform');
             } else if (/^fourway$/i.test(props.controls.method)) {
@@ -363,6 +365,7 @@ var Parser = {
             //     }, 500);
             //   }
             // }
+            //
 
             // stop item on viewport bounds
             if (this._x > Crafty.viewport.width - Parser.blockSize) {
@@ -378,112 +381,6 @@ var Parser = {
               this.y = 0;
             }
           });
-
-          // // TODO handle scores
-          // if (_.isArray(props.collisions)) {
-          //   //console.log(props.collisions);
-          //   _this.addComponent('Collision');
-          //   _this.collisions = props.collisions;
-          //   _.each(props.collisions, function(collision) {
-          //     if (_.isObject(props.collisions[0])) {
-          //       var col_target = collision.target;
-          //       var col_event = collision.event;
-          //       _this.onHit(col_target.slug, function(ent) {
-          //         var target = ent[0].obj;
-          //         //console.log(col_target.slug + ' HIT ' + _this.slug);
-          //         handleCollision(_this, target);
-          //       });
-          //     }
-          //   });
-
-          /*
-            _this.onHit("Player", function(ent) {
-              //console.log('SOMEONE HIT PLAYER!');
-              //console.log(ent);
-
-              var target = ent[0].obj;
-              _.each(props.collisions, function(collision) {
-                  if (_.isObject(props.collisions[0]) ) {
-                    var col_event = collision.event;
-                    //var col_score = collision.score;
-                    if(col_event === "destroySelf") {
-                        _this.destroy();
-                    } else if (col_event === "destroyTarget") {
-                        target.destroy();
-                        Crafty.scene('outro'); // TODO reduce hitpoints, don't die immediately
-                    } else if (col_event === "startDialog") {
-                        //console.log('Collision: Init dialog');
-                    } else if (col_event === "createElement") {
-                        //console.log('Collision: Create element');
-                    }
-
-                    // handle score
-                    if(col_score) {
-                        col_score = parseInt(col_score);
-                        //console.log('Score: ' + col_score);
-                    }
-
-                  }
-
-              });
-
-            });
-*/
-
-          //    }
-
-          // _this.bind('Moved', function(from) {
-
-          //   if (this.has('Collision')) {
-
-          //     var hitPushable = this.hit('Pushable');
-
-          //     // hit pushable
-          //     if (hitPushable) {
-          //       // platformer
-          //       var dir = this._x > from.x ? 'left' : 'right';
-          //       ////console.log(dir);
-          //       var leftX = this._x;
-          //       var widthThis = this._w;
-          //       var rightX = leftX + widthThis;
-
-          //       _.each(hitPushable, function(pushable) {
-          //         var tgt = pushable.obj;
-          //         if (dir == 'left') {
-          //           // push from left to right
-          //           var posObj = rightX - tgt._x;
-          //           tgt.attr({
-          //             x: tgt._x + posObj
-          //           });
-          //         } else {
-          //           // push from right to left
-          //           var posObj = (tgt._x + tgt._w) - leftX;
-          //           tgt.attr({
-          //             x: tgt._x - posObj
-          //           });
-          //         }
-          //         // TODO: push top/down?
-          //       });
-
-          //     }
-
-          //     // hit solid
-          //     if (this.hit('Solid')) {
-          //       //console.log("HIT SOLID");
-          //       /*
-          //         var target = this.hit('Solid')[0].obj;
-          //         //console.log(target);
-          //         */
-          //       this.attr({
-          //         x: from.x,
-          //         y: from.y
-          //       });
-          //     }
-
-
-          //   } // if collision
-
-          // });
 
         } // init
       });
