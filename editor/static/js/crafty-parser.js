@@ -282,7 +282,6 @@ var Parser = {
     return true;
   },
   createGameComponents: function(components) {
-    // if (/^(intro|outro)$/.test(scene.name)) { }
     _.each(components, function(component) {
       var props = component.properties,
         sprite = _.isString(props.file) ? props.file : false;
@@ -302,125 +301,103 @@ var Parser = {
 
           // controls
           if (!_.isUndefined(props.controls)) {
+            // speed and jump
+            var jump = _.isNumber(props.controls.jumpHeight) ? props.controls.jumpHeight : 12;
             var speed = _.isNumber(props.controls.speed) ? props.controls.speed : 4;
 
             // set on top
             _this.z = 100;
 
-            // // twoway === platform
-            // if (props.controls.method.toLowerCase() === 'twoway') {
-            //   var jumpHeight = !_.isNull(props.controls.jumpHeight) ? parseInt(props.controls.jumpHeight) : 12;
-            //   this_.addComponent('Twoway', 'Keyboard', 'Gravity', 'Collision');
-            //   this_.twoway(speed, jumpHeight);
-            //   this_.gravity('platform');
-            // }
-
-            // // fourway
-            // if (props.controls.method.toLowerCase() === 'fourway') {
-            //   this_.addComponent('Fourway', 'Keyboard');
-            //   this_.fourway(speed);
-            // }
-
-            // // multiway
-            // if (props.controls.method.toLowerCase() === 'multiway') {
-            //   this_.addComponent('Multiway', 'Keyboard');
-            //   this_.multiway(speed, {
-            //     UP_ARROW: -90,
-            //     DOWN_ARROW: 90,
-            //     RIGHT_ARROW: 0,
-            //     LEFT_ARROW: 180
-            //   });
-            //}
-
+            if (/^twoway$/i.test(props.controls.method)) {
+              _this.addComponent('Twoway', 'Keyboard', 'Collision');
+              _this.twoway(speed, jump);
+              _this.gravity('Platform');
+            } else if (/^fourway$/i.test(props.controls.method)) {
+              _this.addComponent('Fourway', 'Keyboard');
+              _this.fourway(speed);
+            } else if (/^multiway$/i.test(props.controls.method)) {
+              _this.addComponent('Multiway', 'Keyboard');
+              _this.multiway(speed, {
+                UP_ARROW: -90,
+                DOWN_ARROW: 90,
+                RIGHT_ARROW: 0,
+                LEFT_ARROW: 180
+              });
+            }
           }
 
-          // // component type
-          // if (_.isString(props.type)) {
-          //   this_.addComponent(props.type);
+          // type
+          if (_.isString(props.type)) {
+            _this.addComponent(props.type);
 
-          //   if (props.type.toLowerCase() === "platform") {
-          //     this_.addComponent('platform');
-          //   }
-
-          //   if (props.type.toLowerCase() === 'block') {
-          //     this_.addComponent('platform');
-          //     this_.addComponent('Solid');
-          //     this_.addComponent("Collision");
-          //   }
-
-          //   if (props.type.toLowerCase() === "pushable") {
-          //     this_.addComponent('platform');
-          //     this_.addComponent('Solid');
-          //     this_.addComponent("Collision");
-          //     this_.addComponent("Pushable");
-          //   }
-
-          //   if (props.type.toLowerCase() === "player") {
-          //     this_.addComponent('Player');
-          //     this_.addComponent("Collision");
-          //     this_.direction = '';
-          //   }
-         // }
+            if (/^platform$/i.test(props.type)) {
+              _this.addComponent('Platform');
+            } else if (/^block$/i.test(props.type)) {
+              _this.addComponent('Platform', 'Solid', 'Collision');
+            } else if (/^pushable$/i.test(props.type)) {
+              _this.addComponent('Platform', 'Solid', 'Collision', 'Pushable');
+            } else if (/^player$/i.test(props.type)) {
+              _this.addComponent('Player', 'Collision');
+              _this.direction = '';
+            }
+          }
 
           // gravity
-          // if ((!_.isUndefined(props.gravitation) && !_.isNull(props.gravitation)) && !_.isNull(props.gravitation.strength)) {
-          //   //var sign = props.gravitation.direction ? 1 : -1; // gravity direction
-          //   this_.addComponent("Gravity");
-          //   this_.gravity("platform");
-          //   this_.gravityConst(parseFloat(props.gravitation.strength));
-          // }
+          if ((!_.isUndefined(props.gravitation) && !_.isNull(props.gravitation)) && _.isNumber(props.gravitation.strength)) {
+            var sign = props.gravitation.direction ? 1 : -1; // direction
+            _this.addComponent("Gravity");
+            _this.gravity("Platform");
+            _this.gravityConst(parseFloat(props.gravitation.strength));
+          }
 
-          // bind events
-          // this_.bind("EnterFrame", function(frame) {
+          // events
+          _this.bind("EnterFrame", function(frame) {
 
-          //   //destroy if it goes out of bounds
-          //   if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
+            //destroy object if it goes out of bounds
+            // if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
+            //   this.destroy();
 
-          //     /*
-          //       this.destroy();
+            //   if (this.has('Player')) {
+            //     setTimeout(function() {
+            //       Crafty.scene('outro');
+            //     }, 500);
+            //   }
+            // }
 
-          //       if(this.has('Player')) {
-          //         setTimeout(function() {
-          //           Crafty.scene('outro');
-          //         }, 500);
-          //       }
-          //       */
-          //   }
-
-          //   // stop item on viewport bounds
-          //   if (this._x > Crafty.viewport.width - Parser.blockSize) {
-          //     this.x = Crafty.viewport.width - Parser.blockSize;
-          //   }
-          //   if (this._x < 0) {
-          //     this.x = 0;
-          //   }
-          //   if (this._y > Crafty.viewport.height - Parser.blockSize) {
-          //     this.y = Crafty.viewport.height - Parser.blockSize;
-          //   }
-          //   if (this._y < 0) {
-          //     this.y = 0;
-          //   }
-          // });
+            // stop item on viewport bounds
+            if (this._x > Crafty.viewport.width - Parser.blockSize) {
+              this.x = Crafty.viewport.width - Parser.blockSize;
+            }
+            if (this._x < 0) {
+              this.x = 0;
+            }
+            if (this._y > Crafty.viewport.height - Parser.blockSize) {
+              this.y = Crafty.viewport.height - Parser.blockSize;
+            }
+            if (this._y < 0) {
+              this.y = 0;
+            }
+          });
 
           // // TODO handle scores
           // if (_.isArray(props.collisions)) {
           //   //console.log(props.collisions);
-          //   this_.addComponent('Collision');
-          //   this_.collisions = props.collisions;
+          //   _this.addComponent('Collision');
+          //   _this.collisions = props.collisions;
           //   _.each(props.collisions, function(collision) {
           //     if (_.isObject(props.collisions[0])) {
           //       var col_target = collision.target;
           //       var col_event = collision.event;
-          //       this_.onHit(col_target.slug, function(ent) {
+          //       _this.onHit(col_target.slug, function(ent) {
           //         var target = ent[0].obj;
-          //         //console.log(col_target.slug + ' HIT ' + this_.slug);
-          //         handleCollision(this_, target);
+          //         //console.log(col_target.slug + ' HIT ' + _this.slug);
+          //         handleCollision(_this, target);
           //       });
           //     }
           //   });
 
-            /*
-            this_.onHit("Player", function(ent) {
+          /*
+            _this.onHit("Player", function(ent) {
               //console.log('SOMEONE HIT PLAYER!');
               //console.log(ent);
 
@@ -430,7 +407,7 @@ var Parser = {
                     var col_event = collision.event;
                     //var col_score = collision.score;
                     if(col_event === "destroySelf") {
-                        this_.destroy();
+                        _this.destroy();
                     } else if (col_event === "destroyTarget") {
                         target.destroy();
                         Crafty.scene('outro'); // TODO reduce hitpoints, don't die immediately
@@ -453,9 +430,9 @@ var Parser = {
             });
 */
 
-      //    }
+          //    }
 
-          // this_.bind('Moved', function(from) {
+          // _this.bind('Moved', function(from) {
 
           //   if (this.has('Collision')) {
 
