@@ -1,7 +1,5 @@
 /* Magos Editor */
 
-var DEV = true;
-
 $(function() {
 
   (function(App, $, Em, undefined) {
@@ -985,6 +983,7 @@ $(function() {
         var components = this.get('content').findProperty('title', 'type').get('properties');
         return Em.Object.create(components);
       }).property('content'),
+
       busyObserver: function() {
         return Em.run.next(function() {
           $('.potion-icon').draggable('destroy');
@@ -1580,45 +1579,17 @@ $(function() {
           callback(data);
         });
       },
-
-      // add game component to game canvas
-      // saveSceneComponentToCanvas: function(sceneComponent, sceneName, callback) {
-      //   socket.emit('saveSceneComponentToCanvas', sceneComponent, sceneName, function(data) {
-      //     callback(data);
-      //   });
-      // },
-
-      // remove scene component from game canvas
-      // removeSceneComponentFromCanvas: function(sceneComponent, sceneName, callback) {
-      //   socket.emit('removeSceneComponentFromCanvas', sceneComponent, sceneName, function(data) {
-      //     callback(data);
-      //   });
-      // },
-
       addUser: function(user, callback) {
         socket.emit('addUser', user, function(data) {
           callback(data);
         });
       },
 
-      // userChangedMagos: function(user, magos, callback) {
-      //   socket.emit('userChangedMagos', user, magos, function(data) {
-      //     callback(data);
-      //   });
-      // },
-
       potionBusy: function(potion, busy, callback) {
         socket.emit('potionBusy', potion, busy, function(data) {
           callback(potion, busy);
         });
       },
-
-      // canUserChangeMagos: function(gameSlug, user, magos, callback) {
-      //   socket.emit('canUserChangeMagos', gameSlug, user, magos, function(data) {
-      //     callback(data);
-      //   });
-      // },
-
       saveGame: function(mode, callback) {
         var game = App.gameController.get('content');
         socket.emit('saveGame', mode, game, function(data) {
@@ -1632,7 +1603,7 @@ $(function() {
             potions = [];
 
           _.each(data, function(obj) {
-            _.each(obj.potions, function(potion) { // rules|
+            _.each(obj.potions, function(potion) {
               if (/^(score|controls|collision|gravitation|type|image)$/.test(potion.title)) {
                 var pot = App.Potion.create({
                   'title': potion.title,
@@ -1657,22 +1628,6 @@ $(function() {
       },
       getSceneComponents: function(callback) {
         callback([]);
-        // socket.emit('getSceneComponents', '', function(data) {
-        //   var components = [];
-
-        //   _.each(data, function(obj) {
-        //     components.push(
-        //     App.SceneComponent.create({
-        //       "slug": obj.slug,
-        //       "title": obj.title,
-        //       "sprite": obj.sprite,
-        //       "scenes": obj.scenes,
-        //       "potions": obj.potions
-        //     }));
-        //   });
-
-        //   callback(components);
-        // });
       },
       getLanguages: function(callback) {
         socket.emit('getLanguages', '', function(data) {

@@ -1,30 +1,7 @@
 
-Crafty.c("Controls", {
-  init: function() {
-    this.requires('Twoway');
-    this.enableControl();
-  },
-
-  Controls: function(speed, jump) {
-    this.twoway(speed, jump);
-    return this;
-  }
-});
-
 Crafty.c("GameOver", {
   init: function() {
     this.requires('2D, DOM, Text, gameOver');
-    this.attr({
-      x: 10,
-      y: 25,
-      w: 300
-    });
-  }
-});
-
-Crafty.c("HitPoints", {
-  init: function() {
-    this.requires('2D, DOM, Text, hitPoints');
     this.attr({
       x: 10,
       y: 25,
@@ -147,7 +124,6 @@ Crafty.c('Text2', {
     return this;
   },
   setHeight: function(height) {
-    //this.css('height', height);
     this.h = height;
     return this;
   },
@@ -164,7 +140,6 @@ Crafty.c('Text2', {
     return this;
   },
   setWidth: function(width) {
-    //this.css('width', width);
     this.w = width;
     return this;
   }

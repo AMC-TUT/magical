@@ -59,7 +59,6 @@ var Parser = {
   settings: {
     djangoUri: 'http://192.168.43.232/',
     //djangoUri: 'http://magos.pori.tut.fi/',
-    score: 0
   },
 
   parseGame: function(game) {
@@ -129,7 +128,7 @@ var Parser = {
         if (scene.name == 'intro') {
           Crafty.background("#F2F2F2");
 
-          Parser.settings.score = 0;
+          scores = 0;
 
           var title = Crafty.e('2D, DOM, Text2, TitleText')
             .text(Parser.game.title)
@@ -169,8 +168,8 @@ var Parser = {
         if (scene.name == 'outro') {
           Crafty.background("#F2F2F2");
 
-          var gameOver = Crafty.e('2D, DOM, Text2, TitleText')
-            .text('Game Over')
+          gameOver = Crafty.e('2D, DOM, Text2, TitleText')
+            .text(gameOverText)
             .setStyle(fontStyleTitle)
             .setAlign('center')
             .attr({
@@ -179,8 +178,8 @@ var Parser = {
               w: Crafty.magos.width
             });
 
-          var scores = Crafty.e('2D, DOM, Text2, ScorePoints, OutroText')
-            .text('Score: ' + Parser.settings.score)
+          var s = Crafty.e('2D, DOM, Text2, ScorePoints, OutroText')
+            .text('Score: ' + scores)
             .setStyle(fontStyleOutro)
             .setAlign('center')
             .attr({
@@ -208,7 +207,7 @@ var Parser = {
         if (scene.name == 'game') {
           Crafty.background("#222222");
 
-          var tmpButton = Crafty.e('Button, Text2, StartButton, XButton')
+          var xButton = Crafty.e('Button, Text2, StartButton, XButton')
             .text('x')
             .setStyle(fontStyleGame)
             .setAlign('center')
@@ -222,8 +221,8 @@ var Parser = {
               y: 2
             });
 
-          var scorePoints = Crafty.e('2D, DOM, Text2, ScorePoints, GameText')
-            .text('Score: ' + Parser.settings.score)
+          scoreEnt = Crafty.e('2D, DOM, Text2, ScorePoints, GameText')
+            .text('Score: ' + scores)
             .setStyle(fontStyleGame)
             .attr({
               h: 20,
@@ -283,6 +282,7 @@ var Parser = {
   },
   createGameComponents: function(components) {
     _.each(components, function(component) {
+      //console.log(JSON.stringify(component.properties));
       var props = component.properties,
         sprite = _.isString(props.file) ? props.file : false;
 
@@ -301,23 +301,53 @@ var Parser = {
           // sprite as comp image
           _this.addComponent(_this.slug + "Sprite");
 
+          // type
+          if (_.isString(props.type)) {
+            _this.addComponent(props.type);
+
+            if (/^platform$/i.test(props.type)) {
+              _this.addComponent('Platform');
+            } else if (/^block$/i.test(props.type)) {
+              _this.addComponent('Platform', 'Collision');
+            } else if (/^pushable$/i.test(props.type)) {
+              _this.addComponent('Pushable', 'Collision');
+            } else if (/^collectible$/i.test(props.type)) {
+              _this.addComponent('Collectible', 'Collision');
+            } else if (/^player$/i.test(props.type)) {
+              _this.addComponent('Player', 'Collision');
+            }
+          }
+
           // controls
           if (!_.isUndefined(props.controls)) {
             // speed and jump
             var jump = _.isNumber(props.controls.jumpHeight) ? props.controls.jumpHeight : 12;
             var speed = _.isNumber(props.controls.speed) ? props.controls.speed : 4;
 
-            // set on top
-            _this.z = 100;
+            if(_this.has('Player')) {
+             // if(_this.has("Player")) {
+             //  if(!_this.has("Twoway")) {
+                // set on top
+                _this.z = 100;
+                _this.addComponent('Keyboard, Collision, Twoway, Gravity');
+                _this.twoway(speed, jump);
+                _this.gravity('Platform');
+                player = _this;
+            //   }
+            // }
+
+          } else {
 
             if (/^twoway$/i.test(props.controls.method)) {
-              _this.addComponent('Twoway', 'Keyboard');
+              _this.addComponent('Twoway', 'Keyboard', 'Gravity');
               _this.twoway(speed, jump);
               _this.gravity('Platform');
-            } else if (/^fourway$/i.test(props.controls.method)) {
+            }
+            else if (/^fourway$/i.test(props.controls.method)) {
               _this.addComponent('Fourway', 'Keyboard');
               _this.fourway(speed);
-            } else if (/^multiway$/i.test(props.controls.method)) {
+            }
+            else if (/^multiway$/i.test(props.controls.method)) {
               _this.addComponent('Multiway', 'Keyboard');
               _this.multiway(speed, {
                 UP_ARROW: -90,
@@ -327,25 +357,10 @@ var Parser = {
               });
             }
           }
-
-          // type
-          if (_.isString(props.type)) {
-            _this.addComponent(props.type);
-
-            if (/^platform$/i.test(props.type)) {
-              _this.addComponent('Platform');
-            } else if (/^block$/i.test(props.type)) {
-              _this.addComponent('Platform', 'Solid', 'Collision');
-            } else if (/^pushable$/i.test(props.type)) {
-              _this.addComponent('Platform', 'Solid', 'Collision', 'Pushable');
-            } else if (/^player$/i.test(props.type)) {
-              _this.addComponent('Player', 'Collision');
-              _this.direction = '';
-            }
-          }
+        }
 
           // gravity
-          if ((!_.isUndefined(props.gravitation) && !_.isNull(props.gravitation)) && _.isNumber(props.gravitation.strength)) {
+          if ( _.isObject(props.gravitation) ) {
             var sign = props.gravitation.direction ? 1 : -1; // direction
             _this.addComponent("Gravity");
             _this.gravity("Platform");
@@ -354,7 +369,6 @@ var Parser = {
 
           // events
           _this.bind("EnterFrame", function(frame) {
-
             //destroy object if it goes out of bounds
             // if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
             //   this.destroy();
@@ -380,6 +394,89 @@ var Parser = {
             if (this._y < 0) {
               this.y = 0;
             }
+
+            // collisions
+            _.each(props.collisions, function(collision) {
+              if(targets = _this.hit(collision.target.slug)) {
+                if(!_.isNull(collision.score)) {
+                  scores += parseInt(collision.score);
+                  scoreEnt.text('Score: ' + scores);
+                }
+
+                // destroy something
+                if(collision.event.event === 'destroyTarget') {
+                  var ent = _.first(targets).obj;
+                  // custom for player obj
+                  if(ent.has('Player')) {
+                    setTimeout(function() {
+                      gameOverText = 'Game Over';
+                      Crafty.scene('outro');
+                    }, 500);
+                  }
+                  ent.destroy();
+                } else if(collision.event.event === 'destroySelf') {
+                  _this.destroy();
+                } // destroy
+              }
+            });
+
+            if(_this.has('Pushable')) {
+              var hit = _this.hit('Player');
+
+              if(hit) { // if Player hits Pushable
+                var player = _.first(hit).obj;
+                var overlap = _.first(hit).overlap;
+                var blockSize = Parser.blockSize;
+                var block;
+
+                console.log(JSON.stringify(_.first(hit).normal));
+
+                if(player._x > _this._x) { // from right to left
+
+                  if( b = _this.hit('Block')) {
+                    block = _.first(b).obj;
+                    _this.x = block._x + blockSize;
+                    player.x = block._x + blockSize + blockSize;
+                  }
+                  if( b = _this.hit('Pushable')) {
+                    block = _.first(b).obj;
+                    _this.x = block._x + blockSize;
+                    player.x = block._x + blockSize + blockSize;
+                  }
+
+                  if(player._x - blockSize > 0) {
+                    _this.x = player._x - blockSize;
+                  } else {
+                    player.x = _this._x + blockSize;
+                  }
+                }
+
+                else if(_this._x > player._x) { // from left to right
+
+                  if( b = _this.hit('Block')) {
+                    block = _.first(b).obj;
+                    _this.x = block._x - blockSize;
+                    player.x = block._x - blockSize - blockSize;
+                  }
+                  if( b = _this.hit('Pushable')) {
+                    block = _.first(b).obj;
+                    _this.x = block._x - blockSize;
+                    player.x = block._x - blockSize - blockSize;
+                  }
+
+                  if(player._x + blockSize + blockSize < Crafty.magos.width) {
+                    _this.x = player._x + blockSize;
+                  } else {
+                    player.x = _this._x - blockSize;
+                  }
+
+                }
+                console.log(hit);
+
+
+              }
+            }
+
           });
 
         } // init

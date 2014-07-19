@@ -558,12 +558,7 @@ var editor = io.sockets.on('connection', function(socket) {
       jar: j,
       qs: data
     }, function(error, response, body) {
-      //console.log('TEEEEEEEEEEMUUUUUUUUUUUUUU');
-      //console.log(error);
-      //console.log(response);
-      //console.log(body);
       if(!error && response.statusCode == 200) {
-
         var assets = JSON.parse(body);
 
         if(_.isObject(assets)) {
@@ -634,11 +629,12 @@ var editor = io.sockets.on('connection', function(socket) {
 
   socket.on('getSkillsets', function(noop, fn) {
     // read json file
-    var json = fs.readFileSync(__dirname + '/static/json/skillsets.json', 'utf8');
+    var json = fs.readFileSync(__dirname + '/static/json/skillsetsNEW.json', 'utf8');
     // parse obj's
     var result = JSON.parse(json);
     //console.log(result);
     // return components
+    console.log(json);
     fn(result);
   });
 
@@ -653,7 +649,7 @@ var editor = io.sockets.on('connection', function(socket) {
 
 
   socket.on('disconnect', function() {
-    console.info('user ' + globalSessionObj.userName + ' (' + socket.id + ') disconnected from magos');
+    //console.info('user ' + globalSessionObj.userName + ' (' + socket.id + ') disconnected from magos');
     var slug = '';
     socket.get('slug', function(err, name) {
       slug = name;
@@ -662,13 +658,12 @@ var editor = io.sockets.on('connection', function(socket) {
     client.get('room:' + slug, function(err, roomData) {
       roomData = JSON.parse(roomData);
       if(!_.isNull(roomData)) {
-        if(globalSessionObj.role == 'student') {
+        if(!_.isNull(globalSessionObj) && _.isString(globalSessionObj.role) && _.isString(globalSessionObj.userName)) {
           // remove user from authors and free magos
           var userMagos = myMagos.getUserMagos(roomData, globalSessionObj.userName);
           roomData = myMagos.removeUserFromMagos(roomData, globalSessionObj.userName);
           roomData = myMagos.removeUserFromAuthors(roomData);
-          //socket.broadcast.in(slug).emit('disconnectUser', globalSessionObj.userName, userMagos);
-          //console.log('DISCONNECT FROM ROOM: ' + roomName);
+
           io.sockets.in(roomName).emit('disconnectUser', {
             userName : globalSessionObj.userName,
             magos: userMagos
@@ -677,9 +672,6 @@ var editor = io.sockets.on('connection', function(socket) {
           // persist change
           var jsonRoomData = JSON.stringify(roomData);
           client.set('room:' + slug, jsonRoomData, redis.print);
-        } else {
-          // teacher?
-
         }
       }
     });
