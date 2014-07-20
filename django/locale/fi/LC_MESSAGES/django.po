@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Magos portal\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-01 14:43+0300\n"
-"PO-Revision-Date: 2014-04-01 14:43+0200\n"
+"POT-Creation-Date: 2014-04-02 09:22+0300\n"
+"PO-Revision-Date: 2014-04-02 09:23+0200\n"
 "Last-Translator: Mikko Koskela <mikko.koskela@jouhea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fi\n"
@@ -387,6 +387,16 @@ msgstr "tekijät"
 #: apps/game/models.py:720 apps/game/models.py:721
 msgid "user settings"
 msgstr "käyttäjän asetukset"
+
+#: apps/game/views.py:147
+#, python-format
+msgid "Game %s is now private."
+msgstr "%s peliä ei näytetä muille."
+
+#: apps/game/views.py:150
+#, python-format
+msgid "Game %s is now public for all."
+msgstr "%s peli näytetään kaikille."
 
 #: magos/settings/base.py:64
 msgid "English"

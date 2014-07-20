@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-01 12:17+0300\n"
+"POT-Creation-Date: 2014-04-02 09:24+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -319,56 +319,78 @@ msgstr ""
 msgid "games"
 msgstr ""
 
-#: apps/game/models.py:568
+#: apps/game/models.py:549
+msgid "private"
+msgstr ""
+
+#: apps/game/models.py:551
+msgid "public for your organization"
+msgstr ""
+
+#: apps/game/models.py:553
+msgid "public for all"
+msgstr ""
+
+#: apps/game/models.py:576
 msgid "Magos A game"
 msgstr ""
 
-#: apps/game/models.py:569
+#: apps/game/models.py:577
 msgid "Magos A games"
 msgstr ""
 
-#: apps/game/models.py:581
+#: apps/game/models.py:589
 msgid "Magos B game"
 msgstr ""
 
-#: apps/game/models.py:582
+#: apps/game/models.py:590
 msgid "Magos B games"
 msgstr ""
 
-#: apps/game/models.py:596
+#: apps/game/models.py:604
 msgid "revision"
 msgstr ""
 
-#: apps/game/models.py:597
+#: apps/game/models.py:605
 msgid "revisions"
 msgstr ""
 
-#: apps/game/models.py:613
+#: apps/game/models.py:621
 msgid "highscore"
 msgstr ""
 
-#: apps/game/models.py:614
+#: apps/game/models.py:622
 msgid "highscores"
 msgstr ""
 
-#: apps/game/models.py:631
+#: apps/game/models.py:639
 msgid "review"
 msgstr ""
 
-#: apps/game/models.py:632
+#: apps/game/models.py:640
 msgid "reviews"
 msgstr ""
 
-#: apps/game/models.py:647
+#: apps/game/models.py:655
 msgid "author"
 msgstr ""
 
-#: apps/game/models.py:648
+#: apps/game/models.py:656
 msgid "authors"
 msgstr ""
 
-#: apps/game/models.py:712 apps/game/models.py:713
+#: apps/game/models.py:720 apps/game/models.py:721
 msgid "user settings"
+msgstr ""
+
+#: apps/game/views.py:147
+#, python-format
+msgid "Game %s is now private."
+msgstr ""
+
+#: apps/game/views.py:150
+#, python-format
+msgid "Game %s is now public for all."
 msgstr ""
 
 #: magos/settings/base.py:64
@@ -506,12 +528,30 @@ msgstr ""
 msgid "No comments yet."
 msgstr ""
 
-#: templates/apps/game/details.html:103
+#: templates/apps/game/details.html:104
 msgid "Edit game information"
 msgstr ""
 
-#: templates/apps/game/details.html:104
+#: templates/apps/game/details.html:105
 msgid "Delete game"
+msgstr ""
+
+#: templates/apps/game/details.html:110
+msgid "game visibility"
+msgstr ""
+
+#: templates/apps/game/details.html:113
+msgid ""
+"You can make this game visible for your organization by publishing it in the "
+"game editor."
+msgstr ""
+
+#: templates/apps/game/details.html:116
+msgid "Make game public for all"
+msgstr ""
+
+#: templates/apps/game/details.html:119
+msgid "Make game private"
 msgstr ""
 
 #: templates/apps/game/game_base.html:10 templates/apps/game/login.html:9
