@@ -14,7 +14,6 @@
 
 <body>
 
-  <!-- /* Handlebars templates start */ -->
   <script type="text/x-handlebars" data-template-name="infobox-view">
       {{! InfoBox }}
       <div class="magos-infobox well">
@@ -127,44 +126,6 @@
                           </tr>
                         {{/view}}
                       </div>
-                      {{/if}}
-
-                      {{#if App.selectedComponentController.content.filteredAnimationEvents}}
-                      <div class="infobox-skillset">
-                        <h4>Animation</h4>
-                        {{#view App.InfoBoxAnimationView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-animation"}}
-                          <tr>
-                            <th>Action</th><th>Animation</th>
-                          </tr>
-                          <tr>
-                            <td> ---</td><td> ---</td>
-                          </tr>
-                        {{/view}}
-                      </div>
-                      {{/if}}
-
-                      {{#if App.selectedComponentController.content.filteredAudioEvents}}
-                        <div class="infobox-skillset">
-                        <h4>Audio</h4>
-                        {{#view App.InfoBoxAudioView contentBinding="App.selectedComponentController.content" tagName="table" class="table infobox infobox-audio"}}
-                          {{#each content.filteredAudioEvents}}
-                            <tr>
-                              <td>
-                                {{event}}
-                              </td>
-                              <td>
-                                <audio>
-                                  <source src="/editor/static/game/audios/ogg/boom.ogg" type="audio/ogg" />
-                                </audio>
-                                <button class="btn btn-success btn-mini btn-play"><i class="icon-play icon-white"></i></button>
-                              </td>
-                              <td>
-                                {{audio.playCount}}
-                              </td>
-                            </tr>
-                          {{/each}}
-                        {{/view}}
-                        </div>
                       {{/if}}
 
                   </div>

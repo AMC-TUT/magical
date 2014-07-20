@@ -1315,7 +1315,6 @@ $(function() {
     });
 
     App.InfoBoxSpriteView = Em.View.extend();
-    App.InfoBoxAnimationView = Em.View.extend();
     App.InfoBoxTypeView = Em.View.extend();
 
     /**************************
