@@ -1,4 +1,114 @@
 
 body {
-    background: white;
+  background: #E9E9E9;
+}
+
+.well {
+  background: #F3F3F3;
+  border-color: #AFAFAF;
+}
+
+.navbar-inner {
+  background: #F3F3F3;
+  border-color: #AFAFAF;
+}
+
+.sidebar .magos-potions .table td {
+  color: #111;
+  text-shadow: 0 2px 6px #FFF;
+}
+
+.sidebar .magos-potions {
+  background: #ECECEC;
+}
+
+legend {
+color: #222;
+border-color: #222;
+}
+
+hr {
+  border-bottom: 1px solid #AFAFAF;
+}
+
+.canvas .canvas-table td {
+  border: 1px solid #AFAFAF;
+}
+
+.canvas .canvas-pane {
+  background: #E0E0E0;
+}
+
+.magos-infobox h4 {
+text-shadow: 0 2px 6px #DDD;
+color: #222;
+}
+
+.magos-infobox .infobox-skillset {
+  background: #E0E0E0;
+  color: #222;
+}
+
+.modal {
+  border-color: #AFAFAF;
+}
+
+.modal .modal-body {
+  background: #F8F8F8;
+  color: #222;
+}
+
+.modal .modal-body .nav-tabs>.active>a,
+.modal .modal-body .nav-tabs>.active>a:hover,
+.modal .modal-body .nav-tabs>.active>a:focus {
+  color: #222;
+  background: #F8F8F8;
+  border-color: #AFAFAF;
+}
+
+.assets-list li.ui-selecting,
+.assets-list li:hover,
+.assets-list li:focus {
+  background: #FFF;
+  color: #222;
+}
+
+.modal .modal-footer {
+  background: #F8F8F8;
+  box-shadow: inset 0 1px 0 #444;
+  border-top: 0;
+}
+
+.assets-list li span {
+  color: #222;
+}
+
+.modal .modal-header {
+  background: #F8F8F8;
+  border-color: #AFAFAF;
+}
+
+.modal .modal-body .nav-tabs {
+  border-bottom-color: #AFAFAF;
+}
+
+.modal-backdrop {
+  background-color: #FFF;
+}
+
+label, footer {
+  color: #222;
+}
+
+.magos-shoutbox-log, .magos-shoutbox input[type=text] {
+  border-color: #AFAFAF;
+  -webkit-box-shadow: inset 0 1px 1px #C7C7C7;
+  -moz-box-shadow: inset 0 1px 1px #C7C7C7;
+  box-shadow: inset 0 1px 1px #C7C7C7;
+  background: #FFF;
+}
+
+h3 {
+  color: #222;
+  text-shadow: 0 2px 6px #FFF;
 }
