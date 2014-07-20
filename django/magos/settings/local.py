@@ -17,7 +17,7 @@ DEVELOPMENT_FEATURES = True
 
 
 ########## URL CONFIGURATION
-BASE_URL = 'http://192.168.43.2320/'
+BASE_URL = 'http://192.168.43.232/'
 
 MAGOS_EDITOR_URL = 'http://192.168.43.232/editor/edit/'
 MAGOS_PLAY_URL = 'http://192.168.43.232/editor/play/'
