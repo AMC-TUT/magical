@@ -441,7 +441,7 @@ $(function() {
           var type = obj.getPath('properties.type');
           type = type.toLowerCase();
 
-          if (!_.isUndefined(type) && /^(collectible|player|pushable|goal|decoration|block)$/.test(type)) {
+          if (!_.isUndefined(type) && /^(collectible|player|pushable|decoration|block)$/.test(type)) {
             if (obj.slug.toLowerCase() != currentSlug) {
               targets.push(
                 App.GameComponent.create(obj)
@@ -1133,7 +1133,7 @@ $(function() {
       submitCollisionProperties: function(event) {
         event.preventDefault();
         var col_target = App.gameComponentsController.get('selectedCollisionTarget');
-
+        // App.selectedComponentController.getPath('content.slug'); //
         console.log('submitCollisionProperties');
 
         var col_event = App.gameComponentsController.get('selectedCollisionEvent');
@@ -1372,8 +1372,6 @@ $(function() {
           'name': 'Pushable'
         }), App.ComponentType.create({
           'name': 'Decoration'
-        }), App.ComponentType.create({
-          'name': 'Goal'
         })
       ]
     });
@@ -1609,6 +1607,7 @@ $(function() {
                   'title': potion.title,
                   'properties': potion.properties
                 });
+                console.log(pot);
 
                 App.potionsController.get('content').pushObject(pot);
                 allPotions.push(pot);

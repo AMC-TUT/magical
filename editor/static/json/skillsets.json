@@ -1,76 +1,74 @@
-// [{
-//   "magos": "magos",
-//   "potions": [{
-//     "title": "rules",
-//     "properties": {}
-//   }, {
-//     "title": "score",
-//     "properties": {
-//       "events": [],
-//       "score": 0
-//     }
-//   }, {
-//     "title": "controls",
-//     "properties": {
-//       "methods": [{
-//         "method": "twoway"
-//       }, {
-//         "method": "fourway"
-//       }, {
-//         "method": "multiway"
-//       }],
-//       "speed": 4,
-//       "jumpHeight": 14,
-//       "grid": true,
-//       "snapToGrid": false
-//     }
-//   }, {
-//     "title": "collision",
-//     "properties": {
-//       "events": [
-//       {
-//         "event": "destroySelf",
-//         "title": "Destroy Self"
-//       }, {
-//         "event": "destroyTarget",
-//         "title": "Destroy Target"
-//       }, {
-//         "event": "finishGame",
-//         "title": "Finish Game"
-//       }
-//       ],
-//       "score": 10,
-//       "target": null
-//     }
-//   }, {
-//     "title": "gravitation",
-//     "properties": {
-//       "strength": 0.2
-//     }
-//   }, {
-//     "title": "type",
-//     "properties": {
-//       "types": [{
-//         "title": "Block",
-//         "properties": []
-//       }, {
-//         "title": "Collectible",
-//         "properties": []
-//       }, {
-//         "title": "Pushable",
-//         "properties": []
-//       }, {
-//         "title": "Decoration",
-//         "properties": []
-//       }, {
-//         "title": "Player",
-//         "properties": []
-//       }]
-//     }
-//   }, {
-//     "title": "image",
-//     "properties": {
-//       "sprite": null
-//     }
-//   }]
-// }]
+[{
+  "magos": "magos",
+  "potions": [{
+    "title": "rules",
+    "properties": {}
+  }, {
+    "title": "score",
+    "properties": {
+      "events": [],
+      "score": 0
+    }
+  }, {
+    "title": "controls",
+    "properties": {
+      "methods": [{
+        "method": "twoway"
+      }, {
+        "method": "fourway"
+      }, {
+        "method": "multiway"
+      }],
+      "speed": 4,
+      "jumpHeight": 14,
+      "grid": true,
+      "snapToGrid": false
+    }
+  }, {
+    "title": "collision",
+    "properties": {
+      "events": [{
+        "event": "destroySelf",
+        "title": "Destroy Self"
+      }, {
+        "event": "destroyTarget",
+        "title": "Destroy Target"
+      }, {
+        "event": "finishGame",
+        "title": "Finish Game"
+      }],
+      "score": 10,
+      "target": null
+    }
+  }, {
+    "title": "gravitation",
+    "properties": {
+      "strength": 0.2
+    }
+  }, {
+    "title": "type",
+    "properties": {
+      "types": [{
+        "title": "Block",
+        "properties": []
+      }, {
+        "title": "Collectible",
+        "properties": []
+      }, {
+        "title": "Pushable",
+        "properties": []
+      }, {
+        "title": "Decoration",
+        "properties": []
+      }, {
+        "title": "Player",
+        "properties": []
+      }]
+    }
+  }, {
+    "title": "image",
+    "properties": {
+      "sprite": null
+    }
+  }]
+}]
