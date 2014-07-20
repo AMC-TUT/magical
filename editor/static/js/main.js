@@ -82,11 +82,11 @@ $(function() {
       content: null,
       populate: function(gameData) {
         var controller = this;
-        console.log(gameData);
+        // console.log(gameData);
 
         App.dataSource.joinRoom(gameData, function(data) {
           if (_.isObject(data)) {
-            console.log('User joined room.');
+            // console.log('User joined room.');
             var room = App.Room.create(data);
             controller.set('content', room);
             var user = App.usersController.get('user');
@@ -99,7 +99,7 @@ $(function() {
             var potions = [];
             _.each(data.magoses, function(obj) {
               _.each(obj.potions, function(potion) { // rules|
-                if (/^(score|controls|collision|gravitation|type|image)$/.test(potion.title)) {
+                if (/^(controls|collision|gravitation|type|image)$/.test(potion.title)) {
                   var pot = App.Potion.create(potion);
 
                   potions.push(pot);
@@ -113,13 +113,13 @@ $(function() {
 
             // add user to other instances also
             App.dataSource.addUser(user, function(data) {
-              console.log('emit (add user AGAIN)');
+              // console.log('emit (add user AGAIN)');
             });
 
             App.magosesController.populate();
           } else {
             // user has no access to room
-            console.log('Not authorized.');
+            // console.log('Not authorized.');
             window.location.replace(App.settings.djangoUri);
           }
         });
@@ -166,7 +166,7 @@ $(function() {
             App.usersController.set('user', thisUser);
             // add user to other instances also
             App.dataSource.addUser(thisUser, function(data) {
-              console.log('emit (add user)');
+              // console.log('emit (add user)');
             });
 
             // join game after credential
@@ -422,7 +422,7 @@ $(function() {
         this.removeObject(obj);
         // force game data save
         App.dataSource.saveGame(0, function(data) {
-          console.log('save (remove game component)');
+          // console.log('save (remove game component)');
         });
       },
       refreshCollisionTargets: function() {
@@ -769,12 +769,12 @@ $(function() {
                 App.gameComponentsController.removeItem('slug', slug);
                 // inform other authors of the change
                 App.dataSource.removeGameComponent(slug, function(data) {
-                  console.log('emit (remove game component)');
+                  // console.log('emit (remove game component)');
                 });
 
               } else {
                 // cannot remove
-                console.log('Can not remove gameComponent');
+                // console.log('Can not remove gameComponent');
                 App.setFlash('error', 'Can not remove game component. It is in use.');
               }
 
@@ -837,11 +837,11 @@ $(function() {
           $('#dialog-new-item').modal('hide');
 
           App.dataSource.addGameComponent(item, function(data) {
-            console.log('emit (add game component)');
+            // console.log('emit (add game component)');
           });
 
           App.dataSource.saveGame(1, function(data) {
-            console.log('save (create new)');
+            // console.log('save (create new)');
           });
 
           this.set('itemTitle', null);
@@ -895,11 +895,11 @@ $(function() {
           $('.canvas-pane').find("[data-slug='" + slugName + "']").attr('src', src);
 
           App.dataSource.saveGame(0, function(data) {
-            console.log('save (add sprite)');
+            // console.log('save (add sprite)');
           });
 
           App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
-            console.log('emit (update game component)');
+            // console.log('emit (update game component)');
           });
 
           $modal.modal('hide');
@@ -950,8 +950,8 @@ $(function() {
         });
 
         selected.set('active', true);
-        console.log('CONTENT');
-        console.log(selected.get('properties'));
+        // console.log('CONTENT');
+        // console.log(selected.get('properties'));
       }.observes('content')
 
     });
@@ -989,7 +989,10 @@ $(function() {
           $('.potion-icon').draggable('destroy');
           $('.potion-icon.active').draggable({
             helper: 'clone',
-            cursorAt: { left: 10, top: 5 }
+            cursorAt: {
+              left: 10,
+              top: 5
+            }
           });
         });
       }.observes('content.@each.busy')
@@ -1027,7 +1030,7 @@ $(function() {
         return Em.isEqual(user, active);
       }.property('user', 'userActive'),
       magosObserver: function() {
-        console.log('magos changes');
+        // console.log('magos changes');
         // update magoses to other instances
         var user = this.get('user'),
           magos = this.get('magos');
@@ -1091,61 +1094,31 @@ $(function() {
       selectedCollisionTarget: null,
       selectedCollisionEvent: null,
       selectedScoreScore: null,
+      selectedCollisionScore: 0,
 
       cancelFormSubmit: function(event) {
         event.preventDefault();
         closePotionForm();
       },
 
-      submitScoresProperties: function(event) {
-        event.preventDefault();
-
-        var col_target = App.gameComponentsController.get('selectedScoreTarget');
-        var col_event = App.gameComponentsController.get('selectedScoreEvent');
-        var col_score = this.get('selectedScoreScore');
-        var targetSlug = (col_target) ? col_target.slug : null;
-        var collisions = App.selectedComponentController.getPath('content.properties.collisions');
-
-        _.each(collisions, function(col, index) {
-          if (col.target.slug == targetSlug && col.event.event == col_event.event) {
-
-            col.score = col_score;
-            console.log('SCORE ADDED FOR COLLISION!');
-
-            App.selectedComponentController.setPath('content.properties.collisions', collisions);
-
-            var selectedComponent = App.selectedComponentController.get('content');
-            var slugName = App.selectedComponentController.getPath('content.slug');
-            // save game
-            App.dataSource.saveGame(0, function(data) {
-              console.log('save (edit score properties)');
-            });
-            // inform others of property change
-            App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
-              console.log('emit (update game component score properties)');
-            });
-
-          } // if
-        });
-
-      },
-
       submitCollisionProperties: function(event) {
         event.preventDefault();
         var col_target = App.gameComponentsController.get('selectedCollisionTarget');
-        // App.selectedComponentController.getPath('content.slug'); //
-        console.log('submitCollisionProperties');
+
+        var col_score = App.gameComponentsController.get('selectedCollisionScore');
+        col_score = col_score == 0 ? null : col_score;
 
         var col_event = App.gameComponentsController.get('selectedCollisionEvent');
         var targetSlug = (col_target) ? col_target.slug : null;
         var simple_target = {
           'slug': col_target.slug,
-          'title': col_target.title
+          'title': col_target.title,
+          'score': col_score
         };
         var collision = App.Collision.create({
           'target': simple_target,
           'event': col_event,
-          'score': null
+          'score': col_score
         });
         if (App.selectedComponentController.getPath('content.properties.collisions') === undefined) {
           // no existing collisions
@@ -1158,11 +1131,11 @@ $(function() {
         var slugName = App.selectedComponentController.getPath('content.slug');
         // save game
         App.dataSource.saveGame(0, function(data) {
-          console.log('save (edit properties)');
+          // console.log('save (edit properties)');
         });
         // inform others of property change
         App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
-          console.log('emit (update game component properties)');
+          // console.log('emit (update game component properties)');
         });
       },
 
@@ -1175,7 +1148,7 @@ $(function() {
           'strength': strength
         };
 
-        console.log('submitGravitationProperties');
+        // console.log('submitGravitationProperties');
 
         App.selectedComponentController.setPath('content.properties.gravitation', gravitation);
 
@@ -1183,11 +1156,11 @@ $(function() {
         var slugName = App.selectedComponentController.getPath('content.slug');
         // save game
         App.dataSource.saveGame(0, function(data) {
-          console.log('save (edit properties)');
+          // console.log('save (edit properties)');
         });
         // inform others of property change
         App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
-          console.log('emit (update game component properties)');
+          // console.log('emit (update game component properties)');
         });
 
       },
@@ -1196,7 +1169,7 @@ $(function() {
         event.preventDefault();
         var typeTitle = this.getPath('compType.title');
 
-        console.log('submtiCOmpTYpeProerpteis');
+        // console.log('submtiCOmpTYpeProerpteis');
 
         App.selectedComponentController.setPath('content.properties.type', typeTitle);
 
@@ -1204,11 +1177,11 @@ $(function() {
         var slugName = App.selectedComponentController.getPath('content.slug');
         // save game
         App.dataSource.saveGame(0, function(data) {
-          console.log('save (edit properties)');
+          // console.log('save (edit properties)');
         });
         // inform others of property change
         App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
-          console.log('emit (update game component properties)');
+          // console.log('emit (update game component properties)');
         });
 
       },
@@ -1232,11 +1205,11 @@ $(function() {
         var slugName = App.selectedComponentController.getPath('content.slug');
         // save game
         App.dataSource.saveGame(0, function(data) {
-          console.log('save (edit properties)');
+          // console.log('save (edit properties)');
         });
         // inform others of property change
         App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
-          console.log('emit (update game component properties)');
+          // console.log('emit (update game component properties)');
         });
 
       },
@@ -1248,7 +1221,6 @@ $(function() {
         var view = Em.View.views[$view.attr('id')];
         var content = view.get('content');
         delete content['score'];
-
       },
 
       controlsMethodObserver: function() {
@@ -1317,11 +1289,11 @@ $(function() {
         var slugName = App.selectedComponentController.getPath('content.slug');
         // force game data save
         App.dataSource.saveGame(0, function(data) {
-          console.log('save (remove collision)');
+          // console.log('save (remove collision)');
         });
         // inform others of property change
         App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
-          console.log('emit (update game component properties)');
+          // console.log('emit (update game component properties)');
         });
       }
     });
@@ -1333,20 +1305,15 @@ $(function() {
         var slugName = App.selectedComponentController.getPath('content.slug');
         // force game data save
         App.dataSource.saveGame(0, function(data) {
-          console.log('save (remove gravitation)');
+          // console.log('save (remove gravitation)');
         });
         // inform others of property change
         App.dataSource.updateGameComponent(slugName, selectedComponent, function(data) {
-          console.log('emit (update game component properties)');
+          // console.log('emit (update game component properties)');
         });
       }
     });
-    App.InfoBoxScoreView = Em.View.extend({
-      collisionsBinding: 'App.selectedComponentController.content.properties.collisions',
-      collisionObserver: function() {
-        this.rerender();
-      }.observes('collisions.@each')
-    });
+
     App.InfoBoxSpriteView = Em.View.extend();
     App.InfoBoxAnimationView = Em.View.extend();
     App.InfoBoxTypeView = Em.View.extend();
@@ -1602,12 +1569,11 @@ $(function() {
 
           _.each(data, function(obj) {
             _.each(obj.potions, function(potion) {
-              if (/^(score|controls|collision|gravitation|type|image)$/.test(potion.title)) {
+              if (/^(controls|collision|gravitation|type|image)$/.test(potion.title)) {
                 var pot = App.Potion.create({
                   'title': potion.title,
                   'properties': potion.properties
                 });
-                console.log(pot);
 
                 App.potionsController.get('content').pushObject(pot);
                 allPotions.push(pot);
@@ -1691,7 +1657,7 @@ $(function() {
 
             var game = App.Game.create();
             // debug
-            //console.log(data);
+            // console.log(data);
 
             game.set('title', data.title);
             game.set('slug', data.slug);
@@ -1723,8 +1689,7 @@ $(function() {
 
             var gameComponentsA = [];
             _.each(revision.gameComponents, function(component) {
-              // console.log(component);
-              // console.log(component.properties);
+
               gameComponentsA.push(App.GameComponent.create({
                 title: component.title,
                 slug: component.slug,
@@ -1737,7 +1702,7 @@ $(function() {
 
               var sceneArray = [];
               _.each(scene.sceneComponents, function(component) {
-                // console.log(component.oid);
+
                 sceneArray.push(App.CanvasComponent.create({
                   slug: component.slug,
                   position: component.position,
@@ -1755,13 +1720,12 @@ $(function() {
                 }));
               });
 
-              //
               var obj = App.Scene.create({
                 name: scene.name,
                 sceneComponents: sceneArray,
                 gameComponents: gameArray
               });
-              //
+
               scenes.push(obj);
             });
 
@@ -1780,7 +1744,7 @@ $(function() {
 
           } else {
             // game by that slug was not found
-            console.log('Game not found.');
+            // console.log('Game not found.');
             window.location.replace("http://192.168.43.232/");
           }
         });
@@ -1819,9 +1783,7 @@ $(function() {
     });
 
     socket.on('foobar', function(user) {
-      console.log(user);
       App.setFlash('notice', 'User ' + user.userName + ' requests Magos change from ' + user.magos);
-
     });
 
     socket.on('potionBusy', function(potion, busy) {
@@ -1842,7 +1804,7 @@ $(function() {
 
     // add new game component
     socket.on('addGameComponent', function(item) {
-      console.log('>>> SOCKET REQUEST: addGameComponent');
+      // console.log('>>> SOCKET REQUEST: addGameComponent');
       if (_.isObject(item)) {
         App.gameComponentsController.get('content').pushObject(App.GameComponent.create(item));
       }
@@ -1850,32 +1812,32 @@ $(function() {
 
     // remove game component
     socket.on('removeGameComponent', function(slug) {
-      console.log('>>> SOCKET REQUEST: removeGameComponent');
+      // console.log('>>> SOCKET REQUEST: removeGameComponent');
       App.gameComponentsController.removeItem('slug', slug);
     });
 
     socket.on('updateGameComponent', function(slug, selectedComponent) {
-      console.log('>>> SOCKET REQUEST: updateGameComponent');
+      // console.log('>>> SOCKET REQUEST: updateGameComponent');
       App.gameComponentsController.updateItem('slug', slug, selectedComponent);
     });
 
 
     // add game component to game canvas
     socket.on('saveGameComponentToCanvas', function(component, sceneName) {
-      console.log('>>> SOCKET REQUEST: saveGameComponentToCanvas');
+      // console.log('>>> SOCKET REQUEST: saveGameComponentToCanvas');
       addGameComponentToCavas(component, sceneName);
     });
 
     // remove game component from game canvas
     socket.on('removeGameComponentFromCanvas', function(component, sceneName) {
-      console.log('>>> SOCKET REQUEST: removeGameComponentFromCanvas');
+      // console.log('>>> SOCKET REQUEST: removeGameComponentFromCanvas');
       removeGameComponentFromCanvas(component, sceneName);
     });
 
     socket.on('addUser', function(user) {
       // add user if same user does not already exist
-      console.log('>>> SOCKET REQUEST: addUser');
-      console.log(user);
+      // console.log('>>> SOCKET REQUEST: addUser');
+      // console.log(user);
       if (_.isObject(user)) {
         if (!App.usersController.get('content').findProperty('userName', user.userName)) {
           App.usersController.get('content').pushObject(App.User.create(user));
@@ -1884,15 +1846,15 @@ $(function() {
     });
 
     socket.on('disconnectUser', function(data) {
-      console.log('>>> SOCKET REQUEST: disconnectUser');
+      // console.log('>>> SOCKET REQUEST: disconnectUser');
       App.usersController.removeItem('userName', data.userName);
     });
 
     socket.on('refreshRevision', function(game) {
       if (_.isObject(game)) {
-        console.log('refeshRevision');
-        console.log(game);
-        console.log(game.revision);
+        // console.log('refeshRevision');
+        // console.log(game);
+        // console.log(game.revision);
 
         var revision = game.revision;
 
@@ -1902,7 +1864,7 @@ $(function() {
 
         var gameComponentsA = [];
         _.each(revision.gameComponents, function(component) {
-          console.log(component);
+          // console.log(component);
           gameComponentsA.push(App.GameComponent.create({
             title: component.title,
             slug: component.slug,
@@ -1964,7 +1926,6 @@ $(function() {
       $tgt.siblings().removeClass("active");
       $tgt.addClass("active");
 
-      // TODO Update theme
       var theme = $tgt.data('theme');
       var href = "/editor/static/css/" + theme + ".css";
       $(document).find('#theme').attr('href', href);
@@ -2082,25 +2043,25 @@ $(function() {
         var $tgt = $(event.target),
           oid = $tgt.data('oid');
         var item = App.scenesController.getPath('selected.' + itemType).findProperty('oid', oid);
-        console.log('REMOVABLE ITEM:');
-        console.log(item);
+        // console.log('REMOVABLE ITEM:');
+        // console.log(item);
         App.scenesController.getPath('selected.' + itemType).removeObject(item);
         $tgt.remove();
 
         App.dataSource.saveGame(0, function(data) {
-          console.log('save (click)');
+          // console.log('save (click)');
           // emit removal via socket
           var sceneName = App.scenesController.get('selected').get('name');
           // emit game component removal
           App.dataSource.removeGameComponentFromCanvas(item, sceneName, function(data) {
-            console.log('emit (remove game component from game canvas');
+            // console.log('emit (remove game component from game canvas');
           });
         });
       });
     }
 
     function closePotionForm() {
-      console.log('closePotionForm()');
+      // console.log('closePotionForm()');
       // close potion form
       var $magos = $('.selected-magos');
       if ($magos.is(':hidden')) {
@@ -2343,10 +2304,10 @@ $(function() {
 
           App.dataSource.saveGame(0, function(data) {
             // game component
-            console.log('save game component (drop)');
+            // console.log('save game component (drop)');
             var sceneName = App.scenesController.get('selected').get('name');
             App.dataSource.saveGameComponentToCanvas(obj, sceneName, function(data) {
-              console.log('emit (save game component (drop))');
+              // console.log('emit (save game component (drop))');
             });
           });
         }
@@ -2395,7 +2356,7 @@ $(function() {
             'id': oid
           });
 
-          //console.log(oid);
+          // console.log(oid);
           var obj = {
             oid: oid,
             slug: slug,
@@ -2408,10 +2369,10 @@ $(function() {
           App.scenesController.getPath('selected.sceneComponents').pushObject(obj);
           App.dataSource.saveGame(1, function(data) {
             // scene component
-            console.log('save scene component (drop)');
+            // console.log('save scene component (drop)');
             var sceneName = App.scenesController.get('selected').get('name');
             App.dataSource.saveSceneComponentToCanvas(obj, sceneName, function(data) {
-              console.log('emit (save scene component (drop))');
+              // console.log('emit (save scene component (drop))');
             });
           });
 
