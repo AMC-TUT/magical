@@ -476,6 +476,7 @@ var editor = {
 		// match add word rule
 		$('form#addMatchRule').submit(function(e) {
 			e.preventDefault();
+			console.log('addMatchRule submit');
 			$('#matchWarning').empty();
 			var w1 = $("#word1").val(),
 				w2 = $("#word2").val(),
@@ -494,6 +495,7 @@ var editor = {
 			}
 
     		if(w1!="" && w2!="" && w1!=" " && w2!=" ") {
+				console.log('addMatchRule about to set game');
     			var matchRules = {
     				'task': w1,
     				'rightArr': rAnswers,
