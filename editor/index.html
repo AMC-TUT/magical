@@ -145,7 +145,7 @@
           <div class="navbar" style="margin-bottom: 0;">
             <div class="navbar-inner navbar-inner-in-well">
               <div class="container">
-                <h3 class="sortable-handle">Shoutbox</h3>
+                <h3>Shoutbox</h3>
 
                 <div class="nav shoutbox-collapse" style="width: 100%;">
                   <div class="magos-shoutbox-log">
@@ -153,7 +153,10 @@
                       {{#view App.ShoutsView}}
                         {{#each content}}
                           <tr {{bindAttr class="magos" }}>
-                            <td>{{time}}</td><td>{{userName}}</td><td>{{message}}</td>
+                            <td>
+                            <span class="writer">{{time}} {{userName}}</span>
+                            <span>{{message}}</span>
+                            </td>
                           </tr>
                         {{/each}}
                       {{/view}}
@@ -317,10 +320,8 @@
 
       </div><!--/ left side-->
 
-      <!-- assign busy tag with tool -->
-
-      <div class="span3">
-        <div class="well">  <!-- <div  { {b in d Attr class=":sortable-item :well activeUser:active-user"}}> -->
+      <div class="span3 sortable-sidebar">
+        <div class="well">
 
           <script type="text/x-handlebars">
           {{#view App.MagosView}}

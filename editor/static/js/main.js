@@ -1368,7 +1368,6 @@ $(function() {
         return hours + ":" + minutes + ":" + seconds;
 
       }.property('timestamp')
-
     });
 
     App.shoutsController = Em.ArrayController.create({
@@ -1415,7 +1414,7 @@ $(function() {
 
         var message = this.getPath('textField.value');
 
-        if (!message.length) return;
+        if (_.isNull(message)) return;
 
         var timestamp = Math.round((new Date()).getTime() / 1000); // to unix timestamp
         var shout = {
@@ -1435,9 +1434,7 @@ $(function() {
         // add slug for shout
         shout.slug = this.slug;
 
-        App.dataSource.shout(shout, function(data) {
-          // do something with callback
-        });
+        App.dataSource.shout(shout, function(data) {});
 
         this.setPath('textField.value', null);
       }
@@ -1446,7 +1443,7 @@ $(function() {
     /* Append */
 
     infobox.appendTo('.sortable-mainarea');
-    shoutbox.appendTo('.sortable-mainarea');
+    shoutbox.appendTo('.sortable-sidebar');
 
     /**************************
      * Views
