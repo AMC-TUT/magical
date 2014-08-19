@@ -7,7 +7,7 @@ $(function() {
     App.VERSION = '0.0.1',
 
     App.settings = {
-      djangoUri: 'http://192.168.43.232/' // localhost
+      djangoUri: 'http://10.0.1.6/' // localhost
       //djangoUri : 'http://magos.pori.tut.fi/'
     };
 
@@ -1741,7 +1741,7 @@ $(function() {
           } else {
             // game by that slug was not found
             // console.log('Game not found.');
-            window.location.replace("http://192.168.43.232/");
+            window.location.replace("http://10.0.1.6/");
           }
         });
       }

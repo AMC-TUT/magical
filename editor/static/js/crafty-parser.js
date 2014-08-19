@@ -34,7 +34,7 @@ var Parser = {
   socket: null,
   blockSize: null,
   settings: {
-    djangoUri: 'http://192.168.43.232/',
+    djangoUri: 'http://10.0.1.6/',
     //djangoUri: 'http://magos.pori.tut.fi/',
   },
 
@@ -319,28 +319,28 @@ var Parser = {
               player = _this;
             }
 
-              if (/^twoway$/i.test(props.controls.method)) {
-                _this.addComponent('Twoway', 'Keyboard', 'Gravity');
-                _this.twoway(speed, jump);
-                _this.gravity('Platform');
-                _this.gravityConst(2); // default
-              } else if (/^fourway$/i.test(props.controls.method)) {
-                _this.addComponent('Fourway', 'Keyboard');
-                _this.fourway(speed);
-              } else if (/^multiway$/i.test(props.controls.method)) {
-                _this.addComponent('Multiway', 'Keyboard');
-                _this.multiway(speed, {
-                  UP_ARROW: -90,
-                  DOWN_ARROW: 90,
-                  RIGHT_ARROW: 0,
-                  LEFT_ARROW: 180
-                });
-              }
+            if (/^twoway$/i.test(props.controls.method)) {
+              _this.addComponent('Twoway', 'Keyboard', 'Gravity');
+              _this.twoway(speed, jump);
+              _this.gravity('Platform');
+              _this.gravityConst(2); // default
+            } else if (/^fourway$/i.test(props.controls.method)) {
+              _this.addComponent('Fourway', 'Keyboard');
+              _this.fourway(speed);
+            } else if (/^multiway$/i.test(props.controls.method)) {
+              _this.addComponent('Multiway', 'Keyboard');
+              _this.multiway(speed, {
+                UP_ARROW: -90,
+                DOWN_ARROW: 90,
+                RIGHT_ARROW: 0,
+                LEFT_ARROW: 180
+              });
+            }
 
           }
 
-          // gravity
-          if (_.isObject(props.gravitation)) {
+          // gravity if not already defined
+          if (_.isObject(props.gravitation) && !_this.has('Gravity')) {
             var sign = props.gravitation.direction ? 1 : -1; // direction
             _this.addComponent('Gravity');
             _this.gravity('Platform');

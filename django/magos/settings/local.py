@@ -17,13 +17,13 @@ DEVELOPMENT_FEATURES = True
 
 
 ########## URL CONFIGURATION
-BASE_URL = 'http://192.168.43.232/'
+BASE_URL = 'http://10.0.1.6/'
 
-MAGOS_EDITOR_URL = 'http://192.168.43.232/editor/edit/'
-MAGOS_PLAY_URL = 'http://192.168.43.232/editor/play/'
+MAGOS_EDITOR_URL = 'http://10.0.1.6/editor/edit/'
+MAGOS_PLAY_URL = 'http://10.0.1.6/editor/play/'
 
-MAGOS_LITE_EDITOR_URL = 'http://192.168.43.232/editor-lite/edit/'
-MAGOS_LITE_PLAY_URL = 'http://192.168.43.232/editor-lite/play/'
+MAGOS_LITE_EDITOR_URL = 'http://10.0.1.6/editor-lite/edit/'
+MAGOS_LITE_PLAY_URL = 'http://10.0.1.6/editor-lite/play/'
 
 ########## END URL CONFIGURATION
 
