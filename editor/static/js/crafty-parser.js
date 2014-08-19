@@ -349,18 +349,6 @@ var Parser = {
 
           // events
           _this.bind('EnterFrame', function(frame) {
-            //destroy object if it goes out of bounds
-            // if (this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
-            //   this.destroy();
-
-            //   if (this.has('Player')) {
-            //     setTimeout(function() {
-            //       Crafty.scene('outro');
-            //     }, 500);
-            //   }
-            // }
-            //
-
             // stop item on viewport bounds
             if (this._x > Crafty.viewport.width - Parser.blockSize) {
               this.x = Crafty.viewport.width - Parser.blockSize;

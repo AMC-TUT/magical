@@ -1,5 +1,7 @@
 /* Magos Editor */
 
+var potionBusy = false;
+
 $(function() {
 
   (function(App, $, Em, undefined) {
@@ -368,6 +370,7 @@ $(function() {
       title: null,
       slug: null,
       file: null,
+      busy: false,
       properties: null,
       active: false,
       icon: function() {
@@ -582,8 +585,9 @@ $(function() {
                   $container = $draggable.closest('.magos-potions'),
                   potion = $draggable.data('potion');
 
-                // set potion busy
                 var busy = true;
+                potionBusy = true;
+
                 App.dataSource.potionBusy(potion, busy, function(data) {
                   var potion = App.potionsController.find(function(potion) {
                     return potion.title == data;
@@ -992,6 +996,34 @@ $(function() {
             cursorAt: {
               left: 10,
               top: 5
+            },
+            start: function(event, ui) {
+              var $draggable = $(event.target),
+                potion = $draggable.data('potion');
+
+              // set potion busy
+              var busy = true;
+              App.dataSource.potionBusy(potion, busy, function(data) {
+                var potion = App.potionsController.find(function(potion) {
+                  return potion.title == data;
+                });
+              });
+            },
+            stop: function(event, ui) {
+              setTimeout(function() {
+                if (potionBusy === false) {
+                  var $draggable = $(event.target),
+                    potion = $draggable.data('potion');
+
+                  var busy = false;
+                  App.dataSource.potionBusy(potion, busy, function(data) {
+                    var potion = App.potionsController.find(function(potion) {
+                      return potion.title == data;
+                    });
+                  });
+                }
+              }, 500);
+
             }
           });
         });
@@ -2072,6 +2104,8 @@ $(function() {
 
       // set potion free
       var busy = false;
+      potionBusy = false;
+
       var potion = App.usersController.getPath('content.potion');
       App.dataSource.potionBusy(potion, busy, function(data) {
         var potion = App.potionsController.find(function(potion) {
@@ -2408,7 +2442,7 @@ $(function() {
       });
 
       // run on exit
-      $(window).bind('unload', function(event) {
+      $(window).unload(function() {
         // make potion free to use
         var potion = App.usersController.getPath('content.potion');
         if (_.isString(potion)) {
