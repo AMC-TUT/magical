@@ -370,7 +370,6 @@ $(function() {
       title: null,
       slug: null,
       file: null,
-      busy: false,
       properties: null,
       active: false,
       icon: function() {
