@@ -21,7 +21,7 @@ django-redis-sessions==0.3.1
 django-reusableapps==0.1.1
 django-tastypie==0.9.11
 django-uuidfield==0.4.0
-djangorestframework==0.4.0
+djangorestframework==3.9.1
 gunicorn==0.14.6
 ipdb==0.6.1
 ipython==0.13.1
