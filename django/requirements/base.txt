@@ -9,7 +9,7 @@ amqplib==1.0.2
 anyjson==0.3.3
 argparse==1.2.1
 billiard==2.7.3.17
-celery==3.0.11
+celery==5.2.2
 django-appconf==0.5
 django-audiofield==0.5.2
 django-celery==3.0.11
